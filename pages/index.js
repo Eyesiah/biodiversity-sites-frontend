@@ -2,7 +2,7 @@
 
 import SiteList from '../components/SiteList';
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   try {
     // Fetch data from the external API.
     // Note: We use the full URL here because this code runs on the server,
@@ -36,6 +36,10 @@ export async function getServerSideProps() {
         sites: processedSites,
         error: null
       },
+      // Next.js will attempt to re-generate the page:
+      // - When a request comes in
+      // - At most once every 60 seconds
+      revalidate: 600, // In seconds
     };
   } catch (e) {
     // Handle any errors during the fetch.
