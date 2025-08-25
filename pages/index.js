@@ -1,17 +1,18 @@
 // This function runs on the server side before the page is rendered.
 
-import SiteList from '../components/SiteList';
+import SiteList from "../components/SiteList";
 
 export async function getStaticProps() {
   try {
     // Fetch data from the external API.
-    // Note: We use the full URL here because this code runs on the server,
-    // so the development proxy is not used.
-    const response = await fetch('https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites');
+    // By adding a revalidate option to fetch, we can make the data's cache
+    // lifetime independent of the page's revalidation period.
+    const response = await fetch(
+      "https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites",
+      { next: { revalidate: 3600 } } // Revalidate the data at most once per hour
+    );
 
     if (!response.ok) {
-      // If the response is not ok, we can return an error prop
-      // which will be displayed on the page.
       throw new Error(`Failed to fetch sites, status: ${response.status}`);
     }
 
@@ -36,10 +37,7 @@ export async function getStaticProps() {
         sites: processedSites,
         error: null
       },
-      // Next.js will attempt to re-generate the page:
-      // - When a request comes in
-      // - At most once every 60 seconds
-      revalidate: 600, // In seconds
+      revalidate: 60, // In seconds
     };
   } catch (e) {
     // Handle any errors during the fetch.
@@ -65,7 +63,7 @@ export default function HomePage({ sites, error }) {
       </div>
     );
   }
-
+  
   const totalSites = sites ? sites.length : 0;
   const totalArea = sites ? sites.reduce((acc, site) => acc + site.siteSize, 0) : 0;
 
