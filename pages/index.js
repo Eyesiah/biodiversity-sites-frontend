@@ -1,4 +1,7 @@
 // This function runs on the server side before the page is rendered.
+
+import SiteList from '../components/SiteList';
+
 export async function getServerSideProps() {
   try {
     // Fetch data from the external API.
@@ -12,13 +15,25 @@ export async function getServerSideProps() {
       throw new Error(`Failed to fetch sites, status: ${response.status}`);
     }
 
-    const sites = await response.json();
+    const sitesData = await response.json();
+
+    // Process the data on the server to only include what we need for the table.
+    // This significantly reduces the amount of data sent to the client.
+    const processedSites = sitesData.sites.map(site => ({
+      referenceNumber: site.referenceNumber,
+      responsibleBodies: site.responsibleBodies,
+      siteSize: site.siteSize,
+      // We only need the count, not the full allocation objects.
+      allocationsCount: site.allocations ? site.allocations.length : 0,
+      lpaName: site.lpaArea ? site.lpaArea.name : 'N/A',
+      ncaName: site.nationalCharacterArea ? site.nationalCharacterArea.name : 'N/A',
+    }));
 
     // The value of the `props` key will be
     // passed to the `HomePage` component.
     return {
       props: {
-        sites,
+        sites: processedSites,
         error: null
       },
     };
@@ -45,7 +60,7 @@ export default function HomePage({ sites, error }) {
 
         {error && <p className="error">Error fetching data: {error}</p>}
 
-        {sites && <pre className="raw-json">{JSON.stringify(sites, null, 2)}</pre>}
+        {sites && <SiteList sites={sites} />}
       </main>
     </div>
   );

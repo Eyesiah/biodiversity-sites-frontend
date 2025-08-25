@@ -1,0 +1,1133 @@
+{
+  "sites": [
+    {
+      "referenceNumber": "BGS-101024004",
+      "siteSize": 16.52,
+      "gridReference": "SO54787860",
+      "responsibleBodies": [
+        "RSK Biocensus Limited"
+      ],
+      "startDate": "2023-06-29T00:00:00",
+      "landBoundary": "https://manage-biodiversity-gains.defra.gov.uk/public-documents/BGS-101024004.pdf",
+      "endDate": null,
+      "habitats": {
+        "type": "Baseline",
+        "areas": [
+          {
+            "id": "f1249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Non-cereal crops",
+            "size": 0.01,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "de249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Cereal crops",
+            "size": 0.11,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.3,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "494f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Grassland - Modified grassland",
+            "size": 0.98,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "494f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Grassland - Modified grassland",
+            "size": 0.31,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.28,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "f1249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Non-cereal crops",
+            "size": 2.72,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 2.51,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.03,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "494f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Grassland - Modified grassland",
+            "size": 0.37,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "734f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 1.21,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.6,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "494f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Grassland - Modified grassland",
+            "size": 0.16,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.04,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.03,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "5e4f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Urban - Artificial unvegetated, unsealed surface",
+            "size": 0.25,
+            "unit": "Hectares",
+            "condition": "",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.07,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "f1249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Non-cereal crops",
+            "size": 0.06,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "de249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Cereal crops",
+            "size": 1.12,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "f1249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Non-cereal crops",
+            "size": 0.06,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "de249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Cereal crops",
+            "size": 0.01,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.02,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.85,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "de249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Cereal crops",
+            "size": 0.01,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.02,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "27fd3b46-4b94-ee11-be37-6045bdd0b45d",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.28,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "de249046-4b94-ee11-be37-6045bdf1bc3e",
+            "module": "Area",
+            "type": "Cropland - Cereal crops",
+            "size": 3.68,
+            "unit": "Hectares",
+            "condition": "Condition Assessment N/A",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "494f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Grassland - Modified grassland",
+            "size": 0.42,
+            "unit": "Hectares",
+            "condition": "Poor",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          }
+        ],
+        "hedgerows": [],
+        "watercourses": []
+      },
+      "improvements": {
+        "type": "CreatedOrEnhanced",
+        "areas": [
+          {
+            "id": "01aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.279,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001506-BN1H9",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "2daa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.1576,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001510-BP8C3",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "17aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.3033,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001499-BF9Q1",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "d7a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 2.7213,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001491-BR7B1",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "0baa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.9796,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001495-BW8Y1",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "12aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Lakes - Ponds (Priority Habitat)",
+            "size": 0.0097,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001496-BV7Q3",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "f9a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0398,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001492-BJ0Q5",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "d5a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Lakes - Ponds (Priority Habitat)",
+            "size": 0.0059,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001488-BS6M7",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "11aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0613,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001497-BT0Z8",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "e7a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0238,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001493-BQ9B1",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "d4a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.1119,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001489-BX1M4",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "28aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.3125,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001505-BG3M3",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "d2a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 3.6807,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001486-BF0H3",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "23aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0098,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001502-BN5M0",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "13aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Lowland meadows",
+            "size": 0.4234,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001504-BM3Y0",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "d3a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 1.1216,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001487-BN8B6",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "2baa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.2778,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001509-BW1W8",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "2caa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.6024,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001511-BM4Z8",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "21aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.027,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001501-BZ0J6",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "d6a93520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0705,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001490-BB1J1",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "27aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.03,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001512-BB0F1",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "02aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.019,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001494-BF0W5",
+            "interventionType": "Creation",
+            "developerReference": null
+          },
+          {
+            "id": "29aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 1.2134,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001507-BV0L5",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "2aaa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.3733,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001508-BX2Y4",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "1faa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Other neutral grassland",
+            "size": 0.8526,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00001498-BL2R5",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "25aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Grassland - Lowland meadows",
+            "size": 2.5085,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001503-BL6P0",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "20aa3520-fc86-ef11-ac20-6045bdfbfdc9",
+            "module": "Area",
+            "type": "Heathland and shrub - Mixed scrub",
+            "size": 0.0589,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": "HAB-00001500-BM0Y9",
+            "interventionType": "Creation",
+            "developerReference": null
+          }
+        ],
+        "hedgerows": [],
+        "watercourses": []
+      },
+      "allocations": [
+        {
+          "developerReference": "DEVREG-01182-BP1K6",
+          "localPlanningAuthority": "Cannock Chase LPA",
+          "planningReference": "CH/24/311",
+          "projectName": "Former Rugeley Power Station, Staffordshire, WS15 1PR",
+          "areaUnits": 0.04,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "46daf4c6-9909-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Heathland and shrub - Mixed scrub",
+                "size": 0.0075,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001497-BT0Z8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01182-BP1K6"
+              },
+              {
+                "id": "45daf4c6-9909-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.011,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01182-BP1K6"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01181-BF2D2",
+          "localPlanningAuthority": "Lichfield LPA",
+          "planningReference": "24/01239/FUL",
+          "projectName": "Former Rugeley Power Station, Staffordshire, WS15 1PR",
+          "areaUnits": 0.09,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "8daa54a2-9809-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Heathland and shrub - Mixed scrub",
+                "size": 0.0261,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001500-BM0Y9",
+                "interventionType": null,
+                "developerReference": "DEVREG-01181-BF2D2"
+              },
+              {
+                "id": "8faa54a2-9809-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.011,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01181-BF2D2"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01193-BS9V7",
+          "localPlanningAuthority": "Hounslow LPA",
+          "planningReference": "P/2024/2162",
+          "projectName": "765 Staines Road, Feltham, TW14 8RX",
+          "areaUnits": 1.29,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "849f33d9-c40b-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Lowland meadows",
+                "size": 0.3285,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001504-BM3Y0",
+                "interventionType": null,
+                "developerReference": "DEVREG-01193-BS9V7"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01188-BT4T9",
+          "localPlanningAuthority": "Lichfield LPA",
+          "planningReference": "24/01240/FUL",
+          "projectName": "Former Rugeley Power Station, Staffordshire, WS15 1PR",
+          "areaUnits": 0.21,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "55bc50b0-270b-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Lowland meadows",
+                "size": 0.0382,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001504-BM3Y0",
+                "interventionType": null,
+                "developerReference": "DEVREG-01188-BT4T9"
+              },
+              {
+                "id": "57bc50b0-270b-f011-bae3-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.0332,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01188-BT4T9"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01548-BR2M8",
+          "localPlanningAuthority": "Telford and Wrekin LPA",
+          "planningReference": "TWC/2024/0447",
+          "projectName": "The Burton Borough School, Audley Avenue, Newport, Shropshire, TF10 7DS",
+          "areaUnits": 1.43,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "46719ea9-c076-f011-b4cb-6045bd13ed13",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.0359,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01548-BR2M8"
+              },
+              {
+                "id": "47719ea9-c076-f011-b4cb-6045bd13ed13",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.1325,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001498-BL2R5",
+                "interventionType": null,
+                "developerReference": "DEVREG-01548-BR2M8"
+              },
+              {
+                "id": "45719ea9-c076-f011-b4cb-6045bd13ed13",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.359,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001511-BM4Z8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01548-BR2M8"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01274-BV3N0",
+          "localPlanningAuthority": "South Staffordshire LPA",
+          "planningReference": "24/00652/FUL",
+          "projectName": "\tLawnswood Farm Lawnswood Road Lawnswood STOURBRIDGE DY7 5QL",
+          "areaUnits": 0.02,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "49062b08-ab26-f011-8c4e-00224801b586",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.0084,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001511-BM4Z8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01274-BV3N0"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01235-BX4F6",
+          "localPlanningAuthority": "Stockport LPA",
+          "planningReference": "DC/093468",
+          "projectName": "Deanwater Hotel Wilmslow Road Woodford Stockport SK7 1RJ",
+          "areaUnits": 0.46,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "5d43e006-8b4b-f011-877b-000d3a7fa6c0",
+                "module": "Area",
+                "type": "Grassland - Lowland meadows",
+                "size": 0.0464,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001503-BL6P0",
+                "interventionType": null,
+                "developerReference": "DEVREG-01235-BX4F6"
+              },
+              {
+                "id": "5e43e006-8b4b-f011-877b-000d3a7fa6c0",
+                "module": "Area",
+                "type": "Woodland and forest - Lowland mixed deciduous woodland",
+                "size": 0.2776,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001507-BV0L5",
+                "interventionType": null,
+                "developerReference": "DEVREG-01235-BX4F6"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01098-BH3L0",
+          "localPlanningAuthority": "Telford and Wrekin LPA",
+          "planningReference": "TWC/2024/0384",
+          "projectName": "Former Dun Cow Public House, New Street, Dawley, Telford, Shropshire",
+          "areaUnits": 0.97,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "f6308572-21e3-ef11-be20-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.152,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001510-BP8C3",
+                "interventionType": null,
+                "developerReference": "DEVREG-01098-BH3L0"
+              },
+              {
+                "id": "f7308572-21e3-ef11-be20-6045bdf18a19",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.0608,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01098-BH3L0"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01492-BH8Y5",
+          "localPlanningAuthority": "South Staffordshire LPA",
+          "planningReference": "SCC/24/0121/FULL-MAJ",
+          "projectName": "Blymhill Sewage Treatment Works, Brockton Lane, Brineton. TF11 8NH",
+          "areaUnits": 0.18,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "419770b5-d267-f011-bec3-6045bdfbf09a",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.0608,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001509-BW1W8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01492-BH8Y5"
+              },
+              {
+                "id": "3a9770b5-d267-f011-bec3-6045bdfbf09a",
+                "module": "Area",
+                "type": "Heathland and shrub - Mixed scrub",
+                "size": 0.0037,
+                "unit": "Hectares",
+                "condition": "Moderate",
+                "habitatReference": "HAB-00001502-BN5M0",
+                "interventionType": null,
+                "developerReference": "DEVREG-01492-BH8Y5"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01295-BT3X4",
+          "localPlanningAuthority": "Cheshire East LPA",
+          "planningReference": "24/3281N",
+          "projectName": "King George V Playing Fields West Street, Crewe",
+          "areaUnits": 1.9,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "21c293ae-e52c-f011-8c4d-7c1e521df9a8",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.7014,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001498-BL2R5",
+                "interventionType": null,
+                "developerReference": "DEVREG-01295-BT3X4"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        },
+        {
+          "developerReference": "DEVREG-01221-BG5W0",
+          "localPlanningAuthority": "Telford and Wrekin LPA",
+          "planningReference": "TWC/2024/0709",
+          "projectName": "HM Land Registry, Parkside Court",
+          "areaUnits": 0.3,
+          "hedgerowUnits": 0,
+          "watercoursesUnits": 0,
+          "habitats": {
+            "type": "Allocated",
+            "areas": [
+              {
+                "id": "8567ab8f-4315-f011-998a-00224801b586",
+                "module": "Area",
+                "type": "Grassland - Other neutral grassland",
+                "size": 0.1105,
+                "unit": "Hectares",
+                "condition": "Good",
+                "habitatReference": "HAB-00001511-BM4Z8",
+                "interventionType": null,
+                "developerReference": "DEVREG-01221-BG5W0"
+              }
+            ],
+            "hedgerows": [],
+            "watercourses": []
+          }
+        }
+      ],
+      "extractDate": "2025-08-25T02:13:31.9636852",
+      "removalDate": null,
+      "amendments": [
+        {
+          "amendmentId": "dd35c226-db51-f011-877b-7c1e521df9a8",
+          "amendmentDate": "2025-06-25T15:30:00",
+          "amendmentGrounds": "c) Removing an allocation",
+          "amendmentDetails": "Fully removal all allocated habitats from development.  Allocation application will be resubmitted with corrected metric.",
+          "relatedCaseReference": "BNGREG-N2P2V-BJ3F3"
+        }
+      ],
+      "longitude": -2.664753752796406,
+      "latitude": 52.40316161188975,
+      "easting": 354780,
+      "northing": 278600,
+      "nationalCharacterArea": {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      "lpaArea": {
+        "id": "E60000114",
+        "name": "Shropshire LPA",
+        "size": 3196531097.398155
+      }
+    },
+    {
+      "referenceNumber": "BGS-310125002",
+      "siteSize": 6.15,
+      "gridReference": "NZ142306",
+      "responsibleBodies": [
+        "County Durham LPA"
+      ],
+      "startDate": null,
+      "landBoundary": "https://manage-biodiversity-gains.defra.gov.uk/public-documents/BGS-310125002.pdf",
+      "endDate": "2055-01-31T00:00:00",
+      "habitats": {
+        "type": "Baseline",
+        "areas": [
+          {
+            "id": "734f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 4,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          },
+          {
+            "id": "734f5846-4b94-ee11-be37-7c1e520472c5",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 2.15,
+            "unit": "Hectares",
+            "condition": "Moderate",
+            "habitatReference": null,
+            "interventionType": null,
+            "developerReference": null
+          }
+        ],
+        "hedgerows": [],
+        "watercourses": []
+      },
+      "improvements": {
+        "type": "CreatedOrEnhanced",
+        "areas": [
+          {
+            "id": "da045292-f9df-ef11-a730-00224801b586",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 2.15,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00002040-BS2C8",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          },
+          {
+            "id": "db045292-f9df-ef11-a730-00224801b586",
+            "module": "Area",
+            "type": "Woodland and forest - Lowland mixed deciduous woodland",
+            "size": 4,
+            "unit": "Hectares",
+            "condition": "Good",
+            "habitatReference": "HAB-00002041-BF0G3",
+            "interventionType": "Enhanced",
+            "developerReference": null
+          }
+        ],
+        "hedgerows": [],
+        "watercourses": []
+      },
+      "allocations": [],
+      "extractDate": "2025-08-25T02:13:31.9636852",
+      "removalDate": null,
+      "amendments": [],
+      "longitude": -1.7797969189581577,
+      "latitude": 54.67016118977629,
+      "easting": 414200,
+      "northing": 530600,
+      "nationalCharacterArea": {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      },
+      "lpaArea": {
+        "id": "E60000001",
+        "name": "County Durham LPA",
+        "size": 2231732443.984619
+      }
+    }
+  ]
+}
