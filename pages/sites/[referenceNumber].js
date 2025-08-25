@@ -231,7 +231,7 @@ export default function SitePage({ site, error }) {
 
   const { items: sortedBaseline, requestSort: requestSortBaseline, sortConfig: sortConfigBaseline } = useSortableData(collatedBaseline, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovements, requestSort: requestSortImprovements, sortConfig: sortConfigImprovements } = useSortableData(collatedImprovements, { key: 'type', direction: 'ascending' });
-  sortConfigAllocations
+  const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(site.allocations || [], { key: 'planningReference', direction: 'ascending' });
 
   const getSortClassName = (name, sortConfig) => {
     if (!sortConfig) {
@@ -239,6 +239,8 @@ export default function SitePage({ site, error }) {
     }
     return sortConfig.key === name ? styles[sortConfig.direction] : undefined;
   };
+
+  const planningApplications = new Set(site.allocations?.map(a => a.planningReference)).size;
 
   return (
     <>
@@ -258,13 +260,16 @@ export default function SitePage({ site, error }) {
           <section className={styles.card}>
             <h3>Site Details</h3>
             <dl>
-              <DetailRow label="Grid Reference" value={site.gridReference || 'N/A'} />
+              <DetailRow label="BGS Reference" value={site.referenceNumber} />
+              <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
               <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
-              <DetailRow label="Responsible Body" value={site.responsibleBodies?.join(', ') || 'N/A'} />
-              <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
+              <DetailRow label="Location" value={`${site.latitude}, ${site.longitude}`} />
+              <DetailRow label="Map" value={<a href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`} target="_blank" rel="noreferrer">View on Google Maps</a>} />
               <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
-              <DetailRow label="Area (ha)" value={site.siteSize?.toFixed(4) || 'N/A'} />
-              <DetailRow label="Land Boundary" value={site.landBoundary ? <a href={site.landBoundary} target="_blank" rel="noreferrer">View Document</a> : 'N/A'} />
+              <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
+              <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
+              <DetailRow label="# Planning applications" value={planningApplications} />
+              <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(4)} ha.`} />
             </dl>
             <h4>Habitat Summary</h4>
             <HabitatSummary habitats={site.habitats?.areas} />
