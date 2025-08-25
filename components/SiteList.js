@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import Link from 'next/link';
 
 const SiteList = ({ sites }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
@@ -71,7 +72,11 @@ const SiteList = ({ sites }) => {
       <tbody>
         {sortedSites.map((site) => (
           <tr key={site.referenceNumber}>
-            <td>{site.referenceNumber}</td>
+            <td>
+              <Link href={`/sites/${site.referenceNumber}`}>
+                {site.referenceNumber}
+              </Link>
+            </td>
             <td>{site.responsibleBodies.join(', ')}</td>
             <td>{site.siteSize.toFixed(2)}</td>
             <td>{site.allocationsCount}</td>

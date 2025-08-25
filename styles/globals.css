@@ -93,3 +93,8 @@ a {
 .site-table td {
   font-size: 0.9rem;
 }
+
+.site-table a {
+  color: #0070f3;
+  text-decoration: underline;
+}
