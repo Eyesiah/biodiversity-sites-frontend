@@ -87,8 +87,8 @@ export default function SitePage({ site, error }) {
   return (
     <>
       <Head>
-        <title>BGS Details: {site.referenceNumber}</title>
-        <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`} />
+        <title>{`BGS Details: ${site.referenceNumber}`}</title>
+        <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`}/>
       </Head>
 
       <main className={styles.container}>
@@ -111,22 +111,22 @@ export default function SitePage({ site, error }) {
           </section>
 
           <section className={styles.card}>
-            <h3>Habitat Information</h3>
-            {site.habitat ? (
-              <dl>
-                <DetailRow label="Habitat Type" value={site.habitat.name} />
-                <DetailRow label="Area (ha)" value={site.habitat.area?.toFixed(4)} />
-              </dl>
-            ) : <p>No habitat information available.</p>}
-          </section>
-
-          <section className={styles.card}>
-            <h3>Documents</h3>
-            {site.landBoundary?.url ? (
-              <a href={site.landBoundary.url} target="_blank" rel="noopener noreferrer" className={styles.documentLink}>
-                View Land Boundary PDF
-              </a>
-            ) : <p>No documents available.</p>}
+            <h3>Allocations</h3>
+            {site.allocations && site.allocations.length > 0 ? (
+              site.allocations.map((alloc, index) => (
+                <div key={index} className={styles.allocationItem}>
+                  <dl>
+                    <DetailRow label="Reference" value={alloc.planningReference} />
+                    <DetailRow label="LPA" value={alloc.localPlanningAuthority} />
+                    <DetailRow label="Distance (km)" value={"WIP"} />
+                    <DetailRow label="Address" value={alloc.projectName} />
+                    <DetailRow label="Area units" value={alloc.areaUnits} />
+                    <DetailRow label="Hedgerow units" value={alloc.hedgerowUnits} />
+                    <DetailRow label="Watercourse units" value={alloc.watercoursesUnits} />
+                  </dl>
+                </div>
+              ))
+            ) : <p>No allocation information available.</p>}
           </section>
         </div>
       </main>
