@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useState } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 
 // This function tells Next.js which paths to pre-render at build time.
@@ -22,18 +23,14 @@ export async function getStaticPaths() {
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
   try {
-    // Fetch the entire list of sites. Next.js will automatically dedupe this
-    // request with the one made in getStaticPaths during a build.
-    const res = await fetch('https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites');
+    // Fetch the data for the specific site.
+    const res = await fetch(`https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites/${params.referenceNumber}`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch site data, status: ${res.status}`);
     }
 
-    const data = await res.json();
-
-    // Find the specific site from the list.
-    const site = data.sites.find(s => s.referenceNumber === params.referenceNumber);
+    const site = await res.json();
 
     if (!site) {
       // If the site is not found, return a 404 page.
@@ -58,6 +55,44 @@ export async function getStaticProps({ params }) {
   }
 }
 
+// Helper function to collate habitat data
+const collateHabitats = (habitats, isImprovement) => {
+  if (!habitats) return [];
+
+  const collated = habitats.reduce((acc, habitat) => {
+    const key = habitat.type;
+    if (!acc[key]) {
+      acc[key] = {
+        type: habitat.type,
+        parcels: 0,
+        area: 0,
+        subRows: {},
+      };
+    }
+    acc[key].parcels += 1;
+    acc[key].area += habitat.size;
+
+    const subKey = isImprovement ? `${habitat.interventionType}-${habitat.condition}` : habitat.condition;
+    if (!acc[key].subRows[subKey]) {
+      acc[key].subRows[subKey] = {
+        condition: habitat.condition,
+        interventionType: habitat.interventionType,
+        parcels: 0,
+        area: 0,
+      };
+    }
+    acc[key].subRows[subKey].parcels += 1;
+    acc[key].subRows[subKey].area += habitat.size;
+
+    return acc;
+  }, {});
+
+  return Object.values(collated).map(habitat => ({
+    ...habitat,
+    subRows: Object.values(habitat.subRows),
+  }));
+};
+
 // Helper component for a detail row to keep the JSX clean.
 const DetailRow = ({ label, value }) => (
   <div className={styles.detailRow}>
@@ -65,6 +100,46 @@ const DetailRow = ({ label, value }) => (
     <dd className={styles.detailValue}>{value}</dd>
   </div>
 );
+
+const HabitatRow = ({ habitat, isImprovement }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
+        <td>{habitat.type}</td>
+        <td>{habitat.parcels}</td>
+        <td>{habitat.area.toFixed(4)}</td>
+      </tr>
+      {isOpen && (
+        <tr>
+          <td colSpan={3}>
+            <table className={styles.subTable}>
+              <thead>
+                <tr>
+                  {isImprovement && <th>Intervention</th>}
+                  <th>Condition</th>
+                  <th># parcels</th>
+                  <th>Area (ha)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {habitat.subRows.map((subRow, index) => (
+                  <tr key={index}>
+                    {isImprovement && <td>{subRow.interventionType}</td>}
+                    <td>{subRow.condition}</td>
+                    <td>{subRow.parcels}</td>
+                    <td>{subRow.area.toFixed(4)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      )}
+    </>
+  );
+};
 
 export default function SitePage({ site, error }) {
   if (error) {
@@ -83,6 +158,9 @@ export default function SitePage({ site, error }) {
       </div>
     );
   }
+
+  const collatedBaseline = collateHabitats(site.habitats?.areas, false);
+  const collatedImprovements = collateHabitats(site.improvements?.areas, true);
 
   return (
     <>
@@ -108,6 +186,46 @@ export default function SitePage({ site, error }) {
               <DetailRow label="Area (ha)" value={site.siteSize?.toFixed(4) || 'N/A'} />
               <DetailRow label="Site Condition" value={site.siteCondition || 'N/A'} />
             </dl>
+          </section>
+
+          <section className={styles.card}>
+            <h3>Baseline Habitats</h3>
+            {collatedBaseline.length > 0 ? (
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Habitat</th>
+                    <th># parcels</th>
+                    <th>Area (ha)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {collatedBaseline.map((habitat, index) => (
+                    <HabitatRow key={index} habitat={habitat} />
+                  ))}
+                </tbody>
+              </table>
+            ) : <p>No baseline habitat information available.</p>}
+          </section>
+
+          <section className={styles.card}>
+            <h3>Habitat Improvements</h3>
+            {collatedImprovements.length > 0 ? (
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Habitat</th>
+                    <th># parcels</th>
+                    <th>Area (ha)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {collatedImprovements.map((habitat, index) => (
+                    <HabitatRow key={index} habitat={habitat} isImprovement />
+                  ))}
+                </tbody>
+              </table>
+            ) : <p>No habitat improvement information available.</p>}
           </section>
 
           <section className={styles.card}>
