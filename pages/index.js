@@ -51,16 +51,30 @@ export async function getServerSideProps() {
 
 // The main page component. It receives props from getServerSideProps.
 export default function HomePage({ sites, error }) {
+  if (error) {
+    return (
+      <div className="container">
+        <main className="main">
+          <h1 className="title">Biodiversity Gain Sites</h1>
+          <p className="error">Error fetching data: {error}</p>
+        </main>
+      </div>
+    );
+  }
+
+  const totalSites = sites ? sites.length : 0;
+  const totalArea = sites ? sites.reduce((acc, site) => acc + site.siteSize, 0) : 0;
+
   return (
     <div className="container">
       <main className="main">
         <h1 className="title">
           Biodiversity Gain Sites
         </h1>
-
-        {error && <p className="error">Error fetching data: {error}</p>}
-
-        {sites && <SiteList sites={sites} />}
+        <div className="summary">
+          <p>Displaying <strong>{totalSites}</strong> sites with a total area of <strong>{totalArea.toFixed(2)}</strong> hectares.</p>
+        </div>
+        <SiteList sites={sites} />
       </main>
     </div>
   );

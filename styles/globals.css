@@ -55,6 +55,12 @@ a {
   border-radius: 5px;
 }
 
+.summary {
+  width: 90%;
+  margin: 0 auto 1rem;
+  text-align: left;
+}
+
 .site-table {
   width: 90%;
   margin: 2rem auto;
@@ -77,6 +83,7 @@ a {
   background-color: #4CAF50;
   color: white;
   font-size: 1rem;
+  cursor: pointer;
 }
 
 .site-table tr:hover {
