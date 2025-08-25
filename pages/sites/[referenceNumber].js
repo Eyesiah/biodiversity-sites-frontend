@@ -127,6 +127,39 @@ const collateHabitats = (habitats, isImprovement) => {
   }));
 };
 
+const HabitatSummary = ({ habitats }) => {
+  const summary = habitats.reduce((acc, habitat) => {
+    const key = habitat.type.split(' - ')[0];
+    if (!acc[key]) {
+      acc[key] = { area: 0, parcels: 0 };
+    }
+    acc[key].area += habitat.size;
+    acc[key].parcels += 1;
+    return acc;
+  }, {});
+
+  return (
+    <table className={styles.subTable}>
+      <thead>
+        <tr>
+          <th>Habitat</th>
+          <th>Area (ha)</th>
+          <th>Parcels</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(summary).map(([type, data], index) => (
+          <tr key={index}>
+            <td>{type}</td>
+            <td>{data.area.toFixed(4)}</td>
+            <td>{data.parcels}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
 // Helper component for a detail row to keep the JSX clean.
 const DetailRow = ({ label, value }) => (
   <div className={styles.detailRow}>
@@ -198,7 +231,7 @@ export default function SitePage({ site, error }) {
 
   const { items: sortedBaseline, requestSort: requestSortBaseline, sortConfig: sortConfigBaseline } = useSortableData(collatedBaseline, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovements, requestSort: requestSortImprovements, sortConfig: sortConfigImprovements } = useSortableData(collatedImprovements, { key: 'type', direction: 'ascending' });
-  const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(site.allocations || [], { key: 'planningReference', direction: 'ascending' });
+  sortConfigAllocations
 
   const getSortClassName = (name, sortConfig) => {
     if (!sortConfig) {
@@ -225,12 +258,16 @@ export default function SitePage({ site, error }) {
           <section className={styles.card}>
             <h3>Site Details</h3>
             <dl>
-              <DetailRow label="Site Name" value={site.siteName || 'N/A'} />
+              <DetailRow label="Grid Reference" value={site.gridReference || 'N/A'} />
+              <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
+              <DetailRow label="Responsible Body" value={site.responsibleBodies?.join(', ') || 'N/A'} />
               <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
               <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
               <DetailRow label="Area (ha)" value={site.siteSize?.toFixed(4) || 'N/A'} />
-              <DetailRow label="Site Condition" value={site.siteCondition || 'N/A'} />
+              <DetailRow label="Land Boundary" value={site.landBoundary ? <a href={site.landBoundary} target="_blank" rel="noreferrer">View Document</a> : 'N/A'} />
             </dl>
+            <h4>Habitat Summary</h4>
+            <HabitatSummary habitats={site.habitats?.areas} />
           </section>
 
           <section className={styles.card}>
