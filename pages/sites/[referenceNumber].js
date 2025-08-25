@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 
 // This function tells Next.js which paths to pre-render at build time.
@@ -54,6 +54,40 @@ export async function getStaticProps({ params }) {
     };
   }
 }
+
+const useSortableData = (items, config = null) => {
+  const [sortConfig, setSortConfig] = useState(config);
+
+  const sortedItems = useMemo(() => {
+    let sortableItems = [...items];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === 'ascending'
+    ) {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return { items: sortedItems, requestSort, sortConfig };
+};
 
 // Helper function to collate habitat data
 const collateHabitats = (habitats, isImprovement) => {
@@ -162,6 +196,17 @@ export default function SitePage({ site, error }) {
   const collatedBaseline = collateHabitats(site.habitats?.areas, false);
   const collatedImprovements = collateHabitats(site.improvements?.areas, true);
 
+  const { items: sortedBaseline, requestSort: requestSortBaseline, sortConfig: sortConfigBaseline } = useSortableData(collatedBaseline, { key: 'type', direction: 'ascending' });
+  const { items: sortedImprovements, requestSort: requestSortImprovements, sortConfig: sortConfigImprovements } = useSortableData(collatedImprovements, { key: 'type', direction: 'ascending' });
+  const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(site.allocations || [], { key: 'planningReference', direction: 'ascending' });
+
+  const getSortClassName = (name, sortConfig) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name ? styles[sortConfig.direction] : undefined;
+  };
+
   return (
     <>
       <Head>
@@ -190,17 +235,17 @@ export default function SitePage({ site, error }) {
 
           <section className={styles.card}>
             <h3>Baseline Habitats</h3>
-            {collatedBaseline.length > 0 ? (
+            {sortedBaseline.length > 0 ? (
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Habitat</th>
-                    <th># parcels</th>
-                    <th>Area (ha)</th>
+                    <th onClick={() => requestSortBaseline('type')} className={getSortClassName('type', sortConfigBaseline)}>Habitat</th>
+                    <th onClick={() => requestSortBaseline('parcels')} className={getSortClassName('parcels', sortConfigBaseline)}># parcels</th>
+                    <th onClick={() => requestSortBaseline('area')} className={getSortClassName('area', sortConfigBaseline)}>Area (ha)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {collatedBaseline.map((habitat, index) => (
+                  {sortedBaseline.map((habitat, index) => (
                     <HabitatRow key={index} habitat={habitat} />
                   ))}
                 </tbody>
@@ -210,17 +255,17 @@ export default function SitePage({ site, error }) {
 
           <section className={styles.card}>
             <h3>Habitat Improvements</h3>
-            {collatedImprovements.length > 0 ? (
+            {sortedImprovements.length > 0 ? (
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Habitat</th>
-                    <th># parcels</th>
-                    <th>Area (ha)</th>
+                    <th onClick={() => requestSortImprovements('type')} className={getSortClassName('type', sortConfigImprovements)}>Habitat</th>
+                    <th onClick={() => requestSortImprovements('parcels')} className={getSortClassName('parcels', sortConfigImprovements)}># parcels</th>
+                    <th onClick={() => requestSortImprovements('area')} className={getSortClassName('area', sortConfigImprovements)}>Area (ha)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {collatedImprovements.map((habitat, index) => (
+                  {sortedImprovements.map((habitat, index) => (
                     <HabitatRow key={index} habitat={habitat} isImprovement />
                   ))}
                 </tbody>
@@ -230,21 +275,21 @@ export default function SitePage({ site, error }) {
 
           <section className={styles.card}>
             <h3>Allocations</h3>
-            {site.allocations && site.allocations.length > 0 ? (
+            {sortedAllocations.length > 0 ? (
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Reference</th>
-                    <th>LPA</th>
-                    <th>Distance (km)</th>
-                    <th>Address</th>
-                    <th>Area units</th>
-                    <th>Hedgerow units</th>
-                    <th>Watercourse units</th>
+                    <th onClick={() => requestSortAllocations('planningReference')} className={getSortClassName('planningReference', sortConfigAllocations)}>Reference</th>
+                    <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
+                    <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)}>Distance (km)</th>
+                    <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
+                    <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>
+                    <th onClick={() => requestSortAllocations('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfigAllocations)}>Hedgerow units</th>
+                    <th onClick={() => requestSortAllocations('watercoursesUnits')} className={getSortClassName('watercoursesUnits', sortConfigAllocations)}>Watercourse units</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {site.allocations.map((alloc, index) => (
+                  {sortedAllocations.map((alloc, index) => (
                     <tr key={index}>
                       <td>{alloc.planningReference}</td>
                       <td>{alloc.localPlanningAuthority}</td>
