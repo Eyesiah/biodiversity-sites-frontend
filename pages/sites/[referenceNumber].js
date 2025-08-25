@@ -113,19 +113,32 @@ export default function SitePage({ site, error }) {
           <section className={styles.card}>
             <h3>Allocations</h3>
             {site.allocations && site.allocations.length > 0 ? (
-              site.allocations.map((alloc, index) => (
-                <div key={index} className={styles.allocationItem}>
-                  <dl>
-                    <DetailRow label="Reference" value={alloc.planningReference} />
-                    <DetailRow label="LPA" value={alloc.localPlanningAuthority} />
-                    <DetailRow label="Distance (km)" value={"WIP"} />
-                    <DetailRow label="Address" value={alloc.projectName} />
-                    <DetailRow label="Area units" value={alloc.areaUnits} />
-                    <DetailRow label="Hedgerow units" value={alloc.hedgerowUnits} />
-                    <DetailRow label="Watercourse units" value={alloc.watercoursesUnits} />
-                  </dl>
-                </div>
-              ))
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>LPA</th>
+                    <th>Distance (km)</th>
+                    <th>Address</th>
+                    <th>Area units</th>
+                    <th>Hedgerow units</th>
+                    <th>Watercourse units</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {site.allocations.map((alloc, index) => (
+                    <tr key={index}>
+                      <td>{alloc.planningReference}</td>
+                      <td>{alloc.localPlanningAuthority}</td>
+                      <td>{"WIP"}</td>
+                      <td>{alloc.projectName}</td>
+                      <td>{alloc.areaUnits}</td>
+                      <td>{alloc.hedgerowUnits}</td>
+                      <td>{alloc.watercoursesUnits}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             ) : <p>No allocation information available.</p>}
           </section>
         </div>
