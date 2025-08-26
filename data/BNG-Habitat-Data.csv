@@ -1,0 +1,152 @@
+Habitat Type,Distinctiveness Category ,Distinctiveness Score,Technical Difficulty Creation,Multiplier,Technical Difficulty Enhancement,Multiplier
+Arable field margins cultivated annually,Medium,4,Low,1,Low,1
+Arable field margins game bird mix,Medium,4,Low,1,Low,1
+Arable field margins pollen and nectar,Medium,4,Low,1,Low,1
+Arable field margins tussocky,Medium,4,Low,1,Low,1
+Cereal crops,Low,2,Low,1,Low,1
+Winter stubble,Low,2,Low,1,Low,1
+Horticulture,Low,2,Low,1,Low,1
+Intensive orchards,Low,2,Low,1,Low,1
+Non-cereal crops,Low,2,Low,1,Low,1
+Temporary grass and clover leys,Low,2,Low,1,Low,1
+Traditional orchards,High,6,Low,1,Medium,0.67
+Bracken,Low,2,Low,1,Low,1
+Floodplain wetland mosaic and CFGM,High,6,High,0.33,Medium,0.67
+Lowland calcareous grassland,High,6,High,0.33,High,0.33
+Lowland dry acid grassland,V.High,8,High,0.33,High,0.33
+Lowland meadows,V.High,8,High,0.33,Medium,0.67
+Modified grassland,Low,2,Low,1,Low,1
+Other lowland acid grassland,Medium,4,Low,1,Low,1
+Other neutral grassland,Medium,4,Low,1,Low,1
+Tall herb communities (H6430),High,6,High,0.33,High,0.33
+Upland acid grassland,Medium,4,Low,1,Low,1
+Upland calcareous grassland,High,6,High,0.33,High,0.33
+Upland hay meadows,V.High,8,High,0.33,Medium,0.67
+Blackthorn scrub,Medium,4,Low,1,Low,1
+Bramble scrub,Medium,4,Low,1,Low,1
+Gorse scrub,Medium,4,Low,1,Low,1
+Hawthorn scrub,Medium,4,Low,1,Low,1
+Hazel scrub,Medium,4,Medium,0.67,Low,1
+Lowland heathland,High,6,High,0.33,Medium,0.67
+Mixed scrub,Medium,4,Low,1,Low,1
+Mountain heaths and willow scrub,V.High,8,High,0.33,High,0.33
+Rhododendron scrub,Low,2,Low,1,Low,1
+Dunes with sea buckthorn (H2160),High,6,Medium,0.67,Low,1
+Other sea buckthorn scrub,Low,2,Low,1,Low,1
+Willow scrub,Medium,4,Medium,0.67,Low,1
+Upland heathland,High,6,Medium,0.67,Medium,0.67
+Aquifer fed naturally fluctuating water bodies,V.High,8,Very High,0.1,High,0.33
+Ornamental lake or pond,Low,2,Low,1,High,0.33
+High alkalinity lakes,High,6,High,0.33,High,0.33
+Low alkalinity lakes,High,6,High,0.33,Medium,0.67
+Marl lakes,High,6,High,0.33,High,0.33
+Moderate alkalinity lakes,High,6,High,0.33,High,0.33
+Peat lakes,High,6,High,0.33,High,0.33
+Ponds (priority habitat),High,6,Medium,0.67,Medium,0.67
+Ponds (non-priority habitat),Medium,4,Low,1,Medium,0.67
+Reservoirs,Medium,4,Medium,0.67,Medium,0.67
+Temporary lakes ponds and pools (H3170),High,6,Medium,0.67,Medium,0.67
+Calaminarian grasslands,V.High,8,Very High,0.1,Medium,0.67
+Coastal sand dunes,High,6,Very High,0.1,Medium,0.67
+Coastal vegetated shingle,High,6,Very High,0.1,Medium,0.67
+Ruderal/Ephemeral,Low,2,Low,1,Medium,0.67
+Tall forbs,Low,2,Low,1,Medium,0.67
+Inland rock outcrop and scree habitats,High,6,High,0.33,Low,1
+Limestone pavement,V.High,8,Very High,0.1,Medium,0.67
+Maritime cliff and slopes,High,6,High,0.33,Medium,0.67
+Other inland rock and scree,Medium,4,Medium,0.67,Medium,0.67
+Allotments,Low,2,Low,1,Low,1
+"Artificial unvegetated, unsealed surface",V.Low,0,Low,1,Low,1
+Bioswale,Low,2,Medium,0.67,Low,1
+Intensive green roof,Low,2,Low,1,Low,1
+Built linear features,V.Low,0,Low,1,Low,1
+Cemeteries and churchyards,Medium,4,Medium,0.67,Low,1
+Developed land; sealed surface,V.Low,0,Low,1,Low,1
+Other green roof,Low,2,Low,1,Low,1
+Facade-bound green wall,Low,2,Medium,0.67,Medium,0.67
+Ground based green wall,Low,2,Medium,0.67,Medium,0.67
+Ground level planters,Low,2,Low,1,Low,1
+Biodiverse green roof,Medium,4,Medium,0.67,Medium,0.67
+Introduced shrub,Low,2,Low,1,Low,1
+Open mosaic habitats on previously developed land,High,6,Medium,0.67,Medium,0.67
+Rain garden,Low,2,Low,1,Low,1
+Actively worked sand pit quarry or open cast mine,Low,2,Medium,0.67,Low,1
+Sustainable drainage system,Low,2,Medium,0.67,Medium,0.67
+Unvegetated garden,V.Low,0,Low,1,Low,1
+Vacant or derelict land,Low,2,Low,1,Low,1
+Bare ground,Low,2,Low,1,Low,1
+Vegetated garden,Low,2,Low,1,Low,1
+Urban tree,Medium,4,Low,1,Low,1
+Rural tree,Medium,4,Low,1,Low,1
+Blanket bog,V.High,8,Very High,0.1,High,0.33
+Depressions on peat substrates (H7150),V.High,8,Very High,0.1,High,0.33
+Fens (upland and lowland),V.High,8,High,0.33,High,0.33
+Lowland raised bog,V.High,8,Very High,0.1,High,0.33
+Oceanic valley mire[1] (D2.1),V.High,8,Very High,0.1,High,0.33
+Purple moor grass and rush pastures,V.High,8,High,0.33,High,0.33
+Reedbeds,High,6,Medium,0.67,Medium,0.67
+Transition mires and quaking bogs (H7140),V.High,8,Very High,0.1,High,0.33
+Felled,High,6,High,0.33,Low,1
+Lowland beech and yew woodland,High,6,High,0.33,High,0.33
+Lowland mixed deciduous woodland,High,6,High,0.33,High,0.33
+Native pine woodlands,High,6,High,0.33,High,0.33
+Other coniferous woodland,Low,2,Low,1,Low,1
+Other Scot's pine woodland,Medium,4,Medium,0.67,Medium,0.67
+Other woodland; broadleaved,Medium,4,Low,1,Low,1
+Other woodland; mixed,Medium,4,Low,1,Low,1
+Upland birchwoods,High,6,Medium,0.67,Medium,0.67
+Upland mixed ashwoods,High,6,High,0.33,High,0.33
+Upland oakwood,High,6,High,0.33,High,0.33
+Wet woodland,High,6,Medium,0.67,Medium,0.67
+Wood-pasture and parkland,V.High,8,Very High,0.1,High,0.33
+Replacement for felled woodland,High,6,High,0.33,Low,1
+Coastal lagoons,High,6,Medium,0.67,Medium,0.67
+High energy littoral rock,High,6,High,0.33,Medium,0.67
+"High energy littoral rock - on peat, clay or chalk",V.High,8,Very High,0.1,Medium,0.67
+Moderate energy littoral rock,High,6,High,0.33,Medium,0.67
+"Moderate energy littoral rock - on peat, clay or chalk",V.High,8,Very High,0.1,Medium,0.67
+Low energy littoral rock,High,6,High,0.33,Medium,0.67
+"Low energy littoral rock - on peat, clay or chalk",V.High,8,Very High,0.1,Medium,0.67
+Features of littoral rock,High,6,High,0.33,Medium,0.67
+"Features of littoral rock - on peat, clay or chalk",V.High,8,Very High,0.1,Medium,0.67
+Saltmarshes and saline reedbeds,High,6,High,0.33,Medium,0.67
+Artificial saltmarshes and saline reedbeds,Low,2,High,0.33,Medium,0.67
+Littoral coarse sediment,Medium,4,Medium,0.67,Medium,0.67
+Littoral mud,High,6,High,0.33,Medium,0.67
+Littoral mixed sediments,High,6,High,0.33,Medium,0.67
+Littoral seagrass,High,6,High,0.33,High,0.33
+"Littoral seagrass on peat, clay or chalk",V.High,8,Very High,0.1,High,0.33
+Littoral biogenic reefs - Mussels,High,6,High,0.33,Medium,0.67
+Littoral biogenic reefs - Sabellaria,High,6,High,0.33,Medium,0.67
+Features of littoral sediment,High,6,High,0.33,Medium,0.67
+Artificial littoral coarse sediment,Low,2,Medium,0.67,Medium,0.67
+Artificial littoral mud,Low,2,High,0.33,Medium,0.67
+Artificial littoral sand,Low,2,Medium,0.67,Medium,0.67
+Artificial littoral muddy sand,Low,2,High,0.33,Medium,0.67
+Artificial littoral mixed sediments,Low,2,High,0.33,Medium,0.67
+Artificial littoral seagrass,Low,2,High,0.33,High,0.33
+Artificial littoral biogenic reefs,Low,2,High,0.33,Medium,0.67
+Littoral sand,Medium,4,Medium,0.67,Medium,0.67
+Littoral muddy sand,High,6,High,0.33,Medium,0.67
+Artificial hard structures,Low,2,Medium,0.67,Medium,0.67
+Artificial features of hard structures,Low,2,Medium,0.67,Medium,0.67
+Artificial hard structures with integrated greening of grey infrastructure (IGGI),Medium,4,Medium,0.67,Medium,0.67
+Watercourse footprint,V.low,0,Low,1,Low,1
+Species-rich native hedgerow with trees - associated with bank or ditch,V.High,8,Low,1,Low,1
+Species-rich native hedgerow with trees,High,6,Low,1,Low,1
+Species-rich native hedgerow - associated with bank or ditch,High,6,Low,1,Low,1
+Native hedgerow with trees - associated with bank or ditch,High,6,Low,1,Low,1
+Species-rich native hedgerow,Medium,4,Low,1,Low,1
+Native hedgerow - associated with bank or ditch,Medium,4,Low,1,Low,1
+Native hedgerow with trees,Medium,4,Low,1,Low,1
+Ecologically valuable line of trees,Medium,4,Low,1,Low,1
+Ecologically valuable line of trees - associated with bank or ditch,Medium,4,Low,1,Low,1
+Native hedgerow,Low,2,Low,1,Low,1
+Line of trees,Low,2,Low,1,Low,1
+Line of trees - associated with bank or ditch,Low,2,Low,1,Low,1
+Non-native and ornamental hedgerow,V.Low,1,Low,1,Low,1
+Priority habitat,V.High,8,High,0.33,Medium,0.67
+Other rivers and streams,High,6,High,0.33,Medium,0.67
+Ditches,Medium,4,Medium,0.67,Low,1
+Canals,Medium,4,Medium,0.67,Low,1
+Culvert,Low,2,Medium,0.67,N/A,1

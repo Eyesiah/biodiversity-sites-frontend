@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
+import { getDistinctivenessMap } from '../../lib/habitat';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -35,12 +36,24 @@ export async function getStaticProps({ params }) {
       return { notFound: true };
     }
 
+    const distinctivenessMap = getDistinctivenessMap();
+
+    // Add distinctiveness and displayType to each baseline habitat
+    if (site.habitats && site.habitats.areas) {
+        site.habitats.areas.forEach(habitat => {
+            const typeParts = habitat.type.split(' - ');
+            const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
+            habitat.displayType = lookupType;
+            habitat.distinctiveness = distinctivenessMap.get(lookupType) || 'N/A';
+        });
+    }
+
     return {
       props: {
         site,
         error: null,
       },
-      revalidate: 3600, // Re-generate the page at most once every 60 seconds
+      revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
     console.error(e);
@@ -60,10 +73,13 @@ const useSortableData = (items, config = null) => {
     let sortableItems = [...items];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        const keyA = sortConfig.key === 'type' ? a.displayType : a[sortConfig.key];
+        const keyB = sortConfig.key === 'type' ? b.displayType : b[sortConfig.key];
+
+        if (keyA < keyB) {
           return sortConfig.direction === 'ascending' ? -1 : 1;
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (keyA > keyB) {
           return sortConfig.direction === 'ascending' ? 1 : -1;
         }
         return 0;
@@ -96,6 +112,8 @@ const collateHabitats = (habitats, isImprovement) => {
     if (!acc[key]) {
       acc[key] = {
         type: habitat.type,
+        displayType: habitat.displayType,
+        distinctiveness: habitat.distinctiveness,
         parcels: 0,
         area: 0,
         subRows: {},
@@ -168,17 +186,19 @@ const DetailRow = ({ label, value }) => (
 
 const HabitatRow = ({ habitat, isImprovement }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const hasDistinctiveness = !isImprovement;
 
   return (
     <>
       <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
-        <td>{habitat.type}</td>
+        <td>{habitat.displayType}</td>
+        {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
         <td>{habitat.parcels}</td>
         <td>{habitat.area.toFixed(4)}</td>
       </tr>
       {isOpen && (
         <tr>
-          <td colSpan={3}>
+          <td colSpan={hasDistinctiveness ? 4 : 3}>
             <table className={styles.subTable}>
               <thead>
                 <tr>
@@ -283,13 +303,14 @@ export default function SitePage({ site, error }) {
                 <thead>
                   <tr>
                     <th onClick={() => requestSortBaseline('type')} className={getSortClassName('type', sortConfigBaseline)}>Habitat</th>
+                    <th onClick={() => requestSortBaseline('distinctiveness')} className={getSortClassName('distinctiveness', sortConfigBaseline)}>Distinctiveness</th>
                     <th onClick={() => requestSortBaseline('parcels')} className={getSortClassName('parcels', sortConfigBaseline)}># parcels</th>
                     <th onClick={() => requestSortBaseline('area')} className={getSortClassName('area', sortConfigBaseline)}>Area (ha)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {sortedBaseline.map((habitat, index) => (
-                    <HabitatRow key={index} habitat={habitat} />
+                    <HabitatRow key={index} habitat={habitat} isImprovement={false} />
                   ))}
                 </tbody>
               </table>
@@ -309,7 +330,7 @@ export default function SitePage({ site, error }) {
                 </thead>
                 <tbody>
                   {sortedImprovements.map((habitat, index) => (
-                    <HabitatRow key={index} habitat={habitat} isImprovement />
+                    <HabitatRow key={index} habitat={habitat} isImprovement={true} />
                   ))}
                 </tbody>
               </table>
