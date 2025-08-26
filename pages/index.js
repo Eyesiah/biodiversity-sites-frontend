@@ -2,26 +2,15 @@
 
 import SiteList from "../components/SiteList";
 import API_URL from '../config';
+import { fetchAllSites } from '../lib/api';
 
 export async function getStaticProps() {
   try {
-    // Fetch data from the external API.
-    // By adding a revalidate option to fetch, we can make the data's cache
-    // lifetime independent of the page's revalidation period.
-    const response = await fetch(
-      `${API_URL}/BiodiversityGainSites`,
-      { next: { revalidate: 3600 } } // Revalidate the data at most once per hour
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch sites, status: ${response.status}`);
-    }
-
-    const sitesData = await response.json();
+    const allSites = await fetchAllSites();
 
     // Process the data on the server to only include what we need for the table.
     // This significantly reduces the amount of data sent to the client.
-    const processedSites = sitesData.sites.map(site => ({
+    const processedSites = allSites.map(site => ({
       referenceNumber: site.referenceNumber,
       responsibleBodies: site.responsibleBodies,
       siteSize: site.siteSize,

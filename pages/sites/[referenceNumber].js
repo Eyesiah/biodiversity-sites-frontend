@@ -3,16 +3,13 @@ import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
+import { fetchAllSites } from '../../lib/api';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
-  const res = await fetch(
-    `${API_URL}/BiodiversityGainSites`,
-    { next: { revalidate: 3600 } } // Cache paths for an hour
-  );
-  const data = await res.json();
+  const sites = await fetchAllSites();
 
-  const paths = data.sites.map(site => ({
+  const paths = sites.map(site => ({
     params: { referenceNumber: site.referenceNumber },
   }));
 
