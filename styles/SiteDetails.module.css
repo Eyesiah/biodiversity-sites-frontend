@@ -147,3 +147,13 @@
   margin-top: 1rem;
   border: 1px solid #ccc;
 }
+
+.numericData {
+  text-align: right;
+  font-family: monospace;
+}
+
+.table td.numericData {
+  text-align: right;
+  font-family: monospace;
+}

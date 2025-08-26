@@ -78,8 +78,8 @@ const SiteList = ({ sites }) => {
               </Link>
             </td>
             <td>{site.responsibleBodies.join(', ')}</td>
-            <td>{site.siteSize.toFixed(2)}</td>
-            <td>{site.allocationsCount}</td>
+            <td className="numeric-data">{site.siteSize.toFixed(2)}</td>
+            <td className="numeric-data">{site.allocationsCount}</td>
             <td>{site.lpaName}</td>
             <td>{site.ncaName}</td>
           </tr>

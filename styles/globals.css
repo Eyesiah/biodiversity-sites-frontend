@@ -98,3 +98,8 @@ a {
   color: #0070f3;
   text-decoration: underline;
 }
+
+.numeric-data {
+  text-align: right;
+  font-family: monospace;
+}

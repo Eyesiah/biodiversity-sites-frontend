@@ -191,8 +191,8 @@ const HabitatSummary = ({ habitats }) => {
         {Object.entries(summary).map(([type, data], index) => (
           <tr key={index}>
             <td>{type}</td>
-            <td>{data.area.toFixed(4)}</td>
-            <td>{data.parcels}</td>
+            <td className={styles.numericData}>{data.area.toFixed(4)}</td>
+            <td className={styles.numericData}>{data.parcels}</td>
           </tr>
         ))}
       </tbody>
@@ -217,8 +217,8 @@ const HabitatRow = ({ habitat, isImprovement }) => {
       <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
         <td>{habitat.displayType}</td>
         {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
-        <td>{habitat.parcels}</td>
-        <td>{habitat.area.toFixed(4)}</td>
+        <td className={styles.numericData}>{habitat.parcels}</td>
+        <td className={styles.numericData}>{habitat.area.toFixed(4)}</td>
       </tr>
       {isOpen && (
         <tr>
@@ -237,8 +237,8 @@ const HabitatRow = ({ habitat, isImprovement }) => {
                   <tr key={index}>
                     {isImprovement && <td>{subRow.interventionType}</td>}
                     <td>{subRow.condition}</td>
-                    <td>{subRow.parcels}</td>
-                    <td>{subRow.area.toFixed(4)}</td>
+                    <td className={styles.numericData}>{subRow.parcels}</td>
+                    <td className={styles.numericData}>{subRow.area.toFixed(4)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -416,9 +416,9 @@ export default function SitePage({ site, error }) {
                       <td>{alloc.localPlanningAuthority}</td>
                       <td>{"WIP"}</td>
                       <td>{alloc.projectName}</td>
-                      <td>{alloc.areaUnits}</td>
-                      <td>{alloc.hedgerowUnits}</td>
-                      <td>{alloc.watercoursesUnits}</td>
+                      <td className={styles.numericData}>{alloc.areaUnits}</td>
+                      <td className={styles.numericData}>{alloc.hedgerowUnits}</td>
+                      <td className={styles.numericData}>{alloc.watercoursesUnits}</td>
                     </tr>
                   ))}
                 </tbody>
