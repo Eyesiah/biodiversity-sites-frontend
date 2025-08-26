@@ -19,6 +19,14 @@ export async function getStaticPaths() {
   return { paths, fallback: 'blocking' };
 }
 
+const processHabitatDisplayTypes = (areas) => {  
+  areas.forEach(habitat => {
+      const typeParts = habitat.type.split(' - ');
+      const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
+      habitat.displayType = lookupType;
+  });
+}
+
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
   try {
@@ -40,12 +48,15 @@ export async function getStaticProps({ params }) {
 
     // Add distinctiveness and displayType to each baseline habitat
     if (site.habitats && site.habitats.areas) {
+        processHabitatDisplayTypes(site.habitats.areas);
         site.habitats.areas.forEach(habitat => {
-            const typeParts = habitat.type.split(' - ');
-            const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
-            habitat.displayType = lookupType;
-            habitat.distinctiveness = distinctivenessMap.get(lookupType) || 'N/A';
+            habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
         });
+    }
+    
+    // Add displayType to each habitat improvement
+    if (site.improvements && site.improvements.areas) {
+        processHabitatDisplayTypes(site.improvements.areas);
     }
 
     return {
