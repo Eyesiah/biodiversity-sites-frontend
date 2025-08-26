@@ -2,11 +2,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
+import API_URL from '../../config';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
   const res = await fetch(
-    'https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites',
+    `${API_URL}/BiodiversityGainSites`,
     { next: { revalidate: 3600 } } // Cache paths for an hour
   );
   const data = await res.json();
@@ -24,7 +25,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
     // Fetch the data for the specific site.
-    const res = await fetch(`https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites/${params.referenceNumber}`);
+    const res = await fetch(`${API_URL}/BiodiversityGainSites/${params.referenceNumber}`);
 
     if (!res.ok) {
       throw new Error(`Failed to fetch site data, status: ${res.status}`);
@@ -273,6 +274,9 @@ export default function SitePage({ site, error }) {
             </dl>
             <h4>Habitat Summary</h4>
             <HabitatSummary habitats={site.habitats?.areas} />
+            <h4>Habitat Units</h4>
+            <p>Habitat Units (HUs) are calculated as: HU = Habitat area/length x Distinctiveness x Condition x Strategic Significance.</p>
+            <p>The data required to calculate the HUs (Distinctiveness and Strategic Significance) is not available in the API.</p>
           </section>
 
           <section className={styles.card}>

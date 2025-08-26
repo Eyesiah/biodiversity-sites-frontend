@@ -1,6 +1,7 @@
 // This function runs on the server side before the page is rendered.
 
 import SiteList from "../components/SiteList";
+import API_URL from '../config';
 
 export async function getStaticProps() {
   try {
@@ -8,7 +9,7 @@ export async function getStaticProps() {
     // By adding a revalidate option to fetch, we can make the data's cache
     // lifetime independent of the page's revalidation period.
     const response = await fetch(
-      "https://wa-trees-api-f9evhdfhaufacsdq.ukwest-01.azurewebsites.net/BiodiversityGainSites",
+      `${API_URL}/BiodiversityGainSites`,
       { next: { revalidate: 3600 } } // Revalidate the data at most once per hour
     );
 
