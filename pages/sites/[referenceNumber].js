@@ -376,6 +376,10 @@ export default function SitePage({ site, error }) {
 
   const planningApplications = new Set(site.allocations?.map(a => a.planningReference)).size;
 
+  const hasBaseline = sortedBaselineAreas.length > 0 || sortedBaselineWatercourses.length > 0 || sortedBaselineHedgerows.length > 0;
+  const hasImprovements = sortedImprovementAreas.length > 0 || sortedImprovementWatercourses.length > 0 || sortedImprovementHedgerows.length > 0;
+
+
   return (
     <>
       <Head>
@@ -412,47 +416,53 @@ export default function SitePage({ site, error }) {
             <p>The data required to calculate the HUs (Distinctiveness and Strategic Significance) is not available in the API.</p>
           </section>
 
-          <BaselineHabitatTable
-            title="Areas"
-            habitats={sortedBaselineAreas}
-            requestSort={requestSortBaselineAreas}
-            sortConfig={sortConfigBaselineAreas}
-          />
+          {hasBaseline && <section className={styles.card}>
+            <h3>Baseline</h3>
+            <BaselineHabitatTable
+              title="Areas"
+              habitats={sortedBaselineAreas}
+              requestSort={requestSortBaselineAreas}
+              sortConfig={sortConfigBaselineAreas}
+            />
 
-          <BaselineHabitatTable
-            title="Watercourses"
-            habitats={sortedBaselineWatercourses}
-            requestSort={requestSortBaselineWatercourses}
-            sortConfig={sortConfigBaselineWatercourses}
-          />
+            <BaselineHabitatTable
+              title="Watercourses"
+              habitats={sortedBaselineWatercourses}
+              requestSort={requestSortBaselineWatercourses}
+              sortConfig={sortConfigBaselineWatercourses}
+            />
 
-          <BaselineHabitatTable
-            title="Hedgerows"
-            habitats={sortedBaselineHedgerows}
-            requestSort={requestSortBaselineHedgerows}
-            sortConfig={sortConfigBaselineHedgerows}
-          />
+            <BaselineHabitatTable
+              title="Hedgerows"
+              habitats={sortedBaselineHedgerows}
+              requestSort={requestSortBaselineHedgerows}
+              sortConfig={sortConfigBaselineHedgerows}
+            />
+          </section>}
 
-          <ImprovementHabitatTable
-            title="Area"
-            habitats={sortedImprovementAreas}
-            requestSort={requestSortImprovementAreas}
-            sortConfig={sortConfigImprovementAreas}
-          />
+          {hasImprovements && <section className={styles.card}>
+            <h3>Improvements</h3>
+            <ImprovementHabitatTable
+              title="Area"
+              habitats={sortedImprovementAreas}
+              requestSort={requestSortImprovementAreas}
+              sortConfig={sortConfigImprovementAreas}
+            />
 
-          <ImprovementHabitatTable
-            title="Watercourse"
-            habitats={sortedImprovementWatercourses}
-            requestSort={requestSortImprovementWatercourses}
-            sortConfig={sortConfigImprovementWatercourses}
-          />
+            <ImprovementHabitatTable
+              title="Watercourse"
+              habitats={sortedImprovementWatercourses}
+              requestSort={requestSortImprovementWatercourses}
+              sortConfig={sortConfigImprovementWatercourses}
+            />
 
-          <ImprovementHabitatTable
-            title="Hedgerow"
-            habitats={sortedImprovementHedgerows}
-            requestSort={requestSortImprovementHedgerows}
-            sortConfig={sortConfigImprovementHedgerows}
-          />
+            <ImprovementHabitatTable
+              title="Hedgerow"
+              habitats={sortedImprovementHedgerows}
+              requestSort={requestSortImprovementHedgerows}
+              sortConfig={sortConfigImprovementHedgerows}
+            />
+          </section>}
 
           <section className={styles.card}>
             <h3>Allocations</h3>
