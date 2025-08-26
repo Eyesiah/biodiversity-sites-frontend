@@ -28,10 +28,9 @@ const processHabitatDisplayTypes = (habitats) => {
 }
 const processAreaData = (areas) => {  
   processHabitatDisplayTypes(areas)
-  areas.forEach(habitat => {
-      const typeParts = habitat.type.split(' - ');
-      const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
-      habitat.displayType = lookupType;
+  const distinctivenessMap = getDistinctivenessMap();
+  areas.forEach(habitat => {      
+      habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
   });
 }
 
@@ -51,8 +50,6 @@ export async function getStaticProps({ params }) {
       // If the site is not found, return a 404 page.
       return { notFound: true };
     }
-
-    const distinctivenessMap = getDistinctivenessMap();
 
     // Add distinctiveness and displayType to each baseline habitat
     if (site.habitats) {
