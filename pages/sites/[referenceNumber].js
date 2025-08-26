@@ -7,7 +7,7 @@ import { fetchAllSites } from '../../lib/api';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
-  const sites = await fetchAllSites();
+  const sites = await fetchAllSites(1000);
 
   const paths = sites.map(site => ({
     params: { referenceNumber: site.referenceNumber },
@@ -40,11 +40,11 @@ export async function getStaticProps({ params }) {
         site,
         error: null,
       },
-      revalidate: 60, // Re-generate the page at most once every 60 seconds
+      revalidate: 3600, // Re-generate the page at most once every 60 seconds
     };
   } catch (e) {
     console.error(e);
-    return {
+    return {  
       props: {
         site: null,
         error: e.message,

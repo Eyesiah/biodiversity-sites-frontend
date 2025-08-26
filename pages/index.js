@@ -27,7 +27,7 @@ export async function getStaticProps() {
         sites: processedSites,
         error: null
       },
-      revalidate: 60, // In seconds
+      revalidate: 3600, // In seconds
     };
   } catch (e) {
     // Handle any errors during the fetch.
