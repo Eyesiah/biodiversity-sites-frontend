@@ -290,7 +290,7 @@ const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig }) => {
     return null;
   }
   return <section className={styles.card}>
-      <h3>Baseline {title}</h3>
+      <h3>{title}</h3>
       
         <table className={styles.table}>
           <thead>
@@ -319,7 +319,7 @@ const ImprovementHabitatTable = ({ title, habitats, requestSort, sortConfig }) =
   
     return (
       <section className={styles.card}>
-        <h3>{title} Improvements</h3>
+        <h3>{title}</h3>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -411,9 +411,6 @@ export default function SitePage({ site, error }) {
             </dl>
             <h4>Habitat Summary</h4>
             <HabitatSummary site={site} />
-            <h4>Habitat Units</h4>
-            <p>Habitat Units (HUs) are calculated as: HU = Habitat area/length x Distinctiveness x Condition x Strategic Significance.</p>
-            <p>The data required to calculate the HUs (Distinctiveness and Strategic Significance) is not available in the API.</p>
           </section>
 
           {hasBaseline && <section className={styles.card}>
