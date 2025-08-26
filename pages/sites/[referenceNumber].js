@@ -19,7 +19,15 @@ export async function getStaticPaths() {
   return { paths, fallback: 'blocking' };
 }
 
-const processHabitatDisplayTypes = (areas) => {  
+const processHabitatDisplayTypes = (habitats) => {  
+  habitats.forEach(habitat => {
+      const typeParts = habitat.type.split(' - ');
+      const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
+      habitat.displayType = lookupType;
+  });
+}
+const processAreaData = (areas) => {  
+  processHabitatDisplayTypes(areas)
   areas.forEach(habitat => {
       const typeParts = habitat.type.split(' - ');
       const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
@@ -47,11 +55,19 @@ export async function getStaticProps({ params }) {
     const distinctivenessMap = getDistinctivenessMap();
 
     // Add distinctiveness and displayType to each baseline habitat
-    if (site.habitats && site.habitats.areas) {
-        processHabitatDisplayTypes(site.habitats.areas);
-        site.habitats.areas.forEach(habitat => {
-            habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
-        });
+    if (site.habitats) {
+      if (site.habitats.areas)
+      {
+        processAreaData(site.habitats.areas);
+      }
+      if (site.habitats.hedgerows)
+      {
+        processAreaData(site.habitats.hedgerows);
+      }
+      if (site.habitats.watercourses)
+      {
+        processAreaData(site.habitats.watercourses);
+      }
     }
     
     // Add displayType to each habitat improvement
@@ -255,10 +271,14 @@ export default function SitePage({ site, error }) {
     );
   }
 
-  const collatedBaseline = collateHabitats(site.habitats?.areas, false);
+  const collatedBaselineAreas = collateHabitats(site.habitats?.areas, false);
+  const collatedBaselineWatercourses = collateHabitats(site.habitats?.watercourses, false);
+  const collatedBaselineHedgerows = collateHabitats(site.habitats?.hedgerows, false);
   const collatedImprovements = collateHabitats(site.improvements?.areas, true);
 
-  const { items: sortedBaseline, requestSort: requestSortBaseline, sortConfig: sortConfigBaseline } = useSortableData(collatedBaseline, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(collatedBaselineAreas, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(collatedBaselineWatercourses, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(collatedBaselineHedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovements, requestSort: requestSortImprovements, sortConfig: sortConfigImprovements } = useSortableData(collatedImprovements, { key: 'type', direction: 'ascending' });
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(site.allocations || [], { key: 'planningReference', direction: 'ascending' });
 
@@ -307,26 +327,75 @@ export default function SitePage({ site, error }) {
             <p>The data required to calculate the HUs (Distinctiveness and Strategic Significance) is not available in the API.</p>
           </section>
 
-          <section className={styles.card}>
-            <h3>Baseline Habitats</h3>
-            {sortedBaseline.length > 0 ? (
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th onClick={() => requestSortBaseline('type')} className={getSortClassName('type', sortConfigBaseline)}>Habitat</th>
-                    <th onClick={() => requestSortBaseline('distinctiveness')} className={getSortClassName('distinctiveness', sortConfigBaseline)}>Distinctiveness</th>
-                    <th onClick={() => requestSortBaseline('parcels')} className={getSortClassName('parcels', sortConfigBaseline)}># parcels</th>
-                    <th onClick={() => requestSortBaseline('area')} className={getSortClassName('area', sortConfigBaseline)}>Area (ha)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedBaseline.map((habitat, index) => (
-                    <HabitatRow key={index} habitat={habitat} isImprovement={false} />
-                  ))}
-                </tbody>
-              </table>
-            ) : <p>No baseline habitat information available.</p>}
-          </section>
+          {sortedBaselineAreas.length > 0 && (
+            <section className={styles.card}>
+              <h3>Baseline Areas</h3>
+              
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th onClick={() => requestSortBaselineAreas('type')} className={getSortClassName('type', sortConfigBaselineAreas)}>Habitat</th>
+                      <th onClick={() => requestSortBaselineAreas('distinctiveness')} className={getSortClassName('distinctiveness', sortConfigBaselineAreas)}>Distinctiveness</th>
+                      <th onClick={() => requestSortBaselineAreas('parcels')} className={getSortClassName('parcels', sortConfigBaselineAreas)}># parcels</th>
+                      <th onClick={() => requestSortBaselineAreas('area')} className={getSortClassName('area', sortConfigBaselineAreas)}>Area (ha)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedBaselineAreas.map((habitat, index) => (
+                      <HabitatRow key={index} habitat={habitat} isImprovement={false} />
+                    ))}
+                  </tbody>
+                </table>
+              
+            </section>
+          )}
+            
+          {sortedBaselineWatercourses.length > 0 && (
+            <section className={styles.card}>
+              <h3>Baseline Watercourses</h3>
+              
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th onClick={() => requestSortBaselineWatercourses('type')} className={getSortClassName('type', sortConfigBaselineWatercourses)}>Habitat</th>
+                      <th onClick={() => requestSortBaselineWatercourses('distinctiveness')} className={getSortClassName('distinctiveness', sortConfigBaselineWatercourses)}>Distinctiveness</th>
+                      <th onClick={() => requestSortBaselineWatercourses('parcels')} className={getSortClassName('parcels', sortConfigBaselineWatercourses)}># parcels</th>
+                      <th onClick={() => requestSortBaselineWatercourses('area')} className={getSortClassName('area', sortConfigBaselineWatercourses)}>Area (ha)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedBaselineWatercourses.map((habitat, index) => (
+                      <HabitatRow key={index} habitat={habitat} isImprovement={false} />
+                    ))}
+                  </tbody>
+                </table>
+              
+            </section>
+          )}
+            
+          {sortedBaselineHedgerows.length > 0 && (
+            <section className={styles.card}>
+              <h3>Baseline Hedgerows</h3>
+              
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th onClick={() => requestSortBaselineHedgerows('type')} className={getSortClassName('type', sortConfigBaselineHedgerows)}>Habitat</th>
+                      <th onClick={() => requestSortBaselineHedgerows('distinctiveness')} className={getSortClassName('distinctiveness', sortConfigBaselineHedgerows)}>Distinctiveness</th>
+                      <th onClick={() => requestSortBaselineHedgerows('parcels')} className={getSortClassName('parcels', sortConfigBaselineHedgerows)}># parcels</th>
+                      <th onClick={() => requestSortBaselineHedgerows('area')} className={getSortClassName('area', sortConfigBaselineHedgerows)}>Area (ha)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedBaselineHedgerows.map((habitat, index) => (
+                      <HabitatRow key={index} habitat={habitat} isImprovement={false} />
+                    ))}
+                  </tbody>
+                </table>
+              
+            </section>
+          )}
+
 
           <section className={styles.card}>
             <h3>Habitat Improvements</h3>
