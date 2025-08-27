@@ -1,6 +1,6 @@
 # Biodiversity Net Gain Frontend
 
-This is a [Next.js](https://nextjs.org/) project that displays Biodiversity Net Gain sites scaped from https://environment.data.gov.uk/biodiversity-net-gain .
+This is a [Next.js](https://nextjs.org/) project that displays Biodiversity Gain Sites (BGS) scraped from https://environment.data.gov.uk/biodiversity-net-gain .
 
 Currently available at https://prod.de8atwnp0x7a3.amplifyapp.com/
 
