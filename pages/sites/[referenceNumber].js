@@ -283,7 +283,7 @@ const getSortClassName = (name, sortConfig) => {
   return sortConfig.key === name ? styles[sortConfig.direction] : undefined;
 };
 
-const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig }) => {
+const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement }) => {
 
   if (!habitats || habitats.length == 0)
   {
@@ -296,46 +296,20 @@ const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig }) => {
           <thead>
             <tr>
               <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-              <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
+              {!isImprovement && <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>}
               <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
               <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
             </tr>
           </thead>
           <tbody>
             {habitats.map((habitat, index) => (
-              <HabitatRow key={index} habitat={habitat} isImprovement={false} />
+              <HabitatRow key={index} habitat={habitat} isImprovement={isImprovement} />
             ))}
           </tbody>
         </table>
       
     </section>
     
-};
-
-const ImprovementHabitatTable = ({ title, habitats, requestSort, sortConfig }) => {
-    if (!habitats || habitats.length === 0) {
-      return null;
-    }
-  
-    return (
-      <section className={styles.card}>
-        <h3>{title}</h3>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-              <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
-              <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {habitats.map((habitat, index) => (
-              <HabitatRow key={index} habitat={habitat} isImprovement={true} />
-            ))}
-          </tbody>
-        </table>
-      </section>
-    );
 };
 
 export default function SitePage({ site, error }) {
@@ -420,6 +394,7 @@ export default function SitePage({ site, error }) {
               habitats={sortedBaselineAreas}
               requestSort={requestSortBaselineAreas}
               sortConfig={sortConfigBaselineAreas}
+              isImprovement={false}
             />
 
             <BaselineHabitatTable
@@ -427,6 +402,7 @@ export default function SitePage({ site, error }) {
               habitats={sortedBaselineWatercourses}
               requestSort={requestSortBaselineWatercourses}
               sortConfig={sortConfigBaselineWatercourses}
+              isImprovement={false}
             />
 
             <BaselineHabitatTable
@@ -434,30 +410,34 @@ export default function SitePage({ site, error }) {
               habitats={sortedBaselineHedgerows}
               requestSort={requestSortBaselineHedgerows}
               sortConfig={sortConfigBaselineHedgerows}
+              isImprovement={false}
             />
           </section>}
 
           {hasImprovements && <section className={styles.card}>
             <h3>Improvements</h3>
-            <ImprovementHabitatTable
-              title="Area"
+            <BaselineHabitatTable
+              title="Areas"
               habitats={sortedImprovementAreas}
               requestSort={requestSortImprovementAreas}
               sortConfig={sortConfigImprovementAreas}
+              isImprovement={true}
             />
 
-            <ImprovementHabitatTable
-              title="Watercourse"
+            <BaselineHabitatTable
+              title="Watercourses"
               habitats={sortedImprovementWatercourses}
               requestSort={requestSortImprovementWatercourses}
               sortConfig={sortConfigImprovementWatercourses}
+              isImprovement={true}
             />
 
-            <ImprovementHabitatTable
-              title="Hedgerow"
+            <BaselineHabitatTable
+              title="Hedgerows"
               habitats={sortedImprovementHedgerows}
               requestSort={requestSortImprovementHedgerows}
               sortConfig={sortConfigImprovementHedgerows}
+              isImprovement={true}
             />
           </section>}
 
