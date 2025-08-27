@@ -276,7 +276,7 @@ const getSortClassName = (name, sortConfig) => {
   return sortConfig.key === name ? styles[sortConfig.direction] : undefined;
 };
 
-const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement }) => {
+const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement }) => {
 
   if (!habitats || habitats.length == 0)
   {
@@ -301,9 +301,91 @@ const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig, isImpr
           </tbody>
         </table>
       
-    </section>
-    
+    </section>    
 };
+
+const HabitatsCard = ({title, habitats, isImprovement}) => {
+
+  const collatedAreas = collateHabitats(habitats?.areas, isImprovement);
+  const collatedWatercourses = collateHabitats(habitats?.watercourses, isImprovement);
+  const collatedHedgerows = collateHabitats(habitats?.hedgerows, isImprovement);
+  
+  const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
+  const { items: sortedWatercourses, requestSort: requestSortWatercourses, sortConfig: sortConfigWatercourses } = useSortableData(collatedWatercourses, { key: 'type', direction: 'ascending' });
+  const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
+  
+  const hasHabitats = sortedAreas.length > 0 || sortedWatercourses.length > 0 || sortedHedgerows.length > 0;
+
+  if (hasHabitats)
+  {
+    return <section className={styles.card}>
+      <h3>{title}</h3>
+      <HabitatTable
+        title="Areas"
+        habitats={sortedAreas}
+        requestSort={requestSortAreas}
+        sortConfig={sortConfigAreas}
+        isImprovement={isImprovement}
+      />
+
+      <HabitatTable
+        title="Watercourses"
+        habitats={sortedWatercourses}
+        requestSort={requestSortWatercourses}
+        sortConfig={sortConfigWatercourses}
+        isImprovement={isImprovement}
+      />
+
+      <HabitatTable
+        title="Hedgerows"
+        habitats={sortedHedgerows}
+        requestSort={requestSortHedgerows}
+        sortConfig={sortConfigHedgerows}
+        isImprovement={isImprovement}
+      />
+    </section>
+  }
+  else
+  {
+    return null;
+  }
+}
+
+const AllocationsCard = ({allocations}) => {
+  const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
+  
+  return <section className={styles.card}>
+    <h3>Allocations</h3>
+    {sortedAllocations.length > 0 ? (
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th onClick={() => requestSortAllocations('planningReference')} className={getSortClassName('planningReference', sortConfigAllocations)}>Reference</th>
+            <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
+            <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)}>Distance (km)</th>
+            <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
+            <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>
+            <th onClick={() => requestSortAllocations('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfigAllocations)}>Hedgerow units</th>
+            <th onClick={() => requestSortAllocations('watercoursesUnits')} className={getSortClassName('watercoursesUnits', sortConfigAllocations)}>Watercourse units</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sortedAllocations.map((alloc, index) => (
+            <tr key={index}>
+              <td>{alloc.planningReference}</td>
+              <td>{alloc.localPlanningAuthority}</td>
+              <td>{"WIP"}</td>
+              <td>{alloc.projectName}</td>
+              <td className={styles.numericData}>{alloc.areaUnits}</td>
+              <td className={styles.numericData}>{alloc.hedgerowUnits}</td>
+              <td className={styles.numericData}>{alloc.watercoursesUnits}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : <p>No allocation information available.</p>}
+  </section>
+}
 
 export default function SitePage({ site, error }) {
   if (error) {
@@ -333,30 +415,6 @@ export default function SitePage({ site, error }) {
     );
   }
 
-  const collatedBaselineAreas = collateHabitats(site.habitats?.areas, false);
-  const collatedBaselineWatercourses = collateHabitats(site.habitats?.watercourses, false);
-  const collatedBaselineHedgerows = collateHabitats(site.habitats?.hedgerows, false);
-  
-  const collatedImprovementAreas = collateHabitats(site.improvements?.areas, true);
-  const collatedImprovementWatercourses = collateHabitats(site.improvements?.watercourses, true);
-  const collatedImprovementHedgerows = collateHabitats(site.improvements?.hedgerows, true);
-
-  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(collatedBaselineAreas, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(collatedBaselineWatercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(collatedBaselineHedgerows, { key: 'type', direction: 'ascending' });
-  
-  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(collatedImprovementAreas, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(collatedImprovementWatercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(collatedImprovementHedgerows, { key: 'type', direction: 'ascending' });
-
-  const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(site.allocations || [], { key: 'planningReference', direction: 'ascending' });
-
-  const planningApplications = new Set(site.allocations?.map(a => a.planningReference)).size;
-
-  const hasBaseline = sortedBaselineAreas.length > 0 || sortedBaselineWatercourses.length > 0 || sortedBaselineHedgerows.length > 0;
-  const hasImprovements = sortedImprovementAreas.length > 0 || sortedImprovementWatercourses.length > 0 || sortedImprovementHedgerows.length > 0;
-
-
   return (
     <>
       <Head>
@@ -383,98 +441,29 @@ export default function SitePage({ site, error }) {
               <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
               <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
               <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
-              <DetailRow label="# Planning applications" value={planningApplications} />
+              <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
               <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(4)} ha.`} />
             </dl>
             <h4>Habitat Summary</h4>
             <HabitatSummary site={site} />
           </section>
 
-          {hasBaseline && <section className={styles.card}>
-            <h3>Baseline</h3>
-            <BaselineHabitatTable
-              title="Areas"
-              habitats={sortedBaselineAreas}
-              requestSort={requestSortBaselineAreas}
-              sortConfig={sortConfigBaselineAreas}
-              isImprovement={false}
-            />
+          <HabitatsCard
+            title="Baseline"
+            habitats = {site.habitats}
+            isImprovement={false}
+          />
 
-            <BaselineHabitatTable
-              title="Watercourses"
-              habitats={sortedBaselineWatercourses}
-              requestSort={requestSortBaselineWatercourses}
-              sortConfig={sortConfigBaselineWatercourses}
-              isImprovement={false}
-            />
+          <HabitatsCard
+            title="Improvements"
+            habitats = {site.improvements}
+            isImprovement={true}
+          />
 
-            <BaselineHabitatTable
-              title="Hedgerows"
-              habitats={sortedBaselineHedgerows}
-              requestSort={requestSortBaselineHedgerows}
-              sortConfig={sortConfigBaselineHedgerows}
-              isImprovement={false}
-            />
-          </section>}
+          <AllocationsCard 
+            allocations = {site.allocations}
+          />
 
-          {hasImprovements && <section className={styles.card}>
-            <h3>Improvements</h3>
-            <BaselineHabitatTable
-              title="Areas"
-              habitats={sortedImprovementAreas}
-              requestSort={requestSortImprovementAreas}
-              sortConfig={sortConfigImprovementAreas}
-              isImprovement={true}
-            />
-
-            <BaselineHabitatTable
-              title="Watercourses"
-              habitats={sortedImprovementWatercourses}
-              requestSort={requestSortImprovementWatercourses}
-              sortConfig={sortConfigImprovementWatercourses}
-              isImprovement={true}
-            />
-
-            <BaselineHabitatTable
-              title="Hedgerows"
-              habitats={sortedImprovementHedgerows}
-              requestSort={requestSortImprovementHedgerows}
-              sortConfig={sortConfigImprovementHedgerows}
-              isImprovement={true}
-            />
-          </section>}
-
-          <section className={styles.card}>
-            <h3>Allocations</h3>
-            {sortedAllocations.length > 0 ? (
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th onClick={() => requestSortAllocations('planningReference')} className={getSortClassName('planningReference', sortConfigAllocations)}>Reference</th>
-                    <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
-                    <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)}>Distance (km)</th>
-                    <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
-                    <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>
-                    <th onClick={() => requestSortAllocations('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfigAllocations)}>Hedgerow units</th>
-                    <th onClick={() => requestSortAllocations('watercoursesUnits')} className={getSortClassName('watercoursesUnits', sortConfigAllocations)}>Watercourse units</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sortedAllocations.map((alloc, index) => (
-                    <tr key={index}>
-                      <td>{alloc.planningReference}</td>
-                      <td>{alloc.localPlanningAuthority}</td>
-                      <td>{"WIP"}</td>
-                      <td>{alloc.projectName}</td>
-                      <td className={styles.numericData}>{alloc.areaUnits}</td>
-                      <td className={styles.numericData}>{alloc.hedgerowUnits}</td>
-                      <td className={styles.numericData}>{alloc.watercoursesUnits}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : <p>No allocation information available.</p>}
-          </section>
         </div>
       </main>
     </>
