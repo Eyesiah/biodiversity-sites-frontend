@@ -27,7 +27,6 @@ const processHabitatDisplayTypes = (habitats) => {
   });
 }
 const processAreaData = (areas, distinctivenessMap) => {  
-  processHabitatDisplayTypes(areas)
   areas.forEach(habitat => {      
       habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
   });
@@ -55,6 +54,7 @@ export async function getStaticProps({ params }) {
     if (site.habitats) {
       if (site.habitats.areas)
       {
+        processHabitatDisplayTypes(site.habitats.areas)
         processAreaData(site.habitats.areas, distinctivenessMap);
       }
       if (site.habitats.hedgerows)
@@ -68,15 +68,11 @@ export async function getStaticProps({ params }) {
     }
     
     // Add displayType to each habitat improvement
-    if (site.improvements) {
-      if (site.improvements.areas) {
+    if (site.improvements) 
+    {
+      if (site.improvements.areas) 
+      {
         processHabitatDisplayTypes(site.improvements.areas);
-      }
-      if (site.improvements.hedgerows) {
-        processHabitatDisplayTypes(site.improvements.hedgerows);
-      }
-      if (site.improvements.watercourses) {
-        processHabitatDisplayTypes(site.improvements.watercourses);
       }
     }
 
