@@ -354,7 +354,7 @@ export default function SitePage({ site, error }) {
         <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`}/>
       </Head>
 
-      <main className={styles.container}>
+      <div className={styles.container}>
         <div className={styles.header}>
           <Link href="/" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
@@ -466,7 +466,7 @@ export default function SitePage({ site, error }) {
             ) : <p>No allocation information available.</p>}
           </section>
         </div>
-      </main>
+      </div>
     </>
   );
 }
