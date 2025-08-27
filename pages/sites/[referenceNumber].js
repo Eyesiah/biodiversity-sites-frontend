@@ -308,18 +308,28 @@ const BaselineHabitatTable = ({ title, habitats, requestSort, sortConfig, isImpr
 export default function SitePage({ site, error }) {
   if (error) {
     return (
-      <div className={styles.container}>
-        <p className={styles.error}>Error: {error}</p>
-        <Link href="/">Back to list</Link>
-      </div>
+      <>
+        <Head>
+          <title>Error</title>
+        </Head>
+        <main className={styles.container}>
+          <p className={styles.error}>Error: {error}</p>
+          <Link href="/">Back to list</Link>
+        </main>
+      </>
     );
   }
 
   if (!site) {
     return (
-      <div className={styles.container}>
-        <p>Loading...</p>
-      </div>
+      <>
+        <Head>
+          <title>Loading...</title>
+        </Head>
+        <main className={styles.container}>
+          <p>Loading...</p>
+        </main>
+      </>
     );
   }
 
@@ -354,7 +364,7 @@ export default function SitePage({ site, error }) {
         <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`}/>
       </Head>
 
-      <div className={styles.container}>
+      <main className={styles.container}>
         <div className={styles.header}>
           <Link href="/" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
@@ -466,7 +476,7 @@ export default function SitePage({ site, error }) {
             ) : <p>No allocation information available.</p>}
           </section>
         </div>
-      </div>
+      </main>
     </>
   );
 }
