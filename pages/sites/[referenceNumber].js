@@ -227,6 +227,27 @@ const DetailRow = ({ label, value }) => (
   </div>
 );
 
+const SiteDetailsCard = ({site}) => {
+  return <section className={styles.card}>
+    <h3>Site Details</h3>
+    <dl>
+      <DetailRow label="BGS Reference" value={site.referenceNumber} />
+      <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
+      <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
+      <DetailRow label="Location" value={`${site.latitude}, ${site.longitude}`} />
+      <DetailRow label="Map" value={<a href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`} target="_blank" rel="noreferrer">View on Google Maps</a>} />
+      <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
+      <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
+      <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
+      <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
+      <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(4)} ha.`} />
+    </dl>
+    <h4>Habitat Summary</h4>
+    <HabitatSummary site={site} />
+  </section>
+}
+
+
 const HabitatRow = ({ habitat, isImprovement }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasDistinctiveness = !isImprovement;
@@ -430,23 +451,9 @@ export default function SitePage({ site, error }) {
         </div>
 
         <div className={styles.detailsGrid}>
-          <section className={styles.card}>
-            <h3>Site Details</h3>
-            <dl>
-              <DetailRow label="BGS Reference" value={site.referenceNumber} />
-              <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
-              <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
-              <DetailRow label="Location" value={`${site.latitude}, ${site.longitude}`} />
-              <DetailRow label="Map" value={<a href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`} target="_blank" rel="noreferrer">View on Google Maps</a>} />
-              <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
-              <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
-              <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
-              <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
-              <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(4)} ha.`} />
-            </dl>
-            <h4>Habitat Summary</h4>
-            <HabitatSummary site={site} />
-          </section>
+          <SiteDetailsCard
+            site={site}
+          />
 
           <HabitatsCard
             title="Baseline"
