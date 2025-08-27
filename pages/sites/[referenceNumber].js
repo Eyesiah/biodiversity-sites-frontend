@@ -27,7 +27,7 @@ const processHabitatSubTypes = (habitats) => {
 }
 const processAreaData = (areas, distinctivenessMap) => {  
   areas.forEach(habitat => {      
-      habitat.distinctiveness = distinctivenessMap.get(habitat.type) || 'N/A';
+      habitat.distinctiveness = distinctivenessMap.get(habitat.type.toLowerCase()) || 'N/A';
   });
 }
 
