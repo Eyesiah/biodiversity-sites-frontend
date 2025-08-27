@@ -19,16 +19,15 @@ export async function getStaticPaths() {
   return { paths, fallback: 'blocking' };
 }
 
-const processHabitatDisplayTypes = (habitats) => {  
+const processHabitatSubTypes = (habitats) => {  
   habitats.forEach(habitat => {
       const typeParts = habitat.type.split(' - ');
-      const lookupType = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
-      habitat.displayType = lookupType;
+      habitat.type = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
   });
 }
 const processAreaData = (areas, distinctivenessMap) => {  
   areas.forEach(habitat => {      
-      habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
+      habitat.distinctiveness = distinctivenessMap.get(habitat.type) || 'N/A';
   });
 }
 
@@ -50,11 +49,13 @@ export async function getStaticProps({ params }) {
       return { notFound: true };
     }
 
-    // Add distinctiveness and displayType to each baseline habitat
-    if (site.habitats) {
+    // Add distinctiveness to each baseline habitat
+    if (site.habitats) 
+    {
       if (site.habitats.areas)
       {
-        processHabitatDisplayTypes(site.habitats.areas)
+        // areas first need their sub-type processed out
+        processHabitatSubTypes(site.habitats.areas)
         processAreaData(site.habitats.areas, distinctivenessMap);
       }
       if (site.habitats.hedgerows)
@@ -67,13 +68,10 @@ export async function getStaticProps({ params }) {
       }
     }
     
-    // Add displayType to each habitat improvement
-    if (site.improvements) 
-    {
-      if (site.improvements.areas) 
-      {
-        processHabitatDisplayTypes(site.improvements.areas);
-      }
+    if (site.improvements?.areas)
+    {      
+      // areas need their sub-type processed out
+      processHabitatSubTypes(site.improvements.areas);
     }
 
     return {
@@ -101,8 +99,8 @@ const useSortableData = (items, config = null) => {
     let sortableItems = [...items];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
-        const keyA = sortConfig.key === 'type' ? a.displayType : a[sortConfig.key];
-        const keyB = sortConfig.key === 'type' ? b.displayType : b[sortConfig.key];
+        const keyA = sortConfig.key === 'type' ? a.type : a[sortConfig.key];
+        const keyB = sortConfig.key === 'type' ? b.type : b[sortConfig.key];
 
         if (keyA < keyB) {
           return sortConfig.direction === 'ascending' ? -1 : 1;
@@ -140,7 +138,6 @@ const collateHabitats = (habitats, isImprovement) => {
     if (!acc[key]) {
       acc[key] = {
         type: habitat.type,
-        displayType: habitat.displayType,
         distinctiveness: habitat.distinctiveness,
         parcels: 0,
         area: 0,
@@ -237,7 +234,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
   return (
     <>
       <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
-        <td>{habitat.displayType}</td>
+        <td>{habitat.type}</td>
         {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
         <td className={styles.numericData}>{habitat.parcels}</td>
         <td className={styles.numericData}>{habitat.area.toFixed(4)}</td>
