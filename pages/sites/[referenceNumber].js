@@ -26,9 +26,8 @@ const processHabitatDisplayTypes = (habitats) => {
       habitat.displayType = lookupType;
   });
 }
-const processAreaData = (areas) => {  
+const processAreaData = (areas, distinctivenessMap) => {  
   processHabitatDisplayTypes(areas)
-  const distinctivenessMap = getDistinctivenessMap();
   areas.forEach(habitat => {      
       habitat.distinctiveness = distinctivenessMap.get(habitat.displayType) || 'N/A';
   });
@@ -36,6 +35,7 @@ const processAreaData = (areas) => {
 
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
+  const distinctivenessMap = getDistinctivenessMap();
   try {
     // Fetch the data for the specific site.
     const res = await fetch(`${API_URL}/BiodiversityGainSites/${params.referenceNumber}`);
@@ -55,15 +55,15 @@ export async function getStaticProps({ params }) {
     if (site.habitats) {
       if (site.habitats.areas)
       {
-        processAreaData(site.habitats.areas);
+        processAreaData(site.habitats.areas, distinctivenessMap);
       }
       if (site.habitats.hedgerows)
       {
-        processAreaData(site.habitats.hedgerows);
+        processAreaData(site.habitats.hedgerows, distinctivenessMap);
       }
       if (site.habitats.watercourses)
       {
-        processAreaData(site.habitats.watercourses);
+        processAreaData(site.habitats.watercourses, distinctivenessMap);
       }
     }
     
