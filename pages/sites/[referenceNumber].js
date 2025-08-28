@@ -415,9 +415,9 @@ const AllocationsCard = ({allocations}) => {
                     <td>{alloc.localPlanningAuthority}</td>
                     <td>{"WIP"}</td>
                     <td>{alloc.projectName}</td>
-                    <td className={styles.numericData}>{alloc.areaUnits}</td>
-                    <td className={styles.numericData}>{alloc.hedgerowUnits}</td>
-                    <td className={styles.numericData}>{alloc.watercoursesUnits}</td>
+                    <td className={styles.numericData}>{alloc.areaUnits.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+                    <td className={styles.numericData}>{alloc.hedgerowUnits.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+                    <td className={styles.numericData}>{alloc.watercoursesUnits.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
                   </tr>
                 ))}
               </tbody>
