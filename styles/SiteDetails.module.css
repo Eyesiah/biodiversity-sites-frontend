@@ -118,6 +118,7 @@
   background-color: #f2f2f2;
   font-weight: bold;
   cursor: pointer;
+  text-align: center;
 }
 
 .ascending::after {
