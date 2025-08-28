@@ -5,6 +5,7 @@ import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
 import { getDistinctivenessMap } from '../../lib/habitat';
+import ExternalLink from '../../components/ExternalLink';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -231,11 +232,11 @@ const SiteDetailsCard = ({site}) => {
   return <section className={styles.card}>
     <h3>Site Details</h3>
     <dl>
-      <DetailRow label="BGS Reference" value={<a href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</a>} />
+      <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
       <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={`${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}`} />
-      <DetailRow label="Map" value={<a href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`} target="_blank" rel="noreferrer">View on Google Maps</a>} />
+      <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />
       <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
       <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
