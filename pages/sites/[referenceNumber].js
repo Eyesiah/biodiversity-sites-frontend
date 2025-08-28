@@ -231,7 +231,7 @@ const SiteDetailsCard = ({site}) => {
   return <section className={styles.card}>
     <h3>Site Details</h3>
     <dl>
-      <DetailRow label="BGS Reference" value={site.referenceNumber} />
+      <DetailRow label="BGS Reference" value=<a href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</a>/>
       <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={`${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}`} />
