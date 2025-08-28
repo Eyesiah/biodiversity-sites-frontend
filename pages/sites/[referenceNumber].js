@@ -6,7 +6,8 @@ import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
 import { getDistinctivenessMap } from '../../lib/habitat';
 import ExternalLink from '../../components/ExternalLink';
-import Numeric from '../../components/Numeric';
+
+const DEFAULT_NUMERIC_NUM_DECIMALS = 2
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -200,21 +201,21 @@ const HabitatSummary = ({ site }) => {
       <tbody>
         <tr>
           <td>Areas (ha)</td>
-          <td className={styles.numericData}><Numeric value={baselineArea} /></td>
-          <td className={styles.numericData}><Numeric value={improvementArea} /></td>
-          <td className={styles.numericData}><Numeric value={allocationArea} /></td>
+          <td className={styles.numericData}>{baselineArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{improvementArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Hedgerows (km)</td>
-          <td className={styles.numericData}><Numeric value={baselineHedgerow} /></td>
-          <td className={styles.numericData}><Numeric value={improvementHedgerow} /></td>
-          <td className={styles.numericData}><Numeric value={allocationHedgerow} /></td>
+          <td className={styles.numericData}>{baselineHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{improvementHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Watercourses (km)</td>
-          <td className={styles.numericData}><Numeric value={baselineWatercourse} /></td>
-          <td className={styles.numericData}><Numeric value={improvementWatercourse} /></td>
-          <td className={styles.numericData}><Numeric value={allocationWatercourse} /></td>
+          <td className={styles.numericData}>{baselineWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{improvementWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
       </tbody>
     </table>
@@ -242,7 +243,7 @@ const SiteDetailsCard = ({site}) => {
       <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
-      <DetailRow label="Site Area" value={<><Numeric value={site.siteSize} /> ha.</>} />
+      <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)} ha.`} />
     </dl>
     <h4>Habitat Summary</h4>
     <HabitatSummary site={site} />
@@ -260,7 +261,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
         <td>{habitat.type}</td>
         {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
         <td className={styles.numericData}>{habitat.parcels}</td>
-        <td className={styles.numericData}><Numeric value={habitat.area} /></td>
+        <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
       </tr>
       {isOpen && (
         <tr>
@@ -280,7 +281,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
                     {isImprovement && <td>{subRow.interventionType}</td>}
                     <td>{subRow.condition}</td>
                     <td className={styles.numericData}>{subRow.parcels}</td>
-                    <td className={styles.numericData}><Numeric value={subRow.area} /></td>
+                    <td className={styles.numericData}>{subRow.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
                   </tr>
                 ))}
               </tbody>
