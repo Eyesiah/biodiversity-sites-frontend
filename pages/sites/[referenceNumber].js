@@ -234,7 +234,7 @@ const SiteDetailsCard = ({site}) => {
       <DetailRow label="BGS Reference" value={site.referenceNumber} />
       <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
-      <DetailRow label="Location" value={`${site.latitude}, ${site.longitude}`} />
+      <DetailRow label="Location (Lat/Long)" value={`${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}`} />
       <DetailRow label="Map" value={<a href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`} target="_blank" rel="noreferrer">View on Google Maps</a>} />
       <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
       <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
