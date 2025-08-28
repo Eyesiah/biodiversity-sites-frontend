@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
-import { getDistinctivenessMap } from '../../lib/habitat';
+import { getHabitatDistinctiveness, calculateBaselineHU } from '../../lib/habitat';
 import ExternalLink from '../../components/ExternalLink';
 
 const DEFAULT_NUMERIC_NUM_DECIMALS = 2
@@ -28,15 +28,17 @@ const processHabitatSubTypes = (habitats) => {
       habitat.type = (typeParts.length > 1 ? typeParts[1] : habitat.type).trim();
   });
 }
-const processAreaData = (areas, distinctivenessMap) => {  
-  areas.forEach(habitat => {      
-      habitat.distinctiveness = distinctivenessMap.get(habitat.type.toLowerCase()) || 'N/A';
+
+const processBaselineHabitats = (habitats, isHedgerow) => {  
+  // baseline habitats need their distinctiveness rating gathered and HUs calculated
+  habitats.forEach(habitat => {      
+      habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
+      habitat.HUs = calculateBaselineHU(habitat.size, habitat.distinctiveness, habitat.condition, isHedgerow)
   });
 }
 
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
-  const distinctivenessMap = getDistinctivenessMap();
   try {
     // Fetch the data for the specific site.
     const res = await fetch(`${API_URL}/BiodiversityGainSites/${params.referenceNumber}`);
@@ -59,15 +61,15 @@ export async function getStaticProps({ params }) {
       {
         // areas first need their sub-type processed out
         processHabitatSubTypes(site.habitats.areas)
-        processAreaData(site.habitats.areas, distinctivenessMap);
+        processBaselineHabitats(site.habitats.areas, false);
       }
       if (site.habitats.hedgerows)
       {
-        processAreaData(site.habitats.hedgerows, distinctivenessMap);
+        processBaselineHabitats(site.habitats.hedgerows, true);
       }
       if (site.habitats.watercourses)
       {
-        processAreaData(site.habitats.watercourses, distinctivenessMap);
+        processBaselineHabitats(site.habitats.watercourses, false);
       }
     }
     
@@ -144,11 +146,13 @@ const collateHabitats = (habitats, isImprovement) => {
         distinctiveness: habitat.distinctiveness,
         parcels: 0,
         area: 0,
+        HUs: 0,
         subRows: {},
       };
     }
     acc[key].parcels += 1;
     acc[key].area += habitat.size;
+    acc[key].HUs += habitat.HUs;
 
     const subKey = isImprovement ? `${habitat.interventionType}-${habitat.condition}` : habitat.condition;
     if (!acc[key].subRows[subKey]) {
@@ -157,10 +161,12 @@ const collateHabitats = (habitats, isImprovement) => {
         interventionType: habitat.interventionType,
         parcels: 0,
         area: 0,
+        HUs: 0,
       };
     }
     acc[key].subRows[subKey].parcels += 1;
     acc[key].subRows[subKey].area += habitat.size;
+    acc[key].subRows[subKey].HUs += habitat.HUs;
 
     return acc;
   }, {});
@@ -180,6 +186,10 @@ const HabitatSummary = ({ site }) => {
   const baselineHedgerow = (habitats.hedgerows || []).reduce((acc, h) => acc + h.size, 0);
   const baselineWatercourse = (habitats.watercourses || []).reduce((acc, h) => acc + h.size, 0);
 
+  const baselineAreaHUs = (habitats.areas || []).reduce((acc, h) => acc + h.HUs, 0);
+  const baselineHedgerowHUs = (habitats.hedgerows || []).reduce((acc, h) => acc + h.HUs, 0);
+  const baselineWatercourseHUs = (habitats.watercourses || []).reduce((acc, h) => acc + h.HUs, 0);
+
   const improvementArea = (improvements.areas || []).reduce((acc, h) => acc + h.size, 0);
   const improvementHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + h.size, 0);
   const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.size, 0);
@@ -193,27 +203,31 @@ const HabitatSummary = ({ site }) => {
       <thead>
         <tr>
           <th>Habitat</th>
-          <th>Baseline</th>
-          <th>Improvements</th>
-          <th>Allocations</th>
+          <th>Baseline Size</th>
+          <th>Baseline HUs</th>
+          <th>Improvements Size</th>
+          <th>Allocations Size</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Areas (ha)</td>
           <td className={styles.numericData}>{baselineArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{baselineAreaHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Hedgerows (km)</td>
           <td className={styles.numericData}>{baselineHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{baselineHedgerowHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Watercourses (km)</td>
           <td className={styles.numericData}>{baselineWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{baselineWatercourseHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
@@ -266,10 +280,11 @@ const HabitatRow = ({ habitat, isImprovement }) => {
         {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
         <td className={styles.numericData}>{habitat.parcels}</td>
         <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+        <td className={styles.numericData}>{habitat.HUs ? habitat.HUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS) : 0}</td>
       </tr>
       {isOpen && (
         <tr>
-          <td colSpan={hasDistinctiveness ? 4 : 3}>
+          <td colSpan={hasDistinctiveness ? 5 : 4}>
             <table className={styles.subTable}>
               <thead>
                 <tr>
@@ -277,6 +292,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
                   <th>Condition</th>
                   <th># parcels</th>
                   <th>Area (ha)</th>
+                  <th>HUs</th>
                 </tr>
               </thead>
               <tbody>
@@ -286,6 +302,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
                     <td>{subRow.condition}</td>
                     <td className={styles.numericData}>{subRow.parcels}</td>
                     <td className={styles.numericData}>{subRow.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+                    <td className={styles.numericData}>{subRow.HUs ? subRow.HUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS) : 0}</td>
                   </tr>
                 ))}
               </tbody>
@@ -320,6 +337,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
               {!isImprovement && <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>}
               <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
               <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
+              <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
             </tr>
           </thead>
           <tbody>
