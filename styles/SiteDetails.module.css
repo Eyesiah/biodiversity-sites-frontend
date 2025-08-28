@@ -156,3 +156,20 @@
   text-align: right;
   font-family: monospace;
 }
+
+.inlineTable {
+  width: auto;
+  margin-top: 0;
+}
+
+.subTable th {
+  text-align: center;
+}
+
+.subTable td {
+  text-align: left;
+}
+
+.subTable .numericData {
+  text-align: right;
+}

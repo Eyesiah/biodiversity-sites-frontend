@@ -189,7 +189,7 @@ const HabitatSummary = ({ site }) => {
   const allocationWatercourse = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
 
   return (
-    <table className={styles.subTable}>
+    <table className={`${styles.subTable} ${styles.inlineTable}`}>
       <thead>
         <tr>
           <th>Habitat</th>
@@ -233,7 +233,7 @@ const DetailRow = ({ label, value }) => (
 const SiteDetailsCard = ({site}) => {
   return <section className={styles.card}>
     <h3>Site Details</h3>
-    <dl>
+    <div>
       <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
       <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
@@ -244,9 +244,13 @@ const SiteDetailsCard = ({site}) => {
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
       <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)} ha.`} />
-    </dl>
-    <h4>Habitat Summary</h4>
-    <HabitatSummary site={site} />
+      <div className={styles.detailRow}>
+        <dt className={styles.detailLabel}>Habitat Summary</dt>
+        <dd className={styles.detailValue}>
+          <HabitatSummary site={site} />
+        </dd>
+      </div>
+    </div>
   </section>
 }
 
