@@ -29,11 +29,11 @@ const processHabitatSubTypes = (habitats) => {
   });
 }
 
-const processBaselineHabitats = (habitats, isHedgerow) => {  
+const processBaselineHabitats = (habitats) => {  
   // baseline habitats need their distinctiveness rating gathered and HUs calculated
   habitats.forEach(habitat => {      
       habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
-      habitat.HUs = calculateBaselineHU(habitat.size, habitat.distinctiveness, habitat.condition, isHedgerow)
+      habitat.HUs = calculateBaselineHU(habitat.size, habitat.distinctiveness, habitat.condition)
   });
 }
 
@@ -61,15 +61,15 @@ export async function getStaticProps({ params }) {
       {
         // areas first need their sub-type processed out
         processHabitatSubTypes(site.habitats.areas)
-        processBaselineHabitats(site.habitats.areas, false);
+        processBaselineHabitats(site.habitats.areas);
       }
       if (site.habitats.hedgerows)
       {
-        processBaselineHabitats(site.habitats.hedgerows, true);
+        processBaselineHabitats(site.habitats.hedgerows);
       }
       if (site.habitats.watercourses)
       {
-        processBaselineHabitats(site.habitats.watercourses, false);
+        processBaselineHabitats(site.habitats.watercourses);
       }
     }
     
