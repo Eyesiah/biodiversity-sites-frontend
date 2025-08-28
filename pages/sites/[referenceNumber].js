@@ -33,7 +33,7 @@ const processBaselineHabitats = (habitats) => {
   // baseline habitats need their distinctiveness rating gathered and HUs calculated
   habitats.forEach(habitat => {      
       habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
-      habitat.HUs = calculateBaselineHU(habitat.size, habitat.distinctiveness, habitat.condition)
+      habitat.HUs = calculateBaselineHU(habitat.size, habitat.type, habitat.condition)
   });
 }
 
