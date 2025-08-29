@@ -98,13 +98,32 @@ export async function getStaticProps({ params }) {
         processImprovementHabitats(site.improvements.areas)
       }
       if (site.improvements?.hedgerows) { 
-        processHabitatSubTypes(site.improvements.hedgerows);
+        processHabitatConditions(site.improvements.hedgerows);
         processImprovementHabitats(site.improvements.hedgerows)
       }
       if (site.improvements?.watercourses) { 
-        processHabitatSubTypes(site.improvements.watercourses);
+        processHabitatConditions(site.improvements.watercourses);
         processImprovementHabitats(site.improvements.watercourses)
       }
+    }
+
+    // Pre-process allocations
+    if (site.allocations) {
+      site.allocations.forEach(alloc => {
+
+        // areas need subtypes processed out
+        processHabitatSubTypes(alloc.habitats.areas);
+
+        const allHabitats = [
+          ...(alloc.habitats.areas || []),
+          ...(alloc.habitats.hedgerows || []),
+          ...(alloc.habitats.watercourses || [])
+        ];
+        processHabitatConditions(allHabitats);
+        allHabitats.forEach(habitat => {
+          habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
+        });
+      });
     }
 
     return {
@@ -441,6 +460,71 @@ const HabitatsCard = ({title, habitats, isImprovement}) => {
   }
 }
 
+// component to display the habitats within an allocation
+const AllocationHabitats = ({ habitats }) => {
+  // Flatten the habitats from areas, hedgerows, and watercourses
+  const flattenedHabitats = [
+    ...(habitats.areas || []),
+    ...(habitats.hedgerows || []),
+    ...(habitats.watercourses || []),
+  ];
+
+  if (flattenedHabitats.length === 0) {
+    return <p>No habitat details for this allocation.</p>;
+  }
+
+  return (
+    <table className={styles.subTable}>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Habitat</th>
+          <th>Distinctiveness</th>
+          <th>Condition</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        {flattenedHabitats.map((habitat, index) => (
+          <tr key={index}>
+            <td>{habitat.module}</td>
+            <td>{habitat.type}</td>
+            <td>{habitat.distinctiveness}</td>
+            <td>{habitat.condition}</td>
+            <td className={styles.numericData}>{habitat.size.toFixed(4)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+// component for each row in the allocations table to handle drill-down
+const AllocationRow = ({ alloc }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
+        <td>{alloc.planningReference}</td>
+        <td>{alloc.localPlanningAuthority}</td>
+        <td>{"WIP"}</td>
+        <td>{alloc.projectName}</td>
+        <td className={styles.numericData}>{(alloc.areaUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+        <td className={styles.numericData}>{(alloc.hedgerowUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+        <td className={styles.numericData}>{(alloc.watercoursesUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      </tr>
+      {isOpen && (
+        <tr>
+          <td colSpan="7">
+            <AllocationHabitats habitats={alloc.habitats} />
+          </td>
+        </tr>
+      )}
+    </>
+  );
+};
+
 const AllocationsCard = ({allocations}) => {
   const [isOpen, setIsOpen] = useState(true);
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
@@ -467,15 +551,7 @@ const AllocationsCard = ({allocations}) => {
               </thead>
               <tbody>
                 {sortedAllocations.map((alloc, index) => (
-                  <tr key={index}>
-                    <td>{alloc.planningReference}</td>
-                    <td>{alloc.localPlanningAuthority}</td>
-                    <td>{"WIP"}</td>
-                    <td>{alloc.projectName}</td>
-                    <td className={styles.numericData}>{(alloc.areaUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-                    <td className={styles.numericData}>{(alloc.hedgerowUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-                    <td className={styles.numericData}>{(alloc.watercoursesUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-                  </tr>
+                  <AllocationRow key={index} alloc={alloc} />
                 ))}
               </tbody>
             </table>
