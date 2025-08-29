@@ -395,8 +395,8 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
             </tr>
           </thead>
           <tbody>
-            {habitats.map((habitat, index) => (
-              <HabitatRow key={index} habitat={habitat} isImprovement={isImprovement} />
+            {habitats.map((habitat) => (
+              <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} />
             ))}
           </tbody>
         </table>
@@ -550,8 +550,8 @@ const AllocationsCard = ({allocations}) => {
                 </tr>
               </thead>
               <tbody>
-                {sortedAllocations.map((alloc, index) => (
-                  <AllocationRow key={index} alloc={alloc} />
+                {sortedAllocations.map((alloc) => (
+                  <AllocationRow key={alloc.planningReference} alloc={alloc} />
                 ))}
               </tbody>
             </table>
