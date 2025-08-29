@@ -22,6 +22,16 @@ export async function getStaticPaths() {
   return { paths, fallback: 'blocking' };
 }
 
+const processHabitatConditions = (habitats) => {  
+  // fix for https://github.com/Eyesiah/biodiversity-sites-frontend/issues/3
+  habitats.forEach(habitat => {
+      if (habitat.condition == null || habitat.condition == "")
+      {
+        habitat.condition = "N/A - Other"
+      }
+  });
+}
+
 const processHabitatSubTypes = (habitats) => {  
   habitats.forEach(habitat => {
       const typeParts = habitat.type.split(' - ');
@@ -54,29 +64,36 @@ export async function getStaticProps({ params }) {
       return { notFound: true };
     }
 
-    // Add distinctiveness to each baseline habitat
-    if (site.habitats) 
-    {
-      if (site.habitats.areas)
-      {
+    // Pre-process baseline habitats
+    if (site.habitats) {
+      if (site.habitats.areas) {
         // areas first need their sub-type processed out
         processHabitatSubTypes(site.habitats.areas)
+        processHabitatConditions(site.habitats.areas);
         processBaselineHabitats(site.habitats.areas);
       }
-      if (site.habitats.hedgerows)
-      {
+      if (site.habitats.hedgerows) {
+        processHabitatConditions(site.habitats.hedgerows);
         processBaselineHabitats(site.habitats.hedgerows);
       }
-      if (site.habitats.watercourses)
-      {
+      if (site.habitats.watercourses) {
+        processHabitatConditions(site.habitats.watercourses);
         processBaselineHabitats(site.habitats.watercourses);
       }
     }
     
-    if (site.improvements?.areas)
-    {      
-      // areas need their sub-type processed out
-      processHabitatSubTypes(site.improvements.areas);
+    if (site.improvements) {
+      if (site.improvements?.areas) { 
+        // areas need their sub-type processed out
+        processHabitatSubTypes(site.habitats.areas);
+        processHabitatConditions(site.habitats.areas);
+      }
+      if (site.improvements?.hedgerows) { 
+        processHabitatSubTypes(site.habitats.hedgerows);
+      }
+      if (site.improvements?.watercourses) { 
+        processHabitatSubTypes(site.habitats.watercourses);
+      }
     }
 
     return {
