@@ -222,9 +222,13 @@ const HabitatSummary = ({ site }) => {
   const improvementHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + h.size, 0);
   const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.size, 0);
 
-  const allocationArea = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
-  const allocationHedgerow = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
-  const allocationWatercourse = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
+  const allocationArea = allocations.reduce((acc, a) => acc + a.habitats.areas.reduce((acc, ha) => acc + ha.size, 0), 0);
+  const allocationHedgerow = allocations.reduce((acc, a) => acc + a.habitats.hedgerows.reduce((acc, ha) => acc + ha.size, 0), 0);
+  const allocationWatercourse = allocations.reduce((acc, a) => acc + a.habitats.watercourses.reduce((acc, ha) => acc + ha.size, 0), 0);
+
+  const allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
+  const allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
+  const allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
 
   return (
     <table className={`${styles.subTable} ${styles.inlineTable}`}>
@@ -235,6 +239,7 @@ const HabitatSummary = ({ site }) => {
           <th>Baseline HUs</th>
           <th>Improvements Size</th>
           <th>Allocations Size</th>
+          <th>Allocations HUs</th>
         </tr>
       </thead>
       <tbody>
@@ -244,6 +249,7 @@ const HabitatSummary = ({ site }) => {
           <td className={styles.numericData}>{baselineAreaHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationAreaHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Hedgerows (km)</td>
@@ -251,6 +257,7 @@ const HabitatSummary = ({ site }) => {
           <td className={styles.numericData}>{baselineHedgerowHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationHedgerowHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
         <tr>
           <td>Watercourses (km)</td>
@@ -258,6 +265,7 @@ const HabitatSummary = ({ site }) => {
           <td className={styles.numericData}>{baselineWatercourseHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{improvementWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
           <td className={styles.numericData}>{allocationWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{allocationWatercourseHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         </tr>
       </tbody>
     </table>
