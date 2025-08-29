@@ -281,7 +281,7 @@ const SiteDetailsCard = ({site}) => {
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
       {site.latitude && site.longitude && <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />}
-      <DetailRow label="NCA" value={site.nationalCharacterArea?.name || 'N/A'} />
+      <DetailRow label="NCA" value={site.nationalCharacterArea != null ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${site.nationalCharacterArea.name.toLowerCase().replace(' ', '-')}`}>{site.nationalCharacterArea.name}</ExternalLink> : 'N/A'} />
       <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
