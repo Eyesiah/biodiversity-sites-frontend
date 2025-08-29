@@ -19,7 +19,13 @@ export const config = {
 }
 
 export function middleware(request, event) {
-  const { nextUrl, ip, userAgent, geo } = request;
+  const { nextUrl, geo } = request;
+
+  // Get IP address from headers
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? null;
+
+  // Get User Agent from headers
+  const userAgent = request.headers.get('user-agent') ?? null;
 
   // Construct the event object
   const eventPayload = {
