@@ -299,20 +299,19 @@ const SiteDetailsCard = ({site}) => {
 
 const HabitatRow = ({ habitat, isImprovement }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const hasDistinctiveness = !isImprovement;
 
   return (
     <>
       <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
         <td>{habitat.type}</td>
-        {hasDistinctiveness && <td>{habitat.distinctiveness}</td>}
+        <td>{habitat.distinctiveness}</td>
         <td className={styles.numericData}>{habitat.parcels}</td>
         <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
         <td className={styles.numericData}>{(habitat.HUs ? habitat.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
       </tr>
       {isOpen && (
         <tr>
-          <td colSpan={hasDistinctiveness ? 5 : 4}>
+          <td colSpan={isImprovement ? 5 : 4}>
             <table className={styles.subTable}>
               <thead>
                 <tr>
@@ -362,7 +361,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
           <thead>
             <tr>
               <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-              {!isImprovement && <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>}
+              <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
               <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
               <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
               <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
