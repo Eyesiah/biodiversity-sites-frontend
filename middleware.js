@@ -36,7 +36,8 @@ export function middleware(request, event) {
   };
 
   // Send the event to the API route
-  const url = new URL('/api/analytics', request.url);
+  // We use `http` instead of `https` for internal API calls to avoid SSL issues in Amplify
+  const url = new URL('/api/analytics', `http://${request.nextUrl.host}`);
   
   // Use event.waitUntil to send the request without blocking the response
   event.waitUntil(
