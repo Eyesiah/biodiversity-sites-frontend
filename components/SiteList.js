@@ -65,8 +65,8 @@ const SiteList = ({ sites }) => {
           <th onClick={() => requestSort('responsibleBodies')}>Responsible Bodies{getSortIndicator('responsibleBodies')}</th>
           <th onClick={() => requestSort('siteSize')}>Area (ha){getSortIndicator('siteSize')}</th>
           <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
-          <th onClick={() => requestSort('lpaName')}>LPA{getSortIndicator('lpaName')}</th>
-          <th onClick={() => requestSort('ncaName')}>NCA{getSortIndicator('ncaName')}</th>
+          <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
+          <th onClick={() => requestSort('ncaName')}>National Charatcter Area (NCA){getSortIndicator('ncaName')}</th>
         </tr>
       </thead>
       <tbody>
