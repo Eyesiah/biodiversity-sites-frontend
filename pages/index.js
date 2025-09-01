@@ -86,6 +86,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
             placeholder="Search by BGS reference, Responsible Body, LPA or NCA..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            autoFocus
           />
           {searchTerm && (
             <button
