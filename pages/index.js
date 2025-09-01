@@ -83,7 +83,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS reference, Responsible Body, LPA, or NCA..."
+            placeholder="Search by BGS reference, Responsible Body, LPA or NCA..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
