@@ -18,13 +18,22 @@ function MyApp({ Component, pageProps }) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <style jsx global>{`
+        body {
+          background-color: #36454F; /* Charcoal Grey */
+          color: #f0f0f0;
+        }
+        a {
+          color: #87ceeb; /* A light blue for link visibility */
+        }
+      `}</style>
       <Script
         strategy="afterInteractive"
         src="http://umami-env-2.eba-kzd2jeqh.eu-central-1.elasticbeanstalk.com/script.js"
         data-website-id={umamiWebsiteId}
       />
       <Component {...pageProps} />
-      <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#888' }}>
+      <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         <p>
           Version: {process.env.APP_VERSION}-{process.env.GIT_COMMIT_HASH}
         </p>

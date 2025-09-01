@@ -3,28 +3,20 @@
 import SiteList from "../components/SiteList";
 import API_URL from '../config';
 import { fetchAllSites } from '../lib/api';
+import { processSiteDataForIndex } from '../lib/sites';
+import { formatNumber } from '../lib/format';
 
 export async function getStaticProps() {
   try {
     const allSites = await fetchAllSites();
-
-    // Process the data on the server to only include what we need for the table.
-    // This significantly reduces the amount of data sent to the client.
-    const processedSites = allSites.map(site => ({
-      referenceNumber: site.referenceNumber,
-      responsibleBodies: site.responsibleBodies,
-      siteSize: site.siteSize,
-      // We only need the count, not the full allocation objects.
-      allocationsCount: site.allocations ? site.allocations.length : 0,
-      lpaName: site.lpaArea ? site.lpaArea.name : 'N/A',
-      ncaName: site.nationalCharacterArea ? site.nationalCharacterArea.name : 'N/A',
-    }));
+    const { processedSites, summary } = processSiteDataForIndex(allSites);
 
     // The value of the `props` key will be
     // passed to the `HomePage` component.
     return {
       props: {
         sites: processedSites,
+        summary,
         error: null
       },
       revalidate: 3600, // In seconds
@@ -35,6 +27,7 @@ export async function getStaticProps() {
     return {
       props: {
         sites: null,
+        summary: { totalSites: 0, totalArea: 0, totalBaselineHUs: 0 },
         error: e.message
       },
     };
@@ -42,7 +35,7 @@ export async function getStaticProps() {
 }
 
 // The main page component. It receives props from getServerSideProps.
-export default function HomePage({ sites, error }) {
+export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0 } }) {
   if (error) {
     return (
       <div className="container">
@@ -54,9 +47,6 @@ export default function HomePage({ sites, error }) {
     );
   }
   
-  const totalSites = sites ? sites.length : 0;
-  const totalArea = sites ? sites.reduce((acc, site) => acc + site.siteSize, 0) : 0;
-
   return (
     <div className="container">
       <main className="main">
@@ -64,7 +54,7 @@ export default function HomePage({ sites, error }) {
           Biodiversity Gain Sites
         </h1>
         <div className="summary">
-          <p>Displaying <strong>{totalSites}</strong> sites with a total area of <strong>{totalArea.toFixed(2)}</strong> hectares.</p>
+          <p>Displaying <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covering <strong>{formatNumber(summary.totalArea)}</strong> hectares which comprise <strong>{formatNumber(summary.totalBaselineHUs)}</strong> baseline habitat units</p>
         </div>
         <SiteList sites={sites} />
       </main>
