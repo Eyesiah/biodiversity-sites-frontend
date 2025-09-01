@@ -2,12 +2,12 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  color: #333;
+  color: #2c3e50; /* Midnight Blue */
 }
 
 .header {
   margin-bottom: 2rem;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid #bdc3c7; /* Silver */
   padding-bottom: 1rem;
 }
 
@@ -18,7 +18,7 @@
 
 .header h2 {
   font-size: 1.5rem;
-  color: #555;
+  color: #7f8c8d; /* Asbestos */
   margin: 0.5rem 0 0;
   font-family: monospace;
 }
@@ -26,7 +26,7 @@
 .backLink {
   display: inline-block;
   margin-bottom: 1rem;
-  color: #0070f3;
+  color: #27ae60; /* Nephritis Green */
   text-decoration: none;
   font-size: 1rem;
 }
@@ -42,16 +42,16 @@
 }
 
 .card {
-  border: 1px solid #eaeaea;
+  border: 1px solid #bdc3c7; /* Silver */
   border-radius: 8px;
   padding: 1rem;
-  background-color: #fafafa;
+  background-color: #ffffff; /* White */
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .card h3 {
   margin-top: 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #bdc3c7; /* Silver */
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
 }
@@ -62,7 +62,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.25rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #ecf0f1; /* Clouds */
 }
 
 .detailRow:last-child {
@@ -71,13 +71,13 @@
 
 .detailLabel {
   font-weight: bold;
-  color: #333;
+  color: #2c3e50; /* Midnight Blue */
   margin: 0;
   padding-right: 1rem;
 }
 
 .detailValue {
-  color: #555;
+  color: #7f8c8d; /* Asbestos */
   margin: 0;
   text-align: right;
 }
@@ -85,7 +85,7 @@
 .documentLink {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: #0070f3;
+  background-color: #27ae60; /* Nephritis Green */
   color: white;
   border-radius: 5px;
   text-decoration: none;
@@ -93,11 +93,11 @@
 }
 
 .documentLink:hover {
-  background-color: #005bb5;
+  background-color: #2ecc71; /* Emerald Green */
 }
 
 .error {
-  color: #ff4d4d;
+  color: #e74c3c; /* Alizarin Red */
   font-size: 1.2rem;
 }
 
@@ -109,24 +109,25 @@
 
 .table th,
 .table td {
-  border: 1px solid #ddd;
+  border: 1px solid #bdc3c7; /* Silver */
   padding: 0.3rem;
   text-align: left;
 }
 
 .table th {
-  background-color: #f2f2f2;
   font-weight: bold;
   cursor: pointer;
   text-align: center;
 }
 
 .mainTableHeader {
-  background-color: #f0f8ff;
+  background-color: #2ecc71; /* Emerald Green */
+  color: #ffffff;
 }
 
 .subTableHeader {
-  background-color: #5f95b0ff;
+  background-color: #27ae60; /* Nephritis Green */
+  color: #ffffff;
 }
 
 .ascending::after {
@@ -138,11 +139,11 @@
 }
 
 .table tbody tr:nth-child(odd) {
-  background-color: #fafafa;
+  /* Removed for a cleaner look, but you could use #f9f9f9 for subtle striping */
 }
 
 .table tbody tr:hover {
-  background-color: #f0f0f0;
+  background-color: #ecf0f1; /* Clouds */
 }
 
 .clickableRow {
