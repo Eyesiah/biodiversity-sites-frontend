@@ -110,17 +110,21 @@
 .table th,
 .table td {
   border: 1px solid #bdc3c7; /* Silver */
-  padding: 0.3rem;
+  padding: 0.5rem;
   text-align: left;
 }
 
 .table th {
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
+  position: sticky;
   text-align: center;
+  top: 0;
+  z-index: 1;
 }
 
 .mainTableHeader {
+  /* Styles are now in .table th for sticky positioning */
   background-color: #2ecc71; /* Emerald Green */
   color: #ffffff;
 }
