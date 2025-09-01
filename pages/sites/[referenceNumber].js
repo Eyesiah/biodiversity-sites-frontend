@@ -408,12 +408,12 @@ const HabitatsCard = ({title, habitats, isImprovement}) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const collatedAreas = collateHabitats(habitats?.areas, isImprovement);
-  const collatedWatercourses = collateHabitats(habitats?.watercourses, isImprovement);
   const collatedHedgerows = collateHabitats(habitats?.hedgerows, isImprovement);
+  const collatedWatercourses = collateHabitats(habitats?.watercourses, isImprovement);  
   
   const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
+    const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedWatercourses, requestSort: requestSortWatercourses, sortConfig: sortConfigWatercourses } = useSortableData(collatedWatercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
   
   const hasHabitats = sortedAreas.length > 0 || sortedWatercourses.length > 0 || sortedHedgerows.length > 0;
 
@@ -433,15 +433,6 @@ const HabitatsCard = ({title, habitats, isImprovement}) => {
               sortConfig={sortConfigAreas}
               isImprovement={isImprovement}
             />
-
-            <HabitatTable
-              title="Watercourses"
-              habitats={sortedWatercourses}
-              requestSort={requestSortWatercourses}
-              sortConfig={sortConfigWatercourses}
-              isImprovement={isImprovement}
-            />
-
             <HabitatTable
               title="Hedgerows"
               habitats={sortedHedgerows}
@@ -449,6 +440,13 @@ const HabitatsCard = ({title, habitats, isImprovement}) => {
               sortConfig={sortConfigHedgerows}
               isImprovement={isImprovement}
             />
+            <HabitatTable
+              title="Watercourses"
+              habitats={sortedWatercourses}
+              requestSort={requestSortWatercourses}
+              sortConfig={sortConfigWatercourses}
+              isImprovement={isImprovement}
+            />            
           </>
         )}
       </section>
