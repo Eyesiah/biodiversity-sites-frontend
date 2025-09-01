@@ -610,13 +610,13 @@ export default function SitePage({ site, error }) {
           />
 
           <HabitatsCard
-            title="Baseline"
+            title="Baseline Habitats"
             habitats = {site.habitats}
             isImprovement={false}
           />
 
           <HabitatsCard
-            title="Improvements"
+            title="Improvements Habitats"
             habitats = {site.improvements}
             isImprovement={true}
           />
