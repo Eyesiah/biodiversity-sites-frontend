@@ -340,7 +340,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
         <tr>
           <td colSpan={isImprovement ? 5 : 4}>
             <table className={styles.subTable}>
-              <thead>
+              <thead className={styles.subTableHeader}>
                 <tr>
                   {isImprovement && <th>Intervention</th>}
                   <th>Condition</th>
@@ -385,7 +385,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
       <h3>{title}</h3>
       
         <table className={styles.table}>
-          <thead>
+          <thead className={styles.mainTableHeader}>
             <tr>
               <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
               <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>

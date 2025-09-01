@@ -121,6 +121,14 @@
   text-align: center;
 }
 
+.mainTableHeader {
+  background-color: #f0f8ff;
+}
+
+.subTableHeader {
+  background-color: #5f95b0ff;
+}
+
 .ascending::after {
   content: ' ▲';
 }
