@@ -324,47 +324,77 @@ const SiteDetailsCard = ({site}) => {
 }
 
 
-const HabitatRow = ({ habitat, isImprovement }) => {
+const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <>
-      <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
-        <td>{habitat.type}</td>
-        <td>{habitat.distinctiveness}</td>
-        <td className={styles.numericData}>{habitat.parcels}</td>
-        <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-        <td className={styles.numericData}>{(habitat.HUs ? habitat.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <tr
+        onClick={() => setIsOpen(!isOpen)}
+        className={`${styles.clickableRow} ${isHovered ? styles.subTableHovered : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {mainRow}
       </tr>
       {isOpen && (
-        <tr>
-          <td colSpan={isImprovement ? 5 : 4}>
-            <table className={styles.subTable}>
-              <thead>
-                <tr>
-                  {isImprovement && <th>Intervention</th>}
-                  <th>Condition</th>
-                  <th># parcels</th>
-                  <th>Area (ha)</th>
-                  <th>HUs</th>
-                </tr>
-              </thead>
-              <tbody>
-                {habitat.subRows.map((subRow, index) => (
-                  <tr key={index}>
-                    {isImprovement && <td>{subRow.interventionType}</td>}
-                    <td>{subRow.condition}</td>
-                    <td className={styles.numericData}>{subRow.parcels}</td>
-                    <td className={styles.numericData}>{subRow.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-                    <td className={styles.numericData}>{(subRow.HUs ? subRow.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        <tr
+          className={`${isHovered ? styles.subTableHovered : ''}`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <td colSpan={colSpan}>
+            {collapsibleContent}
           </td>
         </tr>
       )}
     </>
+  );
+};
+
+const HabitatRow = ({ habitat, isImprovement }) => {
+  const mainRow = (
+    <>
+      <td>{habitat.type}</td>
+      <td>{habitat.distinctiveness}</td>
+      <td className={styles.numericData}>{habitat.parcels}</td>
+      <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <td className={styles.numericData}>{(habitat.HUs ? habitat.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+    </>
+  );
+
+  const collapsibleContent = (
+    <table className={styles.subTable}>
+      <thead>
+        <tr>
+          {isImprovement && <th>Intervention</th>}
+          <th>Condition</th>
+          <th># parcels</th>
+          <th>Area (ha)</th>
+          <th>HUs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {habitat.subRows.map((subRow, index) => (
+          <tr key={index}>
+            {isImprovement && <td>{subRow.interventionType}</td>}
+            <td>{subRow.condition}</td>
+            <td className={styles.numericData}>{subRow.parcels}</td>
+            <td className={styles.numericData}>{subRow.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+            <td className={styles.numericData}>{(subRow.HUs ? subRow.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+
+  return (
+    <CollapsibleRow
+      mainRow={mainRow}
+      collapsibleContent={collapsibleContent}
+      colSpan={isImprovement ? 5 : 4}
+    />
   );
 };
 
@@ -499,27 +529,26 @@ const AllocationHabitats = ({ habitats }) => {
 
 // component for each row in the allocations table to handle drill-down
 const AllocationRow = ({ alloc }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const mainRow = (
+    <>
+      <td>{alloc.planningReference}</td>
+      <td>{alloc.localPlanningAuthority}</td>
+      <td>{"WIP"}</td>
+      <td>{alloc.projectName}</td>
+      <td className={styles.numericData}>{(alloc.areaUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <td className={styles.numericData}>{(alloc.hedgerowUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <td className={styles.numericData}>{(alloc.watercoursesUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+    </>
+  );
+
+  const collapsibleContent = <AllocationHabitats habitats={alloc.habitats} />;
 
   return (
-    <>
-      <tr onClick={() => setIsOpen(!isOpen)} className={styles.clickableRow}>
-        <td>{alloc.planningReference}</td>
-        <td>{alloc.localPlanningAuthority}</td>
-        <td>{"WIP"}</td>
-        <td>{alloc.projectName}</td>
-        <td className={styles.numericData}>{(alloc.areaUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-        <td className={styles.numericData}>{(alloc.hedgerowUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-        <td className={styles.numericData}>{(alloc.watercoursesUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-      </tr>
-      {isOpen && (
-        <tr>
-          <td colSpan="7">
-            <AllocationHabitats habitats={alloc.habitats} />
-          </td>
-        </tr>
-      )}
-    </>
+    <CollapsibleRow
+      mainRow={mainRow}
+      collapsibleContent={collapsibleContent}
+      colSpan={7}
+    />
   );
 };
 

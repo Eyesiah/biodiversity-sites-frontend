@@ -186,3 +186,7 @@
 .subTable .numericData {
   text-align: right;
 }
+
+.subTableHovered {
+  background-color: #dcf0e7;
+}
