@@ -54,7 +54,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           Biodiversity Gain Sites
         </h1>
         <div className="summary">
-          <p>Displaying <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covering an area of <strong>{formatNumber(summary.totalArea)}</strong> hectares which comprise <strong>{formatNumber(summary.totalBaselineHUs)}</strong> baseline habitat units.</p>
+          <p>Displaying <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covering <strong>{formatNumber(summary.totalArea)}</strong> hectares which comprise <strong>{formatNumber(summary.totalBaselineHUs)}</strong> baseline habitat units</p>
         </div>
         <SiteList sites={sites} />
       </main>
