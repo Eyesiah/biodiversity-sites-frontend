@@ -27,7 +27,7 @@ export async function getStaticProps() {
     return {
       props: {
         sites: null,
-        summary: { totalSites: 0, totalArea: 0, totalBaselineHUs: 0 },
+        summary: { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 },
         error: e.message
       },
     };
@@ -35,7 +35,7 @@ export async function getStaticProps() {
 }
 
 // The main page component. It receives props from getServerSideProps.
-export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0 } }) {
+export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 } }) {
   if (error) {
     return (
       <div className="container">
@@ -54,7 +54,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           Biodiversity Gain Sites
         </h1>
         <div className="summary">
-          <p>Displaying <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covering <strong>{formatNumber(summary.totalArea)}</strong> hectares which comprise <strong>{formatNumber(summary.totalBaselineHUs)}</strong> baseline habitat units</p>
+          <p>Displaying <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covering <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares which comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created habitat units</p>
         </div>
         <SiteList sites={sites} />
       </main>

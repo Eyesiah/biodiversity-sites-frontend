@@ -20,6 +20,14 @@ function MyApp({ Component, pageProps }) {
         a {
           color: #87ceeb; /* A light blue for link visibility */
         }
+        .site-table .numeric-data {
+          text-align: right;
+          font-family: monospace;
+        }
+        .site-table .centered-data {
+          text-align: center;
+          font-family: monospace;
+        }
       `}</style>
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>

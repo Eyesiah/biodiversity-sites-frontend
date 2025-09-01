@@ -6,6 +6,7 @@ import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
 import { getHabitatDistinctiveness, calculateBaselineHU, calculateImprovementHU } from '../../lib/habitat';
 import ExternalLink from '../../components/ExternalLink';
+import { formatNumber } from '../../lib/format';
 
 const DEFAULT_NUMERIC_NUM_DECIMALS = 2
 
@@ -264,27 +265,27 @@ const HabitatSummary = ({ site }) => {
       <tbody>
         <tr>
           <td>Areas (ha)</td>
-          <td className={styles.numericData}>{baselineArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{baselineAreaHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{improvementArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationArea.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationAreaHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineArea)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
+          <td className={styles.numericData}>{formatNumber(improvementArea)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationArea)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>
         </tr>
         <tr>
           <td>Hedgerows (km)</td>
-          <td className={styles.numericData}>{baselineHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{baselineHedgerowHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{improvementHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationHedgerow.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationHedgerowHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineHedgerow)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
+          <td className={styles.numericData}>{formatNumber(improvementHedgerow)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationHedgerow)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>
         </tr>
         <tr>
           <td>Watercourses (km)</td>
-          <td className={styles.numericData}>{baselineWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{baselineWatercourseHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{improvementWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationWatercourse.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-          <td className={styles.numericData}>{allocationWatercourseHUs.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineWatercourse)}</td>
+          <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
+          <td className={styles.numericData}>{formatNumber(improvementWatercourse)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationWatercourse)}</td>
+          <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>
         </tr>
       </tbody>
     </table>
@@ -312,7 +313,7 @@ const SiteDetailsCard = ({site}) => {
       <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
-      <DetailRow label="Site Area" value={`${site.siteSize?.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)} ha.`} />
+      <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha.`} />
       <div className={styles.detailRow}>
         <dt className={styles.detailLabel}>Habitat Summary</dt>
         <dd className={styles.detailValue}>
@@ -359,8 +360,8 @@ const HabitatRow = ({ habitat, isImprovement }) => {
       <td>{habitat.type}</td>
       <td>{habitat.distinctiveness}</td>
       <td className={styles.numericData}>{habitat.parcels}</td>
-      <td className={styles.numericData}>{habitat.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-      <td className={styles.numericData}>{(habitat.HUs ? habitat.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
+      <td className={styles.numericData}>{formatNumber(habitat.HUs || 0)}</td>
     </>
   );
 
@@ -381,8 +382,8 @@ const HabitatRow = ({ habitat, isImprovement }) => {
             {isImprovement && <td>{subRow.interventionType}</td>}
             <td>{subRow.condition}</td>
             <td className={styles.numericData}>{subRow.parcels}</td>
-            <td className={styles.numericData}>{subRow.area.toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-            <td className={styles.numericData}>{(subRow.HUs ? subRow.HUs : 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+            <td className={styles.numericData}>{formatNumber(subRow.area)}</td>
+            <td className={styles.numericData}>{formatNumber(subRow.HUs || 0)}</td>
           </tr>
         ))}
       </tbody>
@@ -519,7 +520,7 @@ const AllocationHabitats = ({ habitats }) => {
             <td>{habitat.type}</td>
             <td>{habitat.distinctiveness}</td>
             <td>{habitat.condition}</td>
-            <td className={styles.numericData}>{habitat.size.toFixed(4)}</td>
+            <td className={styles.numericData}>{formatNumber(habitat.size)}</td>
           </tr>
         ))}
       </tbody>
@@ -535,9 +536,9 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.localPlanningAuthority}</td>
       <td>{"WIP"}</td>
       <td>{alloc.projectName}</td>
-      <td className={styles.numericData}>{(alloc.areaUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-      <td className={styles.numericData}>{(alloc.hedgerowUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
-      <td className={styles.numericData}>{(alloc.watercoursesUnits || 0).toFixed(DEFAULT_NUMERIC_NUM_DECIMALS)}</td>
+      <td className={styles.numericData}>{formatNumber(alloc.areaUnits || 0)}</td>
+      <td className={styles.numericData}>{formatNumber(alloc.hedgerowUnits || 0)}</td>
+      <td className={styles.numericData}>{formatNumber(alloc.watercoursesUnits || 0)}</td>
     </>
   );
 

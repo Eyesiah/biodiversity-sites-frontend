@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { formatNumber } from '../lib/format';
 
 const SiteList = ({ sites }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
@@ -78,8 +79,8 @@ const SiteList = ({ sites }) => {
               </Link>
             </td>
             <td>{site.responsibleBodies.join(', ')}</td>
-            <td className="numeric-data">{site.siteSize.toFixed(2)}</td>
-            <td className="numeric-data">{site.allocationsCount}</td>
+            <td className="numeric-data">{formatNumber(site.siteSize)}</td>
+            <td className="centered-data">{site.allocationsCount}</td>
             <td>{site.lpaName}</td>
             <td>{site.ncaName}</td>
           </tr>
