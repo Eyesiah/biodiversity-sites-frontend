@@ -87,6 +87,15 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
         </div>
         <SiteList sites={filteredSites} />
       </main>

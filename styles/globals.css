@@ -77,15 +77,16 @@ a[href^="http"]::after, a[href^="https"]::after {
 }
 
 .search-container {
+  position: relative;
   width: 90%;
+  max-width: 500px;
   margin: 1rem auto;
-  text-align: center;
 }
 
 .search-input {
   width: 100%;
-  max-width: 500px;
   padding: 0.75rem;
+  padding-right: 2.5rem; /* Make space for the button */
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -95,6 +96,24 @@ a[href^="http"]::after, a[href^="https"]::after {
 
 .search-input::placeholder {
   color: #888;
+}
+
+.clear-search-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.clear-search-button:hover {
+  color: #000;
 }
 
 .site-table {
