@@ -1,6 +1,6 @@
 // This function runs on the server side before the page is rendered.
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import SiteList from "../components/SiteList";
 import API_URL from '../config';
 import { fetchAllSites } from '../lib/api';
@@ -35,25 +35,39 @@ export async function getStaticProps() {
   }
 }
 
+const DEBOUNCE_DELAY_MS = 300;
+
 // The main page component. It receives props from getServerSideProps.
 export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 } }) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+  // Debounce the search term
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(inputValue);
+    }, DEBOUNCE_DELAY_MS);
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [inputValue]);
 
   const filteredSites = useMemo(() => {
     if (!sites) {
       return [];
     }
-    if (!searchTerm) {
+    if (!debouncedSearchTerm) {
       return sites;
     }
-    const lowercasedTerm = searchTerm.toLowerCase();
+    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
     return sites.filter(site =>
       (site.referenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
       (site.responsibleBodies?.join(', ').toLowerCase() || '').includes(lowercasedTerm) ||
       (site.lpaName?.toLowerCase() || '').includes(lowercasedTerm) ||
       (site.ncaName?.toLowerCase() || '').includes(lowercasedTerm)
     );
-  }, [sites, searchTerm]);
+  }, [sites, debouncedSearchTerm]);
 
   if (error) {
     return (
@@ -73,7 +87,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           Biodiversity Gain Sites
         </h1>
         <div className="summary">
-          {searchTerm ? (
+          {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites.</p>
           ) : (
             <p>This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares. These sites comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created habitat units.</p>
@@ -84,13 +98,13 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
             type="text"
             className="search-input"
             placeholder="Search by BGS reference, Responsible Body, LPA or NCA..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
-          {searchTerm && (
+          {inputValue && (
             <button
-              onClick={() => setSearchTerm('')}
+              onClick={() => setInputValue('')}
               className="clear-search-button"
               aria-label="Clear search"
             >
