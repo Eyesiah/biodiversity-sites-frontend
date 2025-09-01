@@ -304,7 +304,7 @@ const SiteDetailsCard = ({site}) => {
     <h3>Site Details</h3>
     <div>
       <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
-      <DetailRow label="Responsible Bodies" value={site.responsibleBodies?.join(', ') || 'N/A'} />
+      <DetailRow label="Responsible Body" value={site.responsibleBodies?.join(', ') || 'N/A'} />
       <DetailRow label="Start Date" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
       {site.latitude && site.longitude && <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />}
