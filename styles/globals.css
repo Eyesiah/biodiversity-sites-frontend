@@ -152,3 +152,19 @@ a[href^="http"]::after, a[href^="https"]::after {
   text-align: right;
   font-family: monospace;
 }
+
+.prose {
+  text-align: left;
+  font-size: 1rem;
+  max-width: 800px;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.prose h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+}
