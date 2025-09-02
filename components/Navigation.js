@@ -10,15 +10,19 @@ export default function Navigation() {
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <nav className={styles.nav}>
       <button className={styles.hamburger} onClick={toggleMenu}>
         &#9776;
       </button>
       <div className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
-        <Link href="/about" className={styles.link}>About</Link>
-        <Link href="/sites" className={styles.link}>Site List</Link>
-        <Link href="/habitat-summary" className={styles.link}>Habitat Summary</Link>
+        <Link href="/about" className={styles.link} onClick={closeMenu}>About</Link>
+        <Link href="/sites" className={styles.link} onClick={closeMenu}>Site List</Link>
+        <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>Habitat Summary</Link>
       </div>
     </nav>
   );
