@@ -104,7 +104,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies.</p>
           ) : (
-            <p style={{ fontStyle: 'normalitalic', fontSize: '2.1rem' }}>
+            <p style={{ fontStyle: 'normalitalic', fontSize: '1.9rem' }}>
                 This list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.
             </p>
         )}
