@@ -5,10 +5,10 @@ import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
 import { getHabitatDistinctiveness, calculateBaselineHU, calculateImprovementHU } from '../../lib/habitat';
+import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
+import { useSortableData } from '../../lib/hooks';
 import ExternalLink from '../../components/ExternalLink';
 import { formatNumber } from '../../lib/format';
-
-const DEFAULT_NUMERIC_NUM_DECIMALS = 2
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -110,7 +110,30 @@ export async function getStaticProps({ params }) {
 
     // Pre-process allocations
     if (site.allocations) {
-      site.allocations.forEach(alloc => {
+      await Promise.all(site.allocations.map(async (alloc) => {
+        let allocCoords = null;
+
+        // 1. Always try to geocode the address, using the LPA for context.
+        if (alloc.projectName) {
+          allocCoords = await getCoordinatesForAddress(alloc.projectName, alloc.localPlanningAuthority);
+        }
+
+        // 2. If geocoding the full address fails, fall back to just the LPA.
+        if (!allocCoords && alloc.localPlanningAuthority) {
+          allocCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+        }
+
+        // 3. If we have coordinates for the allocation, calculate the distance.
+        if (allocCoords && site.latitude && site.longitude) {
+          alloc.distance = getDistanceFromLatLonInKm(
+            site.latitude,
+            site.longitude,
+            allocCoords.latitude,
+            allocCoords.longitude
+          );
+        } else {
+          alloc.distance = 'unknown';
+        }
 
         // areas need subtypes processed out
         processHabitatSubTypes(alloc.habitats.areas);
@@ -124,7 +147,7 @@ export async function getStaticProps({ params }) {
         allHabitats.forEach(habitat => {
           habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
         });
-      });
+      }));
     }
 
     return {
@@ -144,43 +167,6 @@ export async function getStaticProps({ params }) {
     };
   }
 }
-
-const useSortableData = (items, config = null) => {
-  const [sortConfig, setSortConfig] = useState(config);
-
-  const sortedItems = useMemo(() => {
-    let sortableItems = [...items];
-    if (sortConfig !== null) {
-      sortableItems.sort((a, b) => {
-        const keyA = sortConfig.key === 'type' ? a.type : a[sortConfig.key];
-        const keyB = sortConfig.key === 'type' ? b.type : b[sortConfig.key];
-
-        if (keyA < keyB) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (keyA > keyB) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableItems;
-  }, [items, sortConfig]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === 'ascending'
-    ) {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  return { items: sortedItems, requestSort, sortConfig };
-};
 
 // Helper function to collate habitat data
 const collateHabitats = (habitats, isImprovement) => {
@@ -534,7 +520,9 @@ const AllocationRow = ({ alloc }) => {
     <>
       <td>{alloc.planningReference}</td>
       <td>{alloc.localPlanningAuthority}</td>
-      <td>{"WIP"}</td>
+      <td className={styles.numericData} style={{ textAlign: 'center' }}>
+        {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
+      </td>
       <td>{alloc.projectName}</td>
       <td className={styles.numericData}>{formatNumber(alloc.areaUnits || 0)}</td>
       <td className={styles.numericData}>{formatNumber(alloc.hedgerowUnits || 0)}</td>
@@ -553,14 +541,14 @@ const AllocationRow = ({ alloc }) => {
   );
 };
 
-const AllocationsCard = ({allocations}) => {
+const AllocationsCard = ({allocations, title}) => {
   const [isOpen, setIsOpen] = useState(true);
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
   
   return (
     <section className={styles.card}>
       <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
-        Allocations {isOpen ? '▼' : '▶'}
+        {title} {isOpen ? '▼' : '▶'}
       </h3>
       {isOpen && (
         <>
@@ -570,7 +558,7 @@ const AllocationsCard = ({allocations}) => {
                 <tr>
                   <th onClick={() => requestSortAllocations('planningReference')} className={getSortClassName('planningReference', sortConfigAllocations)}>Reference</th>
                   <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
-                  <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)}>Distance (km)</th>
+                  <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)} style={{ textAlign: 'center' }}>Distance (km)</th>
                   <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
                   <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>
                   <th onClick={() => requestSortAllocations('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfigAllocations)}>Hedgerow units</th>
@@ -638,19 +626,20 @@ export default function SitePage({ site, error }) {
           />
 
           <HabitatsCard
-            title="Baseline Habitats (click any habitat for more detail)"
+            title="Baseline Habitats"
             habitats = {site.habitats}
             isImprovement={false}
           />
 
           <HabitatsCard
-            title="Improvements Habitats (click any habitat for more detail)"
+            title="Improvement Habitats"
             habitats = {site.improvements}
             isImprovement={true}
           />
 
           <AllocationsCard 
-            allocations = {site.allocations}
+            title="Allocations (click any allocation for more detail)"
+            allocations={site.allocations}
           />
 
         </div>
