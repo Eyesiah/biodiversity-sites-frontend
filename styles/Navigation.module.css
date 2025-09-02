@@ -1,31 +1,60 @@
 
 .nav {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #3a4049; /* A shade slightly lighter than the body background */
+  padding: 0.75rem 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .hamburger {
+  display: none;
   background: none;
   border: none;
-  font-size: 24px;
+  color: #f0f0f0;
+  font-size: 1.8rem;
   cursor: pointer;
-  color: white;
 }
 
 .menu {
-  display: none;
-  position: absolute;
-  top: 40px;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-}
-
-.menu.open {
-  display: block;
+  display: flex;
+  gap: 2rem;
 }
 
 .link {
-  display: block;
-  margin-bottom: 10px;
+  color: #f0f0f0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.link:hover {
+  color: #87ceeb; /* Light blue from _app.js */
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    position: absolute;
+    top: 100%; /* Position it right below the nav bar */
+    left: 0;
+    width: 100%;
+    background-color: #3a4049;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add shadow to dropdown too */
+  }
+
+  .menu.open {
+    display: flex;
+  }
 }
