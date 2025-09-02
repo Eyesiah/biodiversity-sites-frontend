@@ -1,3 +1,4 @@
+import Navigation from '../components/Navigation';
 import '../styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -40,6 +41,7 @@ function MyApp({ Component, pageProps }) {
         src="http://umami-env-2.eba-kzd2jeqh.eu-central-1.elasticbeanstalk.com/script.js"
         data-website-id={umamiWebsiteId}
       />
+      <Navigation />
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         <p>

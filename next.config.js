@@ -12,6 +12,15 @@ const nextConfig = {
     APP_VERSION: packageJson.version,
     GIT_COMMIT_HASH: gitCommitHash,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: process.env.LANDING_PAGE || '/about',
+        permanent: true,
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;

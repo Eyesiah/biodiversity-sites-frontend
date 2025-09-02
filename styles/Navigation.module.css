@@ -1,0 +1,30 @@
+
+.nav {
+  position: relative;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.menu.open {
+  display: block;
+}
+
+.link {
+  display: block;
+  margin-bottom: 10px;
+}
