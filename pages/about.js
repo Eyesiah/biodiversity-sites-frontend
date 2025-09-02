@@ -3,12 +3,14 @@ import Head from 'next/head';
 
 export default function About() {
   return (
-    <div>
+    <div className="container">
       <Head>
         <title>About</title>
       </Head>
-      <h1>About</h1>
-      <p>This is the about page.</p>
+      <main className="main">
+        <h1 className="title">About</h1>
+        <p>This is the about page.</p>
+      </main>
     </div>
   );
 }

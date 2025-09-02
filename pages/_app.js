@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <style jsx global>{`
         body {
-          background-color: #36454F; /* Charcoal Grey */
+          background-color: #282c34; /* Charcoal Grey */
           color: #f0f0f0;
         }
         a {
