@@ -96,7 +96,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
   return (
     <div className="container">
       <Head>
-        <title>Responsible Bodies</title>
+        <title>Responsible Bodies</title>        
       </Head>
       <main className="main">
         <h1 className="title">Designated Responsible Bodies</h1>
@@ -104,8 +104,8 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies.</p>
           ) : (
-            <p>This list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> designated responsible bodies.</p>
-          )}
+            <p>This list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.</p>
+        )}
         </div>
         <div className="search-container">
           <input
@@ -126,6 +126,9 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             </button>
           )}
         </div>
+        <p style={{ fontStyle: 'italic', fontSize: '1.0rem' }}>
+          Not all the responsible bodies listed here are included in the BGS Site List or share the exact same name as is shown there.
+        </p>
         <table className="site-table">
           <thead>
             <tr>
