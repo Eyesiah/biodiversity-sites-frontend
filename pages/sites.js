@@ -91,7 +91,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
             <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites.</p>
           ) : (
             <p style={{ fontStyle: 'normalitalic', fontSize: '1.9rem' }}>
-              <p>This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.</p>
+              This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
               They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created habitat units.
             </p>
           )}
