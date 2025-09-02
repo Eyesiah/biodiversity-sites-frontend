@@ -30,6 +30,7 @@ export default function Navigation() {
         <Link href="/sites" className={styles.link} onClick={closeMenu}>BGS Sites List</Link>
         <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>BGS Habitat Summary</Link>
         <Link href="/habitat-analysis" className={styles.link} onClick={closeMenu}>BGS Habitat Analysis</Link>
+        <Link href="/habitat-allocations" className={styles.link} onClick={closeMenu}>BGS Habitat Allocations</Link>
         <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Designated Responsible Bodies</Link>
       </div>
     </nav>
