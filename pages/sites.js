@@ -87,19 +87,21 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           Biodiversity Gain Sites
         </h1>
         <div className="summary">
+          <div className="summary" style={{ textAlign: 'center' }}>
           {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites</p>
           ) : (
-            <p style={{ fontStyle: 'normalitalic', fontSize: '1.9rem' }}>
+            <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
               This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
               They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created habitat units.            </p>
           )}
+          </div>
         </div>
         <div className="search-container">
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS reference, Responsible Body, LPA or NCA..."
+            placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
