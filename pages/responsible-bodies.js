@@ -93,19 +93,30 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
     return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
   };
 
+  // Check which columns have data to decide whether to render them
+  const hasDesignationDate = useMemo(() => responsibleBodies.some(body => body.designationDate), [responsibleBodies]);
+  const hasExpertise = useMemo(() => responsibleBodies.some(body => body.expertise), [responsibleBodies]);
+  const hasOrganisationType = useMemo(() => responsibleBodies.some(body => body.organisationType), [responsibleBodies]);
+  const hasAddress = useMemo(() => responsibleBodies.some(body => body.address), [responsibleBodies]);
+  const hasEmail = useMemo(() => responsibleBodies.some(body => body.emails.length > 0), [responsibleBodies]);
+  const hasTelephone = useMemo(() => responsibleBodies.some(body => body.telephone), [responsibleBodies]);
+
   return (
     <div className="container">
       <Head>
         <title>Responsible Bodies</title>        
       </Head>
-      <main className="main">
+        <main className="main">
         <h1 className="title">Designated Responsible Bodies</h1>
-        <div className="summary">
+        <div className="summary" style={{ textAlign: 'center' }}>
+            <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
+               Designated responsible bodies may enter into conservation covenant agreements with landowners in England.
+            </p>
           {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
           ) : (
             <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
-                This list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.
+                The list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.
             </p>
         )}
         </div>
@@ -129,34 +140,34 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           )}
         </div>
         <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
-          Not all the Responsible Bodies listed are included in the BGS Site List page or share the exact same name
+          Not all the Responsible Bodies listed here are included in the BGS Site List page or share the exact same name
         </p>
         <table className="site-table">
           <thead>
             <tr>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-              <th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>
-              <th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>
-              <th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>
-              <th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>
-              <th>Email</th>
-              <th>Telephone</th>
+              {hasDesignationDate && <th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
+              {hasExpertise && <th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
+              {hasOrganisationType && <th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
+              {hasAddress && <th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
+              {hasEmail && <th>Email</th>}
+              {hasTelephone && <th>Telephone</th>}
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedBodies.map((body) => (
               <tr key={body.name}>
                 <td>{body.name}</td>
-                <td>{body.designationDate}</td>
-                <td>{body.expertise}</td>
-                <td>{body.organisationType}</td>
-                <td>{body.address}</td>
-                <td>
+                {hasDesignationDate && <td>{body.designationDate}</td>}
+                {hasExpertise && <td>{body.expertise}</td>}
+                {hasOrganisationType && <td>{body.organisationType}</td>}
+                {hasAddress && <td>{body.address}</td>}
+                {hasEmail && <td>
                   {body.emails.map(email => (
                     <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
                   ))}
-                </td>
-                <td>{body.telephone}</td>
+                </td>}
+                {hasTelephone && <td>{body.telephone}</td>}
               </tr>
             ))}
           </tbody>
