@@ -7,7 +7,7 @@ import Papa from 'papaparse';
 import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
-import { getHabitatDistinctiveness, processSiteHabitatData } from '../../lib/habitat';
+import { getHabitatDistinctiveness, processSiteHabitatData, processHabitatSubTypes, processHabitatConditions  } from '../../lib/habitat';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
 import { useSortableData, getSortClassName } from '../../lib/hooks';
 import ExternalLink from '../../components/ExternalLink';
