@@ -3,7 +3,9 @@ import Head from 'next/head';
 import { fetchAllSites } from '../lib/api';
 import styles from '../styles/SiteDetails.module.css';
 import { HabitatsCard } from '../components/HabitatsCard';
+import { HabitatSummaryTable } from '../components/HabitatSummaryTable';
 import { processSiteHabitatData } from "../lib/habitat"
+import { DetailRow } from '../components/DetailRow';
 
 export async function getStaticProps() {
   
@@ -57,14 +59,15 @@ export async function getStaticProps() {
     props: {
       numSites: allSites.length,
       habitats: allHabitats,
-      improvements: allImprovements
+      improvements: allImprovements,
+      summary: {}
     }
   };
 }
 
 export default function HabitatSummary({numSites, habitats, improvements}) {
   return (
-    <div className="container">
+    <>
       <Head>
         <title>Habitat Summary</title>
       </Head>
@@ -73,34 +76,38 @@ export default function HabitatSummary({numSites, habitats, improvements}) {
         <div className={styles.header}>
           <h1>Habitat Summary</h1>
         </div>
-        <section className={styles.card}>
-          <h3>BGS Register Summary</h3>
+
+        <div className={styles.detailsGrid}>
+
+          <section className={styles.card}>
+            <h3>BGS Register Summary</h3>
+                
+            <div>
+              <DetailRow label="Number of sites" value={numSites} />
+              <div className={styles.detailRow}>
+                <dt className={styles.detailLabel}>Habitat Summary</dt>
+                <dd className={styles.detailValue}>
+                  <HabitatSummaryTable site={{habitats: habitats, improvements: improvements}} />
+                </dd>
+              </div>
+            </div>
               
-          <div className={styles.detailsGrid}>
-            <table>
-              <tbody>
-                <tr>
-                  <td>Number of sites</td>
-                  <td>{numSites}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+          </section>
 
-        <HabitatsCard
-          title="Baseline Habitats (click any habitat cell for more detail)"
-          habitats = {habitats}
-          isImprovement={false}
-        />
+          <HabitatsCard
+            title="Baseline Habitats (click any habitat cell for more detail)"
+            habitats = {habitats}
+            isImprovement={false}
+          />
 
-        <HabitatsCard
-          title="Improvement Habitats (click any habitat cell for more detail)"
-          habitats = {improvements}
-          isImprovement={true}
-        />
+          <HabitatsCard
+            title="Improvement Habitats (click any habitat cell for more detail)"
+            habitats = {improvements}
+            isImprovement={true}
+          />
+        </div>
 
       </main>
-    </div>
+    </>
   );
 }
