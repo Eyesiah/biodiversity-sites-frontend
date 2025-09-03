@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "fast-xml-parser": "^5.2.5",
     "mongodb": "^6.19.0",
     "next": "^15.5.0",
     "papaparse": "^5.5.3",
@@ -12,6 +13,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "update-ncas": "node tools/update-ncas.js",
+    "update-lnrs": "node tools/update-lnrs.js",
     "start": "next start",
     "lint": "next lint"
   },

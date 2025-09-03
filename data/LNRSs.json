@@ -1,0 +1,1447 @@
+[
+  {
+    "id": "05",
+    "name": "Tees Valley",
+    "size": 2417966624,
+    "adjacents": [
+      {
+        "id": "03",
+        "name": "County Durham",
+        "size": 6674514004
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      }
+    ]
+  },
+  {
+    "id": "03",
+    "name": "County Durham",
+    "size": 6674514004,
+    "adjacents": [
+      {
+        "id": "05",
+        "name": "Tees Valley",
+        "size": 2417966624
+      },
+      {
+        "id": "01",
+        "name": "North of Tyne",
+        "size": 16207491161
+      },
+      {
+        "id": "04",
+        "name": "South of Tyne and Wear",
+        "size": 1060176103
+      },
+      {
+        "id": "02",
+        "name": "Cumbria",
+        "size": 21355207289
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      }
+    ]
+  },
+  {
+    "id": "01",
+    "name": "North of Tyne",
+    "size": 16207491161,
+    "adjacents": [
+      {
+        "id": "03",
+        "name": "County Durham",
+        "size": 6674514004
+      },
+      {
+        "id": "04",
+        "name": "South of Tyne and Wear",
+        "size": 1060176103
+      },
+      {
+        "id": "02",
+        "name": "Cumbria",
+        "size": 21355207289
+      }
+    ]
+  },
+  {
+    "id": "04",
+    "name": "South of Tyne and Wear",
+    "size": 1060176103,
+    "adjacents": [
+      {
+        "id": "03",
+        "name": "County Durham",
+        "size": 6674514004
+      },
+      {
+        "id": "01",
+        "name": "North of Tyne",
+        "size": 16207491161
+      }
+    ]
+  },
+  {
+    "id": "02",
+    "name": "Cumbria",
+    "size": 21355207289,
+    "adjacents": [
+      {
+        "id": "03",
+        "name": "County Durham",
+        "size": 6674514004
+      },
+      {
+        "id": "01",
+        "name": "North of Tyne",
+        "size": 16207491161
+      },
+      {
+        "id": "06",
+        "name": "Lancashire",
+        "size": 9357409901
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Liverpool City Region",
+    "size": 2539561063,
+    "adjacents": [
+      {
+        "id": "13",
+        "name": "Cheshire",
+        "size": 6375937532
+      },
+      {
+        "id": "11",
+        "name": "Greater Manchester",
+        "size": 3604553660
+      },
+      {
+        "id": "06",
+        "name": "Lancashire",
+        "size": 9357409901
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "Cheshire",
+    "size": 6375937532,
+    "adjacents": [
+      {
+        "id": "10",
+        "name": "Liverpool City Region",
+        "size": 2539561063
+      },
+      {
+        "id": "11",
+        "name": "Greater Manchester",
+        "size": 3604553660
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      },
+      {
+        "id": "17",
+        "name": "Shropshire and Telford & Wrekin",
+        "size": 9462644237
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Greater Manchester",
+    "size": 3604553660,
+    "adjacents": [
+      {
+        "id": "10",
+        "name": "Liverpool City Region",
+        "size": 2539561063
+      },
+      {
+        "id": "13",
+        "name": "Cheshire",
+        "size": 6375937532
+      },
+      {
+        "id": "06",
+        "name": "Lancashire",
+        "size": 9357409901
+      },
+      {
+        "id": "08",
+        "name": "West Yorkshire",
+        "size": 5794349015
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      }
+    ]
+  },
+  {
+    "id": "06",
+    "name": "Lancashire",
+    "size": 9357409901,
+    "adjacents": [
+      {
+        "id": "02",
+        "name": "Cumbria",
+        "size": 21355207289
+      },
+      {
+        "id": "10",
+        "name": "Liverpool City Region",
+        "size": 2539561063
+      },
+      {
+        "id": "11",
+        "name": "Greater Manchester",
+        "size": 3604553660
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      },
+      {
+        "id": "08",
+        "name": "West Yorkshire",
+        "size": 5794349015
+      }
+    ]
+  },
+  {
+    "id": "09",
+    "name": "Hull and East Yorkshire",
+    "size": 7388565485,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "name": "Greater Lincolnshire",
+    "size": 19978331309,
+    "adjacents": [
+      {
+        "id": "09",
+        "name": "Hull and East Yorkshire",
+        "size": 7388565485
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      },
+      {
+        "id": "15",
+        "name": "Nottinghamshire and Nottingham",
+        "size": 5996236335
+      },
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "27",
+        "name": "Norfolk",
+        "size": 14950562329
+      }
+    ]
+  },
+  {
+    "id": "07",
+    "name": "North Yorkshire and York",
+    "size": 24272672998,
+    "adjacents": [
+      {
+        "id": "05",
+        "name": "Tees Valley",
+        "size": 2417966624
+      },
+      {
+        "id": "03",
+        "name": "County Durham",
+        "size": 6674514004
+      },
+      {
+        "id": "02",
+        "name": "Cumbria",
+        "size": 21355207289
+      },
+      {
+        "id": "06",
+        "name": "Lancashire",
+        "size": 9357409901
+      },
+      {
+        "id": "09",
+        "name": "Hull and East Yorkshire",
+        "size": 7388565485
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      },
+      {
+        "id": "08",
+        "name": "West Yorkshire",
+        "size": 5794349015
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "South Yorkshire",
+    "size": 4377942944,
+    "adjacents": [
+      {
+        "id": "09",
+        "name": "Hull and East Yorkshire",
+        "size": 7388565485
+      },
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      },
+      {
+        "id": "08",
+        "name": "West Yorkshire",
+        "size": 5794349015
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      },
+      {
+        "id": "15",
+        "name": "Nottinghamshire and Nottingham",
+        "size": 5996236335
+      }
+    ]
+  },
+  {
+    "id": "08",
+    "name": "West Yorkshire",
+    "size": 5794349015,
+    "adjacents": [
+      {
+        "id": "11",
+        "name": "Greater Manchester",
+        "size": 3604553660
+      },
+      {
+        "id": "06",
+        "name": "Lancashire",
+        "size": 9357409901
+      },
+      {
+        "id": "07",
+        "name": "North Yorkshire and York",
+        "size": 24272672998
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "Derbyshire",
+    "size": 7295916167,
+    "adjacents": [
+      {
+        "id": "13",
+        "name": "Cheshire",
+        "size": 6375937532
+      },
+      {
+        "id": "11",
+        "name": "Greater Manchester",
+        "size": 3604553660
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      },
+      {
+        "id": "08",
+        "name": "West Yorkshire",
+        "size": 5794349015
+      },
+      {
+        "id": "15",
+        "name": "Nottinghamshire and Nottingham",
+        "size": 5996236335
+      },
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Nottinghamshire and Nottingham",
+    "size": 5996236335,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "12",
+        "name": "South Yorkshire",
+        "size": 4377942944
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      },
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "name": "Leicestershire, Leicester and Rutland",
+    "size": 6927825493,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      },
+      {
+        "id": "15",
+        "name": "Nottinghamshire and Nottingham",
+        "size": 5996236335
+      },
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      },
+      {
+        "id": "24",
+        "name": "West Northamptonshire",
+        "size": 3674741273
+      }
+    ]
+  },
+  {
+    "id": "25",
+    "name": "North Northamptonshire",
+    "size": 2650179867,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "32",
+        "name": "Bedfordshire",
+        "size": 3266403349
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      },
+      {
+        "id": "24",
+        "name": "West Northamptonshire",
+        "size": 3674741273
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "name": "Herefordshire",
+    "size": 5771946159,
+    "adjacents": [
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "17",
+        "name": "Shropshire and Telford & Wrekin",
+        "size": 9462644237
+      },
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      }
+    ]
+  },
+  {
+    "id": "21",
+    "name": "Worcestershire",
+    "size": 4634202903,
+    "adjacents": [
+      {
+        "id": "20",
+        "name": "Herefordshire",
+        "size": 5771946159
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "17",
+        "name": "Shropshire and Telford & Wrekin",
+        "size": 9462644237
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      },
+      {
+        "id": "22",
+        "name": "West Midlands",
+        "size": 2429348648
+      },
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      }
+    ]
+  },
+  {
+    "id": "23",
+    "name": "Warwickshire",
+    "size": 5283246274,
+    "adjacents": [
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      },
+      {
+        "id": "22",
+        "name": "West Midlands",
+        "size": 2429348648
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      },
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      },
+      {
+        "id": "24",
+        "name": "West Northamptonshire",
+        "size": 3674741273
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "name": "Shropshire and Telford & Wrekin",
+    "size": 9462644237,
+    "adjacents": [
+      {
+        "id": "13",
+        "name": "Cheshire",
+        "size": 6375937532
+      },
+      {
+        "id": "20",
+        "name": "Herefordshire",
+        "size": 5771946159
+      },
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "name": "Staffordshire and Stoke-on-Trent",
+    "size": 7444202942,
+    "adjacents": [
+      {
+        "id": "13",
+        "name": "Cheshire",
+        "size": 6375937532
+      },
+      {
+        "id": "14",
+        "name": "Derbyshire",
+        "size": 7295916167
+      },
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "17",
+        "name": "Shropshire and Telford & Wrekin",
+        "size": 9462644237
+      },
+      {
+        "id": "22",
+        "name": "West Midlands",
+        "size": 2429348648
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "name": "West Midlands",
+    "size": 2429348648,
+    "adjacents": [
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "18",
+        "name": "Staffordshire and Stoke-on-Trent",
+        "size": 7444202942
+      }
+    ]
+  },
+  {
+    "id": "26",
+    "name": "Cambridgeshire and Peterborough",
+    "size": 9100010593,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "27",
+        "name": "Norfolk",
+        "size": 14950562329
+      },
+      {
+        "id": "28",
+        "name": "Suffolk",
+        "size": 10243992192
+      },
+      {
+        "id": "32",
+        "name": "Bedfordshire",
+        "size": 3266403349
+      },
+      {
+        "id": "33",
+        "name": "Hertfordshire",
+        "size": 4297026655
+      },
+      {
+        "id": "34",
+        "name": "Greater Essex",
+        "size": 10302525019
+      }
+    ]
+  },
+  {
+    "id": "27",
+    "name": "Norfolk",
+    "size": 14950562329,
+    "adjacents": [
+      {
+        "id": "16",
+        "name": "Greater Lincolnshire",
+        "size": 19978331309
+      },
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "28",
+        "name": "Suffolk",
+        "size": 10243992192
+      }
+    ]
+  },
+  {
+    "id": "28",
+    "name": "Suffolk",
+    "size": 10243992192,
+    "adjacents": [
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "27",
+        "name": "Norfolk",
+        "size": 14950562329
+      },
+      {
+        "id": "34",
+        "name": "Greater Essex",
+        "size": 10302525019
+      }
+    ]
+  },
+  {
+    "id": "32",
+    "name": "Bedfordshire",
+    "size": 3266403349,
+    "adjacents": [
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "33",
+        "name": "Hertfordshire",
+        "size": 4297026655
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      }
+    ]
+  },
+  {
+    "id": "33",
+    "name": "Hertfordshire",
+    "size": 4297026655,
+    "adjacents": [
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "32",
+        "name": "Bedfordshire",
+        "size": 3266403349
+      },
+      {
+        "id": "34",
+        "name": "Greater Essex",
+        "size": 10302525019
+      },
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      }
+    ]
+  },
+  {
+    "id": "34",
+    "name": "Greater Essex",
+    "size": 10302525019,
+    "adjacents": [
+      {
+        "id": "26",
+        "name": "Cambridgeshire and Peterborough",
+        "size": 9100010593
+      },
+      {
+        "id": "28",
+        "name": "Suffolk",
+        "size": 10243992192
+      },
+      {
+        "id": "33",
+        "name": "Hertfordshire",
+        "size": 4297026655
+      },
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "40",
+        "name": "Kent and Medway",
+        "size": 9948714979
+      }
+    ]
+  },
+  {
+    "id": "39",
+    "name": "Greater London",
+    "size": 4110354450,
+    "adjacents": [
+      {
+        "id": "33",
+        "name": "Hertfordshire",
+        "size": 4297026655
+      },
+      {
+        "id": "34",
+        "name": "Greater Essex",
+        "size": 10302525019
+      },
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      },
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      },
+      {
+        "id": "40",
+        "name": "Kent and Medway",
+        "size": 9948714979
+      }
+    ]
+  },
+  {
+    "id": "37",
+    "name": "Berkshire",
+    "size": 3251613527,
+    "adjacents": [
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      },
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      },
+      {
+        "id": "45",
+        "name": "Hampshire",
+        "size": 9748495088
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      }
+    ]
+  },
+  {
+    "id": "31",
+    "name": "Buckinghamshire and Milton Keynes",
+    "size": 4902038033,
+    "adjacents": [
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "32",
+        "name": "Bedfordshire",
+        "size": 3266403349
+      },
+      {
+        "id": "33",
+        "name": "Hertfordshire",
+        "size": 4297026655
+      },
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      },
+      {
+        "id": "24",
+        "name": "West Northamptonshire",
+        "size": 3674741273
+      }
+    ]
+  },
+  {
+    "id": "30",
+    "name": "Oxfordshire",
+    "size": 6798257341,
+    "adjacents": [
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      },
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      },
+      {
+        "id": "24",
+        "name": "West Northamptonshire",
+        "size": 3674741273
+      }
+    ]
+  },
+  {
+    "id": "48",
+    "name": "East Sussex and Brighton & Hove",
+    "size": 4550142643,
+    "adjacents": [
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      },
+      {
+        "id": "47",
+        "name": "West Sussex",
+        "size": 5097636709
+      },
+      {
+        "id": "40",
+        "name": "Kent and Medway",
+        "size": 9948714979
+      }
+    ]
+  },
+  {
+    "id": "38",
+    "name": "Surrey",
+    "size": 4258270185,
+    "adjacents": [
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "48",
+        "name": "East Sussex and Brighton & Hove",
+        "size": 4550142643
+      },
+      {
+        "id": "47",
+        "name": "West Sussex",
+        "size": 5097636709
+      },
+      {
+        "id": "45",
+        "name": "Hampshire",
+        "size": 9748495088
+      },
+      {
+        "id": "40",
+        "name": "Kent and Medway",
+        "size": 9948714979
+      }
+    ]
+  },
+  {
+    "id": "47",
+    "name": "West Sussex",
+    "size": 5097636709,
+    "adjacents": [
+      {
+        "id": "48",
+        "name": "East Sussex and Brighton & Hove",
+        "size": 4550142643
+      },
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      },
+      {
+        "id": "45",
+        "name": "Hampshire",
+        "size": 9748495088
+      }
+    ]
+  },
+  {
+    "id": "45",
+    "name": "Hampshire",
+    "size": 9748495088,
+    "adjacents": [
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      },
+      {
+        "id": "47",
+        "name": "West Sussex",
+        "size": 5097636709
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      },
+      {
+        "id": "44",
+        "name": "Dorset",
+        "size": 6743326348
+      }
+    ]
+  },
+  {
+    "id": "46",
+    "name": "Isle of Wight",
+    "size": 977576259.7,
+    "adjacents": []
+  },
+  {
+    "id": "40",
+    "name": "Kent and Medway",
+    "size": 9948714979,
+    "adjacents": [
+      {
+        "id": "34",
+        "name": "Greater Essex",
+        "size": 10302525019
+      },
+      {
+        "id": "39",
+        "name": "Greater London",
+        "size": 4110354450
+      },
+      {
+        "id": "48",
+        "name": "East Sussex and Brighton & Hove",
+        "size": 4550142643
+      },
+      {
+        "id": "38",
+        "name": "Surrey",
+        "size": 4258270185
+      }
+    ]
+  },
+  {
+    "id": "35",
+    "name": "West of England",
+    "size": 3895897862,
+    "adjacents": [
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      },
+      {
+        "id": "43",
+        "name": "Somerset",
+        "size": 8907398284
+      }
+    ]
+  },
+  {
+    "id": "29",
+    "name": "Gloucestershire",
+    "size": 7073471274,
+    "adjacents": [
+      {
+        "id": "20",
+        "name": "Herefordshire",
+        "size": 5771946159
+      },
+      {
+        "id": "21",
+        "name": "Worcestershire",
+        "size": 4634202903
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      },
+      {
+        "id": "35",
+        "name": "West of England",
+        "size": 3895897862
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      }
+    ]
+  },
+  {
+    "id": "36",
+    "name": "Wiltshire and Swindon",
+    "size": 8915973372,
+    "adjacents": [
+      {
+        "id": "37",
+        "name": "Berkshire",
+        "size": 3251613527
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      },
+      {
+        "id": "45",
+        "name": "Hampshire",
+        "size": 9748495088
+      },
+      {
+        "id": "35",
+        "name": "West of England",
+        "size": 3895897862
+      },
+      {
+        "id": "29",
+        "name": "Gloucestershire",
+        "size": 7073471274
+      },
+      {
+        "id": "44",
+        "name": "Dorset",
+        "size": 6743326348
+      },
+      {
+        "id": "43",
+        "name": "Somerset",
+        "size": 8907398284
+      }
+    ]
+  },
+  {
+    "id": "44",
+    "name": "Dorset",
+    "size": 6743326348,
+    "adjacents": [
+      {
+        "id": "45",
+        "name": "Hampshire",
+        "size": 9748495088
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      },
+      {
+        "id": "43",
+        "name": "Somerset",
+        "size": 8907398284
+      },
+      {
+        "id": "42",
+        "name": "Devon",
+        "size": 17064079175
+      }
+    ]
+  },
+  {
+    "id": "43",
+    "name": "Somerset",
+    "size": 8907398284,
+    "adjacents": [
+      {
+        "id": "35",
+        "name": "West of England",
+        "size": 3895897862
+      },
+      {
+        "id": "36",
+        "name": "Wiltshire and Swindon",
+        "size": 8915973372
+      },
+      {
+        "id": "44",
+        "name": "Dorset",
+        "size": 6743326348
+      },
+      {
+        "id": "42",
+        "name": "Devon",
+        "size": 17064079175
+      }
+    ]
+  },
+  {
+    "id": "41",
+    "name": "Cornwall and the Isles of Scilly",
+    "size": 8933919810,
+    "adjacents": [
+      {
+        "id": "42",
+        "name": "Devon",
+        "size": 17064079175
+      }
+    ]
+  },
+  {
+    "id": "42",
+    "name": "Devon",
+    "size": 17064079175,
+    "adjacents": [
+      {
+        "id": "44",
+        "name": "Dorset",
+        "size": 6743326348
+      },
+      {
+        "id": "43",
+        "name": "Somerset",
+        "size": 8907398284
+      },
+      {
+        "id": "41",
+        "name": "Cornwall and the Isles of Scilly",
+        "size": 8933919810
+      }
+    ]
+  },
+  {
+    "id": "24",
+    "name": "West Northamptonshire",
+    "size": 3674741273,
+    "adjacents": [
+      {
+        "id": "19",
+        "name": "Leicestershire, Leicester and Rutland",
+        "size": 6927825493
+      },
+      {
+        "id": "25",
+        "name": "North Northamptonshire",
+        "size": 2650179867
+      },
+      {
+        "id": "23",
+        "name": "Warwickshire",
+        "size": 5283246274
+      },
+      {
+        "id": "31",
+        "name": "Buckinghamshire and Milton Keynes",
+        "size": 4902038033
+      },
+      {
+        "id": "30",
+        "name": "Oxfordshire",
+        "size": 6798257341
+      }
+    ]
+  }
+]

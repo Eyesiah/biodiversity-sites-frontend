@@ -1,17 +1,16 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
-import API_URL from '../config';
+import fs from 'fs';
+import path from 'path';
 import { formatNumber } from '../lib/format';
 import ExternalLink from '../components/ExternalLink';
 import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
 
 export async function getStaticProps() {
   try {
-    const res = await fetch(`${API_URL}/NationalCharacterAreas/Areas?includeAdjacent=true`);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch NCA data, status: ${res.status}`);
-    }
-    const rawNcas = await res.json();
+    const jsonPath = path.join(process.cwd(), 'data', 'NCAs.json');
+    const jsonData = fs.readFileSync(jsonPath, 'utf-8');
+    const rawNcas = JSON.parse(jsonData);
     // Convert size from square meters to hectares
     rawNcas.forEach(nca => {
       nca.size = nca.size / 10000;
@@ -25,7 +24,6 @@ export async function getStaticProps() {
         ncas,
         error: null,
       },
-      revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
     console.error(e);
@@ -139,9 +137,7 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
             autoFocus
           />
         </div>
-        <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
-        Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
-        </p>
+        <p>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">
           <thead>
             <tr>
