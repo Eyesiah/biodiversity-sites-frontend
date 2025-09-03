@@ -12,6 +12,11 @@ export async function getStaticProps() {
       throw new Error(`Failed to fetch NCA data, status: ${res.status}`);
     }
     const rawNcas = await res.json();
+    // Convert size from square meters to hectares
+    rawNcas.forEach(nca => {
+      nca.size = nca.size / 10000;
+      nca.adjacents.forEach(adj => adj.size = adj.size / 10000);
+    });
     // Sort by name by default
     const ncas = rawNcas.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -148,7 +153,7 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
                 <>
                   <td>{nca.id}</td>
                   <td>{nca.name}</td>
-                  <td className="numeric-data">{formatNumber(nca.size, 2)}</td>
+                  <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
                   <td className="centered-data">{nca.adjacents?.length || 0}</td>
                 </>
               );
@@ -167,7 +172,7 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
                       </thead>
                       <tbody>
                         {nca.adjacents.map(adj => (
-                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 2)}</td></tr>
+                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
                         ))}
                       </tbody>
                     </table>

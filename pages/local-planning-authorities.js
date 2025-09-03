@@ -12,6 +12,11 @@ export async function getStaticProps() {
       throw new Error(`Failed to fetch LPA data, status: ${res.status}`);
     }
     const rawLpas = await res.json();
+    // Convert size from square meters to hectares
+    rawLpas.forEach(lpa => {
+      lpa.size = lpa.size / 10000;
+      lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+    });
     // Filter to include only LPAs with an ID starting with 'E'
     const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
     // Sort by name by default
@@ -150,7 +155,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                 <>
                   <td>{lpa.id}</td>
                   <td>{lpa.name}</td>
-                  <td className="numeric-data">{formatNumber(lpa.size, 2)}</td>
+                  <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
                   <td className="centered-data">{lpa.adjacents?.length || 0}</td>
                 </>
               );
@@ -169,7 +174,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                       </thead>
                       <tbody>
                         {lpa.adjacents.map(adj => (
-                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 2)}</td></tr>
+                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
                         ))}
                       </tbody>
                     </table>

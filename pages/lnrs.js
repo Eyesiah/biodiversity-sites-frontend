@@ -12,6 +12,11 @@ export async function getStaticProps() {
       throw new Error(`Failed to fetch LNRS data, status: ${res.status}`);
     }
     const rawLnrs = await res.json();
+    // Convert size from square meters to hectares
+    rawLnrs.forEach(lnrs => {
+      lnrs.size = lnrs.size / 10000;
+      lnrs.adjacents.forEach(adj => adj.size = adj.size / 10000);
+    });
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -148,7 +153,7 @@ export default function LNRSAreasPage({ lnrs, error }) {
                 <>
                   <td>{item.id}</td>
                   <td>{item.name}</td>
-                  <td className="numeric-data">{formatNumber(item.size, 2)}</td>
+                  <td className="numeric-data">{formatNumber(item.size, 0)}</td>
                   <td className="centered-data">{item.adjacents?.length || 0}</td>
                 </>
               );
@@ -167,7 +172,7 @@ export default function LNRSAreasPage({ lnrs, error }) {
                       </thead>
                       <tbody>
                         {item.adjacents.map(adj => (
-                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 2)}</td></tr>
+                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
                         ))}
                       </tbody>
                     </table>
