@@ -14,7 +14,10 @@ export async function getStaticProps() {
 
     // Convert size from square meters to hectares
     rawLpas.forEach(lpa => {
-      lpa.size = lpa.size / 10000;      
+      lpa.size = lpa.size / 10000;
+      if (lpa.adjacents) {
+        lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      }
     });
     // Filter to include only LPAs with an ID starting with 'E'
     const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
