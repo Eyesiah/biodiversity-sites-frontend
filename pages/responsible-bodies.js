@@ -128,8 +128,8 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             </button>
           )}
         </div>
-        <p style={{ fontStyle: 'italic', fontSize: '1.3rem' }}>
-          Not all the responsible bodies listed here are included in the BGS Site List or share the exact same name shown there.
+        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+          Not all the Responsible Bodies listed are included in the BGS Site List page or share the exact same name
         </p>
         <table className="site-table">
           <thead>

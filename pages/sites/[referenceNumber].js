@@ -303,10 +303,10 @@ const HabitatSummary = ({ site }) => {
 };
 
 // Helper component for a detail row to keep the JSX clean.
-const DetailRow = ({ label, value }) => (
+const DetailRow = ({ label, value, labelColor, valueColor }) => (
   <div className={styles.detailRow}>
-    <dt className={styles.detailLabel}>{label}</dt>
-    <dd className={styles.detailValue}>{value}</dd>
+    <dt className={styles.detailLabel} style={{ color: labelColor }}>{label}</dt>
+    <dd className={styles.detailValue} style={{ color: valueColor }}>{value}</dd>
   </div>
 );
 
@@ -319,10 +319,19 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
     }
 
     return site.responsibleBodies.map(siteBodyName => {
-      const foundBody = allResponsibleBodies.find(fullBody =>
-        fullBody.name.toLowerCase().includes(siteBodyName.toLowerCase()) ||
-        siteBodyName.toLowerCase().includes(fullBody.name.toLowerCase())
-      );
+      // Normalize names for better matching
+      const normalize = (name) => name.toLowerCase()
+        .replace(/(\b(county|borough|district|city|metropolitan)\b\s)?council/g, '')
+        .replace(/\blpa\b/g, '')
+        .replace(/(\bcombined\b\s)?authority/g, '')
+        .replace(/(\bwildlife\b\s)?trust/g, '')
+        .replace(/limited|ltd/g, '')
+        .replace(/\s+/g, ' ').trim();
+
+      const normalizedSiteBodyName = normalize(siteBodyName);
+
+      const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
+
       return {
         name: siteBodyName,
         details: foundBody || null,
@@ -370,14 +379,14 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
     </div>
     <Modal show={!!selectedBody} onClose={() => setSelectedBody(null)} title={selectedBody?.name}>
       {selectedBody && (
-        <div>
-          <DetailRow label="Designation Date" value={selectedBody.designationDate} />
-          <DetailRow label="Area of Expertise" value={selectedBody.expertise} />
-          <DetailRow label="Type of Organisation" value={selectedBody.organisationType} />
-          <DetailRow label="Address" value={selectedBody.address} />
-          <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} />
-          <DetailRow label="Telephone" value={selectedBody.telephone} />
-        </div>
+        <dl>
+          <DetailRow label="Designation Date" value={selectedBody.designationDate} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Area of Expertise" value={selectedBody.expertise} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Type of Organisation" value={selectedBody.organisationType} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Address" value={selectedBody.address} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Telephone" value={selectedBody.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+        </dl>
       )}
     </Modal>
   </section>
