@@ -96,7 +96,7 @@ export async function getStaticProps({ params }) {
 
     processSiteHabitatData(site);
 
-    // Pre-process allocations
+    // process allocation location data
     if (site.allocations) {
       await Promise.all(site.allocations.map(async (alloc) => {
         let allocCoords = null;
@@ -123,18 +123,6 @@ export async function getStaticProps({ params }) {
           alloc.distance = 'unknown';
         }
 
-        // areas need subtypes processed out
-        processHabitatSubTypes(alloc.habitats.areas);
-
-        const allHabitats = [
-          ...(alloc.habitats.areas || []),
-          ...(alloc.habitats.hedgerows || []),
-          ...(alloc.habitats.watercourses || [])
-        ];
-        processHabitatConditions(allHabitats);
-        allHabitats.forEach(habitat => {
-          habitat.distinctiveness = getHabitatDistinctiveness(habitat.type);
-        });
       }));
     }
 
