@@ -3,10 +3,12 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: #282c34; /* Charcoal Grey */
+  color: #f0f0f0;
 }
 
 a {
-  color: #0070f3;
+  color: #87ceeb; /* A light blue for link visibility */
   text-decoration: underline;
 }
 
@@ -180,4 +182,14 @@ a[href^="http"]::after, a[href^="https"]::after {
 .prose h3 {
   font-size: 1.2rem;
   margin-top: 1.5rem;
+}
+
+.site-table .numeric-data {
+  text-align: right;
+  font-family: monospace;
+}
+
+.site-table .centered-data {
+  text-align: center;
+  font-family: monospace;
 }

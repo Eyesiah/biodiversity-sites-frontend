@@ -19,23 +19,6 @@ function MyApp({ Component, pageProps }) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <style jsx global>{`
-        body {
-          background-color: #282c34; /* Charcoal Grey */
-          color: #f0f0f0;
-        }
-        a {
-          color: #87ceeb; /* A light blue for link visibility */
-        }
-        .site-table .numeric-data {
-          text-align: right;
-          font-family: monospace;
-        }
-        .site-table .centered-data {
-          text-align: center;
-          font-family: monospace;
-        }
-      `}</style>
       <Script
         strategy="afterInteractive"
         src="http://umami-env-2.eba-kzd2jeqh.eu-central-1.elasticbeanstalk.com/script.js"
