@@ -27,6 +27,18 @@ export async function getStaticPaths() {
   return { paths, fallback: 'blocking' };
 }
 
+// This function will be used to normalize names for both counting and matching
+const normalize = (name) => {
+  if (!name) return '';
+  return name.toLowerCase()
+    .replace(/(\b(county|borough|district|city|metropolitan)\b\s)?council/g, '')
+    .replace(/\blpa\b/g, '')
+    .replace(/(\bcombined\b\s)?authority/g, '')
+    .replace(/(\bwildlife\b\s)?trust/g, '')
+    .replace(/limited|ltd/g, '')
+    .replace(/\s+/g, ' ').trim();
+};
+
 const processHabitatConditions = (habitats) => {  
   // fix for https://github.com/Eyesiah/biodiversity-sites-frontend/issues/3
   habitats.forEach(habitat => {
@@ -70,6 +82,20 @@ export async function getStaticProps({ params }) {
       throw new Error(`Failed to fetch site data, status: ${res.status}`);
     }
 
+    // Fetch all sites to calculate counts for responsible bodies
+    const allSitesForCount = await fetchAllSites();
+    const bodyCounts = allSitesForCount.reduce((acc, currentSite) => {
+      if (currentSite.responsibleBodies) {
+        currentSite.responsibleBodies.forEach(bodyName => {
+          // Use the same robust normalization for counting
+          const normalizedName = normalize(bodyName);
+          acc[normalizedName] = (acc[normalizedName] || 0) + 1;
+        });
+      }
+      return acc;
+    }, {});
+
+
     // Fetch and parse responsible bodies data
     const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
@@ -86,6 +112,8 @@ export async function getStaticProps({ params }) {
       address: item['Address'] || '',
       emails: item['Email'] ? item['Email'].split('; ') : [],
       telephone: item['Telephone'] || '',
+      // Find the count for this body
+      siteCount: bodyCounts[normalize(item['Name'] || '')] || 0,
     }));
 
     const site = await res.json();
@@ -320,14 +348,6 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
 
     return site.responsibleBodies.map(siteBodyName => {
       // Normalize names for better matching
-      const normalize = (name) => name.toLowerCase()
-        .replace(/(\b(county|borough|district|city|metropolitan)\b\s)?council/g, '')
-        .replace(/\blpa\b/g, '')
-        .replace(/(\bcombined\b\s)?authority/g, '')
-        .replace(/(\bwildlife\b\s)?trust/g, '')
-        .replace(/limited|ltd/g, '')
-        .replace(/\s+/g, ' ').trim();
-
       const normalizedSiteBodyName = normalize(siteBodyName);
 
       const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
@@ -386,6 +406,7 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
           <DetailRow label="Address" value={selectedBody.address} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           <DetailRow label="Telephone" value={selectedBody.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="# BGS Sites" value={selectedBody.siteCount} labelColor="#f0f0f0" valueColor="#bdc3c7" />
         </dl>
       )}
     </Modal>
