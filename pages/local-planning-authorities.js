@@ -1,28 +1,17 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
-import fs from 'fs';
-import path from 'path';
-import Papa from 'papaparse';
+import API_URL from '../config';
 import { formatNumber } from '../lib/format';
 import ExternalLink from '../components/ExternalLink';
 import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
 
 export async function getStaticProps() {
   try {
-    const csvPath = path.join(process.cwd(), 'data', 'local-planning-authorities.csv');
-    const csvData = fs.readFileSync(csvPath, 'utf-8');
-
-    const parsedData = Papa.parse(csvData, {
-      header: true,
-      skipEmptyLines: true,
-      transform: (value, header) => {
-        if (header === 'size') return parseFloat(value);
-        if (header === 'adjacents') return JSON.parse(value);
-        return value;
-      }
-    });
-
-    const rawLpas = parsedData.data;
+    const res = await fetch(`${API_URL}/LocalPlanningAuthority/Areas?includeAdjacent=true`);
+    if (!res.ok) {
+      throw new Error(`Failed to fetch LPA data, status: ${res.status}`);
+    }
+    const rawLpas = await res.json();
     // Filter to include only LPAs with an ID starting with 'E'
     const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
     // Sort by name by default
@@ -33,6 +22,7 @@ export async function getStaticProps() {
         lpas,
         error: null,
       },
+      revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
     console.error(e);
