@@ -26,42 +26,48 @@ export const HabitatSummaryTable = ({ site }) => {
   const allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
   const allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
 
+  const hasAllocations = site.allocations != null;
+
   return (
     <table className={`${styles.subTable} ${styles.inlineTable}`}>
       <thead>
         <tr>
           <th>Habitat</th>
+          <th># Parcels</th>
           <th>Baseline Size</th>
           <th>Baseline HUs</th>
           <th>Improvements Size</th>
-          <th>Allocations Size</th>
-          <th>Allocations HUs</th>
+          {hasAllocations && <th>Allocations Size</th>}
+          {hasAllocations && <th>Allocations HUs</th>}
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Areas (ha)</td>
+          <td className={styles.numericData}>{habitats.areas?.length ?? 0}</td>
           <td className={styles.numericData}>{formatNumber(baselineArea)}</td>
           <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
           <td className={styles.numericData}>{formatNumber(improvementArea)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationArea)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea)}</td>}
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
         </tr>
         <tr>
           <td>Hedgerows (km)</td>
+          <td className={styles.numericData}>{habitats.hedgerows?.length ?? 0}</td>
           <td className={styles.numericData}>{formatNumber(baselineHedgerow)}</td>
           <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
           <td className={styles.numericData}>{formatNumber(improvementHedgerow)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationHedgerow)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow)}</td>}
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
         </tr>
         <tr>
           <td>Watercourses (km)</td>
+          <td className={styles.numericData}>{habitats.watercourses?.length ?? 0}</td>
           <td className={styles.numericData}>{formatNumber(baselineWatercourse)}</td>
           <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
           <td className={styles.numericData}>{formatNumber(improvementWatercourse)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationWatercourse)}</td>
-          <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse)}</td>}
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
         </tr>
       </tbody>
     </table>
