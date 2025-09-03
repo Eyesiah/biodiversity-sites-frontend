@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo } from 'react';
+import fs from 'fs';
+import path from 'path';
+import Papa from 'papaparse';
 import styles from '../../styles/SiteDetails.module.css';
 import API_URL from '../../config';
 import { fetchAllSites } from '../../lib/api';
@@ -8,6 +11,7 @@ import { getHabitatDistinctiveness, calculateBaselineHU, calculateImprovementHU 
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
 import { useSortableData } from '../../lib/hooks';
 import ExternalLink from '../../components/ExternalLink';
+import Modal from '../../components/Modal';
 import { formatNumber } from '../../lib/format';
 
 // This function tells Next.js which paths to pre-render at build time.
@@ -65,6 +69,24 @@ export async function getStaticProps({ params }) {
     if (!res.ok) {
       throw new Error(`Failed to fetch site data, status: ${res.status}`);
     }
+
+    // Fetch and parse responsible bodies data
+    const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
+    const csvData = fs.readFileSync(csvPath, 'utf-8');
+    const parsedData = Papa.parse(csvData, {
+      header: true,
+      skipEmptyLines: true,
+    });
+
+    const allResponsibleBodies = parsedData.data.map(item => ({
+      name: item['Name'] || '',
+      designationDate: item['Designation Date'] || '',
+      expertise: item['Area of Expertise'] || '',
+      organisationType: item['Type of Organisation'] || '',
+      address: item['Address'] || '',
+      emails: item['Email'] ? item['Email'].split('; ') : [],
+      telephone: item['Telephone'] || '',
+    }));
 
     const site = await res.json();
 
@@ -153,6 +175,7 @@ export async function getStaticProps({ params }) {
     return {
       props: {
         site,
+        allResponsibleBodies,
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
@@ -162,6 +185,7 @@ export async function getStaticProps({ params }) {
     return {  
       props: {
         site: null,
+        allResponsibleBodies: [],
         error: e.message,
       },
     };
@@ -286,12 +310,49 @@ const DetailRow = ({ label, value }) => (
   </div>
 );
 
-const SiteDetailsCard = ({site}) => {
+const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
+  const [selectedBody, setSelectedBody] = useState(null);
+
+  const siteResponsibleBodies = useMemo(() => {
+    if (!site.responsibleBodies || !allResponsibleBodies) {
+      return [];
+    }
+
+    return site.responsibleBodies.map(siteBodyName => {
+      const foundBody = allResponsibleBodies.find(fullBody =>
+        fullBody.name.toLowerCase().includes(siteBodyName.toLowerCase()) ||
+        siteBodyName.toLowerCase().includes(fullBody.name.toLowerCase())
+      );
+      return {
+        name: siteBodyName,
+        details: foundBody || null,
+      };
+    });
+  }, [site.responsibleBodies, allResponsibleBodies]);
+
   return <section className={styles.card}>
     <h3>Site Details</h3>
     <div>
       <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
-      <DetailRow label="Responsible Body" value={site.responsibleBodies?.join(', ') || 'N/A'} />
+      <DetailRow 
+        label="Responsible Body" 
+        value={
+          siteResponsibleBodies.length > 0 ? (
+            siteResponsibleBodies.map((body, index) => (
+              <span key={index}>
+                {body.details ? (
+                  <button onClick={() => setSelectedBody(body.details)} className={styles.linkButton}>
+                    {body.name}
+                  </button>
+                ) : (
+                  body.name
+                )}
+                {index < siteResponsibleBodies.length - 1 && ', '}
+              </span>
+            ))
+          ) : 'N/A'
+        } 
+      />
       <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
       {site.latitude && site.longitude && <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />}
@@ -307,6 +368,18 @@ const SiteDetailsCard = ({site}) => {
         </dd>
       </div>
     </div>
+    <Modal show={!!selectedBody} onClose={() => setSelectedBody(null)} title={selectedBody?.name}>
+      {selectedBody && (
+        <div>
+          <DetailRow label="Designation Date" value={selectedBody.designationDate} />
+          <DetailRow label="Area of Expertise" value={selectedBody.expertise} />
+          <DetailRow label="Type of Organisation" value={selectedBody.organisationType} />
+          <DetailRow label="Address" value={selectedBody.address} />
+          <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} />
+          <DetailRow label="Telephone" value={selectedBody.telephone} />
+        </div>
+      )}
+    </Modal>
   </section>
 }
 
@@ -578,7 +651,7 @@ const AllocationsCard = ({allocations, title}) => {
   );
 }
 
-export default function SitePage({ site, error }) {
+export default function SitePage({ site, allResponsibleBodies, error }) {
   if (error) {
     return (
       <>
@@ -623,6 +696,7 @@ export default function SitePage({ site, error }) {
         <div className={styles.detailsGrid}>
           <SiteDetailsCard
             site={site}
+            allResponsibleBodies={allResponsibleBodies}
           />
 
           <HabitatsCard
