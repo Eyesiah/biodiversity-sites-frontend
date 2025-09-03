@@ -93,30 +93,34 @@ const HabitatRow = ({ habitat, isImprovement }) => {
 };
 
 const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement }) => {
+  const [isOpen, setIsOpen] = useState(true);
 
   if (!habitats || habitats.length == 0)
   {
     return null;
   }
   return <section className={styles.card}>
-      <h3>{title}</h3>
-      
+    <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
+        {title} {isOpen ? '▼' : '▶'}
+    </h3>
+    {isOpen && 
         <table className={styles.table}>
-          <thead>
+            <thead>
             <tr>
-              <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-              <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
-              <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
-              <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
-              <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
+                <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
+                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
+                <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
+                <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
+                <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             {habitats.map((habitat) => (
-              <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} />
+                <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} />
             ))}
-          </tbody>
+            </tbody>
         </table>
+    }
       
     </section>    
 };
@@ -129,7 +133,7 @@ export function HabitatsCard ({title, habitats, isImprovement}) {
   const collatedWatercourses = collateHabitats(habitats?.watercourses, isImprovement);  
   
   const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
-    const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
+  const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedWatercourses, requestSort: requestSortWatercourses, sortConfig: sortConfigWatercourses } = useSortableData(collatedWatercourses, { key: 'type', direction: 'ascending' });
   
   const hasHabitats = sortedAreas.length > 0 || sortedWatercourses.length > 0 || sortedHedgerows.length > 0;
