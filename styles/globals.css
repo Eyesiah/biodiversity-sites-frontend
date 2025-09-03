@@ -120,7 +120,7 @@ a[href^="http"]::after, a[href^="https"]::after {
 }
 
 .site-table {
-  width: 90%;
+  width: auto;
   margin: 2rem auto;
   border-collapse: collapse;
   background-color: #fff;
