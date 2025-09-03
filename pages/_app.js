@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Script
         strategy="afterInteractive"
-        src="http://umami-env-2.eba-kzd2jeqh.eu-central-1.elasticbeanstalk.com/script.js"
+        src="/api/umami/script"
         data-website-id={umamiWebsiteId}
       />
       <Navigation />
