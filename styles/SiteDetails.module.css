@@ -143,10 +143,6 @@
   content: ' ▼';
 }
 
-.table tbody tr:nth-child(odd) {
-  /* Removed for a cleaner look, but you could use #f9f9f9 for subtle striping */
-}
-
 .table tbody tr:hover {
   background-color: #ecf0f1; /* Clouds */
 }
