@@ -31,8 +31,10 @@ export default function Navigation() {
         <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>BGS Habitat Summary</Link>
         <Link href="/habitat-analysis" className={styles.link} onClick={closeMenu}>BGS Habitat Analysis</Link>
         <Link href="/habitat-allocations" className={styles.link} onClick={closeMenu}>BGS Habitat Allocations</Link>
+        <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Responsible Bodies</Link>
         <Link href="/local-planning-authorities" className={styles.link} onClick={closeMenu}>Local Planning Authorities</Link>
-        <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Designated Responsible Bodies</Link>
+        <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
+        <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
       </div>
     </nav>
   );

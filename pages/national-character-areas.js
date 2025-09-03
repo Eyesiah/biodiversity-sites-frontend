@@ -7,19 +7,17 @@ import styles from '../styles/SiteDetails.module.css'; // Re-using some styles f
 
 export async function getStaticProps() {
   try {
-    const res = await fetch(`${API_URL}/LocalPlanningAuthority/Areas?includeAdjacent=true`);
+    const res = await fetch(`${API_URL}/NationalCharacterAreas/Areas?includeAdjacent=true`);
     if (!res.ok) {
-      throw new Error(`Failed to fetch LPA data, status: ${res.status}`);
+      throw new Error(`Failed to fetch NCA data, status: ${res.status}`);
     }
-    const rawLpas = await res.json();
-    // Filter to include only LPAs with an ID starting with 'E'
-    const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
+    const rawNcas = await res.json();
     // Sort by name by default
-    const lpas = filteredLpas.sort((a, b) => a.name.localeCompare(b.name));
+    const ncas = rawNcas.sort((a, b) => a.name.localeCompare(b.name));
 
     return {
       props: {
-        lpas,
+        ncas,
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
@@ -28,7 +26,7 @@ export async function getStaticProps() {
     console.error(e);
     return {
       props: {
-        lpas: [],
+        ncas: [],
         error: e.message,
       },
     };
@@ -62,7 +60,7 @@ const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan }) => {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
+export default function NationalCharacterAreasPage({ ncas, error }) {
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -75,13 +73,13 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
     return () => clearTimeout(timerId);
   }, [inputValue]);
 
-  const filteredAndSortedLPAs = useMemo(() => {
-    let filtered = [...lpas];
+  const filteredAndSortedNCAs = useMemo(() => {
+    let filtered = [...ncas];
 
     if (debouncedSearchTerm) {
       const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-      filtered = filtered.filter(lpa =>
-        (lpa.name?.toLowerCase() || '').includes(lowercasedTerm)
+      filtered = filtered.filter(nca =>
+        (nca.name?.toLowerCase() || '').includes(lowercasedTerm)
       );
     }
 
@@ -98,7 +96,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
     }
 
     return filtered;
-  }, [lpas, debouncedSearchTerm, sortConfig]);
+  }, [ncas, debouncedSearchTerm, sortConfig]);
 
   const requestSort = (key) => {
     let direction = 'ascending';
@@ -120,45 +118,45 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
   return (
     <div className="container">
       <Head>
-        <title>Local Planning Authorities</title>
+        <title>National Character Areas</title>
       </Head>
       <main className="main">
-        <h1 className="title">Local Planning Authorities</h1>
+        <h1 className="title">National Character Areas</h1>
         <div className="search-container">
           <input
             type="text"
             className="search-input"
-            placeholder="Search by LPA name."
+            placeholder="Search by NCA name."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
         </div>
-        <p>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
+        <p>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs.</p>
         <table className="site-table">
           <thead>
             <tr>
               <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
               <th onClick={() => requestSort('size')}>Area (ha){getSortIndicator('size')}</th>
-              <th onClick={() => requestSort('adjacents.length')}># Adjacent LPAs{getSortIndicator('adjacents.length')}</th>
+              <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
             </tr>
           </thead>
           <tbody>
-            {filteredAndSortedLPAs.map((lpa) => {
+            {filteredAndSortedNCAs.map((nca) => {
               const mainRow = (
                 <>
-                  <td>{lpa.id}</td>
-                  <td>{lpa.name}</td>
-                  <td className="numeric-data">{formatNumber(lpa.size, 2)}</td>
-                  <td className="centered-data">{lpa.adjacents?.length || 0}</td>
+                  <td>{nca.id}</td>
+                  <td>{nca.name}</td>
+                  <td className="numeric-data">{formatNumber(nca.size, 2)}</td>
+                  <td className="centered-data">{nca.adjacents?.length || 0}</td>
                 </>
               );
 
               const collapsibleContent = (
                 <div style={{ padding: '0.5rem' }}>
-                  <h4>Adjacent LPAs</h4>
-                  {lpa.adjacents && lpa.adjacents.length > 0 ? (
+                  <h4>Adjacent NCAs</h4>
+                  {nca.adjacents && nca.adjacents.length > 0 ? (
                     <table className={styles.subTable}>
                       <thead>
                         <tr>
@@ -168,7 +166,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {lpa.adjacents.map(adj => (
+                        {nca.adjacents.map(adj => (
                           <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 2)}</td></tr>
                         ))}
                       </tbody>
@@ -179,7 +177,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                 </div>
               );
 
-              return <CollapsibleRow key={lpa.id} mainRow={mainRow} collapsibleContent={collapsibleContent} colSpan={4} />;
+              return <CollapsibleRow key={nca.id} mainRow={mainRow} collapsibleContent={collapsibleContent} colSpan={4} />;
             })}
           </tbody>
         </table>
