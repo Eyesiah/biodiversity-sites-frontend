@@ -18,11 +18,6 @@ export async function getStaticProps() {
     });
     // Filter to include only LPAs with an ID starting with 'E'
     const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
-    // Add adjacent count but remove the heavy adjacent data from initial props
-    filteredLpas.forEach(lpa => {
-      lpa.adjacentCount = lpa.adjacents?.length || 0;
-      delete lpa.adjacents;
-    });
     // Sort by name by default
     const lpas = filteredLpas.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -43,68 +38,24 @@ export async function getStaticProps() {
   }
 }
 
-const CollapsibleRow = ({ lpa, mainRow, colSpan }) => {
+const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [adjacents, setAdjacents] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleToggle = async () => {
-    const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
-
-    // Fetch data only when opening the row for the first time
-    if (newIsOpen && adjacents.length === 0 && lpa.adjacentCount > 0) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(`/api/lpa/${lpa.id}`);
-        if (!res.ok) throw new Error('Failed to fetch adjacency data.');
-        const data = await res.json();
-        setAdjacents(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
 
   return (
     <>
       <tr
-        onClick={handleToggle}
+        onClick={() => setIsOpen(!isOpen)}
         className={`${styles.clickableRow} ${isHovered ? styles.subTableHovered : ''}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {mainRow}
       </tr>
-      {isOpen && lpa.adjacentCount > 0 && (
+      {isOpen && (
         <tr className={`${isHovered ? styles.subTableHovered : ''}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
           <td colSpan={colSpan}>
-            <div style={{ padding: '0.5rem' }}>
-              <h4>Adjacent LPAs</h4>
-              {isLoading && <p>Loading...</p>}
-              {error && <p className="error">{error}</p>}
-              {!isLoading && !error && adjacents.length > 0 && (
-                <table className={styles.subTable}>
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Area (ha)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {adjacents.map(adj => (
-                      <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+            {collapsibleContent}
           </td>
         </tr>
       )}
@@ -195,7 +146,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
               <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
               <th onClick={() => requestSort('size')}>Area (ha){getSortIndicator('size')}</th>
-              <th onClick={() => requestSort('adjacentCount')}># Adjacent LPAs{getSortIndicator('adjacentCount')}</th>
+              <th onClick={() => requestSort('adjacents.length')}># Adjacent LPAs{getSortIndicator('adjacents.length')}</th>
             </tr>
           </thead>
           <tbody>
@@ -205,11 +156,35 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                   <td>{lpa.id}</td>
                   <td>{lpa.name}</td>
                   <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
-                  <td className="centered-data">{lpa.adjacentCount}</td>
+                  <td className="centered-data">{lpa.adjacents?.length || 0}</td>
                 </>
               );
 
-              return <CollapsibleRow key={lpa.id} lpa={lpa} mainRow={mainRow} colSpan={4} />;
+              const collapsibleContent = (
+                <div style={{ padding: '0.5rem' }}>
+                  <h4>Adjacent LPAs</h4>
+                  {lpa.adjacents && lpa.adjacents.length > 0 ? (
+                    <table className={styles.subTable}>
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Name</th>
+                          <th>Area (ha)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {lpa.adjacents.map(adj => (
+                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p>No adjacency data available.</p>
+                  )}
+                </div>
+              );
+
+              return <CollapsibleRow key={lpa.id} mainRow={mainRow} collapsibleContent={collapsibleContent} colSpan={4} />;
             })}
           </tbody>
         </table>
