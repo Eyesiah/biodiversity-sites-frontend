@@ -116,6 +116,8 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
     return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
   };
 
+  const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
+
   if (error) {
     return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
   }
@@ -137,7 +139,9 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
             autoFocus
           />
         </div>
-        <p>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs.</p>
+        <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
+        Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
+        </p>
         <table className="site-table">
           <thead>
             <tr>

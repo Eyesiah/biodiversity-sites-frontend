@@ -118,6 +118,8 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
     return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
   };
 
+  const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
+
   if (error) {
     return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
   }
@@ -139,7 +141,9 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
             autoFocus
           />
         </div>
-        <p>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
+        <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
+        Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
+        </p>
         <table className="site-table">
           <thead>
             <tr>

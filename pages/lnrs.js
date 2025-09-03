@@ -116,6 +116,8 @@ export default function LNRSAreasPage({ lnrs, error }) {
     return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
   };
 
+  const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
+
   if (error) {
     return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
   }
@@ -137,7 +139,9 @@ export default function LNRSAreasPage({ lnrs, error }) {
             autoFocus
           />
         </div>
-        <p>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas.</p>
+        <p style={{ fontStyle: 'italic', fontSize: '1.8rem' }}>
+          Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
+        </p>
         <table className="site-table">
           <thead>
             <tr>
