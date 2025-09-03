@@ -102,9 +102,9 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
         <h1 className="title">Designated Responsible Bodies</h1>
         <div className="summary">
           {inputValue ? (
-            <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies.</p>
+            <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
           ) : (
-            <p style={{ fontStyle: 'normalitalic', fontSize: '1.9rem' }}>
+            <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
                 This list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.
             </p>
         )}
@@ -129,7 +129,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           )}
         </div>
         <p style={{ fontStyle: 'italic', fontSize: '1.3rem' }}>
-          Not all the responsible bodies listed here are included in the BGS Site List or share the exact same name as is shown there.
+          Not all the responsible bodies listed here are included in the BGS Site List or share the exact same name shown there.
         </p>
         <table className="site-table">
           <thead>
