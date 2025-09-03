@@ -108,15 +108,12 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
       </Head>
         <main className="main">
         <h1 className="title">Designated Responsible Bodies</h1>
-        <div className="summary" style={{ textAlign: 'center' }}>
-            <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
-               Designated responsible bodies may enter into conservation covenant agreements with landowners in England.
-            </p>
+        <div className="summary" style={{ textAlign: 'center' }}>           
           {inputValue ? (
             <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
           ) : (
             <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
-                The list contains <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies.
+                These <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies may enter into conservation covenant agreements with landowners in England.
             </p>
         )}
         </div>
@@ -124,7 +121,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by name, expertise, type, or address..."
+            placeholder="Search by name, expertise, type, or address."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
@@ -140,7 +137,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           )}
         </div>
         <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
-          Not all the Responsible Bodies listed here are included in the BGS Site List page or share the exact same name
+          Not all the Responsible Bodies listed here are included in the BGS Site List page or share the same name.
         </p>
         <table className="site-table">
           <thead>
