@@ -1,0 +1,4992 @@
+[
+  {
+    "id": "1",
+    "name": "North Northumberland Coastal Plain",
+    "size": 377000000,
+    "adjacents": [
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "3",
+        "name": "Cheviot Fringe",
+        "size": 516000000
+      },
+      {
+        "id": "12",
+        "name": "Mid Northumberland",
+        "size": 637000000
+      },
+      {
+        "id": "13",
+        "name": "South East Northumberland Coastal Plain",
+        "size": 437000000
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Northumberland Sandstone Hills",
+    "size": 727000000,
+    "adjacents": [
+      {
+        "id": "1",
+        "name": "North Northumberland Coastal Plain",
+        "size": 377000000
+      },
+      {
+        "id": "3",
+        "name": "Cheviot Fringe",
+        "size": 516000000
+      },
+      {
+        "id": "4",
+        "name": "Cheviots",
+        "size": 365000000
+      },
+      {
+        "id": "5",
+        "name": "Border Moors and Forests",
+        "size": 1272000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "12",
+        "name": "Mid Northumberland",
+        "size": 637000000
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Cheviot Fringe",
+    "size": 516000000,
+    "adjacents": [
+      {
+        "id": "1",
+        "name": "North Northumberland Coastal Plain",
+        "size": 377000000
+      },
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "4",
+        "name": "Cheviots",
+        "size": 365000000
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Cheviots",
+    "size": 365000000,
+    "adjacents": [
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "3",
+        "name": "Cheviot Fringe",
+        "size": 516000000
+      },
+      {
+        "id": "5",
+        "name": "Border Moors and Forests",
+        "size": 1272000000
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Border Moors and Forests",
+    "size": 1272000000,
+    "adjacents": [
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "4",
+        "name": "Cheviots",
+        "size": 365000000
+      },
+      {
+        "id": "6",
+        "name": "Solway Basin",
+        "size": 984000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Solway Basin",
+    "size": 984000000,
+    "adjacents": [
+      {
+        "id": "5",
+        "name": "Border Moors and Forests",
+        "size": 1272000000
+      },
+      {
+        "id": "7",
+        "name": "West Cumbria Coastal Plain",
+        "size": 493000000
+      },
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "9",
+        "name": "Eden Valley",
+        "size": 810000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "West Cumbria Coastal Plain",
+    "size": 493000000,
+    "adjacents": [
+      {
+        "id": "6",
+        "name": "Solway Basin",
+        "size": 984000000
+      },
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      },
+      {
+        "id": "20",
+        "name": "Morecambe Bay Limestones",
+        "size": 400000000
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Cumbria High Fells",
+    "size": 1990000000,
+    "adjacents": [
+      {
+        "id": "6",
+        "name": "Solway Basin",
+        "size": 984000000
+      },
+      {
+        "id": "7",
+        "name": "West Cumbria Coastal Plain",
+        "size": 493000000
+      },
+      {
+        "id": "9",
+        "name": "Eden Valley",
+        "size": 810000000
+      },
+      {
+        "id": "17",
+        "name": "Orton Fells",
+        "size": 293000000
+      },
+      {
+        "id": "18",
+        "name": "Howgill Fells",
+        "size": 104000000
+      },
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Eden Valley",
+    "size": 810000000,
+    "adjacents": [
+      {
+        "id": "6",
+        "name": "Solway Basin",
+        "size": 984000000
+      },
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "17",
+        "name": "Orton Fells",
+        "size": 293000000
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "North Pennines",
+    "size": 2146000000,
+    "adjacents": [
+      {
+        "id": "9",
+        "name": "Eden Valley",
+        "size": 810000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      },
+      {
+        "id": "17",
+        "name": "Orton Fells",
+        "size": 293000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Tyne Gap and Hadrian's Wall",
+    "size": 434000000,
+    "adjacents": [
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "5",
+        "name": "Border Moors and Forests",
+        "size": 1272000000
+      },
+      {
+        "id": "6",
+        "name": "Solway Basin",
+        "size": 984000000
+      },
+      {
+        "id": "9",
+        "name": "Eden Valley",
+        "size": 810000000
+      },
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "12",
+        "name": "Mid Northumberland",
+        "size": 637000000
+      },
+      {
+        "id": "13",
+        "name": "South East Northumberland Coastal Plain",
+        "size": 437000000
+      },
+      {
+        "id": "14",
+        "name": "Tyne and Wear Lowlands",
+        "size": 464000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "Mid Northumberland",
+    "size": 637000000,
+    "adjacents": [
+      {
+        "id": "1",
+        "name": "North Northumberland Coastal Plain",
+        "size": 377000000
+      },
+      {
+        "id": "2",
+        "name": "Northumberland Sandstone Hills",
+        "size": 727000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "13",
+        "name": "South East Northumberland Coastal Plain",
+        "size": 437000000
+      },
+      {
+        "id": "14",
+        "name": "Tyne and Wear Lowlands",
+        "size": 464000000
+      }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "South East Northumberland Coastal Plain",
+    "size": 437000000,
+    "adjacents": [
+      {
+        "id": "1",
+        "name": "North Northumberland Coastal Plain",
+        "size": 377000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "12",
+        "name": "Mid Northumberland",
+        "size": 637000000
+      },
+      {
+        "id": "14",
+        "name": "Tyne and Wear Lowlands",
+        "size": 464000000
+      }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "Tyne and Wear Lowlands",
+    "size": 464000000,
+    "adjacents": [
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "12",
+        "name": "Mid Northumberland",
+        "size": 637000000
+      },
+      {
+        "id": "13",
+        "name": "South East Northumberland Coastal Plain",
+        "size": 437000000
+      },
+      {
+        "id": "15",
+        "name": "Durham Magnesian Limestone Plateau",
+        "size": 453000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Durham Magnesian Limestone Plateau",
+    "size": 453000000,
+    "adjacents": [
+      {
+        "id": "14",
+        "name": "Tyne and Wear Lowlands",
+        "size": 464000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      },
+      {
+        "id": "23",
+        "name": "Tees Lowlands",
+        "size": 1022000000
+      }
+    ]
+  },
+  {
+    "id": "16",
+    "name": "Durham Coalfield Pennine Fringe",
+    "size": 661000000,
+    "adjacents": [
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "11",
+        "name": "Tyne Gap and Hadrian's Wall",
+        "size": 434000000
+      },
+      {
+        "id": "14",
+        "name": "Tyne and Wear Lowlands",
+        "size": 464000000
+      },
+      {
+        "id": "15",
+        "name": "Durham Magnesian Limestone Plateau",
+        "size": 453000000
+      },
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "23",
+        "name": "Tees Lowlands",
+        "size": 1022000000
+      }
+    ]
+  },
+  {
+    "id": "17",
+    "name": "Orton Fells",
+    "size": 293000000,
+    "adjacents": [
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "9",
+        "name": "Eden Valley",
+        "size": 810000000
+      },
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "18",
+        "name": "Howgill Fells",
+        "size": 104000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      }
+    ]
+  },
+  {
+    "id": "18",
+    "name": "Howgill Fells",
+    "size": 104000000,
+    "adjacents": [
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "17",
+        "name": "Orton Fells",
+        "size": 293000000
+      },
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      }
+    ]
+  },
+  {
+    "id": "19",
+    "name": "South Cumbria Low Fells",
+    "size": 691000000,
+    "adjacents": [
+      {
+        "id": "7",
+        "name": "West Cumbria Coastal Plain",
+        "size": 493000000
+      },
+      {
+        "id": "8",
+        "name": "Cumbria High Fells",
+        "size": 1990000000
+      },
+      {
+        "id": "18",
+        "name": "Howgill Fells",
+        "size": 104000000
+      },
+      {
+        "id": "20",
+        "name": "Morecambe Bay Limestones",
+        "size": 400000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      }
+    ]
+  },
+  {
+    "id": "20",
+    "name": "Morecambe Bay Limestones",
+    "size": 400000000,
+    "adjacents": [
+      {
+        "id": "7",
+        "name": "West Cumbria Coastal Plain",
+        "size": 493000000
+      },
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "31",
+        "name": "Morecambe Coast and Lune Estuary",
+        "size": 132000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      }
+    ]
+  },
+  {
+    "id": "21",
+    "name": "Yorkshire Dales",
+    "size": 2400000000,
+    "adjacents": [
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "17",
+        "name": "Orton Fells",
+        "size": 293000000
+      },
+      {
+        "id": "18",
+        "name": "Howgill Fells",
+        "size": 104000000
+      },
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      },
+      {
+        "id": "20",
+        "name": "Morecambe Bay Limestones",
+        "size": 400000000
+      },
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      },
+      {
+        "id": "35",
+        "name": "Lancashire Valleys",
+        "size": 554000000
+      },
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      }
+    ]
+  },
+  {
+    "id": "22",
+    "name": "Pennine Dales Fringe",
+    "size": 873000000,
+    "adjacents": [
+      {
+        "id": "10",
+        "name": "North Pennines",
+        "size": 2146000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "23",
+        "name": "Tees Lowlands",
+        "size": 1022000000
+      },
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      },
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      }
+    ]
+  },
+  {
+    "id": "23",
+    "name": "Tees Lowlands",
+    "size": 1022000000,
+    "adjacents": [
+      {
+        "id": "15",
+        "name": "Durham Magnesian Limestone Plateau",
+        "size": 453000000
+      },
+      {
+        "id": "16",
+        "name": "Durham Coalfield Pennine Fringe",
+        "size": 661000000
+      },
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "25",
+        "name": "North York Moors and Cleveland Hills",
+        "size": 1659000000
+      }
+    ]
+  },
+  {
+    "id": "24",
+    "name": "Vale of Mowbray",
+    "size": 606000000,
+    "adjacents": [
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "23",
+        "name": "Tees Lowlands",
+        "size": 1022000000
+      },
+      {
+        "id": "25",
+        "name": "North York Moors and Cleveland Hills",
+        "size": 1659000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      },
+      {
+        "id": "29",
+        "name": "Howardian Hills",
+        "size": 240000000
+      },
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      }
+    ]
+  },
+  {
+    "id": "25",
+    "name": "North York Moors and Cleveland Hills",
+    "size": 1659000000,
+    "adjacents": [
+      {
+        "id": "23",
+        "name": "Tees Lowlands",
+        "size": 1022000000
+      },
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "26",
+        "name": "Vale of Pickering",
+        "size": 431000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      },
+      {
+        "id": "29",
+        "name": "Howardian Hills",
+        "size": 240000000
+      }
+    ]
+  },
+  {
+    "id": "26",
+    "name": "Vale of Pickering",
+    "size": 431000000,
+    "adjacents": [
+      {
+        "id": "25",
+        "name": "North York Moors and Cleveland Hills",
+        "size": 1659000000
+      },
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "29",
+        "name": "Howardian Hills",
+        "size": 240000000
+      }
+    ]
+  },
+  {
+    "id": "27",
+    "name": "Yorkshire Wolds",
+    "size": 1114000000,
+    "adjacents": [
+      {
+        "id": "26",
+        "name": "Vale of Pickering",
+        "size": 431000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      },
+      {
+        "id": "29",
+        "name": "Howardian Hills",
+        "size": 240000000
+      },
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "40",
+        "name": "Holderness",
+        "size": 873000000
+      },
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      }
+    ]
+  },
+  {
+    "id": "28",
+    "name": "Vale of York",
+    "size": 1021000000,
+    "adjacents": [
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "25",
+        "name": "North York Moors and Cleveland Hills",
+        "size": 1659000000
+      },
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "29",
+        "name": "Howardian Hills",
+        "size": 240000000
+      },
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      },
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      }
+    ]
+  },
+  {
+    "id": "29",
+    "name": "Howardian Hills",
+    "size": 240000000,
+    "adjacents": [
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "25",
+        "name": "North York Moors and Cleveland Hills",
+        "size": 1659000000
+      },
+      {
+        "id": "26",
+        "name": "Vale of Pickering",
+        "size": 431000000
+      },
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      }
+    ]
+  },
+  {
+    "id": "30",
+    "name": "Southern Magnesian Limestone",
+    "size": 1368000000,
+    "adjacents": [
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "24",
+        "name": "Vale of Mowbray",
+        "size": 606000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "49",
+        "name": "Sherwood",
+        "size": 535000000
+      }
+    ]
+  },
+  {
+    "id": "31",
+    "name": "Morecambe Coast and Lune Estuary",
+    "size": 132000000,
+    "adjacents": [
+      {
+        "id": "20",
+        "name": "Morecambe Bay Limestones",
+        "size": 400000000
+      },
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      }
+    ]
+  },
+  {
+    "id": "32",
+    "name": "Lancashire and Amounderness Plain",
+    "size": 986000000,
+    "adjacents": [
+      {
+        "id": "31",
+        "name": "Morecambe Coast and Lune Estuary",
+        "size": 132000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      },
+      {
+        "id": "35",
+        "name": "Lancashire Valleys",
+        "size": 554000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      },
+      {
+        "id": "57",
+        "name": "Sefton Coast",
+        "size": 90000000
+      },
+      {
+        "id": "58",
+        "name": "Merseyside Conurbation",
+        "size": 287000000
+      }
+    ]
+  },
+  {
+    "id": "33",
+    "name": "Bowland Fringe and Pendle Hill",
+    "size": 741000000,
+    "adjacents": [
+      {
+        "id": "19",
+        "name": "South Cumbria Low Fells",
+        "size": 691000000
+      },
+      {
+        "id": "20",
+        "name": "Morecambe Bay Limestones",
+        "size": 400000000
+      },
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "31",
+        "name": "Morecambe Coast and Lune Estuary",
+        "size": 132000000
+      },
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "34",
+        "name": "Bowland Fells",
+        "size": 374000000
+      },
+      {
+        "id": "35",
+        "name": "Lancashire Valleys",
+        "size": 554000000
+      }
+    ]
+  },
+  {
+    "id": "34",
+    "name": "Bowland Fells",
+    "size": 374000000,
+    "adjacents": [
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      }
+    ]
+  },
+  {
+    "id": "35",
+    "name": "Lancashire Valleys",
+    "size": 554000000,
+    "adjacents": [
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "33",
+        "name": "Bowland Fringe and Pendle Hill",
+        "size": 741000000
+      },
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      }
+    ]
+  },
+  {
+    "id": "36",
+    "name": "Southern Pennines",
+    "size": 1197000000,
+    "adjacents": [
+      {
+        "id": "21",
+        "name": "Yorkshire Dales",
+        "size": 2400000000
+      },
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "35",
+        "name": "Lancashire Valleys",
+        "size": 554000000
+      },
+      {
+        "id": "37",
+        "name": "Yorkshire Southern Pennine Fringe",
+        "size": 585000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      }
+    ]
+  },
+  {
+    "id": "37",
+    "name": "Yorkshire Southern Pennine Fringe",
+    "size": 585000000,
+    "adjacents": [
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      }
+    ]
+  },
+  {
+    "id": "38",
+    "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+    "size": 1698000000,
+    "adjacents": [
+      {
+        "id": "22",
+        "name": "Pennine Dales Fringe",
+        "size": 873000000
+      },
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      },
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "37",
+        "name": "Yorkshire Southern Pennine Fringe",
+        "size": 585000000
+      },
+      {
+        "id": "49",
+        "name": "Sherwood",
+        "size": 535000000
+      },
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      }
+    ]
+  },
+  {
+    "id": "39",
+    "name": "Humberhead Levels",
+    "size": 1718000000,
+    "adjacents": [
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "28",
+        "name": "Vale of York",
+        "size": 1021000000
+      },
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      },
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "49",
+        "name": "Sherwood",
+        "size": 535000000
+      }
+    ]
+  },
+  {
+    "id": "40",
+    "name": "Holderness",
+    "size": 873000000,
+    "adjacents": [
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      }
+    ]
+  },
+  {
+    "id": "41",
+    "name": "Humber Estuary",
+    "size": 280000000,
+    "adjacents": [
+      {
+        "id": "27",
+        "name": "Yorkshire Wolds",
+        "size": 1114000000
+      },
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "40",
+        "name": "Holderness",
+        "size": 873000000
+      },
+      {
+        "id": "42",
+        "name": "Lincolnshire Coast and Marshes",
+        "size": 882000000
+      },
+      {
+        "id": "43",
+        "name": "Lincolnshire Wolds",
+        "size": 845000000
+      },
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      }
+    ]
+  },
+  {
+    "id": "42",
+    "name": "Lincolnshire Coast and Marshes",
+    "size": 882000000,
+    "adjacents": [
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      },
+      {
+        "id": "43",
+        "name": "Lincolnshire Wolds",
+        "size": 845000000
+      },
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      },
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      }
+    ]
+  },
+  {
+    "id": "43",
+    "name": "Lincolnshire Wolds",
+    "size": 845000000,
+    "adjacents": [
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      },
+      {
+        "id": "42",
+        "name": "Lincolnshire Coast and Marshes",
+        "size": 882000000
+      },
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      }
+    ]
+  },
+  {
+    "id": "44",
+    "name": "Central Lincolnshire Vale",
+    "size": 819000000,
+    "adjacents": [
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      },
+      {
+        "id": "42",
+        "name": "Lincolnshire Coast and Marshes",
+        "size": 882000000
+      },
+      {
+        "id": "43",
+        "name": "Lincolnshire Wolds",
+        "size": 845000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      },
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "47",
+        "name": "Southern Lincolnshire Edge",
+        "size": 570000000
+      }
+    ]
+  },
+  {
+    "id": "45",
+    "name": "Northern Lincolnshire Edge with Coversands",
+    "size": 501000000,
+    "adjacents": [
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "41",
+        "name": "Humber Estuary",
+        "size": 280000000
+      },
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      },
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "47",
+        "name": "Southern Lincolnshire Edge",
+        "size": 570000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      }
+    ]
+  },
+  {
+    "id": "46",
+    "name": "The Fens",
+    "size": 3826000000,
+    "adjacents": [
+      {
+        "id": "42",
+        "name": "Lincolnshire Coast and Marshes",
+        "size": 882000000
+      },
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      },
+      {
+        "id": "47",
+        "name": "Southern Lincolnshire Edge",
+        "size": 570000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      },
+      {
+        "id": "76",
+        "name": "North West Norfolk",
+        "size": 801000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      },
+      {
+        "id": "87",
+        "name": "East Anglian Chalk",
+        "size": 839000000
+      },
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      }
+    ]
+  },
+  {
+    "id": "47",
+    "name": "Southern Lincolnshire Edge",
+    "size": 570000000,
+    "adjacents": [
+      {
+        "id": "44",
+        "name": "Central Lincolnshire Vale",
+        "size": 819000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      },
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      }
+    ]
+  },
+  {
+    "id": "48",
+    "name": "Trent and Belvoir Vales",
+    "size": 1776000000,
+    "adjacents": [
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "45",
+        "name": "Northern Lincolnshire Edge with Coversands",
+        "size": 501000000
+      },
+      {
+        "id": "47",
+        "name": "Southern Lincolnshire Edge",
+        "size": 570000000
+      },
+      {
+        "id": "49",
+        "name": "Sherwood",
+        "size": 535000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "74",
+        "name": "Leicestershire and Nottinghamshire Wolds",
+        "size": 641000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      }
+    ]
+  },
+  {
+    "id": "49",
+    "name": "Sherwood",
+    "size": 535000000,
+    "adjacents": [
+      {
+        "id": "30",
+        "name": "Southern Magnesian Limestone",
+        "size": 1368000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "39",
+        "name": "Humberhead Levels",
+        "size": 1718000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      }
+    ]
+  },
+  {
+    "id": "50",
+    "name": "Derbyshire Peak Fringe and Lower Derwent",
+    "size": 378000000,
+    "adjacents": [
+      {
+        "id": "37",
+        "name": "Yorkshire Southern Pennine Fringe",
+        "size": 585000000
+      },
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      },
+      {
+        "id": "52",
+        "name": "White Peak",
+        "size": 529000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      }
+    ]
+  },
+  {
+    "id": "51",
+    "name": "Dark Peak",
+    "size": 866000000,
+    "adjacents": [
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "37",
+        "name": "Yorkshire Southern Pennine Fringe",
+        "size": 585000000
+      },
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "52",
+        "name": "White Peak",
+        "size": 529000000
+      },
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      }
+    ]
+  },
+  {
+    "id": "52",
+    "name": "White Peak",
+    "size": 529000000,
+    "adjacents": [
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      },
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "64",
+        "name": "Potteries and Churnet Valley",
+        "size": 531000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      }
+    ]
+  },
+  {
+    "id": "53",
+    "name": "South West Peak",
+    "size": 426000000,
+    "adjacents": [
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      },
+      {
+        "id": "52",
+        "name": "White Peak",
+        "size": 529000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      },
+      {
+        "id": "55",
+        "name": "Manchester Conurbation",
+        "size": 342000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "64",
+        "name": "Potteries and Churnet Valley",
+        "size": 531000000
+      }
+    ]
+  },
+  {
+    "id": "54",
+    "name": "Manchester Pennine Fringe",
+    "size": 393000000,
+    "adjacents": [
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "51",
+        "name": "Dark Peak",
+        "size": 866000000
+      },
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "55",
+        "name": "Manchester Conurbation",
+        "size": 342000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      }
+    ]
+  },
+  {
+    "id": "55",
+    "name": "Manchester Conurbation",
+    "size": 342000000,
+    "adjacents": [
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      },
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      }
+    ]
+  },
+  {
+    "id": "56",
+    "name": "Lancashire Coal Measures",
+    "size": 406000000,
+    "adjacents": [
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "35",
+        "name": "Lancashire Valleys",
+        "size": 554000000
+      },
+      {
+        "id": "36",
+        "name": "Southern Pennines",
+        "size": 1197000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      },
+      {
+        "id": "55",
+        "name": "Manchester Conurbation",
+        "size": 342000000
+      },
+      {
+        "id": "58",
+        "name": "Merseyside Conurbation",
+        "size": 287000000
+      },
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      }
+    ]
+  },
+  {
+    "id": "57",
+    "name": "Sefton Coast",
+    "size": 90000000,
+    "adjacents": [
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "58",
+        "name": "Merseyside Conurbation",
+        "size": 287000000
+      }
+    ]
+  },
+  {
+    "id": "58",
+    "name": "Merseyside Conurbation",
+    "size": 287000000,
+    "adjacents": [
+      {
+        "id": "32",
+        "name": "Lancashire and Amounderness Plain",
+        "size": 986000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      },
+      {
+        "id": "57",
+        "name": "Sefton Coast",
+        "size": 90000000
+      },
+      {
+        "id": "59",
+        "name": "Wirral",
+        "size": 165000000
+      },
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      }
+    ]
+  },
+  {
+    "id": "59",
+    "name": "Wirral",
+    "size": 165000000,
+    "adjacents": [
+      {
+        "id": "58",
+        "name": "Merseyside Conurbation",
+        "size": 287000000
+      },
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      }
+    ]
+  },
+  {
+    "id": "60",
+    "name": "Mersey Valley",
+    "size": 447000000,
+    "adjacents": [
+      {
+        "id": "55",
+        "name": "Manchester Conurbation",
+        "size": 342000000
+      },
+      {
+        "id": "56",
+        "name": "Lancashire Coal Measures",
+        "size": 406000000
+      },
+      {
+        "id": "58",
+        "name": "Merseyside Conurbation",
+        "size": 287000000
+      },
+      {
+        "id": "59",
+        "name": "Wirral",
+        "size": 165000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "62",
+        "name": "Cheshire Sandstone Ridge",
+        "size": 220000000
+      }
+    ]
+  },
+  {
+    "id": "61",
+    "name": "Shropshire, Cheshire and Staffordshire Plain",
+    "size": 3662000000,
+    "adjacents": [
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "54",
+        "name": "Manchester Pennine Fringe",
+        "size": 393000000
+      },
+      {
+        "id": "55",
+        "name": "Manchester Conurbation",
+        "size": 342000000
+      },
+      {
+        "id": "59",
+        "name": "Wirral",
+        "size": 165000000
+      },
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      },
+      {
+        "id": "62",
+        "name": "Cheshire Sandstone Ridge",
+        "size": 220000000
+      },
+      {
+        "id": "63",
+        "name": "Oswestry Uplands",
+        "size": 100000000
+      },
+      {
+        "id": "64",
+        "name": "Potteries and Churnet Valley",
+        "size": 531000000
+      },
+      {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "67",
+        "name": "Cannock Chase and Cank Wood",
+        "size": 728000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      }
+    ]
+  },
+  {
+    "id": "62",
+    "name": "Cheshire Sandstone Ridge",
+    "size": 220000000,
+    "adjacents": [
+      {
+        "id": "60",
+        "name": "Mersey Valley",
+        "size": 447000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      }
+    ]
+  },
+  {
+    "id": "63",
+    "name": "Oswestry Uplands",
+    "size": 100000000,
+    "adjacents": [
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      }
+    ]
+  },
+  {
+    "id": "64",
+    "name": "Potteries and Churnet Valley",
+    "size": 531000000,
+    "adjacents": [
+      {
+        "id": "52",
+        "name": "White Peak",
+        "size": 529000000
+      },
+      {
+        "id": "53",
+        "name": "South West Peak",
+        "size": 426000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      }
+    ]
+  },
+  {
+    "id": "65",
+    "name": "Shropshire Hills",
+    "size": 1080000000,
+    "adjacents": [
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "98",
+        "name": "Clun and North West Herefordshire Hills",
+        "size": 626000000
+      },
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      }
+    ]
+  },
+  {
+    "id": "66",
+    "name": "Mid Severn Sandstone Plateau",
+    "size": 888000000,
+    "adjacents": [
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      {
+        "id": "67",
+        "name": "Cannock Chase and Cank Wood",
+        "size": 728000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "67",
+    "name": "Cannock Chase and Cank Wood",
+    "size": 728000000,
+    "adjacents": [
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      }
+    ]
+  },
+  {
+    "id": "68",
+    "name": "Needwood and South Derbyshire Claylands",
+    "size": 815000000,
+    "adjacents": [
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "52",
+        "name": "White Peak",
+        "size": 529000000
+      },
+      {
+        "id": "61",
+        "name": "Shropshire, Cheshire and Staffordshire Plain",
+        "size": 3662000000
+      },
+      {
+        "id": "64",
+        "name": "Potteries and Churnet Valley",
+        "size": 531000000
+      },
+      {
+        "id": "67",
+        "name": "Cannock Chase and Cank Wood",
+        "size": 728000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      }
+    ]
+  },
+  {
+    "id": "69",
+    "name": "Trent Valley Washlands",
+    "size": 394000000,
+    "adjacents": [
+      {
+        "id": "38",
+        "name": "Nottinghamshire, Derbyshire and Yorkshire Coalfield",
+        "size": 1698000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "49",
+        "name": "Sherwood",
+        "size": 535000000
+      },
+      {
+        "id": "50",
+        "name": "Derbyshire Peak Fringe and Lower Derwent",
+        "size": 378000000
+      },
+      {
+        "id": "67",
+        "name": "Cannock Chase and Cank Wood",
+        "size": 728000000
+      },
+      {
+        "id": "68",
+        "name": "Needwood and South Derbyshire Claylands",
+        "size": 815000000
+      },
+      {
+        "id": "70",
+        "name": "Melbourne Parklands",
+        "size": 150000000
+      },
+      {
+        "id": "72",
+        "name": "Mease/Sence Lowlands",
+        "size": 324000000
+      },
+      {
+        "id": "73",
+        "name": "Charnwood",
+        "size": 175000000
+      },
+      {
+        "id": "74",
+        "name": "Leicestershire and Nottinghamshire Wolds",
+        "size": 641000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      }
+    ]
+  },
+  {
+    "id": "70",
+    "name": "Melbourne Parklands",
+    "size": 150000000,
+    "adjacents": [
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "71",
+        "name": "Leicestershire and South Derbyshire Coalfield",
+        "size": 205000000
+      },
+      {
+        "id": "72",
+        "name": "Mease/Sence Lowlands",
+        "size": 324000000
+      },
+      {
+        "id": "73",
+        "name": "Charnwood",
+        "size": 175000000
+      }
+    ]
+  },
+  {
+    "id": "71",
+    "name": "Leicestershire and South Derbyshire Coalfield",
+    "size": 205000000,
+    "adjacents": [
+      {
+        "id": "70",
+        "name": "Melbourne Parklands",
+        "size": 150000000
+      },
+      {
+        "id": "72",
+        "name": "Mease/Sence Lowlands",
+        "size": 324000000
+      },
+      {
+        "id": "73",
+        "name": "Charnwood",
+        "size": 175000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      }
+    ]
+  },
+  {
+    "id": "72",
+    "name": "Mease/Sence Lowlands",
+    "size": 324000000,
+    "adjacents": [
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "70",
+        "name": "Melbourne Parklands",
+        "size": 150000000
+      },
+      {
+        "id": "71",
+        "name": "Leicestershire and South Derbyshire Coalfield",
+        "size": 205000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      }
+    ]
+  },
+  {
+    "id": "73",
+    "name": "Charnwood",
+    "size": 175000000,
+    "adjacents": [
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "70",
+        "name": "Melbourne Parklands",
+        "size": 150000000
+      },
+      {
+        "id": "71",
+        "name": "Leicestershire and South Derbyshire Coalfield",
+        "size": 205000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      }
+    ]
+  },
+  {
+    "id": "74",
+    "name": "Leicestershire and Nottinghamshire Wolds",
+    "size": 641000000,
+    "adjacents": [
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      }
+    ]
+  },
+  {
+    "id": "75",
+    "name": "Kesteven Uplands",
+    "size": 690000000,
+    "adjacents": [
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "47",
+        "name": "Southern Lincolnshire Edge",
+        "size": 570000000
+      },
+      {
+        "id": "48",
+        "name": "Trent and Belvoir Vales",
+        "size": 1776000000
+      },
+      {
+        "id": "74",
+        "name": "Leicestershire and Nottinghamshire Wolds",
+        "size": 641000000
+      },
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "92",
+        "name": "Rockingham Forest",
+        "size": 510000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      }
+    ]
+  },
+  {
+    "id": "76",
+    "name": "North West Norfolk",
+    "size": 801000000,
+    "adjacents": [
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "77",
+        "name": "North Norfolk Coast",
+        "size": 62000000
+      },
+      {
+        "id": "78",
+        "name": "Central North Norfolk",
+        "size": 720000000
+      },
+      {
+        "id": "84",
+        "name": "Mid Norfolk",
+        "size": 909000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      }
+    ]
+  },
+  {
+    "id": "77",
+    "name": "North Norfolk Coast",
+    "size": 62000000,
+    "adjacents": [
+      {
+        "id": "76",
+        "name": "North West Norfolk",
+        "size": 801000000
+      },
+      {
+        "id": "78",
+        "name": "Central North Norfolk",
+        "size": 720000000
+      }
+    ]
+  },
+  {
+    "id": "78",
+    "name": "Central North Norfolk",
+    "size": 720000000,
+    "adjacents": [
+      {
+        "id": "76",
+        "name": "North West Norfolk",
+        "size": 801000000
+      },
+      {
+        "id": "77",
+        "name": "North Norfolk Coast",
+        "size": 62000000
+      },
+      {
+        "id": "79",
+        "name": "North East Norfolk and Flegg",
+        "size": 247000000
+      },
+      {
+        "id": "80",
+        "name": "The Broads",
+        "size": 563000000
+      },
+      {
+        "id": "84",
+        "name": "Mid Norfolk",
+        "size": 909000000
+      }
+    ]
+  },
+  {
+    "id": "79",
+    "name": "North East Norfolk and Flegg",
+    "size": 247000000,
+    "adjacents": [
+      {
+        "id": "78",
+        "name": "Central North Norfolk",
+        "size": 720000000
+      },
+      {
+        "id": "80",
+        "name": "The Broads",
+        "size": 563000000
+      },
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      }
+    ]
+  },
+  {
+    "id": "80",
+    "name": "The Broads",
+    "size": 563000000,
+    "adjacents": [
+      {
+        "id": "78",
+        "name": "Central North Norfolk",
+        "size": 720000000
+      },
+      {
+        "id": "79",
+        "name": "North East Norfolk and Flegg",
+        "size": 247000000
+      },
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      },
+      {
+        "id": "83",
+        "name": "South Norfolk and High Suffolk Claylands",
+        "size": 2145000000
+      },
+      {
+        "id": "84",
+        "name": "Mid Norfolk",
+        "size": 909000000
+      }
+    ]
+  },
+  {
+    "id": "81",
+    "name": "Greater Thames Estuary",
+    "size": 837000000,
+    "adjacents": [
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      },
+      {
+        "id": "112",
+        "name": "Inner London",
+        "size": 330000000
+      },
+      {
+        "id": "113",
+        "name": "North Kent Plain",
+        "size": 848000000
+      }
+    ]
+  },
+  {
+    "id": "82",
+    "name": "Suffolk Coast and Heaths",
+    "size": 822000000,
+    "adjacents": [
+      {
+        "id": "79",
+        "name": "North East Norfolk and Flegg",
+        "size": 247000000
+      },
+      {
+        "id": "80",
+        "name": "The Broads",
+        "size": 563000000
+      },
+      {
+        "id": "81",
+        "name": "Greater Thames Estuary",
+        "size": 837000000
+      },
+      {
+        "id": "83",
+        "name": "South Norfolk and High Suffolk Claylands",
+        "size": 2145000000
+      },
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      }
+    ]
+  },
+  {
+    "id": "83",
+    "name": "South Norfolk and High Suffolk Claylands",
+    "size": 2145000000,
+    "adjacents": [
+      {
+        "id": "80",
+        "name": "The Broads",
+        "size": 563000000
+      },
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      },
+      {
+        "id": "84",
+        "name": "Mid Norfolk",
+        "size": 909000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      },
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      }
+    ]
+  },
+  {
+    "id": "84",
+    "name": "Mid Norfolk",
+    "size": 909000000,
+    "adjacents": [
+      {
+        "id": "76",
+        "name": "North West Norfolk",
+        "size": 801000000
+      },
+      {
+        "id": "78",
+        "name": "Central North Norfolk",
+        "size": 720000000
+      },
+      {
+        "id": "80",
+        "name": "The Broads",
+        "size": 563000000
+      },
+      {
+        "id": "83",
+        "name": "South Norfolk and High Suffolk Claylands",
+        "size": 2145000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      }
+    ]
+  },
+  {
+    "id": "85",
+    "name": "The Brecks",
+    "size": 1019000000,
+    "adjacents": [
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "76",
+        "name": "North West Norfolk",
+        "size": 801000000
+      },
+      {
+        "id": "83",
+        "name": "South Norfolk and High Suffolk Claylands",
+        "size": 2145000000
+      },
+      {
+        "id": "84",
+        "name": "Mid Norfolk",
+        "size": 909000000
+      },
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      },
+      {
+        "id": "87",
+        "name": "East Anglian Chalk",
+        "size": 839000000
+      }
+    ]
+  },
+  {
+    "id": "86",
+    "name": "South Suffolk and North Essex Clayland",
+    "size": 3290000000,
+    "adjacents": [
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      },
+      {
+        "id": "83",
+        "name": "South Norfolk and High Suffolk Claylands",
+        "size": 2145000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      },
+      {
+        "id": "87",
+        "name": "East Anglian Chalk",
+        "size": 839000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      }
+    ]
+  },
+  {
+    "id": "87",
+    "name": "East Anglian Chalk",
+    "size": 839000000,
+    "adjacents": [
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "85",
+        "name": "The Brecks",
+        "size": 1019000000
+      },
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      },
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      }
+    ]
+  },
+  {
+    "id": "88",
+    "name": "Bedfordshire and Cambridgeshire Claylands",
+    "size": 2606000000,
+    "adjacents": [
+      {
+        "id": "46",
+        "name": "The Fens",
+        "size": 3826000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      },
+      {
+        "id": "87",
+        "name": "East Anglian Chalk",
+        "size": 839000000
+      },
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "90",
+        "name": "Bedfordshire Greensand Ridge",
+        "size": 273000000
+      },
+      {
+        "id": "91",
+        "name": "Yardley-Whittlewood Ridge",
+        "size": 338000000
+      },
+      {
+        "id": "92",
+        "name": "Rockingham Forest",
+        "size": 510000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      }
+    ]
+  },
+  {
+    "id": "89",
+    "name": "Northamptonshire Vales",
+    "size": 904000000,
+    "adjacents": [
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "91",
+        "name": "Yardley-Whittlewood Ridge",
+        "size": 338000000
+      },
+      {
+        "id": "92",
+        "name": "Rockingham Forest",
+        "size": 510000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "95",
+        "name": "Northamptonshire Uplands",
+        "size": 1011000000
+      }
+    ]
+  },
+  {
+    "id": "90",
+    "name": "Bedfordshire Greensand Ridge",
+    "size": 273000000,
+    "adjacents": [
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      }
+    ]
+  },
+  {
+    "id": "91",
+    "name": "Yardley-Whittlewood Ridge",
+    "size": 338000000,
+    "adjacents": [
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "95",
+        "name": "Northamptonshire Uplands",
+        "size": 1011000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      }
+    ]
+  },
+  {
+    "id": "92",
+    "name": "Rockingham Forest",
+    "size": 510000000,
+    "adjacents": [
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      },
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      }
+    ]
+  },
+  {
+    "id": "93",
+    "name": "High Leicestershire",
+    "size": 569000000,
+    "adjacents": [
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "74",
+        "name": "Leicestershire and Nottinghamshire Wolds",
+        "size": 641000000
+      },
+      {
+        "id": "75",
+        "name": "Kesteven Uplands",
+        "size": 690000000
+      },
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "92",
+        "name": "Rockingham Forest",
+        "size": 510000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      }
+    ]
+  },
+  {
+    "id": "94",
+    "name": "Leicestershire Vales",
+    "size": 718000000,
+    "adjacents": [
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "71",
+        "name": "Leicestershire and South Derbyshire Coalfield",
+        "size": 205000000
+      },
+      {
+        "id": "72",
+        "name": "Mease/Sence Lowlands",
+        "size": 324000000
+      },
+      {
+        "id": "73",
+        "name": "Charnwood",
+        "size": 175000000
+      },
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "93",
+        "name": "High Leicestershire",
+        "size": 569000000
+      },
+      {
+        "id": "95",
+        "name": "Northamptonshire Uplands",
+        "size": 1011000000
+      },
+      {
+        "id": "96",
+        "name": "Dunsmore and Feldon",
+        "size": 706000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      }
+    ]
+  },
+  {
+    "id": "95",
+    "name": "Northamptonshire Uplands",
+    "size": 1011000000,
+    "adjacents": [
+      {
+        "id": "89",
+        "name": "Northamptonshire Vales",
+        "size": 904000000
+      },
+      {
+        "id": "91",
+        "name": "Yardley-Whittlewood Ridge",
+        "size": 338000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "96",
+        "name": "Dunsmore and Feldon",
+        "size": 706000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      }
+    ]
+  },
+  {
+    "id": "96",
+    "name": "Dunsmore and Feldon",
+    "size": 706000000,
+    "adjacents": [
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "95",
+        "name": "Northamptonshire Uplands",
+        "size": 1011000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      }
+    ]
+  },
+  {
+    "id": "97",
+    "name": "Arden",
+    "size": 1434000000,
+    "adjacents": [
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "67",
+        "name": "Cannock Chase and Cank Wood",
+        "size": 728000000
+      },
+      {
+        "id": "69",
+        "name": "Trent Valley Washlands",
+        "size": 394000000
+      },
+      {
+        "id": "72",
+        "name": "Mease/Sence Lowlands",
+        "size": 324000000
+      },
+      {
+        "id": "94",
+        "name": "Leicestershire Vales",
+        "size": 718000000
+      },
+      {
+        "id": "96",
+        "name": "Dunsmore and Feldon",
+        "size": 706000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "98",
+    "name": "Clun and North West Herefordshire Hills",
+    "size": 626000000,
+    "adjacents": [
+      {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      }
+    ]
+  },
+  {
+    "id": "99",
+    "name": "Black Mountains and Golden Valley",
+    "size": 260000000,
+    "adjacents": [
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "104",
+        "name": "South Herefordshire and Over Severn",
+        "size": 511000000
+      }
+    ]
+  },
+  {
+    "id": "100",
+    "name": "Herefordshire Lowlands",
+    "size": 887000000,
+    "adjacents": [
+      {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      {
+        "id": "98",
+        "name": "Clun and North West Herefordshire Hills",
+        "size": 626000000
+      },
+      {
+        "id": "99",
+        "name": "Black Mountains and Golden Valley",
+        "size": 260000000
+      },
+      {
+        "id": "101",
+        "name": "Herefordshire Plateau",
+        "size": 346000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      },
+      {
+        "id": "103",
+        "name": "Malvern Hills",
+        "size": 83000000
+      },
+      {
+        "id": "104",
+        "name": "South Herefordshire and Over Severn",
+        "size": 511000000
+      }
+    ]
+  },
+  {
+    "id": "101",
+    "name": "Herefordshire Plateau",
+    "size": 346000000,
+    "adjacents": [
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      },
+      {
+        "id": "103",
+        "name": "Malvern Hills",
+        "size": 83000000
+      }
+    ]
+  },
+  {
+    "id": "102",
+    "name": "Teme Valley",
+    "size": 193000000,
+    "adjacents": [
+      {
+        "id": "65",
+        "name": "Shropshire Hills",
+        "size": 1080000000
+      },
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "101",
+        "name": "Herefordshire Plateau",
+        "size": 346000000
+      },
+      {
+        "id": "103",
+        "name": "Malvern Hills",
+        "size": 83000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "103",
+    "name": "Malvern Hills",
+    "size": 83000000,
+    "adjacents": [
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "101",
+        "name": "Herefordshire Plateau",
+        "size": 346000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      },
+      {
+        "id": "104",
+        "name": "South Herefordshire and Over Severn",
+        "size": 511000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "104",
+    "name": "South Herefordshire and Over Severn",
+    "size": 511000000,
+    "adjacents": [
+      {
+        "id": "99",
+        "name": "Black Mountains and Golden Valley",
+        "size": 260000000
+      },
+      {
+        "id": "100",
+        "name": "Herefordshire Lowlands",
+        "size": 887000000
+      },
+      {
+        "id": "103",
+        "name": "Malvern Hills",
+        "size": 83000000
+      },
+      {
+        "id": "105",
+        "name": "Forest of Dean and Lower Wye",
+        "size": 314000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "105",
+    "name": "Forest of Dean and Lower Wye",
+    "size": 314000000,
+    "adjacents": [
+      {
+        "id": "104",
+        "name": "South Herefordshire and Over Severn",
+        "size": 511000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      }
+    ]
+  },
+  {
+    "id": "106",
+    "name": "Severn and Avon Vales",
+    "size": 2103000000,
+    "adjacents": [
+      {
+        "id": "66",
+        "name": "Mid Severn Sandstone Plateau",
+        "size": 888000000
+      },
+      {
+        "id": "96",
+        "name": "Dunsmore and Feldon",
+        "size": 706000000
+      },
+      {
+        "id": "97",
+        "name": "Arden",
+        "size": 1434000000
+      },
+      {
+        "id": "102",
+        "name": "Teme Valley",
+        "size": 193000000
+      },
+      {
+        "id": "103",
+        "name": "Malvern Hills",
+        "size": 83000000
+      },
+      {
+        "id": "104",
+        "name": "South Herefordshire and Over Severn",
+        "size": 511000000
+      },
+      {
+        "id": "105",
+        "name": "Forest of Dean and Lower Wye",
+        "size": 314000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "118",
+        "name": "Bristol, Avon Valleys and Ridges",
+        "size": 843000000
+      }
+    ]
+  },
+  {
+    "id": "107",
+    "name": "Cotswolds",
+    "size": 2882000000,
+    "adjacents": [
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "91",
+        "name": "Yardley-Whittlewood Ridge",
+        "size": 338000000
+      },
+      {
+        "id": "95",
+        "name": "Northamptonshire Uplands",
+        "size": 1011000000
+      },
+      {
+        "id": "96",
+        "name": "Dunsmore and Feldon",
+        "size": 706000000
+      },
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      },
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      },
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      },
+      {
+        "id": "118",
+        "name": "Bristol, Avon Valleys and Ridges",
+        "size": 843000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      }
+    ]
+  },
+  {
+    "id": "108",
+    "name": "Upper Thames Clay Vales",
+    "size": 1890000000,
+    "adjacents": [
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "109",
+        "name": "Midvale Ridge",
+        "size": 445000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      }
+    ]
+  },
+  {
+    "id": "109",
+    "name": "Midvale Ridge",
+    "size": 445000000,
+    "adjacents": [
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      }
+    ]
+  },
+  {
+    "id": "110",
+    "name": "Chilterns",
+    "size": 1641000000,
+    "adjacents": [
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      },
+      {
+        "id": "87",
+        "name": "East Anglian Chalk",
+        "size": 839000000
+      },
+      {
+        "id": "88",
+        "name": "Bedfordshire and Cambridgeshire Claylands",
+        "size": 2606000000
+      },
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      },
+      {
+        "id": "115",
+        "name": "Thames Valley",
+        "size": 861000000
+      },
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "129",
+        "name": "Thames Basin Heaths",
+        "size": 1185000000
+      }
+    ]
+  },
+  {
+    "id": "111",
+    "name": "Northern Thames Basin",
+    "size": 2510000000,
+    "adjacents": [
+      {
+        "id": "81",
+        "name": "Greater Thames Estuary",
+        "size": 837000000
+      },
+      {
+        "id": "82",
+        "name": "Suffolk Coast and Heaths",
+        "size": 822000000
+      },
+      {
+        "id": "86",
+        "name": "South Suffolk and North Essex Clayland",
+        "size": 3290000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "112",
+        "name": "Inner London",
+        "size": 330000000
+      },
+      {
+        "id": "115",
+        "name": "Thames Valley",
+        "size": 861000000
+      }
+    ]
+  },
+  {
+    "id": "112",
+    "name": "Inner London",
+    "size": 330000000,
+    "adjacents": [
+      {
+        "id": "81",
+        "name": "Greater Thames Estuary",
+        "size": 837000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      },
+      {
+        "id": "113",
+        "name": "North Kent Plain",
+        "size": 848000000
+      },
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "115",
+        "name": "Thames Valley",
+        "size": 861000000
+      }
+    ]
+  },
+  {
+    "id": "113",
+    "name": "North Kent Plain",
+    "size": 848000000,
+    "adjacents": [
+      {
+        "id": "81",
+        "name": "Greater Thames Estuary",
+        "size": 837000000
+      },
+      {
+        "id": "112",
+        "name": "Inner London",
+        "size": 330000000
+      },
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "119",
+        "name": "North Downs",
+        "size": 1374000000
+      }
+    ]
+  },
+  {
+    "id": "114",
+    "name": "Thames Basin Lowlands",
+    "size": 328000000,
+    "adjacents": [
+      {
+        "id": "112",
+        "name": "Inner London",
+        "size": 330000000
+      },
+      {
+        "id": "113",
+        "name": "North Kent Plain",
+        "size": 848000000
+      },
+      {
+        "id": "115",
+        "name": "Thames Valley",
+        "size": 861000000
+      },
+      {
+        "id": "119",
+        "name": "North Downs",
+        "size": 1374000000
+      },
+      {
+        "id": "129",
+        "name": "Thames Basin Heaths",
+        "size": 1185000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      }
+    ]
+  },
+  {
+    "id": "115",
+    "name": "Thames Valley",
+    "size": 861000000,
+    "adjacents": [
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "111",
+        "name": "Northern Thames Basin",
+        "size": 2510000000
+      },
+      {
+        "id": "112",
+        "name": "Inner London",
+        "size": 330000000
+      },
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "129",
+        "name": "Thames Basin Heaths",
+        "size": 1185000000
+      }
+    ]
+  },
+  {
+    "id": "116",
+    "name": "Berkshire and Marlborough Downs",
+    "size": 1110000000,
+    "adjacents": [
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      },
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      },
+      {
+        "id": "129",
+        "name": "Thames Basin Heaths",
+        "size": 1185000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      }
+    ]
+  },
+  {
+    "id": "117",
+    "name": "Avon Vales",
+    "size": 643000000,
+    "adjacents": [
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "108",
+        "name": "Upper Thames Clay Vales",
+        "size": 1890000000
+      },
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      },
+      {
+        "id": "133",
+        "name": "Blackmore Vale and Vale of Wardour",
+        "size": 784000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      }
+    ]
+  },
+  {
+    "id": "118",
+    "name": "Bristol, Avon Valleys and Ridges",
+    "size": 843000000,
+    "adjacents": [
+      {
+        "id": "106",
+        "name": "Severn and Avon Vales",
+        "size": 2103000000
+      },
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      },
+      {
+        "id": "142",
+        "name": "Somerset Levels and Moors",
+        "size": 658000000
+      }
+    ]
+  },
+  {
+    "id": "119",
+    "name": "North Downs",
+    "size": 1374000000,
+    "adjacents": [
+      {
+        "id": "113",
+        "name": "North Kent Plain",
+        "size": 848000000
+      },
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "120",
+        "name": "Wealden Greensand",
+        "size": 1458000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      }
+    ]
+  },
+  {
+    "id": "120",
+    "name": "Wealden Greensand",
+    "size": 1458000000,
+    "adjacents": [
+      {
+        "id": "119",
+        "name": "North Downs",
+        "size": 1374000000
+      },
+      {
+        "id": "121",
+        "name": "Low Weald",
+        "size": 1824000000
+      },
+      {
+        "id": "123",
+        "name": "Romney Marshes",
+        "size": 367000000
+      },
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      }
+    ]
+  },
+  {
+    "id": "121",
+    "name": "Low Weald",
+    "size": 1824000000,
+    "adjacents": [
+      {
+        "id": "120",
+        "name": "Wealden Greensand",
+        "size": 1458000000
+      },
+      {
+        "id": "122",
+        "name": "High Weald",
+        "size": 1749000000
+      },
+      {
+        "id": "123",
+        "name": "Romney Marshes",
+        "size": 367000000
+      },
+      {
+        "id": "124",
+        "name": "Pevensey Levels",
+        "size": 96000000
+      },
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      }
+    ]
+  },
+  {
+    "id": "122",
+    "name": "High Weald",
+    "size": 1749000000,
+    "adjacents": [
+      {
+        "id": "121",
+        "name": "Low Weald",
+        "size": 1824000000
+      },
+      {
+        "id": "123",
+        "name": "Romney Marshes",
+        "size": 367000000
+      },
+      {
+        "id": "124",
+        "name": "Pevensey Levels",
+        "size": 96000000
+      }
+    ]
+  },
+  {
+    "id": "123",
+    "name": "Romney Marshes",
+    "size": 367000000,
+    "adjacents": [
+      {
+        "id": "120",
+        "name": "Wealden Greensand",
+        "size": 1458000000
+      },
+      {
+        "id": "121",
+        "name": "Low Weald",
+        "size": 1824000000
+      },
+      {
+        "id": "122",
+        "name": "High Weald",
+        "size": 1749000000
+      }
+    ]
+  },
+  {
+    "id": "124",
+    "name": "Pevensey Levels",
+    "size": 96000000,
+    "adjacents": [
+      {
+        "id": "121",
+        "name": "Low Weald",
+        "size": 1824000000
+      },
+      {
+        "id": "122",
+        "name": "High Weald",
+        "size": 1749000000
+      },
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      }
+    ]
+  },
+  {
+    "id": "125",
+    "name": "South Downs",
+    "size": 1019000000,
+    "adjacents": [
+      {
+        "id": "120",
+        "name": "Wealden Greensand",
+        "size": 1458000000
+      },
+      {
+        "id": "121",
+        "name": "Low Weald",
+        "size": 1824000000
+      },
+      {
+        "id": "124",
+        "name": "Pevensey Levels",
+        "size": 96000000
+      },
+      {
+        "id": "126",
+        "name": "South Coast Plain",
+        "size": 522000000
+      },
+      {
+        "id": "128",
+        "name": "South Hampshire Lowlands",
+        "size": 386000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      }
+    ]
+  },
+  {
+    "id": "126",
+    "name": "South Coast Plain",
+    "size": 522000000,
+    "adjacents": [
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      },
+      {
+        "id": "128",
+        "name": "South Hampshire Lowlands",
+        "size": 386000000
+      }
+    ]
+  },
+  {
+    "id": "127",
+    "name": "Isle of Wight",
+    "size": 380000000,
+    "adjacents": []
+  },
+  {
+    "id": "128",
+    "name": "South Hampshire Lowlands",
+    "size": 386000000,
+    "adjacents": [
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      },
+      {
+        "id": "126",
+        "name": "South Coast Plain",
+        "size": 522000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      },
+      {
+        "id": "131",
+        "name": "New Forest",
+        "size": 738000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      }
+    ]
+  },
+  {
+    "id": "129",
+    "name": "Thames Basin Heaths",
+    "size": 1185000000,
+    "adjacents": [
+      {
+        "id": "110",
+        "name": "Chilterns",
+        "size": 1641000000
+      },
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "115",
+        "name": "Thames Valley",
+        "size": 861000000
+      },
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      }
+    ]
+  },
+  {
+    "id": "130",
+    "name": "Hampshire Downs",
+    "size": 1489000000,
+    "adjacents": [
+      {
+        "id": "114",
+        "name": "Thames Basin Lowlands",
+        "size": 328000000
+      },
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "119",
+        "name": "North Downs",
+        "size": 1374000000
+      },
+      {
+        "id": "120",
+        "name": "Wealden Greensand",
+        "size": 1458000000
+      },
+      {
+        "id": "125",
+        "name": "South Downs",
+        "size": 1019000000
+      },
+      {
+        "id": "128",
+        "name": "South Hampshire Lowlands",
+        "size": 386000000
+      },
+      {
+        "id": "129",
+        "name": "Thames Basin Heaths",
+        "size": 1185000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      }
+    ]
+  },
+  {
+    "id": "131",
+    "name": "New Forest",
+    "size": 738000000,
+    "adjacents": [
+      {
+        "id": "128",
+        "name": "South Hampshire Lowlands",
+        "size": 386000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      },
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "135",
+        "name": "Dorset Heaths",
+        "size": 617000000
+      }
+    ]
+  },
+  {
+    "id": "132",
+    "name": "Salisbury Plain and West Wiltshire Downs",
+    "size": 1223000000,
+    "adjacents": [
+      {
+        "id": "116",
+        "name": "Berkshire and Marlborough Downs",
+        "size": 1110000000
+      },
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      },
+      {
+        "id": "128",
+        "name": "South Hampshire Lowlands",
+        "size": 386000000
+      },
+      {
+        "id": "130",
+        "name": "Hampshire Downs",
+        "size": 1489000000
+      },
+      {
+        "id": "131",
+        "name": "New Forest",
+        "size": 738000000
+      },
+      {
+        "id": "133",
+        "name": "Blackmore Vale and Vale of Wardour",
+        "size": 784000000
+      },
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      }
+    ]
+  },
+  {
+    "id": "133",
+    "name": "Blackmore Vale and Vale of Wardour",
+    "size": 784000000,
+    "adjacents": [
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      },
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      }
+    ]
+  },
+  {
+    "id": "134",
+    "name": "Dorset Downs and Cranborne Chase",
+    "size": 1169000000,
+    "adjacents": [
+      {
+        "id": "131",
+        "name": "New Forest",
+        "size": 738000000
+      },
+      {
+        "id": "132",
+        "name": "Salisbury Plain and West Wiltshire Downs",
+        "size": 1223000000
+      },
+      {
+        "id": "133",
+        "name": "Blackmore Vale and Vale of Wardour",
+        "size": 784000000
+      },
+      {
+        "id": "135",
+        "name": "Dorset Heaths",
+        "size": 617000000
+      },
+      {
+        "id": "138",
+        "name": "Weymouth Lowlands",
+        "size": 133000000
+      },
+      {
+        "id": "139",
+        "name": "Marshwood and Powerstock Vales",
+        "size": 159000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      }
+    ]
+  },
+  {
+    "id": "135",
+    "name": "Dorset Heaths",
+    "size": 617000000,
+    "adjacents": [
+      {
+        "id": "131",
+        "name": "New Forest",
+        "size": 738000000
+      },
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "136",
+        "name": "South Purbeck",
+        "size": 119000000
+      },
+      {
+        "id": "138",
+        "name": "Weymouth Lowlands",
+        "size": 133000000
+      }
+    ]
+  },
+  {
+    "id": "136",
+    "name": "South Purbeck",
+    "size": 119000000,
+    "adjacents": [
+      {
+        "id": "135",
+        "name": "Dorset Heaths",
+        "size": 617000000
+      },
+      {
+        "id": "138",
+        "name": "Weymouth Lowlands",
+        "size": 133000000
+      }
+    ]
+  },
+  {
+    "id": "137",
+    "name": "Isle of Porland",
+    "size": 11000000,
+    "adjacents": [
+      {
+        "id": "138",
+        "name": "Weymouth Lowlands",
+        "size": 133000000
+      }
+    ]
+  },
+  {
+    "id": "138",
+    "name": "Weymouth Lowlands",
+    "size": 133000000,
+    "adjacents": [
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "135",
+        "name": "Dorset Heaths",
+        "size": 617000000
+      },
+      {
+        "id": "136",
+        "name": "South Purbeck",
+        "size": 119000000
+      },
+      {
+        "id": "137",
+        "name": "Isle of Porland",
+        "size": 11000000
+      },
+      {
+        "id": "139",
+        "name": "Marshwood and Powerstock Vales",
+        "size": 159000000
+      }
+    ]
+  },
+  {
+    "id": "139",
+    "name": "Marshwood and Powerstock Vales",
+    "size": 159000000,
+    "adjacents": [
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "138",
+        "name": "Weymouth Lowlands",
+        "size": 133000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "147",
+        "name": "Blackdowns",
+        "size": 808000000
+      }
+    ]
+  },
+  {
+    "id": "140",
+    "name": "Yeovil Scarplands",
+    "size": 786000000,
+    "adjacents": [
+      {
+        "id": "133",
+        "name": "Blackmore Vale and Vale of Wardour",
+        "size": 784000000
+      },
+      {
+        "id": "134",
+        "name": "Dorset Downs and Cranborne Chase",
+        "size": 1169000000
+      },
+      {
+        "id": "139",
+        "name": "Marshwood and Powerstock Vales",
+        "size": 159000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      },
+      {
+        "id": "142",
+        "name": "Somerset Levels and Moors",
+        "size": 658000000
+      },
+      {
+        "id": "143",
+        "name": "Mid Somerset Hills",
+        "size": 421000000
+      },
+      {
+        "id": "147",
+        "name": "Blackdowns",
+        "size": 808000000
+      }
+    ]
+  },
+  {
+    "id": "141",
+    "name": "Mendip Hills",
+    "size": 303000000,
+    "adjacents": [
+      {
+        "id": "107",
+        "name": "Cotswolds",
+        "size": 2882000000
+      },
+      {
+        "id": "117",
+        "name": "Avon Vales",
+        "size": 643000000
+      },
+      {
+        "id": "118",
+        "name": "Bristol, Avon Valleys and Ridges",
+        "size": 843000000
+      },
+      {
+        "id": "133",
+        "name": "Blackmore Vale and Vale of Wardour",
+        "size": 784000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "142",
+        "name": "Somerset Levels and Moors",
+        "size": 658000000
+      },
+      {
+        "id": "143",
+        "name": "Mid Somerset Hills",
+        "size": 421000000
+      }
+    ]
+  },
+  {
+    "id": "142",
+    "name": "Somerset Levels and Moors",
+    "size": 658000000,
+    "adjacents": [
+      {
+        "id": "118",
+        "name": "Bristol, Avon Valleys and Ridges",
+        "size": 843000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      },
+      {
+        "id": "143",
+        "name": "Mid Somerset Hills",
+        "size": 421000000
+      },
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      }
+    ]
+  },
+  {
+    "id": "143",
+    "name": "Mid Somerset Hills",
+    "size": 421000000,
+    "adjacents": [
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "141",
+        "name": "Mendip Hills",
+        "size": 303000000
+      },
+      {
+        "id": "142",
+        "name": "Somerset Levels and Moors",
+        "size": 658000000
+      },
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      },
+      {
+        "id": "147",
+        "name": "Blackdowns",
+        "size": 808000000
+      }
+    ]
+  },
+  {
+    "id": "144",
+    "name": "Quantock Hills",
+    "size": 76000000,
+    "adjacents": [
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      }
+    ]
+  },
+  {
+    "id": "145",
+    "name": "Exmoor",
+    "size": 1304000000,
+    "adjacents": [
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      },
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      },
+      {
+        "id": "149",
+        "name": "The Culm",
+        "size": 2831000000
+      }
+    ]
+  },
+  {
+    "id": "146",
+    "name": "Vale of Taunton and Quantock Fringes",
+    "size": 484000000,
+    "adjacents": [
+      {
+        "id": "142",
+        "name": "Somerset Levels and Moors",
+        "size": 658000000
+      },
+      {
+        "id": "143",
+        "name": "Mid Somerset Hills",
+        "size": 421000000
+      },
+      {
+        "id": "144",
+        "name": "Quantock Hills",
+        "size": 76000000
+      },
+      {
+        "id": "145",
+        "name": "Exmoor",
+        "size": 1304000000
+      },
+      {
+        "id": "147",
+        "name": "Blackdowns",
+        "size": 808000000
+      },
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      }
+    ]
+  },
+  {
+    "id": "147",
+    "name": "Blackdowns",
+    "size": 808000000,
+    "adjacents": [
+      {
+        "id": "139",
+        "name": "Marshwood and Powerstock Vales",
+        "size": 159000000
+      },
+      {
+        "id": "140",
+        "name": "Yeovil Scarplands",
+        "size": 786000000
+      },
+      {
+        "id": "143",
+        "name": "Mid Somerset Hills",
+        "size": 421000000
+      },
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      },
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      }
+    ]
+  },
+  {
+    "id": "148",
+    "name": "Devon Redlands",
+    "size": 974000000,
+    "adjacents": [
+      {
+        "id": "145",
+        "name": "Exmoor",
+        "size": 1304000000
+      },
+      {
+        "id": "146",
+        "name": "Vale of Taunton and Quantock Fringes",
+        "size": 484000000
+      },
+      {
+        "id": "147",
+        "name": "Blackdowns",
+        "size": 808000000
+      },
+      {
+        "id": "149",
+        "name": "The Culm",
+        "size": 2831000000
+      },
+      {
+        "id": "150",
+        "name": "Dartmoor",
+        "size": 874000000
+      },
+      {
+        "id": "151",
+        "name": "South Devon",
+        "size": 1211000000
+      }
+    ]
+  },
+  {
+    "id": "149",
+    "name": "The Culm",
+    "size": 2831000000,
+    "adjacents": [
+      {
+        "id": "145",
+        "name": "Exmoor",
+        "size": 1304000000
+      },
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      },
+      {
+        "id": "150",
+        "name": "Dartmoor",
+        "size": 874000000
+      },
+      {
+        "id": "151",
+        "name": "South Devon",
+        "size": 1211000000
+      },
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "150",
+    "name": "Dartmoor",
+    "size": 874000000,
+    "adjacents": [
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      },
+      {
+        "id": "149",
+        "name": "The Culm",
+        "size": 2831000000
+      },
+      {
+        "id": "151",
+        "name": "South Devon",
+        "size": 1211000000
+      }
+    ]
+  },
+  {
+    "id": "151",
+    "name": "South Devon",
+    "size": 1211000000,
+    "adjacents": [
+      {
+        "id": "148",
+        "name": "Devon Redlands",
+        "size": 974000000
+      },
+      {
+        "id": "149",
+        "name": "The Culm",
+        "size": 2831000000
+      },
+      {
+        "id": "150",
+        "name": "Dartmoor",
+        "size": 874000000
+      },
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "152",
+    "name": "Cornish Killas",
+    "size": 2221000000,
+    "adjacents": [
+      {
+        "id": "149",
+        "name": "The Culm",
+        "size": 2831000000
+      },
+      {
+        "id": "151",
+        "name": "South Devon",
+        "size": 1211000000
+      },
+      {
+        "id": "153",
+        "name": "Bodmin Moor",
+        "size": 286000000
+      },
+      {
+        "id": "154",
+        "name": "Hensbarrow",
+        "size": 119000000
+      },
+      {
+        "id": "155",
+        "name": "Carnmenellis",
+        "size": 143000000
+      },
+      {
+        "id": "156",
+        "name": "West Penwith",
+        "size": 202000000
+      },
+      {
+        "id": "157",
+        "name": "The Lizard",
+        "size": 147000000
+      }
+    ]
+  },
+  {
+    "id": "153",
+    "name": "Bodmin Moor",
+    "size": 286000000,
+    "adjacents": [
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "154",
+    "name": "Hensbarrow",
+    "size": 119000000,
+    "adjacents": [
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "155",
+    "name": "Carnmenellis",
+    "size": 143000000,
+    "adjacents": [
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "156",
+    "name": "West Penwith",
+    "size": 202000000,
+    "adjacents": [
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "157",
+    "name": "The Lizard",
+    "size": 147000000,
+    "adjacents": [
+      {
+        "id": "152",
+        "name": "Cornish Killas",
+        "size": 2221000000
+      }
+    ]
+  },
+  {
+    "id": "158",
+    "name": "Isles of Scilly",
+    "size": 16000000,
+    "adjacents": []
+  },
+  {
+    "id": "159",
+    "name": "Lundy",
+    "size": 5000000,
+    "adjacents": []
+  }
+]

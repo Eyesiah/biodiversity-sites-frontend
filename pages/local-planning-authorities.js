@@ -1,21 +1,23 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
-import API_URL from '../config';
+import fs from 'fs';
+import path from 'path';
 import { formatNumber } from '../lib/format';
 import ExternalLink from '../components/ExternalLink';
 import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
 
 export async function getStaticProps() {
   try {
-    const res = await fetch(`${API_URL}/LocalPlanningAuthority/Areas?includeAdjacent=true`);
-    if (!res.ok) {
-      throw new Error(`Failed to fetch LPA data, status: ${res.status}`);
-    }
-    const rawLpas = await res.json();
+    const jsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
+    const jsonData = fs.readFileSync(jsonPath, 'utf-8');
+    const rawLpas = JSON.parse(jsonData);
+
     // Convert size from square meters to hectares
     rawLpas.forEach(lpa => {
       lpa.size = lpa.size / 10000;
-      lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      if (lpa.adjacents) {
+        lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      }
     });
     // Filter to include only LPAs with an ID starting with 'E'
     const filteredLpas = rawLpas.filter(lpa => lpa.id && lpa.id.startsWith('E'));
@@ -27,7 +29,6 @@ export async function getStaticProps() {
         lpas,
         error: null,
       },
-      revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
     console.error(e);
@@ -141,9 +142,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
             autoFocus
           />
         </div>
-        <p style={{ fontStyle: 'normalitalic', fontSize: '1.8rem' }}>
-        Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
-        </p>
+        <p>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">
           <thead>
             <tr>
