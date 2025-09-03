@@ -6,6 +6,7 @@ import { HabitatsCard } from '../components/HabitatsCard';
 import { HabitatSummaryTable } from '../components/HabitatSummaryTable';
 import { processSiteHabitatData } from "../lib/habitat"
 import { DetailRow } from '../components/DetailRow';
+import { formatNumber } from '../lib/format';
 
 export async function getStaticProps() {
   
@@ -22,7 +23,10 @@ export async function getStaticProps() {
     watercourses: []
   }
 
+  let totalSize = 0
+
   allSites.forEach(site => {
+    totalSize += site.siteSize;
     processSiteHabitatData(site)
     if (site.habitats) {
       if (site.habitats.areas)
@@ -57,6 +61,7 @@ export async function getStaticProps() {
 
   return {
     props: {
+      totalSize: totalSize,
       numSites: allSites.length,
       habitats: allHabitats,
       improvements: allImprovements,
@@ -65,7 +70,7 @@ export async function getStaticProps() {
   };
 }
 
-export default function HabitatSummary({numSites, habitats, improvements}) {
+export default function HabitatSummary({totalSize, numSites, habitats, improvements}) {
   return (
     <>
       <Head>
@@ -83,7 +88,8 @@ export default function HabitatSummary({numSites, habitats, improvements}) {
             <h3>BGS Register Summary</h3>
                 
             <div>
-              <DetailRow label="Number of sites" value={numSites} />
+              <DetailRow label="Number of BGS sites" value={numSites} />
+              <DetailRow label="Total BGS site area (ha)" value={formatNumber(totalSize)} />
               <div className={styles.detailRow}>
                 <dt className={styles.detailLabel}>Habitat Summary</dt>
                 <dd className={styles.detailValue}>
