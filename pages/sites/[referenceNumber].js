@@ -730,13 +730,13 @@ export default function SitePage({ site, allResponsibleBodies, error }) {
           />
 
           <HabitatsCard
-            title="Baseline Habitats"
+            title="Baseline Habitats (click any habitat cell for more detail)"
             habitats = {site.habitats}
             isImprovement={false}
           />
 
           <HabitatsCard
-            title="Improvement Habitats"
+            title="Improvement Habitats (click any habitat cell for more detail)"
             habitats = {site.improvements}
             isImprovement={true}
           />
