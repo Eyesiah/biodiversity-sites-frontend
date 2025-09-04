@@ -87,6 +87,15 @@ export async function getStaticProps({ params }) {
       siteCount: bodyCounts[normalize(item['Name'] || '')] || 0,
     }));
 
+    // Fetch all LPAs to link from site
+    const lpaJsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
+    const lpaJsonData = fs.readFileSync(lpaJsonPath, 'utf-8');
+    const allLpas = JSON.parse(lpaJsonData);
+    allLpas.forEach(lpa => {
+      lpa.size = lpa.size / 10000;
+      if (lpa.adjacents) lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+    });
+
     const site = await res.json();
 
     if (!site) {
@@ -130,6 +139,7 @@ export async function getStaticProps({ params }) {
       props: {
         site,
         allResponsibleBodies,
+        allLpas,
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
@@ -140,6 +150,7 @@ export async function getStaticProps({ params }) {
       props: {
         site: null,
         allResponsibleBodies: [],
+        allLpas: [],
         error: e.message,
       },
     };
@@ -147,8 +158,9 @@ export async function getStaticProps({ params }) {
 }
 
 
-const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
+const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
   const [selectedBody, setSelectedBody] = useState(null);
+  const [selectedLpa, setSelectedLpa] = useState(null);
 
   const siteResponsibleBodies = useMemo(() => {
     if (!site.responsibleBodies || !allResponsibleBodies) {
@@ -167,6 +179,10 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
       };
     });
   }, [site.responsibleBodies, allResponsibleBodies]);
+
+  const siteLpaDetails = useMemo(() => {
+    return allLpas.find(lpa => lpa.name === site.lpaArea?.name);
+  }, [allLpas, site.lpaArea]);
 
   return <section className={styles.card}>
     <h3>Site Details</h3>
@@ -194,8 +210,13 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
       <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
       {site.latitude && site.longitude && <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />}
-      <DetailRow label="NCA" value={site.nationalCharacterArea != null ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.nationalCharacterArea.name)}`}>{site.nationalCharacterArea.name}</ExternalLink> : 'N/A'} />
-      <DetailRow label="LPA" value={site.lpaArea?.name || 'N/A'} />
+      <DetailRow label="NCA" value={site.nationalCharacterArea?.name ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.nationalCharacterArea.name)}`}>{site.nationalCharacterArea.name}</ExternalLink> : 'N/A'} />
+      <DetailRow 
+        label="LPA" 
+        value={
+          siteLpaDetails ? <button onClick={() => setSelectedLpa(siteLpaDetails)} className={styles.linkButton}>{site.lpaArea.name}</button> : (site.lpaArea?.name || 'N/A')
+        } 
+      />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
       <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha.`} />
@@ -216,6 +237,23 @@ const SiteDetailsCard = ({ site, allResponsibleBodies }) => {
           <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           <DetailRow label="Telephone" value={selectedBody.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           <DetailRow label="# BGS Sites" value={selectedBody.siteCount} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+        </dl>
+      )}
+    </Modal>
+    <Modal show={!!selectedLpa} onClose={() => setSelectedLpa(null)} title={selectedLpa?.name}>
+      {selectedLpa && (
+        <dl>
+          <DetailRow label="ID" value={selectedLpa.id} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Area (ha)" value={formatNumber(selectedLpa.size, 0)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="# Adjacent LPAs" value={selectedLpa.adjacents?.length || 0} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          {selectedLpa.adjacents?.length > 0 && (
+            <div style={{ marginTop: '1rem' }}>
+              <h4>Adjacent LPAs</h4>
+              <ul className={styles.adjacencyList}>
+                {selectedLpa.adjacents.map(adj => <li key={adj.id}>{adj.name} ({adj.id}) - {formatNumber(adj.size, 0)} ha</li>)}
+              </ul>
+            </div>
+          )}
         </dl>
       )}
     </Modal>
@@ -326,7 +364,7 @@ const AllocationsCard = ({allocations, title}) => {
   );
 }
 
-export default function SitePage({ site, allResponsibleBodies, error }) {
+export default function SitePage({ site, allResponsibleBodies, allLpas, error }) {
   if (error) {
     return (
       <>
@@ -372,6 +410,7 @@ export default function SitePage({ site, allResponsibleBodies, error }) {
           <SiteDetailsCard
             site={site}
             allResponsibleBodies={allResponsibleBodies}
+            allLpas={allLpas}
           />
 
           <HabitatsCard
