@@ -238,7 +238,7 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
       />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
-      {medianAllocationDistance !== null && <DetailRow label="Median allocation distance (km)" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
+      {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
       <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
       <div className={styles.detailRow}>
         <dt className={styles.detailLabel}>Habitat Summary</dt>
