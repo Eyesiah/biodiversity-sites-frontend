@@ -124,7 +124,7 @@
   cursor: pointer;
   font-weight: bold;
   position: sticky;
-  text-align: left;
+  text-align: center;
   top: 0;
   z-index: 1;
 }

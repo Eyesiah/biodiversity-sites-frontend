@@ -143,7 +143,7 @@ a[href^="http"]::after, a[href^="https"]::after {
 .site-table td {
   padding: 1rem;
   border-bottom: 1px solid #ddd;
-  text-align: left;
+  text-align: center;
   vertical-align: top;
 }
 
@@ -164,6 +164,7 @@ a[href^="http"]::after, a[href^="https"]::after {
 
 .site-table td {
   font-size: 0.9rem;
+  text-align: left;
 }
 
 .site-table td a {
