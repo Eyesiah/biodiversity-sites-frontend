@@ -13,8 +13,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "update-ncas": "node tools/update-ncas.js",
-    "update-lnrs": "node tools/update-lnrs.js",
+    "update-allocations": "node tools/update-allocations.js",
     "start": "next start",
     "lint": "next lint"
   },
