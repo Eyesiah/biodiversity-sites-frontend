@@ -86,13 +86,15 @@ export async function getStaticProps() {
       totalBaseline += h.baseline;
       totalImprovement += h.improvement;
       totalAllocation += h.allocation;
-      return {
+       return {
         ...h,
         improvementSites: h.improvementSites.size,
       };
     });
 
     // Calculate percentages
+    const totalImprovementSites = processedData.reduce((acc, h) => acc + h.improvementSites, 0);
+
     processedData.forEach(h => {
       h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
       h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
@@ -106,6 +108,7 @@ export async function getStaticProps() {
         baseline: totalBaseline,
         improvement: totalImprovement,
         allocation: totalAllocation,
+        improvementSites: totalImprovementSites,
         improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
       },
     };
@@ -149,34 +152,34 @@ const AnalysisTable = ({ title, data, unit }) => {
               </tr>
             </thead>
             <tbody>
+              <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+                <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
+                <td className={styles.numericData}>{formatNumber(data.totals.baseline)}</td>
+                <td></td>
+                <td className={styles.numericData}>{formatNumber(data.totals.improvementSites, 0)}</td>
+                <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
+                <td></td>
+                <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
+                <td></td>
+                <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 2)}%</td>
+              </tr>
+            </tbody>
+            <tbody>
               {sortedRows.map(row => (
                 <tr key={row.habitat}>
                   <td>{row.habitat}</td>
                   <td>{row.distinctiveness}</td>
                   <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.baselineShare, 1)}%</td>
+                  <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
                   <td className={styles.numericData}>{row.improvementSites || 0}</td>
                   <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementShare, 1)}%</td>
+                  <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
                   <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.allocationShare, 1)}%</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 1)}%</td>
+                  <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
+                  <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr>
-                <th colSpan="2">Totals</th>
-                <td className={styles.numericData}>{formatNumber(data.totals.baseline)}</td>
-                <td></td>
-                <td></td>
-                <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
-                <td></td>
-                <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
-                <td></td>
-                <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 1)}%</td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       )}
