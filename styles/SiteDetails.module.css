@@ -57,6 +57,10 @@
   margin-bottom: 1rem;
 }
 
+.card > section {
+  margin-left: auto;
+}
+
 
 
 .detailRow {

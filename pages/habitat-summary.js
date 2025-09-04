@@ -101,13 +101,13 @@ export default function HabitatSummary({totalSize, numSites, habitats, improveme
           </section>
 
           <HabitatsCard
-            title="Baseline Habitats (click any habitat cell for more detail)"
+            title="Baseline Habitats (click any habitat cell for condition detail)"
             habitats = {habitats}
             isImprovement={false}
           />
 
           <HabitatsCard
-            title="Improvement Habitats (click any habitat cell for more detail)"
+            title="Improvement Habitats (click any habitat cell condition detail)"
             habitats = {improvements}
             isImprovement={true}
           />
