@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import fs from 'fs';
 import path from 'path';
+import ExternalLink from '../components/ExternalLink';
 import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '../lib/format';
@@ -113,7 +114,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
           ) : (
             <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
-                These <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies may enter into conservation covenant agreements with landowners in England.
+                These <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
             </p>
         )}
         </div>
@@ -169,7 +170,8 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             ))}
           </tbody>
         </table>
-      </main>
+normtNum
+py naty      </main>
     </div>
   );
 }
