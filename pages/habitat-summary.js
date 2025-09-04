@@ -66,14 +66,14 @@ export async function getStaticProps() {
       numSites: allSites.length,
       habitats: allHabitats,
       improvements: allImprovements,
-      summary: {}
+      allocations: allSites.flatMap(s => s.allocations || [])
     }
   };
 }
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function HabitatSummary({ totalSize, numSites, habitats, improvements }) {
+export default function HabitatSummary({ totalSize, numSites, habitats, improvements, allocations }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
@@ -126,7 +126,7 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
               <div className={styles.detailRow}>
                 <dt className={styles.detailLabel}>Habitat Summary</dt>
                 <dd className={styles.detailValue}>
-                  <HabitatSummaryTable site={{habitats: habitats, improvements: improvements}} />
+                  <HabitatSummaryTable site={{habitats: habitats, improvements: improvements, allocations: allocations}} />
                 </dd>
               </div>
             </div>
