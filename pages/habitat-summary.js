@@ -112,7 +112,7 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
 
       <main className={styles.container}>        
         <div className={styles.header}>
-          <h1>Habitat Summary</h1>
+          <h1>Habitats Summary</h1>
         </div>
 
         <div className={styles.detailsGrid}>
