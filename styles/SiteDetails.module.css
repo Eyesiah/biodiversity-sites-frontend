@@ -58,9 +58,10 @@
 }
 
 .card > section {
-  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
-
 
 
 .detailRow {
