@@ -184,15 +184,23 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
     return allLpas.find(lpa => lpa.name === site.lpaArea?.name);
   }, [allLpas, site.lpaArea]);
 
-  const meanAllocationDistance = useMemo(() => {
+  const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) {
       return null;
     }
     const distances = site.allocations
       .map(alloc => alloc.distance)
-      .filter(d => typeof d === 'number');
+      .filter(d => typeof d === 'number')
+      .sort((a, b) => a - b);
 
-    return distances.length > 0 ? distances.reduce((a, b) => a + b, 0) / distances.length : null;
+    if (distances.length === 0) return null;
+
+    const mid = Math.floor(distances.length / 2);
+    if (distances.length % 2 === 0) {
+      return (distances[mid - 1] + distances[mid]) / 2;
+    } else {
+      return distances[mid];
+    }
   }, [site.allocations]);
 
   return <section className={styles.card}>
@@ -230,7 +238,7 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
       />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
       <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
-      {meanAllocationDistance !== null && <DetailRow label="Mean allocation distance (km)" value={`${formatNumber(Math.round(meanAllocationDistance), 0)} km`} />}
+      {medianAllocationDistance !== null && <DetailRow label="Median allocation distance (km)" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
       <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
       <div className={styles.detailRow}>
         <dt className={styles.detailLabel}>Habitat Summary</dt>
