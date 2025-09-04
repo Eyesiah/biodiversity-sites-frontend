@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { fetchAllSites } from '../lib/api';
 import { getHabitatDistinctiveness, processSiteHabitatData } from '../lib/habitat';
 import styles from '../styles/SiteDetails.module.css';
@@ -155,7 +155,7 @@ const AnalysisTable = ({ title, data, unit }) => {
                   <td>{row.distinctiveness}</td>
                   <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
                   <td className={styles.numericData}>{formatNumber(row.baselineShare, 1)}%</td>
-                  <td className={styles.numericData}>{row.improvementSites > 0 ? row.improvementSites : ''}</td>
+                  <td className={styles.numericData}>{row.improvementSites || 0}</td>
                   <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
                   <td className={styles.numericData}>{formatNumber(row.improvementShare, 1)}%</td>
                   <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
@@ -184,7 +184,35 @@ const AnalysisTable = ({ title, data, unit }) => {
   );
 }
 
+const DEBOUNCE_DELAY_MS = 300;
+
 export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(inputValue);
+    }, DEBOUNCE_DELAY_MS);
+
+    return () => clearTimeout(timerId);
+  }, [inputValue]);
+
+  const filterAnalysisData = (analysisData) => {
+    if (!debouncedSearchTerm) {
+      return analysisData;
+    }
+    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
+    const filteredRows = analysisData.rows.filter(row =>
+      row.habitat.toLowerCase().includes(lowercasedTerm)
+    );
+    return { ...analysisData, rows: filteredRows };
+  };
+
+  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, debouncedSearchTerm]);
+  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, debouncedSearchTerm]);
+  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, debouncedSearchTerm]);
+
   return (
     <>
       <Head>
@@ -195,11 +223,29 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         <div className={styles.header}>
           <h1>BGS Habitat Analysis</h1>
         </div>
-
+        <div className="search-container sticky-search">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by habitat name..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            autoFocus
+          />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
+        </div>
         <div className={styles.detailsGrid}>
-          <AnalysisTable title="Area Habitats" data={areaAnalysis} unit="ha" />
-          <AnalysisTable title="Hedgerow Habitats" data={hedgerowAnalysis} unit="km" />
-          <AnalysisTable title="Watercourses Habitats" data={watercourseAnalysis} unit="km" />
+          <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
+          <AnalysisTable title="Hedgerow Habitats" data={filteredHedgerowAnalysis} unit="km" />
+          <AnalysisTable title="Watercourses Habitats" data={filteredWatercourseAnalysis} unit="km" />
         </div>
       </main>
     </>

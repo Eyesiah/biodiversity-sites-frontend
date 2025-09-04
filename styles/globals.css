@@ -85,6 +85,15 @@ a[href^="http"]::after, a[href^="https"]::after {
   margin: 1rem auto;
 }
 
+.sticky-search {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px; /* Adjust this value to sit below your main navigation */
+  background-color: #F9F6EE; /* Match the page background */
+  padding: 1rem 0;
+  z-index: 999; /* Ensure it stays on top of other content */
+}
+
 .search-input {
   width: 100%;
   padding: 0.75rem;

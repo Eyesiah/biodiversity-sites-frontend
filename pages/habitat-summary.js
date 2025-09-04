@@ -1,5 +1,6 @@
 
 import Head from 'next/head';
+import { useState, useMemo, useEffect } from 'react';
 import { fetchAllSites } from '../lib/api';
 import styles from '../styles/SiteDetails.module.css';
 import { HabitatsCard } from '../components/HabitatsCard';
@@ -70,7 +71,39 @@ export async function getStaticProps() {
   };
 }
 
-export default function HabitatSummary({totalSize, numSites, habitats, improvements}) {
+const DEBOUNCE_DELAY_MS = 300;
+
+export default function HabitatSummary({ totalSize, numSites, habitats, improvements }) {
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(inputValue);
+    }, DEBOUNCE_DELAY_MS);
+
+    return () => clearTimeout(timerId);
+  }, [inputValue]);
+
+  const filterHabitats = (habitatData) => {
+    if (!debouncedSearchTerm) {
+      return habitatData;
+    }
+    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
+    const filteredData = {};
+    for (const category in habitatData) {
+      if (Array.isArray(habitatData[category])) {
+        filteredData[category] = habitatData[category].filter(h =>
+          h.type.toLowerCase().includes(lowercasedTerm)
+        );
+      }
+    }
+    return filteredData;
+  };
+
+  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, debouncedSearchTerm]);
+  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, debouncedSearchTerm]);
+
   return (
     <>
       <Head>
@@ -100,15 +133,35 @@ export default function HabitatSummary({totalSize, numSites, habitats, improveme
               
           </section>
 
+          <div className="search-container sticky-search">
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by habitat name..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+
           <HabitatsCard
             title="Baseline Habitats (click any habitat cell for condition detail)"
-            habitats = {habitats}
+            habitats = {filteredBaselineHabitats}
             isImprovement={false}
           />
 
           <HabitatsCard
             title="Improvement Habitats (click any habitat cell condition detail)"
-            habitats = {improvements}
+            habitats = {filteredImprovementHabitats}
             isImprovement={true}
           />
         </div>
