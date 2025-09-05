@@ -126,7 +126,7 @@ const AllocationRow = ({ alloc }) => {
   };
 
 const DEBOUNCE_DELAY_MS = 300;
-
+hjgdjyt
 export default function AllocationsPage({ allocations, error }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -159,7 +159,7 @@ export default function AllocationsPage({ allocations, error }) {
   }, [allocations, debouncedSearchTerm]);
 
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
-
+fdsa
   const summaryData = useMemo(() => {
     const source = filteredAllocations;
 
