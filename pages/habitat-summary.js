@@ -1,6 +1,6 @@
 
 import Head from 'next/head';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { fetchAllSites } from '../lib/api';
 import styles from '../styles/SiteDetails.module.css';
 import { HabitatsCard } from '../components/HabitatsCard';
@@ -85,7 +85,7 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
     return () => clearTimeout(timerId);
   }, [inputValue]);
 
-  const filterHabitats = (habitatData) => {
+  const filterHabitats = useCallback((habitatData) => {
     if (!debouncedSearchTerm) {
       return habitatData;
     }
@@ -99,10 +99,10 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
       }
     }
     return filteredData;
-  };
+  }, [debouncedSearchTerm]);
 
-  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, debouncedSearchTerm]);
-  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, debouncedSearchTerm]);
+  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, filterHabitats]);
+  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, filterHabitats]);
 
   return (
     <>

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { fetchAllSites } from '../lib/api';
 import { getHabitatDistinctiveness, processSiteHabitatData } from '../lib/habitat';
 import styles from '../styles/SiteDetails.module.css';
@@ -201,7 +201,7 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
     return () => clearTimeout(timerId);
   }, [inputValue]);
 
-  const filterAnalysisData = (analysisData) => {
+  const filterAnalysisData = useCallback((analysisData) => {
     if (!debouncedSearchTerm) {
       return analysisData;
     }
@@ -210,11 +210,11 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
       row.habitat.toLowerCase().includes(lowercasedTerm)
     );
     return { ...analysisData, rows: filteredRows };
-  };
+  }, [debouncedSearchTerm]);
 
-  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, debouncedSearchTerm]);
-  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, debouncedSearchTerm]);
-  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, debouncedSearchTerm]);
+  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, filterAnalysisData]);
+  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, filterAnalysisData]);
+  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, filterAnalysisData]);
 
   return (
     <>
