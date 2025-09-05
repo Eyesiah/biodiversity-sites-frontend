@@ -101,8 +101,8 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
     return filteredData;
   };
 
-  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, debouncedSearchTerm]);
-  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, debouncedSearchTerm]);
+  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, debouncedSearchTerm, filterHabitats]);
+  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, debouncedSearchTerm, filterHabitats]);
 
   return (
     <>

@@ -212,9 +212,9 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
     return { ...analysisData, rows: filteredRows };
   };
 
-  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, debouncedSearchTerm]);
-  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, debouncedSearchTerm]);
-  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, debouncedSearchTerm]);
+  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, debouncedSearchTerm, filterAnalysisData]);
+  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, debouncedSearchTerm, filterAnalysisData]);
+  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, debouncedSearchTerm, filterAnalysisData]);
 
   return (
     <>
