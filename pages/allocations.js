@@ -104,6 +104,7 @@ const AllocationRow = ({ alloc }) => {
       <>
         <td><Link href={`/sites/${alloc.siteReferenceNumber}`}>{alloc.siteReferenceNumber}</Link></td>
         <td>{alloc.planningReference}</td>
+        <td>{alloc.localPlanningAuthority}</td>
         <td className={styles.numericData}>
           {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
         </td>
@@ -118,8 +119,8 @@ const AllocationRow = ({ alloc }) => {
     return (
       <CollapsibleRow
         mainRow={mainRow}
-        collapsibleContent={collapsibleContent} 
-        colSpan={6}
+        collapsibleContent={collapsibleContent}
+        colSpan={7}
       />
     );
   };
@@ -152,6 +153,36 @@ export default function AllocationsPage({ allocations, error }) {
   }, [allocations, debouncedSearchTerm]);
 
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
+
+  const summaryData = useMemo(() => {
+    const source = filteredAllocations;
+
+    const totalArea = source.reduce((sum, alloc) => sum + (alloc.areaUnits || 0), 0);
+    const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hedgerowUnits || 0), 0);
+    const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.watercoursesUnits || 0), 0);
+
+    const distances = source
+      .map(alloc => alloc.distance)
+      .filter(d => typeof d === 'number')
+      .sort((a, b) => a - b);
+
+    let medianDistance = null;
+    if (distances.length > 0) {
+      const mid = Math.floor(distances.length / 2);
+      if (distances.length % 2 === 0) {
+        medianDistance = (distances[mid - 1] + distances[mid]) / 2;
+      } else {
+        medianDistance = distances[mid];
+      }
+    }
+
+    return {
+      totalArea,
+      totalHedgerow,
+      totalWatercourse,
+      medianDistance,
+    };
+  }, [filteredAllocations]);
 
   if (error) {
     return (
@@ -191,6 +222,7 @@ export default function AllocationsPage({ allocations, error }) {
             <tr>
               <th onClick={() => requestSort('siteReferenceNumber')} className={getSortClassName('siteReferenceNumber', sortConfig)}>BGS Ref</th>
               <th onClick={() => requestSort('planningReference')} className={getSortClassName('planningReference', sortConfig)}>Planning Ref</th>
+              <th onClick={() => requestSort('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfig)}>LPA</th>
               <th onClick={() => requestSort('distance')} className={getSortClassName('distance', sortConfig)}>Distance (km)</th>
               <th onClick={() => requestSort('areaUnits')} className={getSortClassName('areaUnits', sortConfig)}>Area Units</th>
               <th onClick={() => requestSort('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfig)}>Hedgerow Units</th>
@@ -198,6 +230,15 @@ export default function AllocationsPage({ allocations, error }) {
             </tr>
           </thead>
           <tbody>
+            <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+              <td colSpan="3" style={{ textAlign: 'center', border: '1px solid #ddd' }}>Totals</td>
+              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>
+                {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 0)} (median)` : 'N/A'}
+              </td>
+              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
+              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
+              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
+            </tr>
             {sortedAllocations.map((alloc, index) => (
               <AllocationRow key={`${alloc.siteReferenceNumber}-${alloc.planningReference}-${index}`} alloc={alloc} />
             ))}
