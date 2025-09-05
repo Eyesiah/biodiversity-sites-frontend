@@ -248,7 +248,7 @@ export default function AllocationsPage({ allocations, error }) {
             <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
               <td colSpan="3" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
               <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-                {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 0)} (median)` : 'N/A'}
+                {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
               </td>
               <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
               <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
