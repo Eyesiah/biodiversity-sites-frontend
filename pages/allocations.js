@@ -249,6 +249,9 @@ export default function AllocationsPage({ allocations, error }) {
             </button>
           )}
         </div>
+        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+          Totals are recalculated as your search string is entered.
+        </p>
         <table className="site-table">
           <thead>
             <tr>
