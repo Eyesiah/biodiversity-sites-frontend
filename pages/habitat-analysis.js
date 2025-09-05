@@ -8,120 +8,128 @@ import { useSortableData, getSortClassName } from '../lib/hooks';
 
 // This function runs at build time to fetch and process data.
 export async function getStaticProps() {
-  const allSites = await fetchAllSites();
+  try {
+    const allSites = await fetchAllSites();
 
-  const analysis = {
-    areas: {},
-    hedgerows: {},
-    watercourses: {},
-  };
-
-  // Helper to initialize a habitat entry
-  const initHabitat = (habitatName) => ({
-    habitat: habitatName,
-    distinctiveness: getHabitatDistinctiveness(habitatName),
-    baseline: 0,
-    improvementSites: new Set(),
-    improvement: 0,
-    allocation: 0,
-  });
-
-  // Process each site
-  allSites.forEach(site => {
-
-    processSiteHabitatData(site);
-
-    const processCategory = (category) => {
-      // Baseline
-      if (site.habitats && site.habitats[category]) {
-        site.habitats[category].forEach(h => {
-          const habitatName = h.type;
-          if (!analysis[category][habitatName]) {
-            analysis[category][habitatName] = initHabitat(habitatName);
-          }
-          analysis[category][habitatName].baseline += h.size;
-        });
-      }
-
-      // Improvements
-      if (site.improvements && site.improvements[category]) {
-        site.improvements[category].forEach(h => {
-          const habitatName = h.type;
-          if (!analysis[category][habitatName]) {
-            analysis[category][habitatName] = initHabitat(habitatName);
-          }
-          analysis[category][habitatName].improvement += h.size;
-          analysis[category][habitatName].improvementSites.add(site.referenceNumber);
-        });
-      }
-
-      // Allocations
-      if (site.allocations) {
-        site.allocations.forEach(alloc => {
-          if (alloc.habitats && alloc.habitats[category]) {
-            alloc.habitats[category].forEach(h => {
-              const habitatName = h.type;
-              if (!analysis[category][habitatName]) {
-                analysis[category][habitatName] = initHabitat(habitatName);
-              }
-              analysis[category][habitatName].allocation += h.size;
-            });
-          }
-        });
-      }
+    const analysis = {
+      areas: {},
+      hedgerows: {},
+      watercourses: {},
     };
 
-    processCategory('areas');
-    processCategory('hedgerows');
-    processCategory('watercourses');
-  });
+    // Helper to initialize a habitat entry
+    const initHabitat = (habitatName) => ({
+      habitat: habitatName,
+      distinctiveness: getHabitatDistinctiveness(habitatName),
+      baseline: 0,
+      improvementSites: new Set(),
+      improvement: 0,
+      allocation: 0,
+    });
 
-  // Convert sets to counts and calculate totals
-  const finalizeData = (category) => {
-    let totalBaseline = 0;
-    let totalImprovement = 0;
-    let totalAllocation = 0;
+    // Process each site
+    allSites.forEach(site => {
 
-    const processedData = Object.values(analysis[category]).map(h => {
-      totalBaseline += h.baseline;
-      totalImprovement += h.improvement;
-      totalAllocation += h.allocation;
-       return {
-        ...h,
-        improvementSites: h.improvementSites.size,
+      processSiteHabitatData(site);
+
+      const processCategory = (category) => {
+        // Baseline
+        if (site.habitats && site.habitats[category]) {
+          site.habitats[category].forEach(h => {
+            const habitatName = h.type;
+            if (!analysis[category][habitatName]) {
+              analysis[category][habitatName] = initHabitat(habitatName);
+            }
+            analysis[category][habitatName].baseline += h.size;
+          });
+        }
+
+        // Improvements
+        if (site.improvements && site.improvements[category]) {
+          site.improvements[category].forEach(h => {
+            const habitatName = h.type;
+            if (!analysis[category][habitatName]) {
+              analysis[category][habitatName] = initHabitat(habitatName);
+            }
+            analysis[category][habitatName].improvement += h.size;
+            analysis[category][habitatName].improvementSites.add(site.referenceNumber);
+          });
+        }
+
+        // Allocations
+        if (site.allocations) {
+          site.allocations.forEach(alloc => {
+            if (alloc.habitats && alloc.habitats[category]) {
+              alloc.habitats[category].forEach(h => {
+                const habitatName = h.type;
+                if (!analysis[category][habitatName]) {
+                  analysis[category][habitatName] = initHabitat(habitatName);
+                }
+                analysis[category][habitatName].allocation += h.size;
+              });
+            }
+          });
+        }
       };
+
+      processCategory('areas');
+      processCategory('hedgerows');
+      processCategory('watercourses');
     });
 
-    // Calculate percentages
-    const totalImprovementSites = processedData.reduce((acc, h) => acc + h.improvementSites, 0);
+    // Convert sets to counts and calculate totals
+    const finalizeData = (category) => {
+      let totalBaseline = 0;
+      let totalImprovement = 0;
+      let totalAllocation = 0;
 
-    processedData.forEach(h => {
-      h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
-      h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
-      h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
-      h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
-    });
+      const processedData = Object.values(analysis[category]).map(h => {
+        totalBaseline += h.baseline;
+        totalImprovement += h.improvement;
+        totalAllocation += h.allocation;
+         return {
+          ...h,
+          improvementSites: h.improvementSites.size,
+        };
+      });
+
+      // Calculate percentages
+      const totalImprovementSites = processedData.reduce((acc, h) => acc + h.improvementSites, 0);
+
+      processedData.forEach(h => {
+        h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
+        h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
+        h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
+        h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
+      });
+
+      return {
+        rows: processedData.sort((a, b) => a.habitat.localeCompare(b.habitat)),
+        totals: {
+          baseline: totalBaseline,
+          improvement: totalImprovement,
+          allocation: totalAllocation,
+          improvementSites: totalImprovementSites,
+          improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
+        },
+      };
+    };
 
     return {
-      rows: processedData.sort((a, b) => a.habitat.localeCompare(b.habitat)),
-      totals: {
-        baseline: totalBaseline,
-        improvement: totalImprovement,
-        allocation: totalAllocation,
-        improvementSites: totalImprovementSites,
-        improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
+      props: {
+        areaAnalysis: finalizeData('areas'),
+        hedgerowAnalysis: finalizeData('hedgerows'),
+        watercourseAnalysis: finalizeData('watercourses'),
+        lastUpdated: new Date().toISOString(),
       },
+      revalidate: 3600, // Re-generate the page at most once per hour
     };
-  };
-
-  return {
-    props: {
-      areaAnalysis: finalizeData('areas'),
-      hedgerowAnalysis: finalizeData('hedgerows'),
-      watercourseAnalysis: finalizeData('watercourses'),
-    },
-    revalidate: 3600, // Re-generate the page at most once per hour
-  };
+  } catch (e) {
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
+  }
 }
 
 // Reusable component to render an analysis table

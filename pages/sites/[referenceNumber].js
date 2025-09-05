@@ -147,22 +147,17 @@ export async function getStaticProps({ params }) {
         site,
         allResponsibleBodies,
         allLpas,
+        lastUpdated: new Date().toISOString(),
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
-    console.error(e);
-    return {  
-      props: {
-        site: null,
-        allResponsibleBodies: [],
-        allLpas: [],
-        error: e.message,
-      },
-      // Re-attempt to generate the page after 10 seconds if an error occurred.
-      revalidate: 10,
-    };
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    // For initial page loads (or when using fallback: 'blocking'), this will result in a 500 error page.
+    throw e;
   }
 }
 
