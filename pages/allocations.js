@@ -130,13 +130,19 @@ const DEBOUNCE_DELAY_MS = 300;
 export default function AllocationsPage({ allocations, error }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
+    setIsSearching(true);
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(inputValue);
+      setIsSearching(false);
     }, DEBOUNCE_DELAY_MS);
 
-    return () => clearTimeout(timerId);
+    return () => {
+      clearTimeout(timerId);
+      setIsSearching(false);
+    }
   }, [inputValue]);
 
   const filteredAllocations = useMemo(() => {
@@ -215,6 +221,16 @@ export default function AllocationsPage({ allocations, error }) {
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
+          {isSearching && <div className="loader" />}
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
         </div>
         <table className="site-table">
           <thead>
