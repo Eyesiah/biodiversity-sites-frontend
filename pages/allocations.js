@@ -7,6 +7,7 @@ import { formatNumber } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { CollapsibleRow } from '../components/CollapsibleRow';
 import styles from '../styles/SiteDetails.module.css';
+import { processSiteHabitatData } from '../lib/habitat';
 
 export async function getStaticProps() {
   try {
@@ -14,6 +15,7 @@ export async function getStaticProps() {
     
     const allocationPromises = allSites.flatMap(site => {
       if (!site.allocations) return [];
+      processSiteHabitatData(site);
       return site.allocations.map(async (alloc) => {
         let allocCoords = null;
 
@@ -35,10 +37,25 @@ export async function getStaticProps() {
           );
         }
 
+        const mapHabitats = (habitats) => (habitats || []).map(h => ({
+          module: h.module,
+          type: h.type,
+          distinctiveness: h.distinctiveness || '',
+          condition: h.condition,
+          size: h.size,
+        }));
+
         return {
-          ...alloc,
+          planningReference: alloc.planningReference,
+          localPlanningAuthority: alloc.localPlanningAuthority,
+          projectName: alloc.projectName,
+          areaUnits: alloc.areaUnits,
+          hedgerowUnits: alloc.hedgerowUnits,
+          watercoursesUnits: alloc.watercoursesUnits,
+          habitats: { areas: mapHabitats(alloc.habitats?.areas), hedgerows: mapHabitats(alloc.habitats?.hedgerows), watercourses: mapHabitats(alloc.habitats?.watercourses) },
           siteReferenceNumber: site.referenceNumber,
           distance: distance,
+
         };
       });
     });
