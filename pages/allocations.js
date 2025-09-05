@@ -75,6 +75,8 @@ export async function getStaticProps() {
         allocations: [],
         error: e.message,
       },
+      // Re-attempt to generate the page after 10 seconds if an error occurred.
+      revalidate: 10,
     };
   }
 }

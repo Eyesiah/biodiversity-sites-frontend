@@ -31,6 +31,8 @@ export async function getStaticProps() {
         summary: { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 },
         error: e.message
       },
+      // Re-attempt to generate the page after 10 seconds if an error occurred.
+      revalidate: 10,
     };
   }
 }
