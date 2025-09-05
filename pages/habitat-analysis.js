@@ -139,6 +139,12 @@ const AnalysisTable = ({ title, data, unit }) => {
           <table className={`${styles.table} ${styles.subTable}`}>
             <thead>
               <tr>
+                <th colSpan="1" style={{ border: 1 }}>Groups</th>
+                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
+                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
+                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#eef0e0ff' }}>Allocations</th>
+              </tr>
+              <tr>
                 <th onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</th>
                 <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
                 <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline ({unit})</th>
@@ -223,7 +229,7 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
       </Head>
 
       <main className={styles.container}>
-        <h1 className="title">BGS Habitat Analysis</h1>
+        <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>BGS Habitat Analysis</h1>
         <div className="search-container sticky-search">
           <input
             type="text"
