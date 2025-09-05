@@ -10,7 +10,7 @@ export default function About() {
       <main className="main prose">
         <h1 className="title">Biodiversity Gain Sites in England</h1>
 
-        <p>England's <ExternalLink href="https://www.google.com/search?q=Biodiversity+Net+Gain+(BNG)">Biodiversity Net Gain (BNG)</ExternalLink> requirement, which aims to leave nature in a measurably better state after a development project, means that developers must now achieve at least a 10% increase in the biodiversity of a parcel of land following its development. If this is not possible, Biodiversity Gain Sites (BGS) have been made available. These sites are locations where habitats for wildlife are created or improved. If biodiversity gains can’t be delivered within a development site - by creating or enhancing its existing habitats - they must be delivered elsewhere, by developers paying for the same types of habitat at a different location. Landowners have registered their land for this purpose and will sell <ExternalLink href="https://www.google.com/search?q=biodiversity+units">biodiversity units</ExternalLink> to developers.</p>
+        <p>England&apos;s <ExternalLink href="https://www.google.com/search?q=Biodiversity+Net+Gain+(BNG)">Biodiversity Net Gain (BNG)</ExternalLink> requirement, which aims to leave nature in a measurably better state after a development project, means that developers must now achieve at least a 10% increase in the biodiversity of a parcel of land following its development. If this is not possible, Biodiversity Gain Sites (BGS) have been made available. These sites are locations where habitats for wildlife are created or improved. If biodiversity gains can’t be delivered within a development site - by creating or enhancing its existing habitats - they must be delivered elsewhere, by developers paying for the same types of habitat at a different location. Landowners have registered their land for this purpose and will sell <ExternalLink href="https://www.google.com/search?q=biodiversity+units">biodiversity units</ExternalLink> to developers.</p>
 
         <h2>How we gathered the data</h2>
         <p>The data included in the list of biodiversity gain sites given here is compiled from various sources:</p>
@@ -25,7 +25,7 @@ export default function About() {
         <p>Details of the responsible bodies are taken from the .GOV list <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies">Conservation covenants: list of designated responsible bodies</ExternalLink>.</p>
 
         <h3>3. Locations</h3>
-        <p>Site locations are given but the precise location of allocations has to be deduced from the address using Google’s Geocoder. This sometimes doesn’t work well, so some checking is needed. If it fails, the location falls back to the LPA's centroid.</p>
+        <p>Site locations are given but the precise location of allocations has to be deduced from the address using Google’s Geocoder. This sometimes doesn&apos;t work well, so some checking is needed. If it fails, the location falls back to the LPA's centroid.</p>
 
         <h3>4. Local Planning Authorities (LPAs)</h3>
         <p>Links to LPA planning portals for searching for an application have been manually gathered.</p>
