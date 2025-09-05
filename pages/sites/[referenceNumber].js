@@ -20,15 +20,22 @@ import { DetailRow } from "../../components/DetailRow"
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
-  const sites = await fetchAllSites(1000);
+  try {
+    const sites = await fetchAllSites(1000);
 
-  const paths = sites.map(site => ({
-    params: { referenceNumber: site.referenceNumber },
-  }));
+    const paths = sites.map(site => ({
+      params: { referenceNumber: site.referenceNumber },
+    }));
 
-  // fallback: 'blocking' means that if a path is not found,
-  // Next.js will server-render it on the first request and then cache it.
-  return { paths, fallback: 'blocking' };
+    // fallback: 'blocking' means that if a path is not found,
+    // Next.js will server-render it on the first request and then cache it.
+    return { paths, fallback: 'blocking' };
+  } catch (error) {
+    console.error("Error in getStaticPaths:", error);
+    // If the API is down, we can't pre-render any pages.
+    // fallback: 'blocking' will cause pages to be rendered on-demand when requested.
+    return { paths: [], fallback: 'blocking' };
+  }
 }
 
 // This function will be used to normalize names for both counting and matching
