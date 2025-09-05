@@ -127,7 +127,7 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
       </Head>
       <main className="main">
         <h1 className="title">National Character Areas</h1>
-        <div className="search-container">
+        <div className="search-container sticky-search">
           <input
             type="text"
             className="search-input"

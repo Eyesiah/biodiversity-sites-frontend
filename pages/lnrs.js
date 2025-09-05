@@ -127,7 +127,7 @@ export default function LNRSAreasPage({ lnrs, error }) {
       </Head>
       <main className="main">
         <h1 className="title">Local Nature Recovery Strategies</h1>
-        <div className="search-container">
+        <div className="search-container sticky-search">
           <input
             type="text"
             className="search-input"

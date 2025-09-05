@@ -132,7 +132,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
       </Head>
       <main className="main">
         <h1 className="title">Local Planning Authorities</h1>
-        <div className="search-container">
+        <div className="search-container sticky-search">
           <input
             type="text"
             className="search-input"

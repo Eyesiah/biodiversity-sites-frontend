@@ -118,7 +118,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             </p>
         )}
         </div>
-        <div className="search-container">
+        <div className="search-container sticky-search">
           <input
             type="text"
             className="search-input"

@@ -105,12 +105,12 @@ const AllocationRow = ({ alloc }) => {
         <td><Link href={`/sites/${alloc.siteReferenceNumber}`}>{alloc.siteReferenceNumber}</Link></td>
         <td>{alloc.planningReference}</td>
         <td>{alloc.localPlanningAuthority}</td>
-        <td className={styles.numericData}>
+        <td className="centered-data">
           {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
         </td>
-        <td className={styles.numericData}>{formatNumber(alloc.areaUnits || 0)}</td>
-        <td className={styles.numericData}>{formatNumber(alloc.hedgerowUnits || 0)}</td>
-        <td className={styles.numericData}>{formatNumber(alloc.watercoursesUnits || 0)}</td>
+        <td className="numeric-data">{formatNumber(alloc.areaUnits || 0)}</td>
+        <td className="numeric-data">{formatNumber(alloc.hedgerowUnits || 0)}</td>
+        <td className="numeric-data">{formatNumber(alloc.watercoursesUnits || 0)}</td>
       </>
     );
   
@@ -220,8 +220,8 @@ export default function AllocationsPage({ allocations, error }) {
         <table className="site-table">
           <thead>
             <tr>
-              <th onClick={() => requestSort('siteReferenceNumber')} className={getSortClassName('siteReferenceNumber', sortConfig)}>BGS Ref</th>
-              <th onClick={() => requestSort('planningReference')} className={getSortClassName('planningReference', sortConfig)}>Planning Ref</th>
+              <th onClick={() => requestSort('siteReferenceNumber')} className={getSortClassName('siteReferenceNumber', sortConfig)}>BGS Ref.</th>
+              <th onClick={() => requestSort('planningReference')} className={getSortClassName('planningReference', sortConfig)}>Planning Ref.</th>
               <th onClick={() => requestSort('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfig)}>LPA</th>
               <th onClick={() => requestSort('distance')} className={getSortClassName('distance', sortConfig)}>Distance (km)</th>
               <th onClick={() => requestSort('areaUnits')} className={getSortClassName('areaUnits', sortConfig)}>Area Units</th>
@@ -231,13 +231,13 @@ export default function AllocationsPage({ allocations, error }) {
           </thead>
           <tbody>
             <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-              <td colSpan="3" style={{ textAlign: 'center', border: '1px solid #ddd' }}>Totals</td>
-              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>
+              <td colSpan="3" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+              <td className="centered-data" style={{ border: '3px solid #ddd' }}>
                 {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 0)} (median)` : 'N/A'}
               </td>
-              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
-              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
-              <td className={styles.numericData} style={{ border: '1px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
             </tr>
             {sortedAllocations.map((alloc, index) => (
               <AllocationRow key={`${alloc.siteReferenceNumber}-${alloc.planningReference}-${index}`} alloc={alloc} />
