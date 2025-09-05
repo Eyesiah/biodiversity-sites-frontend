@@ -223,9 +223,7 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
       </Head>
 
       <main className={styles.container}>
-        <div className={styles.header}>
-          <h1>BGS Habitat Analysis</h1>
-        </div>
+        <h1 className="title">BGS Habitat Analysis</h1>
         <div className="search-container sticky-search">
           <input
             type="text"
