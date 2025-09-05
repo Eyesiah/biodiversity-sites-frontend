@@ -203,11 +203,10 @@ export default function AllocationsPage({ allocations, error }) {
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p>
-            Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> of <strong>{formatNumber(allocations.length, 0)}</strong> total allocations.
+          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> of <strong>{formatNumber(allocations.length, 0)}</strong> total allocations.
           </p>
         </div>
-        <div className="search-container">
+        <div className="search-container sticky-search">
           <input
             type="text"
             className="search-input"
