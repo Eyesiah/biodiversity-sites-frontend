@@ -140,10 +140,10 @@ const AnalysisTable = ({ title, data, unit }) => {
             <thead>
               <tr>
                 <th onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</th>
-                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
+                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
                 <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline ({unit})</th>
                 <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
-                <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)}>Improvement # Sites</th>
+                <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
                 <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Area ({unit})</th>
                 <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
@@ -156,7 +156,7 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.baseline)}</td>
                 <td></td>
-                <td className={styles.numericData}>{formatNumber(data.totals.improvementSites, 0)}</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementSites, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
                 <td></td>
                 <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
@@ -168,10 +168,10 @@ const AnalysisTable = ({ title, data, unit }) => {
               {sortedRows.map(row => (
                 <tr key={row.habitat}>
                   <td>{row.habitat}</td>
-                  <td>{row.distinctiveness}</td>
+                  <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
                   <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
                   <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
-                  <td className={styles.numericData}>{row.improvementSites || 0}</td>
+                  <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
                   <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
                   <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
                   <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
