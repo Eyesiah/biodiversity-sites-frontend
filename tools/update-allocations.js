@@ -2,8 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { fetchAllSites } = require('../lib/api.js');
 const { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } = require('../lib/geo.js');
-
-const JSON_PATH = path.join(__dirname, '..', 'data', 'allocations.json');
+const clientPromise = require('../lib/mongodb.js').default;
 
 async function fetchAndProcessAllocations() {
   try {
@@ -43,15 +42,24 @@ async function fetchAndProcessAllocations() {
     });
 
     const allAllocations = await Promise.all(allocationPromises);
-    console.log(`Processed ${allAllocations.length} allocations. Writing to JSON file...`);
+    console.log(`Processed ${allAllocations.length} allocations. Writing to MongoDB...`);
 
-    fs.writeFileSync(JSON_PATH, JSON.stringify(allAllocations, null, 2), 'utf-8');
-    console.log(`Successfully created ${JSON_PATH}`);
+    const client = await clientPromise;
+    const db = client.db();
+    const collection = db.collection('processedAllocations');
+
+    // Clear the existing collection and insert the new data
+    await collection.deleteMany({});
+    if (allAllocations.length > 0) {
+      await collection.insertMany(allAllocations);
+    }
+
+    console.log(`Successfully updated the 'processedAllocations' collection in MongoDB.`);
+    await client.close();
 
   } catch (error) {
     console.error('An error occurred while updating allocations data:', error);
     process.exit(1);
   }
 }
-
 fetchAndProcessAllocations();

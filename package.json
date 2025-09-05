@@ -13,7 +13,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "update-allocations": "node tools/update-allocations.js",
     "start": "next start",
     "lint": "next lint"
   },

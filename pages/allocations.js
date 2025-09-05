@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import fs from 'fs';
-import path from 'path';
+import { fetchAllSites } from '../lib/api';
+import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '../lib/geo';
 import { formatNumber } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { CollapsibleRow } from '../components/CollapsibleRow';
@@ -10,15 +10,46 @@ import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
   try {
-    const jsonPath = path.join(process.cwd(), 'data', 'allocations.json');
-    const jsonData = fs.readFileSync(jsonPath, 'utf-8');
-    const allAllocations = JSON.parse(jsonData);
+    const allSites = await fetchAllSites();
+    
+    const allocationPromises = allSites.flatMap(site => {
+      if (!site.allocations) return [];
+      return site.allocations.map(async (alloc) => {
+        let allocCoords = null;
 
+        if (alloc.projectName) {
+          allocCoords = await getCoordinatesForAddress(alloc.projectName, alloc.localPlanningAuthority);
+        }
+
+        if (!allocCoords && alloc.localPlanningAuthority) {
+          allocCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+        }
+
+        let distance = 'unknown';
+        if (allocCoords && site.latitude && site.longitude) {
+          distance = getDistanceFromLatLonInKm(
+            site.latitude,
+            site.longitude,
+            allocCoords.latitude,
+            allocCoords.longitude
+          );
+        }
+
+        return {
+          ...alloc,
+          siteReferenceNumber: site.referenceNumber,
+          distance: distance,
+        };
+      });
+    });
+
+    const allAllocations = await Promise.all(allocationPromises);
     return {
       props: {
         allocations: allAllocations,
         error: null,
       },
+      revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
     console.error(e);
