@@ -5,8 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import styles from '../../styles/SiteDetails.module.css';
-import API_URL from '../../config';
-import { fetchAllSites } from '../../lib/api';
+import { fetchAllSites, queryBGSAPI } from '../../lib/api';
 import { processSiteHabitatData  } from '../../lib/habitat';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
 import { useSortableData, getSortClassName } from '../../lib/hooks';
@@ -53,12 +52,6 @@ const normalize = (name) => {
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
   try {
-    // Fetch the data for the specific site.
-    const res = await fetch(`${API_URL}/BiodiversityGainSites/${params.referenceNumber}`);
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch site data, status: ${res.status}`);
-    }
 
     // Fetch all sites to calculate counts for responsible bodies
     const allSitesForCount = await fetchAllSites();
@@ -103,7 +96,8 @@ export async function getStaticProps({ params }) {
       if (lpa.adjacents) lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
     });
 
-    const site = await res.json();
+    // Fetch the data for the specific site.    
+    const site = await queryBGSAPI(`BiodiversityGainSites/${params.referenceNumber}`);
 
     if (!site) {
       // If the site is not found, return a 404 page.
