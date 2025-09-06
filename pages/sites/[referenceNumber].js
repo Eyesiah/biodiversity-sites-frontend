@@ -5,8 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import styles from '../../styles/SiteDetails.module.css';
-import API_URL from '../../config';
-import { fetchAllSites } from '../../lib/api';
+import { fetchAllSites, queryBGSAPI } from '../../lib/api';
 import { processSiteHabitatData  } from '../../lib/habitat';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
 import { useSortableData, getSortClassName } from '../../lib/hooks';
@@ -20,6 +19,7 @@ import { DetailRow } from "../../components/DetailRow"
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
+  try {
     const sites = await fetchAllSites(1000);
 
     const paths = sites.map(site => ({
@@ -29,7 +29,13 @@ export async function getStaticPaths() {
     // fallback: 'blocking' means that if a path is not found,
     // Next.js will server-render it on the first request and then cache it.
     return { paths, fallback: 'blocking' };
+  } catch (error) {
+    console.error("Error in getStaticPaths:", error);
+    // If the API is down, we can't pre-render any pages.
+    // fallback: 'blocking' will cause pages to be rendered on-demand when requested.
+    return { paths: [], fallback: 'blocking' };
   }
+}
 
 // This function will be used to normalize names for both counting and matching
 const normalize = (name) => {
@@ -46,12 +52,6 @@ const normalize = (name) => {
 // This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
   try {
-    // Fetch the data for the specific site.
-    const res = await fetch(`${API_URL}/BiodiversityGainSites/${params.referenceNumber}`);
-
-    if (!res.ok) {
-      throw new Error(`Failed to fetch site data, status: ${res.status}`);
-    }
 
     // Fetch all sites to calculate counts for responsible bodies
     const allSitesForCount = await fetchAllSites();
@@ -96,7 +96,8 @@ export async function getStaticProps({ params }) {
       if (lpa.adjacents) lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
     });
 
-    const site = await res.json();
+    // Fetch the data for the specific site.    
+    const site = await queryBGSAPI(`BiodiversityGainSites/${params.referenceNumber}`);
 
     if (!site) {
       // If the site is not found, return a 404 page.
@@ -128,59 +129,65 @@ export async function getStaticProps({ params }) {
             allocCoords.latitude,
             allocCoords.longitude
           );
-
-          // If distance is > 688km, fall back to LPA centroid
-          if (alloc.distance > 688 && alloc.localPlanningAuthority) {
-            const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
-            if (lpaCoords) {
-              alloc.distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
-            }
-          }
         } else {
           alloc.distance = 'unknown';
         }
 
+        // If distance is > 688km, fall back to LPA centroid
+        if (alloc.distance > 688 && alloc.localPlanningAuthority) {
+          const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+          if (lpaCoords) {
+            alloc.distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
+          }
+        }
       }));
     }
-
-    const siteResponsibleBodies = (site.responsibleBodies || []).map(siteBodyName => {
-        const normalizedSiteBodyName = normalize(siteBodyName);
-        const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
-        return {
-            name: siteBodyName,
-            details: foundBody || null,
-        };
-    });
-
-    const siteLpaDetails = allLpas.find(lpa => lpa.name === site.lpaArea?.name) || null;
 
     return {
       props: {
         site,
-        siteResponsibleBodies,
-        siteLpaDetails,
+        allResponsibleBodies,
+        allLpas,
         lastUpdated: new Date().toISOString(),
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
-    console.error(e);
-    return {  
-      props: {
-        site: null,
-        allResponsibleBodies: [],
-        allLpas: [],
-        error: e.message,
-      },
-    };
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    // For initial page loads (or when using fallback: 'blocking'), this will result in a 500 error page.
+    throw e;
   }
 }
 
 
-const SiteDetailsCard = ({ site, siteResponsibleBodies, siteLpaDetails }) => {
+const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
   const [selectedBody, setSelectedBody] = useState(null);
   const [selectedLpa, setSelectedLpa] = useState(null);
+
+  const siteResponsibleBodies = useMemo(() => {
+    if (!site.responsibleBodies || !allResponsibleBodies) {
+      return [];
+    }
+
+    return site.responsibleBodies.map(siteBodyName => {
+      // Normalize names for better matching
+      const normalizedSiteBodyName = normalize(siteBodyName);
+
+      const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
+
+      return {
+        name: siteBodyName,
+        details: foundBody || null,
+      };
+    });
+  }, [site.responsibleBodies, allResponsibleBodies]);
+
+  const siteLpaDetails = useMemo(() => {
+    return allLpas.find(lpa => lpa.name === site.lpaArea?.name);
+  }, [allLpas, site.lpaArea]);
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) {
@@ -208,7 +215,7 @@ const SiteDetailsCard = ({ site, siteResponsibleBodies, siteLpaDetails }) => {
       <DetailRow 
         label="Responsible Body" 
         value={
-          siteResponsibleBodies && siteResponsibleBodies.length > 0 ? (
+          siteResponsibleBodies.length > 0 ? (
             siteResponsibleBodies.map((body, index) => (
               <span key={index}>
                 {body.details ? (
@@ -382,7 +389,7 @@ const AllocationsCard = ({allocations, title}) => {
   );
 }
 
-export default function SitePage({ site, siteResponsibleBodies, siteLpaDetails, error }) {
+export default function SitePage({ site, allResponsibleBodies, allLpas, error }) {
   if (error) {
     return (
       <>
@@ -427,8 +434,8 @@ export default function SitePage({ site, siteResponsibleBodies, siteLpaDetails, 
         <div className={styles.detailsGrid}>
           <SiteDetailsCard
             site={site}
-            siteResponsibleBodies={siteResponsibleBodies}
-            siteLpaDetails={siteLpaDetails}
+            allResponsibleBodies={allResponsibleBodies}
+            allLpas={allLpas}
           />
 
           <HabitatsCard
