@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   const parsedData = Papa.parse(csvData, { header: true, skipEmptyLines: true });
 
   const paths = parsedData.data.map(item => ({
-    params: { bodyName: normalizeBodyName(slugify(item['Name'] || '')) },
+    params: { bodyName: slugify(normalizeBodyName(item['Name'] || '')) },
   }));
 
   return { paths, fallback: false };
