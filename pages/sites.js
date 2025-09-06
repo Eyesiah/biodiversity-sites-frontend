@@ -18,20 +18,16 @@ export async function getStaticProps() {
       props: {
         sites: processedSites,
         summary,
+        lastUpdated: new Date().toISOString(),
         error: null
       },
       revalidate: 3600, // In seconds
     };
   } catch (e) {
-    // Handle any errors during the fetch.
-    console.error(e);
-    return {
-      props: {
-        sites: null,
-        summary: { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 },
-        error: e.message
-      },
-    };
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
   }
 }
 

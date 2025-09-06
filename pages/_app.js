@@ -27,6 +27,11 @@ function MyApp({ Component, pageProps }) {
       <Navigation />
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
+        {pageProps.lastUpdated && (
+          <p>
+            Page last updated: {new Date(pageProps.lastUpdated).toLocaleString('en-GB')}
+          </p>
+        )}
         <p>
           Version: {process.env.APP_VERSION}-{process.env.GIT_COMMIT_HASH}
         </p>

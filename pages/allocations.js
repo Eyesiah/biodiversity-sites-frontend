@@ -35,6 +35,14 @@ export async function getStaticProps() {
             allocCoords.latitude,
             allocCoords.longitude
           );
+
+          // If distance is > 688km, fall back to LPA centroid
+          if (distance > 688 && alloc.localPlanningAuthority) {
+            const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+            if (lpaCoords) {
+              distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
+            }
+          }
         }
 
         const mapHabitats = (habitats) => (habitats || []).map(h => ({
@@ -64,18 +72,16 @@ export async function getStaticProps() {
     return {
       props: {
         allocations: allAllocations,
+        lastUpdated: new Date().toISOString(),
         error: null,
       },
       revalidate: 3600, // Re-generate the page at most once per hour
     };
   } catch (e) {
-    console.error(e);
-    return {
-      props: {
-        allocations: [],
-        error: e.message,
-      },
-    };
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
   }
 }
 
@@ -249,6 +255,9 @@ export default function AllocationsPage({ allocations, error }) {
             </button>
           )}
         </div>
+        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+          Totals are recalculated as your search string is entered.
+        </p>
         <table className="site-table">
           <thead>
             <tr>

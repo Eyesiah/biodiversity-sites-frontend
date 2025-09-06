@@ -10,65 +10,72 @@ import { DetailRow } from '../components/DetailRow';
 import { formatNumber } from '../lib/format';
 
 export async function getStaticProps() {
-  
-  const allSites = await fetchAllSites();
+  try {
+    const allSites = await fetchAllSites();
 
-  const allHabitats = {
-    areas: [],
-    hedgerows: [],
-    watercourses: []
+    const allHabitats = {
+      areas: [],
+      hedgerows: [],
+      watercourses: []
+    }
+    const allImprovements = {
+      areas: [],
+      hedgerows: [],
+      watercourses: []
+    }
+
+    let totalSize = 0
+
+    allSites.forEach(site => {
+      totalSize += site.siteSize;
+      processSiteHabitatData(site)
+      if (site.habitats) {
+        if (site.habitats.areas)
+        {
+          allHabitats.areas.push(...site.habitats.areas);
+        }
+        if (site.habitats.hedgerows)
+        {
+          allHabitats.hedgerows.push(...site.habitats.hedgerows);
+        }
+        if (site.habitats.watercourses)
+        {
+          allHabitats.watercourses.push(...site.habitats.watercourses);
+        }
+      }
+      if (site.improvements) {
+        if (site.improvements.areas)
+        {
+          allImprovements.areas.push(...site.improvements.areas);
+        }
+        if (site.improvements.hedgerows)
+        {
+          allImprovements.hedgerows.push(...site.improvements.hedgerows);
+        }
+        if (site.improvements.watercourses)
+        {
+          allImprovements.watercourses.push(...site.improvements.watercourses);
+        }
+      }
+    });
+
+
+    return {
+      props: {
+        totalSize: totalSize,
+        numSites: allSites.length,
+        habitats: allHabitats,
+        improvements: allImprovements,
+        allocations: allSites.flatMap(s => s.allocations || []),
+        lastUpdated: new Date().toISOString()
+      }
+    };
+  } catch (e) {
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
   }
-  const allImprovements = {
-    areas: [],
-    hedgerows: [],
-    watercourses: []
-  }
-
-  let totalSize = 0
-
-  allSites.forEach(site => {
-    totalSize += site.siteSize;
-    processSiteHabitatData(site)
-    if (site.habitats) {
-      if (site.habitats.areas)
-      {
-        allHabitats.areas.push(...site.habitats.areas);
-      }
-      if (site.habitats.hedgerows)
-      {
-        allHabitats.hedgerows.push(...site.habitats.hedgerows);
-      }
-      if (site.habitats.watercourses)
-      {
-        allHabitats.watercourses.push(...site.habitats.watercourses);
-      }
-    }
-    if (site.improvements) {
-      if (site.improvements.areas)
-      {
-        allImprovements.areas.push(...site.improvements.areas);
-      }
-      if (site.improvements.hedgerows)
-      {
-        allImprovements.hedgerows.push(...site.improvements.hedgerows);
-      }
-      if (site.improvements.watercourses)
-      {
-        allImprovements.watercourses.push(...site.improvements.watercourses);
-      }
-    }
-  });
-
-
-  return {
-    props: {
-      totalSize: totalSize,
-      numSites: allSites.length,
-      habitats: allHabitats,
-      improvements: allImprovements,
-      allocations: allSites.flatMap(s => s.allocations || [])
-    }
-  };
 }
 
 const DEBOUNCE_DELAY_MS = 300;
@@ -111,7 +118,7 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
       </Head>
 
       <main className={styles.container}>        
-        <h1 className="title">Habitats Summary</h1>
+        <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Habitats Summary</h1>
 
         <div className={styles.detailsGrid}>
 

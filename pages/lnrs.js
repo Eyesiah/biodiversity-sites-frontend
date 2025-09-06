@@ -22,17 +22,15 @@ export async function getStaticProps() {
     return {
       props: {
         lnrs,
+        lastUpdated: new Date().toISOString(),
         error: null,
       },
     };
   } catch (e) {
-    console.error(e);
-    return {
-      props: {
-        lnrs: [],
-        error: e.message,
-      },
-    };
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
   }
 }
 

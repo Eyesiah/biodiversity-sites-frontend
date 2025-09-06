@@ -51,8 +51,8 @@ const HabitatRow = ({ habitat, isImprovement }) => {
   const mainRow = (
     <>
       <td>{habitat.type}</td>
-      <td>{habitat.distinctiveness}</td>
-      <td className={styles.numericData}>{habitat.parcels}</td>
+      <td style={{ textAlign: 'center' }}>{habitat.distinctiveness}</td>
+      <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.parcels}</td>
       <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
       <td className={styles.numericData}>{formatNumber(habitat.HUs || 0)}</td>
     </>
@@ -108,8 +108,8 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
             <thead>
             <tr>
                 <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)}>Distinctiveness</th>
-                <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)}># parcels</th>
+                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
+                <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># parcels</th>
                 <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Area (ha)</th>
                 <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
             </tr>

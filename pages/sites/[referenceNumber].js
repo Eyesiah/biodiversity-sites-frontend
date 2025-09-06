@@ -128,6 +128,14 @@ export async function getStaticProps({ params }) {
             allocCoords.latitude,
             allocCoords.longitude
           );
+
+          // If distance is > 688km, fall back to LPA centroid
+          if (alloc.distance > 688 && alloc.localPlanningAuthority) {
+            const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+            if (lpaCoords) {
+              alloc.distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
+            }
+          }
         } else {
           alloc.distance = 'unknown';
         }

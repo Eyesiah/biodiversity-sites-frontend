@@ -7,29 +7,37 @@ import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '../lib/format';
 
 export async function getStaticProps() {
-  const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
-  const csvData = fs.readFileSync(csvPath, 'utf-8');
+  try {
+    const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
+    const csvData = fs.readFileSync(csvPath, 'utf-8');
 
-  const parsedData = Papa.parse(csvData, {
-    header: true,
-    skipEmptyLines: true,
-  });
+    const parsedData = Papa.parse(csvData, {
+      header: true,
+      skipEmptyLines: true,
+    });
 
-  const bodyItems = parsedData.data.map(item => ({
-    name: item['Name'] || '',
-    designationDate: item['Designation Date'] || '',
-    expertise: item['Area of Expertise'] || '',
-    organisationType: item['Type of Organisation'] || '',
-    address: item['Address'] || '',
-    emails: item['Email'] ? item['Email'].split('; ') : [],
-    telephone: item['Telephone'] || '',
-  }));
+    const bodyItems = parsedData.data.map(item => ({
+      name: item['Name'] || '',
+      designationDate: item['Designation Date'] || '',
+      expertise: item['Area of Expertise'] || '',
+      organisationType: item['Type of Organisation'] || '',
+      address: item['Address'] || '',
+      emails: item['Email'] ? item['Email'].split('; ') : [],
+      telephone: item['Telephone'] || '',
+    }));
 
-  return {
-    props: {
-      responsibleBodies: bodyItems,
-    },
-  };
+    return {
+      props: {
+        responsibleBodies: bodyItems,
+        lastUpdated: new Date().toISOString(),
+      },
+    };
+  } catch (e) {
+    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
+    // If a previous version of the page was successfully generated, Next.js will continue
+    // to serve the stale (old) page instead of showing an error.
+    throw e;
+  }
 }
 
 const DEBOUNCE_DELAY_MS = 300;
