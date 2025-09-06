@@ -35,6 +35,14 @@ export async function getStaticProps() {
             allocCoords.latitude,
             allocCoords.longitude
           );
+
+          // If distance is > 688km, fall back to LPA centroid
+          if (distance > 688 && alloc.localPlanningAuthority) {
+            const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+            if (lpaCoords) {
+              distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
+            }
+          }
         }
 
         const mapHabitats = (habitats) => (habitats || []).map(h => ({
