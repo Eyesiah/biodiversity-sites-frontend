@@ -22,9 +22,12 @@ export async function getStaticProps() {
       habitat: habitatName,
       distinctiveness: getHabitatDistinctiveness(habitatName),
       baseline: 0,
+      baselineParcels: 0,
       improvementSites: new Set(),
       improvement: 0,
+      improvementParcels: 0,
       allocation: 0,
+      allocationParcels: 0,
     });
 
     // Process each site
@@ -41,6 +44,7 @@ export async function getStaticProps() {
               analysis[category][habitatName] = initHabitat(habitatName);
             }
             analysis[category][habitatName].baseline += h.size;
+            analysis[category][habitatName].baselineParcels += 1;
           });
         }
 
@@ -52,6 +56,7 @@ export async function getStaticProps() {
               analysis[category][habitatName] = initHabitat(habitatName);
             }
             analysis[category][habitatName].improvement += h.size;
+            analysis[category][habitatName].improvementParcels += 1;
             analysis[category][habitatName].improvementSites.add(site.referenceNumber);
           });
         }
@@ -66,6 +71,7 @@ export async function getStaticProps() {
                   analysis[category][habitatName] = initHabitat(habitatName);
                 }
                 analysis[category][habitatName].allocation += h.size;
+                analysis[category][habitatName].allocationParcels += 1;
               });
             }
           });
@@ -82,12 +88,18 @@ export async function getStaticProps() {
       let totalBaseline = 0;
       let totalImprovement = 0;
       let totalAllocation = 0;
+      let totalBaselineParcels = 0;
+      let totalImprovementParcels = 0;
+      let totalAllocationParcels = 0;
 
       const processedData = Object.values(analysis[category]).map(h => {
         totalBaseline += h.baseline;
         totalImprovement += h.improvement;
         totalAllocation += h.allocation;
-         return {
+        totalBaselineParcels += h.baselineParcels;
+        totalImprovementParcels += h.improvementParcels;
+        totalAllocationParcels += h.allocationParcels;
+        return {
           ...h,
           improvementSites: h.improvementSites.size,
         };
@@ -109,6 +121,9 @@ export async function getStaticProps() {
           baseline: totalBaseline,
           improvement: totalImprovement,
           allocation: totalAllocation,
+          improvementParcels: totalImprovementParcels,
+          baselineParcels: totalBaselineParcels,
+          allocationParcels: totalAllocationParcels,
           improvementSites: totalImprovementSites,
           improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
         },
@@ -147,53 +162,60 @@ const AnalysisTable = ({ title, data, unit }) => {
           <table className={`${styles.table} ${styles.subTable}`}>
             <thead>
               <tr>
-                <th colSpan="1" style={{ border: 1 }}>Groups</th>
+                <th colSpan="2" style={{ border: 0 }}></th>
                 <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
-                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
-                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#eef0e0ff' }}>Allocations</th>
+                <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
+                <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#f0e0e0' }}>Allocations</th>
               </tr>
               <tr>
                 <th onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</th>
                 <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
+                <th onClick={() => requestSort('baselineParcels')} className={getSortClassName('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline ({unit})</th>
                 <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
+                <th onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Area ({unit})</th>
                 <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
+                <th onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
-                <th onClick={() => requestSort('allocationShare')} className={getSortClassName('allocationShare', sortConfig)}>% Share</th>
-                <th onClick={() => requestSort('improvementAllocation')} className={getSortClassName('improvementAllocation', sortConfig)}>% of Improvement</th>
+                <th onClick={() => requestSort('allocationShare')} className={getSortClassName('allocationShare', sortConfig)}>% Share</th>                
+                <th onClick={() => requestSort('improvementAllocation')} className={getSortClassName('improvementAllocation', sortConfig)}>% of Improvements</th>
               </tr>
             </thead>
             <tbody>
               <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
                 <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.baselineParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.baseline)}</td>
                 <td></td>
                 <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementSites, 0)}</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
                 <td></td>
                 <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
                 <td></td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.allocationParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 2)}%</td>
               </tr>
             </tbody>
-            <tbody>
-              {sortedRows.map(row => (
-                <tr key={row.habitat}>
-                  <td>{row.habitat}</td>
-                  <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
-                  <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
-                  <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
-                  <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
-                </tr>
-              ))}
-            </tbody>
+            {sortedRows.map(row => (
+              <tr key={row.habitat}>
+                <td>{row.habitat}</td>
+                <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.baselineParcels, 0)}</td>
+                <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
+                <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
+                <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.improvementParcels, 0)}</td>
+                <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
+                <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
+                <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
+                <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.allocationParcels, 0)}</td>
+                <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
+              </tr>
+            ))}
           </table>
         </div>
       )}
