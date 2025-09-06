@@ -1,9 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState, useMemo } from 'react';
-import fs from 'fs';
-import path from 'path';
-import Papa from 'papaparse';
+import { useState, useMemo, useEffect } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
 import { fetchAllSites, queryBGSAPI } from '../../lib/api';
 import { processSiteHabitatData  } from '../../lib/habitat';
@@ -11,7 +8,7 @@ import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForL
 import { useSortableData, getSortClassName } from '../../lib/hooks';
 import ExternalLink from '../../components/ExternalLink';
 import Modal from '../../components/Modal';
-import { formatNumber, slugify } from '../../lib/format';
+import { formatNumber, slugify, normalizeBodyName } from '../../lib/format';
 import { HabitatsCard } from "../../components/HabitatsCard"
 import { CollapsibleRow } from "../../components/CollapsibleRow"
 import { HabitatSummaryTable } from "../../components/HabitatSummaryTable"
@@ -21,7 +18,6 @@ import { DetailRow } from "../../components/DetailRow"
 export async function getStaticPaths() {
   try {
     const sites = await fetchAllSites(1000);
-
     const paths = sites.map(site => ({
       params: { referenceNumber: site.referenceNumber },
     }));
@@ -37,72 +33,14 @@ export async function getStaticPaths() {
   }
 }
 
-// This function will be used to normalize names for both counting and matching
-const normalize = (name) => {
-  if (!name) return '';
-  return name.toLowerCase()
-    .replace(/(\b(county|borough|district|city|metropolitan)\b\s)?council/g, '')
-    .replace(/\blpa\b/g, '')
-    .replace(/(\bcombined\b\s)?authority/g, '')
-    .replace(/(\bwildlife\b\s)?trust/g, '')
-    .replace(/limited|ltd/g, '')
-    .replace(/\s+/g, ' ').trim();
-};
-
-// This function fetches the data for a single site based on its reference number.
 export async function getStaticProps({ params }) {
   try {
 
-    // Fetch all sites to calculate counts for responsible bodies
-    const allSitesForCount = await fetchAllSites();
-    const bodyCounts = allSitesForCount.reduce((acc, currentSite) => {
-      if (currentSite.responsibleBodies) {
-        currentSite.responsibleBodies.forEach(bodyName => {
-          // Use the same robust normalization for counting
-          const normalizedName = normalize(bodyName);
-          acc[normalizedName] = (acc[normalizedName] || 0) + 1;
-        });
-      }
-      return acc;
-    }, {});
-
-
-    // Fetch and parse responsible bodies data
-    const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
-    const csvData = fs.readFileSync(csvPath, 'utf-8');
-    const parsedData = Papa.parse(csvData, {
-      header: true,
-      skipEmptyLines: true,
-    });
-
-    const allResponsibleBodies = parsedData.data.map(item => ({
-      name: item['Name'] || '',
-      designationDate: item['Designation Date'] || '',
-      expertise: item['Area of Expertise'] || '',
-      organisationType: item['Type of Organisation'] || '',
-      address: item['Address'] || '',
-      emails: item['Email'] ? item['Email'].split('; ') : [],
-      telephone: item['Telephone'] || '',
-      // Find the count for this body
-      siteCount: bodyCounts[normalize(item['Name'] || '')] || 0,
-    }));
-
-    // Fetch all LPAs to link from site
-    const lpaJsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
-    const lpaJsonData = fs.readFileSync(lpaJsonPath, 'utf-8');
-    const allLpas = JSON.parse(lpaJsonData);
-    allLpas.forEach(lpa => {
-      lpa.size = lpa.size / 10000;
-      if (lpa.adjacents) lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
-    });
-
-    // Fetch the data for the specific site.    
     const site = await queryBGSAPI(`BiodiversityGainSites/${params.referenceNumber}`);
 
     if (!site) {
-      // If the site is not found, return a 404 page.
       return { notFound: true };
-    }
+      }
 
     processSiteHabitatData(site);
 
@@ -146,8 +84,6 @@ export async function getStaticProps({ params }) {
     return {
       props: {
         site,
-        allResponsibleBodies,
-        allLpas,
         lastUpdated: new Date().toISOString(),
         error: null,
       },
@@ -162,70 +98,110 @@ export async function getStaticProps({ params }) {
   }
 }
 
+const InfoModal = ({ modalState, onClose }) => {
+  const { show, type, name, title } = modalState;
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
-  const [selectedBody, setSelectedBody] = useState(null);
-  const [selectedLpa, setSelectedLpa] = useState(null);
+  useEffect(() => {
+    if (show && name) {
+      const fetchData = async () => {
+        setIsLoading(true);
+        setData(null);
+        try {
+          const buildId = window.__NEXT_DATA__.buildId;
+          const res = await fetch(`/_next/data/${buildId}/modals/${type}/${name}.json`);
+          if (!res.ok) throw new Error(`Failed to fetch details: ${res.status}`);
+          const json = await res.json();
+          setData(json.pageProps);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchData();
+    }
+  }, [show, type, name]);
 
-  const siteResponsibleBodies = useMemo(() => {
-    if (!site.responsibleBodies || !allResponsibleBodies) {
-      return [];
+  const renderContent = () => {
+    if (isLoading) return <p>Loading...</p>;
+    if (!data) return <p>No data available.</p>;
+
+    if (type === 'body' && data.body) {
+      const { body } = data;
+      return (
+        <dl>
+          <DetailRow label="Designation Date" value={body.designationDate} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Area of Expertise" value={body.expertise} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Type of Organisation" value={body.organisationType} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Address" value={body.address} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Email" value={body.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Telephone" value={body.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="# BGS Sites" value={body.siteCount} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+        </dl>
+      );
     }
 
-    return site.responsibleBodies.map(siteBodyName => {
-      // Normalize names for better matching
-      const normalizedSiteBodyName = normalize(siteBodyName);
+    if (type === 'lpa' && data.lpa) {
+      const { lpa } = data;
+      return (
+        <dl>
+          <DetailRow label="ID" value={lpa.id} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Area (ha)" value={formatNumber(lpa.size, 0)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          {lpa.adjacents?.length > 0 && (
+            <div style={{ marginTop: '1rem' }}>
+              <h4>Adjacent LPAs</h4>
+              <ul className={styles.adjacencyList}>
+                {lpa.adjacents.map(adj => <li key={adj.id}>{adj.name} ({adj.id}) - {formatNumber(adj.size, 0)} ha</li>)}
+              </ul>
+            </div>
+          )}
+        </dl>
+      );
+    }
 
-      const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
+    return <p>Details could not be loaded.</p>;
+  };
 
-      return {
-        name: siteBodyName,
-        details: foundBody || null,
-      };
-    });
-  }, [site.responsibleBodies, allResponsibleBodies]);
+  return (
+    <Modal show={show} onClose={onClose} title={title}>
+      {renderContent()}
+    </Modal>
+  );
+};
 
-  const siteLpaDetails = useMemo(() => {
-    return allLpas.find(lpa => lpa.name === site.lpaArea?.name);
-  }, [allLpas, site.lpaArea]);
+const SiteDetailsCard = ({ site }) => {
+  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '' });
 
   const medianAllocationDistance = useMemo(() => {
-    if (!site.allocations || site.allocations.length === 0) {
-      return null;
-    }
-    const distances = site.allocations
-      .map(alloc => alloc.distance)
-      .filter(d => typeof d === 'number')
-      .sort((a, b) => a - b);
-
+    if (!site.allocations || site.allocations.length === 0) return null;
+    const distances = site.allocations.map(alloc => alloc.distance).filter(d => typeof d === 'number').sort((a, b) => a - b);
     if (distances.length === 0) return null;
-
     const mid = Math.floor(distances.length / 2);
-    if (distances.length % 2 === 0) {
-      return (distances[mid - 1] + distances[mid]) / 2;
-    } else {
-      return distances[mid];
-    }
+    return distances.length % 2 === 0 ? (distances[mid - 1] + distances[mid]) / 2 : distances[mid];
   }, [site.allocations]);
 
-  return <section className={styles.card}>
+  const showModal = (type, name, title) => {
+    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title });
+  };
+
+  return (
+    <section className={styles.card}>
     <h3>Site Details</h3>
     <div>
       <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
       <DetailRow 
         label="Responsible Body" 
         value={
-          siteResponsibleBodies.length > 0 ? (
-            siteResponsibleBodies.map((body, index) => (
+          (site.responsibleBodies && site.responsibleBodies.length > 0) ? (
+            site.responsibleBodies.map((bodyName, index) => (
               <span key={index}>
-                {body.details ? (
-                  <button onClick={() => setSelectedBody(body.details)} className={styles.linkButton}>
-                    {body.name}
-                  </button>
-                ) : (
-                  body.name
-                )}
-                {index < siteResponsibleBodies.length - 1 && ', '}
+                <button onClick={() => showModal('body', bodyName, bodyName)} className={styles.linkButton}>
+                  {bodyName}
+                </button>
+                {index < site.responsibleBodies.length - 1 && ', '}
               </span>
             ))
           ) : 'N/A'
@@ -238,7 +214,7 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
       <DetailRow 
         label="LPA" 
         value={
-          siteLpaDetails ? <button onClick={() => setSelectedLpa(siteLpaDetails)} className={styles.linkButton}>{site.lpaArea.name}</button> : (site.lpaArea?.name || 'N/A')
+          site.lpaArea?.name ? <button onClick={() => showModal('lpa', site.lpaArea.name, site.lpaArea.name)} className={styles.linkButton}>{site.lpaArea.name}</button> : 'N/A'
         } 
       />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
@@ -252,37 +228,9 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
         </dd>
       </div>
     </div>
-    <Modal show={!!selectedBody} onClose={() => setSelectedBody(null)} title={selectedBody?.name}>
-      {selectedBody && (
-        <dl>
-          <DetailRow label="Designation Date" value={selectedBody.designationDate} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Area of Expertise" value={selectedBody.expertise} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Type of Organisation" value={selectedBody.organisationType} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Address" value={selectedBody.address} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Email" value={selectedBody.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Telephone" value={selectedBody.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="# BGS Sites" value={selectedBody.siteCount} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-        </dl>
-      )}
-    </Modal>
-    <Modal show={!!selectedLpa} onClose={() => setSelectedLpa(null)} title={selectedLpa?.name}>
-      {selectedLpa && (
-        <dl>
-          <DetailRow label="ID" value={selectedLpa.id} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Area (ha)" value={formatNumber(selectedLpa.size, 0)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="# Adjacent LPAs" value={selectedLpa.adjacents?.length || 0} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          {selectedLpa.adjacents?.length > 0 && (
-            <div style={{ marginTop: '1rem' }}>
-              <h4>Adjacent LPAs</h4>
-              <ul className={styles.adjacencyList}>
-                {selectedLpa.adjacents.map(adj => <li key={adj.id}>{adj.name} ({adj.id}) - {formatNumber(adj.size, 0)} ha</li>)}
-              </ul>
-            </div>
-          )}
-        </dl>
-      )}
-    </Modal>
+      <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
   </section>
+  )
 }
 
 
@@ -389,7 +337,7 @@ const AllocationsCard = ({allocations, title}) => {
   );
 }
 
-export default function SitePage({ site, allResponsibleBodies, allLpas, error }) {
+export default function SitePage({ site, error }) {
   if (error) {
     return (
       <>
@@ -432,11 +380,7 @@ export default function SitePage({ site, allResponsibleBodies, allLpas, error })
         </div>
 
         <div className={styles.detailsGrid}>
-          <SiteDetailsCard
-            site={site}
-            allResponsibleBodies={allResponsibleBodies}
-            allLpas={allLpas}
-          />
+          <SiteDetailsCard site={site} />
 
           <HabitatsCard
             title="Baseline Habitats (click any habitat cell for more detail)"
