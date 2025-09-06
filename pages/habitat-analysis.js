@@ -237,7 +237,7 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
       </Head>
 
       <main className={styles.container}>
-        <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>BGS Habitat Analysis</h1>
+        <h1 className="title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>BGS Habitat Analysis</h1>
         <div className="search-container sticky-search">
           <input
             type="text"
