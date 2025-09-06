@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-if (process.env.NODE_ENV === 'development') {
-  const cacheDir = path.join(__dirname, 'dev-api-cache');
-  if (fs.existsSync(cacheDir)) {
-    fs.rmSync(cacheDir, { recursive: true, force: true });
-    console.log('Cleared development API cache.');
-  }
+// always clear any dev cache that exists on startup
+const cacheDir = path.join(__dirname, 'dev-api-cache');
+if (fs.existsSync(cacheDir)) {
+  fs.rmSync(cacheDir, { recursive: true, force: true });
+  console.log('Cleared development API cache.');
 }
 
 const { execSync } = require('child_process');
