@@ -193,9 +193,9 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
                 <td></td>
+                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.allocationParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
                 <td></td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.allocationParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 2)}%</td>
               </tr>
             </tbody>
@@ -210,9 +210,9 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.improvementParcels, 0)}</td>
                 <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
                 <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
-                <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
-                <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
                 <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.allocationParcels, 0)}</td>
+                <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
+                <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>                
                 <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
               </tr>
             ))}
