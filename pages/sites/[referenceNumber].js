@@ -136,11 +136,22 @@ export async function getStaticProps({ params }) {
       }));
     }
 
+    const siteResponsibleBodies = (site.responsibleBodies || []).map(siteBodyName => {
+        const normalizedSiteBodyName = normalize(siteBodyName);
+        const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
+        return {
+            name: siteBodyName,
+            details: foundBody || null,
+        };
+    });
+
+    const siteLpaDetails = allLpas.find(lpa => lpa.name === site.lpaArea?.name) || null;
+
     return {
       props: {
         site,
-        allResponsibleBodies,
-        allLpas,
+        siteResponsibleBodies,
+        siteLpaDetails,
         lastUpdated: new Date().toISOString(),
         error: null,
       },
@@ -156,31 +167,9 @@ export async function getStaticProps({ params }) {
 }
 
 
-const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
+const SiteDetailsCard = ({ site, siteResponsibleBodies, siteLpaDetails }) => {
   const [selectedBody, setSelectedBody] = useState(null);
   const [selectedLpa, setSelectedLpa] = useState(null);
-
-  const siteResponsibleBodies = useMemo(() => {
-    if (!site.responsibleBodies || !allResponsibleBodies) {
-      return [];
-    }
-
-    return site.responsibleBodies.map(siteBodyName => {
-      // Normalize names for better matching
-      const normalizedSiteBodyName = normalize(siteBodyName);
-
-      const foundBody = allResponsibleBodies.find(fullBody => normalize(fullBody.name) === normalizedSiteBodyName);
-
-      return {
-        name: siteBodyName,
-        details: foundBody || null,
-      };
-    });
-  }, [site.responsibleBodies, allResponsibleBodies]);
-
-  const siteLpaDetails = useMemo(() => {
-    return allLpas.find(lpa => lpa.name === site.lpaArea?.name);
-  }, [allLpas, site.lpaArea]);
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) {
@@ -208,7 +197,7 @@ const SiteDetailsCard = ({ site, allResponsibleBodies, allLpas }) => {
       <DetailRow 
         label="Responsible Body" 
         value={
-          siteResponsibleBodies.length > 0 ? (
+          siteResponsibleBodies && siteResponsibleBodies.length > 0 ? (
             siteResponsibleBodies.map((body, index) => (
               <span key={index}>
                 {body.details ? (
@@ -382,7 +371,7 @@ const AllocationsCard = ({allocations, title}) => {
   );
 }
 
-export default function SitePage({ site, allResponsibleBodies, allLpas, error }) {
+export default function SitePage({ site, siteResponsibleBodies, siteLpaDetails, error }) {
   if (error) {
     return (
       <>
@@ -427,8 +416,8 @@ export default function SitePage({ site, allResponsibleBodies, allLpas, error })
         <div className={styles.detailsGrid}>
           <SiteDetailsCard
             site={site}
-            allResponsibleBodies={allResponsibleBodies}
-            allLpas={allLpas}
+            siteResponsibleBodies={siteResponsibleBodies}
+            siteLpaDetails={siteLpaDetails}
           />
 
           <HabitatsCard
