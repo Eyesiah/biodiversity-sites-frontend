@@ -96,7 +96,7 @@ const LpaDataRow = ({ lpa }) => {
       setError(null);
       try {
         const buildId = window.__NEXT_DATA__.buildId;
-        const res = await fetch(`/_next/data/${buildId}/lpas/${lpa.id}.json`);
+        const res = await fetch(`/_next/data/${buildId}/lpas/modals/${lpa.id}.json`);
         if (!res.ok) {
           throw new Error(`Failed to fetch data: ${res.status}`);
         }
