@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
 import { formatNumber } from '../lib/format';
-import ExternalLink from '../components/ExternalLink';
+import { CollapsibleRow } from '../components/CollapsibleRow';
 import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
 
 export async function getStaticProps() {
@@ -33,31 +33,6 @@ export async function getStaticProps() {
     throw e;
   }
 }
-
-const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <>
-      <tr
-        onClick={() => setIsOpen(!isOpen)}
-        className={`${styles.clickableRow} ${isHovered ? styles.subTableHovered : ''}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        {mainRow}
-      </tr>
-      {isOpen && (
-        <tr className={`${isHovered ? styles.subTableHovered : ''}`} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-          <td colSpan={colSpan}>
-            {collapsibleContent}
-          </td>
-        </tr>
-      )}
-    </>
-  );
-};
 
 const DEBOUNCE_DELAY_MS = 300;
 

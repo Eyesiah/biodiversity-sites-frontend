@@ -40,7 +40,7 @@ export async function getStaticProps({ params }) {
     }));
 
     for (const allocation of matchingAllocations) {
-      flattenedHabitats.push([
+      flattenedHabitats.push(...[
         ...(mapHabitats(allocation.habitats?.areas)),
         ...(mapHabitats(allocation.habitats?.hedgerows)),
         ...(mapHabitats(allocation.habitats?.watercourses)),
