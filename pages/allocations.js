@@ -134,7 +134,7 @@ const AllocationRow = ({ alloc }) => {
       setError(null);
       try {
         const buildId = window.__NEXT_DATA__.buildId;
-        const res = await fetch(`/_next/data/${buildId}/modals/allocations/${alloc.srn}/${slugify(alloc.pr)}.json`);
+        const res = await fetch(`/_next/data/${buildId}/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`);
         if (!res.ok) {
           throw new Error(`Failed to fetch data: ${res.status}`);
         }

@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   const allSites = await fetchAllSites();
   const paths = allSites.flatMap(site =>
     (site.allocations || []).map(alloc => ({
-      params: { ids: [site.referenceNumber, alloc.planningReference] },
+      params: { ids: [site.referenceNumber, slugify(alloc.planningReference.trim())] },
     }))
   );
 
@@ -26,19 +26,10 @@ export async function getStaticProps({ params }) {
     }
 
     const matchingAllocations = (site.allocations || []).filter(
-      alloc => slugify(alloc.planningReference) === planningReference
+      alloc => slugify(alloc.planningReference.trim()) === planningReference
     );
 
-    // Validate that the planning reference is unique for this site
-    if (matchingAllocations.length > 1) {
-      console.error(`Validation Error: Found ${matchingAllocations.length} allocations with planningReference '${planningReference}' in site '${siteReferenceNumber}'. Expected 1.`);
-    }
-
-    const allocation = matchingAllocations[0];
-
-    if (!allocation) {
-      return { notFound: true };
-    }
+    const flattenedHabitats = []
 
     const mapHabitats = (habitats) => (habitats || []).map(h => ({
       module: h.module,
@@ -48,11 +39,13 @@ export async function getStaticProps({ params }) {
       size: h.size,
     }));
 
-    const flattenedHabitats = [
-      ...(mapHabitats(allocation.habitats?.areas)),
-      ...(mapHabitats(allocation.habitats?.hedgerows)),
-      ...(mapHabitats(allocation.habitats?.watercourses)),
-    ];
+    for (const allocation of matchingAllocations) {
+      flattenedHabitats.push([
+        ...(mapHabitats(allocation.habitats?.areas)),
+        ...(mapHabitats(allocation.habitats?.hedgerows)),
+        ...(mapHabitats(allocation.habitats?.watercourses)),
+      ]);
+    }
 
     return {
       props: {          
