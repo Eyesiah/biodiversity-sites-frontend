@@ -35,7 +35,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
 
-    site = fetchSite(params.referenceNumber)
+    const site = await fetchSite(params.referenceNumber)
     if (!site)
     {
       return { notFound: true };
