@@ -223,3 +223,8 @@
 .adjacencyList li:last-child {
   border-bottom: none;
 }
+
+.tableContainer {
+  display: flex;
+  overflow-x: auto;
+}
