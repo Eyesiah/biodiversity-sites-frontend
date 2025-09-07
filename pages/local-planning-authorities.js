@@ -3,8 +3,8 @@ import { useState, useMemo, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
 import { formatNumber } from '../lib/format';
-import { CollapsibleRow } from '../components/CollapsibleRow';
 import styles from '../styles/SiteDetails.module.css';
+import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
 
 export async function getStaticProps() {
   try {
@@ -68,57 +68,22 @@ function LpaDetails({ lpa }) {
   );
 }
 
-const LpaDataRow = ({ lpa }) => {
-  const [details, setDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const mainRow = (
-    <>
-      <td>{lpa.id}</td>
-      <td>{lpa.name}</td>
-      <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
-      <td className="centered-data">{lpa.adjacentsCount}</td>
-    </>
-  );
-
-  const collapsibleContent = (
-    <div style={{ padding: '0.5rem' }}>
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="error">Error: {error}</p>}
-      {details && <LpaDetails lpa={details} />}
-    </div>
-  );
-
-  const onToggle = async (isOpen) => {
-    if (isOpen && !details && !isLoading) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const buildId = window.__NEXT_DATA__.buildId;
-        const res = await fetch(`/_next/data/${buildId}/lpas/modals/${lpa.id}.json`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch data: ${res.status}`);
-        }
-        const json = await res.json();
-        setDetails(json.pageProps.lpa);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  return (
-    <CollapsibleRow
-      mainRow={mainRow}
-      collapsibleContent={collapsibleContent}
-      colSpan={4}
-      onToggle={onToggle}
-    />
-  );
-};
+const LpaDataRow = ({ lpa }) => (
+  <DataFetchingCollapsibleRow
+    mainRow={(
+      <>
+        <td>{lpa.id}</td>
+        <td>{lpa.name}</td>
+        <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
+        <td className="centered-data">{lpa.adjacentsCount}</td>
+      </>
+    )}
+    dataUrl={`/modals/lpas/${lpa.id}.json`}
+    renderDetails={details => <LpaDetails lpa={details} />}
+    dataExtractor={json => json.pageProps.lpa}
+    colSpan={4}
+  />
+);
 
 const DEBOUNCE_DELAY_MS = 300;
 

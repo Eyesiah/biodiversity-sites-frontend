@@ -5,7 +5,7 @@ import { fetchAllSites } from '../lib/api';
 import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '../lib/geo';
 import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
-import { CollapsibleRow } from '../components/CollapsibleRow';
+import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -101,12 +101,9 @@ const AllocationHabitats = ({ habitats }) => {
   );
 };
 
-const AllocationRow = ({ alloc }) => {
-  const [details, setDetails] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const mainRow = (
+const AllocationRow = ({ alloc }) => (
+  <DataFetchingCollapsibleRow
+    mainRow={(
     <>
       <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
       <td>{alloc.pr}</td>
@@ -118,45 +115,13 @@ const AllocationRow = ({ alloc }) => {
       <td className="numeric-data">{formatNumber(alloc.hu || 0)}</td>
       <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
     </>
-  );
-
-  const collapsibleContent = (
-    <div style={{ padding: '0.5rem' }}>
-      {isLoading && <p>Loading habitat details...</p>}
-      {error && <p className="error">Error: {error}</p>}
-      {details && <AllocationHabitats habitats={details} />}
-    </div>
-  );
-
-  const onToggle = async (isOpen) => {
-    if (isOpen && !details && !isLoading) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const buildId = window.__NEXT_DATA__.buildId;
-        const res = await fetch(`/_next/data/${buildId}/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch data: ${res.status}`);
-        }
-        const json = await res.json();
-        setDetails(json.pageProps.habitats);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  };
-
-  return (
-    <CollapsibleRow
-      mainRow={mainRow}
-      collapsibleContent={collapsibleContent}
+    )}
+    dataUrl={`/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`}
+    renderDetails={details => <AllocationHabitats habitats={details} />}
+    dataExtractor={json => json.pageProps.habitats}
       colSpan={7}
-      onToggle={onToggle}
     />
   );
-};
 
 const DEBOUNCE_DELAY_MS = 300;
 
