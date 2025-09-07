@@ -2,8 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
 import styles from '../../styles/SiteDetails.module.css';
-import { fetchAllSites, queryBGSAPI } from '../../lib/api';
-import { processSiteHabitatData  } from '../../lib/habitat';
+import { fetchAllSites, fetchSite } from '../../lib/api';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
 import { useSortableData, getSortClassName } from '../../lib/hooks';
 import ExternalLink from '../../components/ExternalLink';
@@ -36,13 +35,11 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
 
-    const site = await queryBGSAPI(`BiodiversityGainSites/${params.referenceNumber}`);
-
-    if (!site) {
+    site = fetchSite(params.referenceNumber)
+    if (!site)
+    {
       return { notFound: true };
-      }
-
-    processSiteHabitatData(site);
+    }
 
     // process allocation location data
     if (site.allocations) {
