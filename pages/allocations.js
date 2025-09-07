@@ -3,11 +3,10 @@ import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
 import { fetchAllSites } from '../lib/api';
 import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '../lib/geo';
-import { formatNumber } from '../lib/format';
+import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
-import { CollapsibleRow } from '../components/CollapsibleRow';
+import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
 import styles from '../styles/SiteDetails.module.css';
-import { processSiteHabitatData } from '../lib/habitat';
 
 export async function getStaticProps() {
   try {
@@ -15,7 +14,6 @@ export async function getStaticProps() {
     
     const allocationPromises = allSites.flatMap(site => {
       if (!site.allocations) return [];
-      processSiteHabitatData(site);
       return site.allocations.map(async (alloc) => {
         let allocCoords = null;
 
@@ -36,7 +34,6 @@ export async function getStaticProps() {
             allocCoords.longitude
           );
 
-          // If distance is > 688km, fall back to LPA centroid
           if (distance > 688 && alloc.localPlanningAuthority) {
             const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
             if (lpaCoords) {
@@ -45,25 +42,15 @@ export async function getStaticProps() {
           }
         }
 
-        const mapHabitats = (habitats) => (habitats || []).map(h => ({
-          module: h.module,
-          type: h.type,
-          distinctiveness: h.distinctiveness || '',
-          condition: h.condition,
-          size: h.size,
-        }));
-
         return {
-          planningReference: alloc.planningReference,
-          localPlanningAuthority: alloc.localPlanningAuthority,
-          projectName: alloc.projectName,
-          areaUnits: alloc.areaUnits,
-          hedgerowUnits: alloc.hedgerowUnits,
-          watercoursesUnits: alloc.watercoursesUnits,
-          habitats: { areas: mapHabitats(alloc.habitats?.areas), hedgerows: mapHabitats(alloc.habitats?.hedgerows), watercourses: mapHabitats(alloc.habitats?.watercourses) },
-          siteReferenceNumber: site.referenceNumber,
-          distance: distance,
-
+          pr: alloc.planningReference,
+          lpa: alloc.localPlanningAuthority,
+          pn: alloc.projectName,
+          au: alloc.areaUnits,
+          hu: alloc.hedgerowUnits,
+          wu: alloc.watercoursesUnits,
+          srn: site.referenceNumber,
+          d: distance,
         };
       });
     });
@@ -75,78 +62,66 @@ export async function getStaticProps() {
         lastUpdated: new Date().toISOString(),
         error: null,
       },
-      revalidate: 3600, // Re-generate the page at most once per hour
+      revalidate: 3600,
     };
   } catch (e) {
-    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
-    // If a previous version of the page was successfully generated, Next.js will continue
-    // to serve the stale (old) page instead of showing an error.
     throw e;
   }
 }
 
 const AllocationHabitats = ({ habitats }) => {
-    const flattenedHabitats = [
-      ...(habitats.areas || []),
-      ...(habitats.hedgerows || []),
-      ...(habitats.watercourses || []),
-    ];
-  
-    if (flattenedHabitats.length === 0) {
-      return <p>No habitat details for this allocation.</p>;
-    }
-  
-    return (
-      <table className={styles.subTable}>
-        <thead>
-          <tr>
-            <th>Module</th>
-            <th>Habitat</th>
-            <th>Distinctiveness</th>
-            <th>Condition</th>
-            <th>Size</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flattenedHabitats.map((habitat, index) => (
-            <tr key={index}>
-              <td>{habitat.module}</td>
-              <td>{habitat.type}</td>
-              <td>{habitat.distinctiveness}</td>
-              <td>{habitat.condition}</td>
-              <td className={styles.numericData}>{formatNumber(habitat.size)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    );
-  };
 
-const AllocationRow = ({ alloc }) => {
-    const mainRow = (
-      <>
-        <td><Link href={`/sites/${alloc.siteReferenceNumber}`}>{alloc.siteReferenceNumber}</Link></td>
-        <td>{alloc.planningReference}</td>
-        <td>{alloc.localPlanningAuthority}</td>
-        <td className="centered-data">
-          {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
-        </td>
-        <td className="numeric-data">{formatNumber(alloc.areaUnits || 0)}</td>
-        <td className="numeric-data">{formatNumber(alloc.hedgerowUnits || 0)}</td>
-        <td className="numeric-data">{formatNumber(alloc.watercoursesUnits || 0)}</td>
-      </>
-    );
-  
-    const collapsibleContent = <AllocationHabitats habitats={alloc.habitats} />;
-  
-    return (
-      <CollapsibleRow
-        mainRow={mainRow}
-        collapsibleContent={collapsibleContent}
-        colSpan={7}
-      />
-    );
-  };
+  if (habitats.length === 0) {
+    return <p>No habitat details for this allocation.</p>;
+  }
+
+  return (
+    <table className={styles.subTable}>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Habitat</th>
+          <th>Distinctiveness</th>
+          <th>Condition</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        {habitats.map((habitat, index) => (
+          <tr key={index}>
+            <td>{habitat.module}</td>
+            <td>{habitat.type}</td>
+            <td>{habitat.distinctiveness}</td>
+            <td>{habitat.condition}</td>
+            <td className={styles.numericData}>{formatNumber(habitat.size)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+const AllocationRow = ({ alloc }) => (
+  <DataFetchingCollapsibleRow
+    mainRow={(
+    <>
+      <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
+      <td>{alloc.pr}</td>
+      <td>{alloc.lpa}</td>
+      <td className="centered-data">
+        {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
+      </td>
+      <td className="numeric-data">{formatNumber(alloc.au || 0)}</td>
+      <td className="numeric-data">{formatNumber(alloc.hu || 0)}</td>
+      <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
+    </>
+    )}
+    dataUrl={`/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`}
+    renderDetails={details => <AllocationHabitats habitats={details} />}
+    dataExtractor={json => json.pageProps.habitats}
+      colSpan={7}
+    />
+  );
 
 const DEBOUNCE_DELAY_MS = 300;
 
@@ -174,10 +149,10 @@ export default function AllocationsPage({ allocations, error }) {
     }
     const lowercasedTerm = debouncedSearchTerm.toLowerCase();
     return allocations.filter(alloc =>
-      (alloc.siteReferenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.planningReference?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.localPlanningAuthority?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.projectName?.toLowerCase() || '').includes(lowercasedTerm)
+      (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm)
     );
   }, [allocations, debouncedSearchTerm]);
 
@@ -186,12 +161,12 @@ export default function AllocationsPage({ allocations, error }) {
   const summaryData = useMemo(() => {
     const source = filteredAllocations;
 
-    const totalArea = source.reduce((sum, alloc) => sum + (alloc.areaUnits || 0), 0);
-    const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hedgerowUnits || 0), 0);
-    const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.watercoursesUnits || 0), 0);
+    const totalArea = source.reduce((sum, alloc) => sum + (alloc.au || 0), 0);
+    const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hu || 0), 0);
+    const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.wu || 0), 0);
 
     const distances = source
-      .map(alloc => alloc.distance)
+      .map(alloc => alloc.d)
       .filter(d => typeof d === 'number')
       .sort((a, b) => a - b);
 
@@ -261,13 +236,13 @@ export default function AllocationsPage({ allocations, error }) {
         <table className="site-table">
           <thead>
             <tr>
-              <th onClick={() => requestSort('siteReferenceNumber')} className={getSortClassName('siteReferenceNumber', sortConfig)}>BGS Ref.</th>
-              <th onClick={() => requestSort('planningReference')} className={getSortClassName('planningReference', sortConfig)}>Planning Ref.</th>
-              <th onClick={() => requestSort('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfig)}>LPA</th>
-              <th onClick={() => requestSort('distance')} className={getSortClassName('distance', sortConfig)}>Distance (km)</th>
-              <th onClick={() => requestSort('areaUnits')} className={getSortClassName('areaUnits', sortConfig)}>Area Units</th>
-              <th onClick={() => requestSort('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfig)}>Hedgerow Units</th>
-              <th onClick={() => requestSort('watercoursesUnits')} className={getSortClassName('watercoursesUnits', sortConfig)}>Watercourse Units</th>
+              <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
+              <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+              <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+              <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
+              <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
+              <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
+              <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
             </tr>
           </thead>
           <tbody>
@@ -280,8 +255,8 @@ export default function AllocationsPage({ allocations, error }) {
               <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
               <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
             </tr>
-            {sortedAllocations.map((alloc, index) => (
-              <AllocationRow key={`${alloc.siteReferenceNumber}-${alloc.planningReference}-${index}`} alloc={alloc} />
+            {sortedAllocations.map((alloc) => (
+              <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
             ))}
           </tbody>
         </table>
