@@ -162,7 +162,7 @@ const AnalysisTable = ({ title, data, unit }) => {
           <table className={`${styles.table} ${styles.subTable}`}>
             <thead>
               <tr>
-                <th colSpan="2" style={{ border: 0 }}>Intervention Groups</th>
+                <th colSpan="2" style={{ border: 0 }}>Intervention Groups xxx</th>
                 <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#f0e0e0' }}>Allocations</th>
