@@ -162,7 +162,7 @@ const AnalysisTable = ({ title, data, unit }) => {
           <table className={`${styles.table} ${styles.subTable}`}>
             <thead>
               <tr>
-                <th colSpan="2" style={{ border: 0 }}></th>
+                <th colSpan="2" style={{ border: 0 }}>Intervention Groups</th>
                 <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#f0e0e0' }}>Allocations</th>
@@ -198,24 +198,24 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <td></td>
                 <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 2)}%</td>
               </tr>
+              {sortedRows.map(row => (
+                <tr key={row.habitat}>
+                  <td>{row.habitat}</td>
+                  <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
+                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.baselineParcels, 0)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
+                  <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
+                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.improvementParcels, 0)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
+                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.allocationParcels, 0)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
+                  <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
+                  <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
+                </tr>
+              ))}
             </tbody>
-            {sortedRows.map(row => (
-              <tr key={row.habitat}>
-                <td>{row.habitat}</td>
-                <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.baselineParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
-                <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
-                <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.improvementParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
-                <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.allocationParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
-                <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>                
-                <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
-              </tr>
-            ))}
           </table>
         </div>
       )}

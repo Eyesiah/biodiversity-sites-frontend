@@ -178,8 +178,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             ))}
           </tbody>
         </table>
-normtNum
-py naty      </main>
+      </main>
     </div>
   );
 }
