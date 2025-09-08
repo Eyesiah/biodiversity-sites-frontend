@@ -131,7 +131,7 @@ export default function StatisticsPage({ stats }) {
   return (
     <div className="container">
       <main className="main">
-        <h1 className="title">Historical Statistics</h1>
+        <h1 className="title">BGS Register Statistics</h1>
         {stats.length > 0 ? (
           <>
             {renderMultiLineChart(
