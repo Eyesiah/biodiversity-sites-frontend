@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ prod ]
+  schedule:
+    # Runs at 1am UTC every day
+    - cron: '0 1 * * *'
 
 jobs:
   lint:
@@ -46,3 +49,11 @@ jobs:
       run: npm run lint
     - name: Build project
       run: npm run build
+
+  update-stats:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call stats endpoint to update history
+        run: |
+          curl -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" https://prod.de8atwnp0x7a3.amplifyapp.com/api/cron

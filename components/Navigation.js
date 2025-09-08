@@ -35,6 +35,7 @@ export default function Navigation() {
         <Link href="/local-planning-authorities" className={styles.link} onClick={closeMenu}>Local Planning Authorities</Link>
         <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
         <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
+        <Link href="/statistics" className={styles.link} onClick={closeMenu}>Register Statistics</Link>
       </div>
     </nav>
   );
