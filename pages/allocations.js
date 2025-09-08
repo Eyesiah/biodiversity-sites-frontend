@@ -56,6 +56,7 @@ export async function getStaticProps() {
     });
 
     const allAllocations = await Promise.all(allocationPromises);
+
     return {
       props: {
         allocations: allAllocations,
@@ -233,6 +234,15 @@ export default function AllocationsPage({ allocations, error }) {
         <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
           Totals are recalculated as your search string is entered.
         </p>
+        <div style={{ margin: '1rem 0', textAlign: 'center' }}>
+          <button 
+            onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=800,height=600')}
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          >
+            View Allocated Habitats Chart
+          </button>
+        </div>
         <table className="site-table">
           <thead>
             <tr>
