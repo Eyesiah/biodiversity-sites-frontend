@@ -162,7 +162,7 @@ const AnalysisTable = ({ title, data, unit }) => {
           <table className={`${styles.table} ${styles.subTable}`}>
             <thead>
               <tr>
-                <th colSpan="2" style={{ border: 0 }}>Intervention Groups xxx</th>
+                <th colSpan="2" style={{ border: 0 }}>Intervention Groups</th>
                 <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
                 <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#f0e0e0' }}>Allocations</th>
@@ -175,7 +175,7 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
                 <th onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Area ({unit})</th>
+                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Size ({unit})</th>
                 <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
