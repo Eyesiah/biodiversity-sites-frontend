@@ -8,7 +8,8 @@
     "next": "^15.5.2",
     "papaparse": "^5.5.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "recharts": "^3.1.2"
   },
   "scripts": {
     "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 next dev",
