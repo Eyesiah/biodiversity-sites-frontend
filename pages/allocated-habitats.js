@@ -11,18 +11,20 @@ export async function getStaticProps() {
 
     allSites.forEach(site => {
       site.allocations?.forEach(alloc => {
-        const processHabitats = (habitats) => {
+        const processHabitats = (habitats, module) => {
           habitats?.forEach(habitat => {
             if (habitat.type) {
-              habitatData[habitat.type] = (habitatData[habitat.type] || 0) + habitat.size;
+              habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.size, module };
             }
           });
         };
-        ['areas', 'hedgerows', 'watercourses'].forEach(category => processHabitats(alloc.habitats?.[category]));
+        processHabitats(alloc.habitats?.areas, 'area');
+        processHabitats(alloc.habitats?.hedgerows, 'hedgerow');
+        processHabitats(alloc.habitats?.watercourses, 'watercourse');
       });
     });
 
-    const pieChartData = Object.entries(habitatData).map(([name, value]) => ({ name, value }));
+    const pieChartData = Object.entries(habitatData).map(([name, data]) => ({ name, value: data.value, module: data.module }));
 
     return {
       props: {
@@ -38,14 +40,11 @@ export async function getStaticProps() {
 
 export default function AllocatedHabitatsChartPage({ pieChartData }) {
   return (
-    <main className={styles.container}>
-      <Head><title>Allocated Habitats Chart</title></Head>
-      <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
-        <h1 className="title" style={{ fontSize: '1.5rem' }}>Allocated habitats by percentage</h1>
-      </div>
-      <div style={{ width: '100%', height: '80vh' }}>
+    <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
+      <Head><title>Allocated Habitats Chart</title></Head>      
+      <div style={{ height: 'calc(100vh - 6rem)' }}>
         <AllocationPieChart data={pieChartData} />
       </div>
-    </main>
+    </div>
   );
 }

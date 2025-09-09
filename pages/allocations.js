@@ -236,7 +236,7 @@ export default function AllocationsPage({ allocations, error }) {
         </p>
         <div style={{ margin: '1rem 0', textAlign: 'center' }}>
           <button 
-            onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=800,height=600')}
+            onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=650,height=500')}
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           >
