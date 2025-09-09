@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { fetchAllSites } from '../lib/api';
-import { processHabitatSubTypes, calculateBaselineHU } from '../lib/habitat';
 import { AllocationPieChart } from '../components/AllocationPieChart';
 
 export async function getStaticProps() {
