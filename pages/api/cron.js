@@ -10,21 +10,37 @@ async function handler(req, res) {
   }
 
   try {
-    // 1. Fetch the data from the external API
-    const allSites = await fetchAllSites();
-
-    // 2. Process the data to get the summary
-    const { summary } = processSiteDataForIndex(allSites);
-
-    // 3. Save the statistics to the database
+    // init the db connection
     const client = await clientPromise;
     const db = client.db();
+
+    // Fetch the data from the external API
+    const allSites = await fetchAllSites();
+
+    // Process the data to get the summary
+    const { processedSites, summary } = processSiteDataForIndex(allSites);
+
+    // get the set of sites that were already known
+    const sitesCollection = db.collection('sites');
+    const knownSites = await sitesCollection.find({}).toArray();
+    const knownSiteIDs = knownSites.map((site) => site.id);
+    let newSites = [];
+    for (const site of processedSites) {
+      if (!knownSiteIDs.includes(site.referenceNumber)) {
+        newSites.push(site.referenceNumber)
+        await sitesCollection.insertOne({id: site.referenceNumber});
+      }
+    }
+
+
+    // Save the statistics to the database
     const statsCollection = db.collection('statistics');
 
     const timestamp = new Date();
     await statsCollection.insertOne({
       timestamp,
       ...summary,
+      newSites
     });
 
     res.status(200).json({
