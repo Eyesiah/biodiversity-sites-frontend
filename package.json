@@ -6,6 +6,7 @@
     "fast-xml-parser": "^5.2.5",
     "mongodb": "^6.19.0",
     "next": "^15.5.2",
+    "nprogress": "^0.2.0",
     "papaparse": "^5.5.3",
     "react": "^18",
     "react-dom": "^18",

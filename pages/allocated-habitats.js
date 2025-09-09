@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { fetchAllSites } from '../lib/api';
+import { processHabitatSubTypes, calculateBaselineHU } from '../lib/habitat';
 import { AllocationPieChart } from '../components/AllocationPieChart';
-import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
   try {
@@ -10,18 +10,26 @@ export async function getStaticProps() {
     const habitatData = {};
 
     allSites.forEach(site => {
-      site.allocations?.forEach(alloc => {
-        const processHabitats = (habitats, module) => {
-          habitats?.forEach(habitat => {
-            if (habitat.type) {
-              habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.size, module };
+      if (site.allocations) {
+        site.allocations.forEach(alloc => {
+          const processHabitats = (habitats, module) => {      
+            if (habitats) {
+              if (module == 'area') {
+                processHabitatSubTypes(habitats)
+              }
+              habitats.forEach(habitat => {
+                if (habitat.type) {
+                  habitat.HUs = calculateBaselineHU(habitat.size, habitat.type, habitat.condition)
+                  habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.HUs, module };
+                }
+              });
             }
-          });
-        };
-        processHabitats(alloc.habitats?.areas, 'area');
-        processHabitats(alloc.habitats?.hedgerows, 'hedgerow');
-        processHabitats(alloc.habitats?.watercourses, 'watercourse');
-      });
+          };
+          processHabitats(alloc.habitats?.areas, 'area');
+          processHabitats(alloc.habitats?.hedgerows, 'hedgerow');
+          processHabitats(alloc.habitats?.watercourses, 'watercourse');
+        });
+      }
     });
 
     const pieChartData = Object.entries(habitatData).map(([name, data]) => ({ name, value: data.value, module: data.module }));

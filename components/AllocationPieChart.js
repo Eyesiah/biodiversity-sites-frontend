@@ -8,12 +8,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    let unit = 'ha'; // Default to ha
-    if (data.module === 'area') {
-      unit = 'ha';
-    } else if (data.module !== 'area') {
-      unit = 'km';
-    }
+    let unit = 'HUs';
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
