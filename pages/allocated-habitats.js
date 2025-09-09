@@ -15,7 +15,7 @@ export async function getStaticProps() {
             if (habitats) {
               habitats.forEach(habitat => {
                 if (habitat.type) {
-                  habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.HUs, module };
+                  habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.size, module };
                 }
               });
             }
