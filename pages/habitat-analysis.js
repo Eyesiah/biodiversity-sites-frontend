@@ -175,7 +175,7 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
                 <th onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Area ({unit})</th>
+                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Size ({unit})</th>
                 <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
@@ -278,7 +278,23 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
               &times;
             </button>
           )}
-        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', margin: '1rem 0' }}>
+        <button 
+          onClick={() => window.open('/improvement-habitats', 'chartWindow', 'width=600,height=450')}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Improvement Habitats Chart
+        </button>
+        <button 
+          onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=600,height=450')}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Allocated Habitats Chart
+        </button>
+      </div>
         <div className={styles.detailsGrid}>
           <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
           <AnalysisTable title="Hedgerow Habitats" data={filteredHedgerowAnalysis} unit="km" />
