@@ -240,7 +240,7 @@ export default function AllocationsPage({ allocations, error }) {
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           >
-            Allocated Habitats Chart
+            Area Habitats Allocated Chart
           </button>
         </div>
         <table className="site-table">

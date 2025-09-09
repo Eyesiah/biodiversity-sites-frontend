@@ -20,9 +20,7 @@ export async function getStaticProps() {
               });
             }
           };
-          processHabitats(alloc.habitats?.areas, 'area');
-          processHabitats(alloc.habitats?.hedgerows, 'hedgerow');
-          processHabitats(alloc.habitats?.watercourses, 'watercourse');
+          processHabitats(alloc.habitats?.areas, 'area');          
         });
       }
     });
@@ -44,7 +42,7 @@ export async function getStaticProps() {
 export default function AllocatedHabitatsChartPage({ pieChartData }) {
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
-      <Head><title>Allocated Habitats Chart</title></Head>
+      <Head><title>Allocated Area Habitats Chart</title></Head>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
        
         <button

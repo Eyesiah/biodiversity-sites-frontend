@@ -8,7 +8,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    let unit = 'HUs';
+    let unit = 'ha';
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
@@ -58,7 +58,8 @@ export const AllocationPieChart = ({ data }) => {
 
     data.forEach(entry => {
       const percentage = entry.value / total;
-      if (percentage < 0.03) {
+      if (percentage < 0.01        
+      ) {
         otherValue += entry.value;
         otherChartData.push(entry);
       } else {
@@ -90,7 +91,7 @@ export const AllocationPieChart = ({ data }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', border: '1px solid #bdc3c7', borderRadius: '8px', padding: '1rem', backgroundColor: '#fff' }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>Allocated habitats by percentage & size</h4>
+        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>Area habitats allocated - by size</h4>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
             <Pie
