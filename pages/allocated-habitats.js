@@ -41,8 +41,18 @@ export async function getStaticProps() {
 export default function AllocatedHabitatsChartPage({ pieChartData }) {
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
-      <Head><title>Allocated Habitats Chart</title></Head>      
-      <div style={{ height: 'calc(100vh - 6rem)' }}>
+      <Head><title>Allocated Habitats Chart</title></Head>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+       
+        <button
+          onClick={() => window.close()}
+          className="linkButton"
+          style={{ fontSize: '1.5rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer' }}
+        >
+          Close
+        </button>
+      </div>
+      <div style={{ height: 'calc(100vh - 7rem)' }}>
         <AllocationPieChart data={pieChartData} />
       </div>
     </div>
