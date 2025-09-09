@@ -27,7 +27,8 @@ function MyApp({ Component, pageProps }) {
         src="/api/umami/script"
         data-website-id={umamiWebsiteId}
       />
-      {router.pathname !== '/allocated-habitats' && <Navigation />}
+      {router.pathname !== '/allocated-habitats' &&
+        router.pathname !== '/improvement-habitats' && <Navigation />}
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         {pageProps.lastUpdated && (

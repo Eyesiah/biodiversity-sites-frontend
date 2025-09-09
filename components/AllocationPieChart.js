@@ -104,7 +104,7 @@ export const AllocationPieChart = ({ data }) => {
               cy="50%"
               labelLine={(props) => props.percent < 0.05}
               label={renderCustomizedLabel}
-              outerRadius="90%"
+              outerRadius="95%"
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
