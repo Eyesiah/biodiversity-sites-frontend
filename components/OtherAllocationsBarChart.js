@@ -33,7 +33,7 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
           <YAxis type="category" dataKey="name" width={200} tick={<CustomizedYAxisTick />} interval={0} />
           <Tooltip 
             formatter={(value, name, props) => {
-              const unit = props.payload.module === 'area' ? 'ha' : 'km';
+              const unit = 'HUs';
               return `${formatNumber(props.payload.value, 2)} ${unit}`;
             }} 
             labelStyle={{ color: '#262626ff' }} itemStyle={{ color: '#000' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}/>
