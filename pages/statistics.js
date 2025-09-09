@@ -1,5 +1,6 @@
 import clientPromise from '../lib/mongodb';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Link from 'next/link';
 
 export async function getStaticProps() {
   try {
@@ -11,6 +12,26 @@ export async function getStaticProps() {
       .find({})
       .sort({ timestamp: 1 })
       .toArray();
+
+    // gather the site additions by date first to collate entries together on the same day
+    let siteAdditionsMap = {};
+    statsData.forEach((stat) => {
+      if (stat.newSites && stat.newSites.length > 0) {
+        const date = new Date(stat.timestamp);
+        var noTime = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+        if (siteAdditionsMap[noTime] == null) {
+          siteAdditionsMap[noTime] = [];
+        }
+        siteAdditionsMap[noTime].push(...stat.newSites);
+      }
+    });
+    let siteAdditions = [];
+    for (const [date, list] of Object.entries(siteAdditionsMap)) {
+      siteAdditions.push({
+        date: date,
+        sites: list
+      });
+    };
 
     // Process data for the charts, using the most recent entry for each day
     const statsByDate = statsData.reduce((acc, stat) => {
@@ -38,13 +59,14 @@ export async function getStaticProps() {
     return {
       props: {
         stats: processedData,
+        siteAdditions
       },
       revalidate: 3600, // Re-generate the page every hour
     };
   } catch (e) {
     console.error(e);
     return {
-      props: { stats: [] },
+      props: { stats: [], siteAdditions: [] },
     };
   }
 }
@@ -65,68 +87,64 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function StatisticsPage({ stats }) {
-  const renderMultiLineChart = (dataKeys, strokeColors, names, title) => (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>{title}</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={stats}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="timestamp"
-            type="number"
-            scale="time"
-            domain={['dataMin', 'dataMax']}
-            tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
-          />
-          <YAxis tickFormatter={(value) => value.toLocaleString()} />
-          <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
-          <Legend />
-          {dataKeys.map((dataKey, i) => (
-            <Line key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
+export default function StatisticsPage({ stats, siteAdditions }) {
+  const renderMultiLineChart = (dataKeys, strokeColors, names, title) => {
+    const filteredData = stats.filter(stat =>
+      dataKeys.some(key => stat[key] != null && stat[key] !== 0)
+    );
 
-  const renderChart = (dataKey, strokeColor, name) => (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>{name}</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={stats}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="timestamp"
-            type="number"
-            scale="time"
-            domain={['dataMin', 'dataMax']}
-            tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
-          />
-          <YAxis tickFormatter={(value) => value.toLocaleString()} />
-          <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
-          <Legend />
-          <Line type="monotone" dataKey={dataKey} stroke={strokeColor} name={name} activeDot={{ r: 8 }} />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
+    // Replace 0 with null for better line chart rendering (to create gaps)
+    const chartData = filteredData.map(stat => {
+      const newStat = { ...stat };
+      dataKeys.forEach(key => {
+        if (newStat[key] === 0) {
+          newStat[key] = null;
+        }
+      });
+      return newStat;
+    });
+
+    if (chartData.length === 0) {
+      return (
+        <div>
+          <h2 style={{ textAlign: 'center' }}>{title}</h2>
+          <p style={{ textAlign: 'center', height: '400px' }}>No data available for this chart.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <h2 style={{ textAlign: 'center' }}>{title}</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={['dataMin', 'dataMax']}
+              tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
+            />
+            <YAxis tickFormatter={(value) => value.toLocaleString()} />
+            <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
+            <Legend />
+            {dataKeys.map((dataKey, i) => (
+              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
 
   return (
     <div className="container">
@@ -144,21 +162,87 @@ export default function StatisticsPage({ stats }) {
                 )}
               </div>
               <div style={{ flex: 1 }}>
-                {renderChart('allocationsPerSite', '#d4a6f2', 'Allocations Per Site')}
+                {renderMultiLineChart(
+                  ['allocationsPerSite'],
+                  ['#d4a6f2'],
+                  ['Allocations Per Site'],
+                  'Allocations Per Site'
+                )}
               </div>
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['totalBaselineHUs', 'totalCreatedHUs'],
-                  ['#ff7300', '#00C49F'],
-                  ['Total Baseline Habitat Units', 'Total Created Habitat Units'],
+                  ['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Baseline Habitat Units', 'Total Created Habitat Units', 'Total Allocated Habitat Units'],
                   'Habitat Units'
                 )}
               </div>
-              <div style={{ flex: 1 }}>
-                {renderChart('totalArea', '#ffc658', 'Total Area (ha)')}
+              <div style={{ flex: 1 }}>                
+                {renderMultiLineChart(
+                  ['totalArea'],
+                  ['#ffc658'],
+                  ['Area'],
+                  'Total Sites Area (ha)'
+                )}
               </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['baselineAreaSize', 'baselineHedgerowSize', 'baselineWatercourseSize'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
+                  'Baseline Sizes'
+                )}
+              </div>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['improvementsAreaSize', 'improvementsHedgerowSize', 'improvementsWatercourseSize'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
+                  'Improvement Sizes'
+                )}
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['baselineParcels', 'improvementsParcels', 'allocatedParcels'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels'],
+                  'Num Parcels'
+                )}
+              </div>
+
+              { siteAdditions && siteAdditions.length > 0 && <div style={{ flex: 1, marginRight: '20px' }}>
+                <h2>Site Register Addition Date</h2>
+                <table className="site-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Sites</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {siteAdditions.map((addition) => (
+                      <tr key={addition.date}>
+                        <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
+                        <td>{addition.sites.map((site, index) => (
+                          <>
+                            <Link href={`/sites/${site}`}>{site}</Link>
+                            {index < addition.sites.length - 1 && ', '}
+                          </> ))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div> }
             </div>
           </>
         ) : (
