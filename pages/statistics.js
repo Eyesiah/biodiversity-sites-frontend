@@ -193,9 +193,9 @@ export default function StatisticsPage({ stats, siteAdditions }) {
                 )}
               </div>
 
-              { siteAdditions && siteAdditions.length > 0 && <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'flex-start' }}>
+              { siteAdditions && siteAdditions.length > 0 && <div style={{ flex: 1, marginRight: '20px' }}>
                 <h2>Site Register Addition Date</h2>
-                <table className="site-table" style={{ marginLeft: 0 }}>
+                <table className="site-table">
                   <thead>
                     <tr>
                       <th>Date</th>
