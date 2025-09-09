@@ -88,37 +88,63 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function StatisticsPage({ stats, siteAdditions }) {
-  const renderMultiLineChart = (dataKeys, strokeColors, names, title) => (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>{title}</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={stats}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="timestamp"
-            type="number"
-            scale="time"
-            domain={['dataMin', 'dataMax']}
-            tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
-          />
-          <YAxis tickFormatter={(value) => value.toLocaleString()} />
-          <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
-          <Legend />
-          {dataKeys.map((dataKey, i) => (
-            <Line key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
+  const renderMultiLineChart = (dataKeys, strokeColors, names, title) => {
+    const filteredData = stats.filter(stat =>
+      dataKeys.some(key => stat[key] != null && stat[key] !== 0)
+    );
+
+    // Replace 0 with null for better line chart rendering (to create gaps)
+    const chartData = filteredData.map(stat => {
+      const newStat = { ...stat };
+      dataKeys.forEach(key => {
+        if (newStat[key] === 0) {
+          newStat[key] = null;
+        }
+      });
+      return newStat;
+    });
+
+    if (chartData.length === 0) {
+      return (
+        <div>
+          <h2 style={{ textAlign: 'center' }}>{title}</h2>
+          <p style={{ textAlign: 'center', height: '400px' }}>No data available for this chart.</p>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <h2 style={{ textAlign: 'center' }}>{title}</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="timestamp"
+              type="number"
+              scale="time"
+              domain={['dataMin', 'dataMax']}
+              tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
+            />
+            <YAxis tickFormatter={(value) => value.toLocaleString()} />
+            <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
+            <Legend />
+            {dataKeys.map((dataKey, i) => (
+              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
 
   return (
     <div className="container">
