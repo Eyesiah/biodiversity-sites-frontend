@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { fetchAllSites } from '../lib/api';
-import { getHabitatDistinctiveness, processSiteHabitatData } from '../lib/habitat';
+import { getHabitatDistinctiveness } from '../lib/habitat';
 import styles from '../styles/SiteDetails.module.css';
 import { formatNumber } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
@@ -32,8 +32,6 @@ export async function getStaticProps() {
 
     // Process each site
     allSites.forEach(site => {
-
-      processSiteHabitatData(site);
 
       const processCategory = (category) => {
         // Baseline

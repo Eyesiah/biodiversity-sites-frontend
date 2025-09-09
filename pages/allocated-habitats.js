@@ -14,12 +14,8 @@ export async function getStaticProps() {
         site.allocations.forEach(alloc => {
           const processHabitats = (habitats, module) => {      
             if (habitats) {
-              if (module == 'area') {
-                processHabitatSubTypes(habitats)
-              }
               habitats.forEach(habitat => {
                 if (habitat.type) {
-                  habitat.HUs = calculateBaselineHU(habitat.size, habitat.type, habitat.condition)
                   habitatData[habitat.type] = { value: (habitatData[habitat.type]?.value || 0) + habitat.HUs, module };
                 }
               });

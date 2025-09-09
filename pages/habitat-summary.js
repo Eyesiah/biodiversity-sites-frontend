@@ -5,7 +5,6 @@ import { fetchAllSites } from '../lib/api';
 import styles from '../styles/SiteDetails.module.css';
 import { HabitatsCard } from '../components/HabitatsCard';
 import { HabitatSummaryTable } from '../components/HabitatSummaryTable';
-import { processSiteHabitatData } from "../lib/habitat"
 import { DetailRow } from '../components/DetailRow';
 import { formatNumber } from '../lib/format';
 
@@ -27,8 +26,9 @@ export async function getStaticProps() {
     let totalSize = 0
 
     allSites.forEach(site => {
+
       totalSize += site.siteSize;
-      processSiteHabitatData(site)
+
       if (site.habitats) {
         if (site.habitats.areas)
         {
