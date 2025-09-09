@@ -206,3 +206,18 @@ a[href^="http"]::after, a[href^="https"]::after {
   text-align: center;
   font-family: monospace;
 }
+
+/* NProgress customization */
+#nprogress .bar {
+  background: #29d !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #29d !important;
+  border-left-color: #29d !important;
+}
