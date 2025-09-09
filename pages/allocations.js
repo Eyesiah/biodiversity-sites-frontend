@@ -145,8 +145,8 @@ export default function AllocationsPage({ allocations, error }) {
   }, [inputValue]);
 
   const openChartWindow = (url) => {
-    const width = window.screen.width * 0.6;
-    const height = window.screen.height * 0.6;
+    const width = window.screen.width * 0.4;
+    const height = window.screen.height * 0.65;
     window.open(url, 'chartWindow', `width=${width},height=${height}`);
   };
 
