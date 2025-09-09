@@ -182,9 +182,9 @@ export default function StatisticsPage({ stats, siteAdditions }) {
                 {renderChart('totalArea', '#ffc658', 'Total Area (ha)')}
               </div>
             </div>
-            { siteAdditions && <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            { siteAdditions && siteAdditions.length > 0 && <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'flex-start' }}>
               <h2>Site Register Addition Date</h2>
-              <table className="site-table">
+              <table className="site-table" style={{ marginLeft: 0 }}>
                 <thead>
                   <tr>
                     <th>Date</th>
