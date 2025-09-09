@@ -22,7 +22,7 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
 
   return (
     <div style={{ width: '100%', height: chartHeight }}>
-      <h4 style={{ textAlign: 'center', fontSize: '1.4rem', color: '#000' }}>Habitats smaller than 1% of all allocations</h4>
+      <h4 style={{ textAlign: 'center', fontSize: '1.4rem', color: '#000' }}>Other allocations under 1%</h4>
       <ResponsiveContainer>
         <BarChart
           layout="vertical"

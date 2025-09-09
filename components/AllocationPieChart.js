@@ -8,7 +8,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    let unit = 'ha';
+    const unit = data.module === 'area' ? 'ha' : 'km';
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
@@ -46,12 +46,16 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-export const AllocationPieChart = ({ data }) => {
+export const AllocationPieChart = ({ data, disableAggregation = false, title = 'Area habitats allocated - by size' }) => {
   const { chartData, otherData } = useMemo(() => {
     if (!data || data.length === 0) {
       return { chartData: [], otherData: [] };
     }
-    const total = data.reduce((sum, entry) => sum + entry.value, 0);
+    if (disableAggregation) {
+      return { chartData: data, otherData: [] };
+    }
+
+    const total = data.reduce((sum, entry) => sum + entry.value, 0);    
     const mainChartData = [];
     const otherChartData = [];
     let otherValue = 0;
@@ -73,7 +77,7 @@ export const AllocationPieChart = ({ data }) => {
 
     const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
     return { chartData: mainChartData, otherData: otherDataWithTotalPercentage };
-  }, [data]);
+  }, [data, disableAggregation]);
 
   const otherAllocationsColor = useMemo(() => {
     const otherIndex = chartData.findIndex(entry => entry.name === 'Other allocations');
@@ -91,7 +95,7 @@ export const AllocationPieChart = ({ data }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', border: '1px solid #bdc3c7', borderRadius: '8px', padding: '1rem', backgroundColor: '#fff' }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>Area habitats allocated - by size</h4>
+        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>{title}</h4>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
             <Pie

@@ -144,6 +144,12 @@ export default function AllocationsPage({ allocations, error }) {
     }
   }, [inputValue]);
 
+  const openChartWindow = (url) => {
+    const width = window.screen.width * 0.6;
+    const height = window.screen.height * 0.6;
+    window.open(url, 'chartWindow', `width=${width},height=${height}`);
+  };
+
   const filteredAllocations = useMemo(() => {
     if (!debouncedSearchTerm) {
       return allocations;
@@ -231,18 +237,33 @@ export default function AllocationsPage({ allocations, error }) {
             </button>
           )}
         </div>
-        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
-          Totals are recalculated as your search string is entered.
-        </p>
-        <div style={{ margin: '1rem 0', textAlign: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Allocation Charts:</span>
           <button 
-            onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=650,height=500')}
+            onClick={() => openChartWindow('/allocated-habitats')}
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           >
-            Area Habitats Allocated Chart
+            Area Habitats
+          </button>
+          <button 
+            onClick={() => openChartWindow('/hedgerow-allocations')}
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          >
+            Hedgerow Habitats
+          </button>
+          <button 
+            onClick={() => openChartWindow('/watercourse-allocations')}
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          >
+            Watercourse Habitats
           </button>
         </div>
+        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+          Totals are recalculated as your search string is entered.
+        </p>
         <table className="site-table">
           <thead>
             <tr>
