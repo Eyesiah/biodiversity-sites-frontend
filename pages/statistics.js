@@ -120,36 +120,6 @@ export default function StatisticsPage({ stats, siteAdditions }) {
     </div>
   );
 
-  const renderChart = (dataKey, strokeColor, name) => (
-    <div>
-      <h2 style={{ textAlign: 'center' }}>{name}</h2>
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart
-          data={stats}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="timestamp"
-            type="number"
-            scale="time"
-            domain={['dataMin', 'dataMax']}
-            tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')}
-          />
-          <YAxis tickFormatter={(value) => value.toLocaleString()} />
-          <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
-          <Legend />
-          <Line type="monotone" dataKey={dataKey} stroke={strokeColor} name={name} activeDot={{ r: 8 }} />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
-
   return (
     <div className="container">
       <main className="main">
@@ -166,46 +136,88 @@ export default function StatisticsPage({ stats, siteAdditions }) {
                 )}
               </div>
               <div style={{ flex: 1 }}>
-                {renderChart('allocationsPerSite', '#d4a6f2', 'Allocations Per Site')}
+                {renderMultiLineChart(
+                  ['allocationsPerSite'],
+                  ['#d4a6f2'],
+                  ['Allocations Per Site'],
+                  'Allocations Per Site'
+                )}
               </div>
             </div>
+
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['totalBaselineHUs', 'totalCreatedHUs'],
-                  ['#ff7300', '#00C49F'],
-                  ['Total Baseline Habitat Units', 'Total Created Habitat Units'],
+                  ['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Baseline Habitat Units', 'Total Created Habitat Units', 'Total Allocated Habitat Units'],
                   'Habitat Units'
                 )}
               </div>
-              <div style={{ flex: 1 }}>
-                {renderChart('totalArea', '#ffc658', 'Total Area (ha)')}
+              <div style={{ flex: 1 }}>                
+                {renderMultiLineChart(
+                  ['totalArea'],
+                  ['#ffc658'],
+                  ['Area'],
+                  'Total Sites Area (ha)'
+                )}
               </div>
             </div>
-            { siteAdditions && siteAdditions.length > 0 && <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'flex-start' }}>
-              <h2>Site Register Addition Date</h2>
-              <table className="site-table" style={{ marginLeft: 0 }}>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Sites</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {siteAdditions.map((addition) => (
-                    <tr id={addition.date}>
-                      <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
-                      <td>{addition.sites.map((site, index) => (
-                        <>
-                          <Link href={`/sites/${site}`}>{site}</Link>
-                          {index < addition.sites.length - 1 && ', '}
-                        </> ))}
-                      </td>
+
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['baselineAreaSize', 'baselineHedgerowSize', 'baselineWatercourseSize'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
+                  'Baseline Sizes'
+                )}
+              </div>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['improvementsAreaSize', 'improvementsHedgerowSize', 'improvementsWatercourseSize'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
+                  'Improvement Sizes'
+                )}
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
+                  ['baselineParcels', 'improvementsParcels', 'allocatedParcels'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels'],
+                  'Num Parcels'
+                )}
+              </div>
+
+              { siteAdditions && siteAdditions.length > 0 && <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'flex-start' }}>
+                <h2>Site Register Addition Date</h2>
+                <table className="site-table" style={{ marginLeft: 0 }}>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Sites</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div> }
+                  </thead>
+                  <tbody>
+                    {siteAdditions.map((addition) => (
+                      <tr id={addition.date}>
+                        <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
+                        <td>{addition.sites.map((site, index) => (
+                          <>
+                            <Link href={`/sites/${site}`}>{site}</Link>
+                            {index < addition.sites.length - 1 && ', '}
+                          </> ))}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div> }
+            </div>
           </>
         ) : (
           <p>No statistics data available yet. The first data point will be generated by the next scheduled run.</p>
