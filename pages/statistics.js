@@ -230,7 +230,7 @@ export default function StatisticsPage({ stats, siteAdditions }) {
                   </thead>
                   <tbody>
                     {siteAdditions.map((addition) => (
-                      <tr id={addition.date}>
+                      <tr key={addition.date}>
                         <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
                         <td>{addition.sites.map((site, index) => (
                           <>
