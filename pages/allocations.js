@@ -226,6 +226,15 @@ export default function AllocationsPage({ allocations, error }) {
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
           {isSearching && <div className="loader" />}
           {inputValue && (
             <button
