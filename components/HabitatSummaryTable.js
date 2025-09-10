@@ -54,8 +54,8 @@ export const HabitatSummaryTable = ({ site }) => {
           <td className={styles.numericData}>{formatNumber(habitats.areas?.length ?? 0, 0)}</td>
           <td className={styles.numericData}>{formatNumber(baselineArea, 2)}</td>
           <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementArea)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea)}</td>}
+          <td className={styles.numericData}>{formatNumber(improvementArea, 2)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
           {hasAllocations && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
           {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
         </tr>
@@ -64,8 +64,8 @@ export const HabitatSummaryTable = ({ site }) => {
           <td className={styles.numericData}>{formatNumber(habitats.hedgerows?.length ?? 0, 0)}</td>
           <td className={styles.numericData}>{formatNumber(baselineHedgerow, 2)}</td>
           <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementHedgerow)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow)}</td>}
+          <td className={styles.numericData}>{formatNumber(improvementHedgerow, 2)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
           {hasAllocations && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
           {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
         </tr>
@@ -74,8 +74,8 @@ export const HabitatSummaryTable = ({ site }) => {
           <td className={styles.numericData}>{formatNumber(habitats.watercourses?.length ?? 0, 0)}</td>
           <td className={styles.numericData}>{formatNumber(baselineWatercourse, 2)}</td>
           <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementWatercourse)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse)}</td>}
+          <td className={styles.numericData}>{formatNumber(improvementWatercourse, 2)}</td>
+          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
           {hasAllocations && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
           {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
         </tr>

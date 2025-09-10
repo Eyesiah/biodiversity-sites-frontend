@@ -65,7 +65,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
           {isImprovement && <th>Intervention</th>}
           <th>Condition</th>
           <th># parcels</th>
-          <th>Area (ha)</th>
+          <th>Size (ha)</th>
           <th>HUs</th>
         </tr>
       </thead>
