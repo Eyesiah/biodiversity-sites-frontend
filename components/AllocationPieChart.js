@@ -8,7 +8,12 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const unit = data.module === 'area' ? 'ha' : 'km';
+    let unit = 'ha'; // Default to ha
+    if (data.module === 'mixed') {
+      unit = 'ha';
+    } else if (data.module !== 'area') {
+      unit = 'km';
+    }
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
@@ -23,7 +28,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   const labelText = `${(percent * 100).toFixed(2)}%`;
 
   // For small slices, render the label outside the pie with a line.
-  if (percent < 0.05) {
+  if (percent < 0.04) {
     const radius = outerRadius + 25; // Position label outside the pie
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -46,7 +51,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-export const AllocationPieChart = ({ data, disableAggregation = false, title = 'Area habitats allocated - by size', showBreakdown = true }) => {
+export const AllocationPieChart = ({ data, disableAggregation = false, title = 'Area habitats allocated - by size', showBreakdown = true, otherLabel = 'Other allocations' }) => {
   const { chartData, otherData } = useMemo(() => {
     if (!data || data.length === 0) {
       return { chartData: [], otherData: [] };
@@ -72,15 +77,15 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
     });
 
     if (otherValue > 0) {
-      mainChartData.push({ name: 'Other allocations', value: otherValue, module: 'mixed' });
+      mainChartData.push({ name: otherLabel, value: otherValue, module: 'mixed' });
     }
 
-    const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
+    const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, value: entry.value, module: entry.module, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
     return { chartData: mainChartData, otherData: otherDataWithTotalPercentage };
-  }, [data, disableAggregation]);
+  }, [data, disableAggregation, otherLabel]);
 
   const otherAllocationsColor = useMemo(() => {
-    const otherIndex = chartData.findIndex(entry => entry.name === 'Other allocations');
+    const otherIndex = chartData.findIndex(entry => entry.name === otherLabel);
     if (otherIndex !== -1) {
       // Check if the 'Other allocations' segment exists and return its specific color
       return '#997a71ff';
@@ -102,9 +107,9 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
               data={chartData}
               cx="50%"
               cy="50%"
-              labelLine={(props) => props.percent < 0.05}
+              labelLine={(props) => props.percent < 0.04}
               label={renderCustomizedLabel}
-              outerRadius="95%"
+              outerRadius="100%"
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
@@ -112,7 +117,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.name === 'Other allocations' ? '#aaaaaa' : COLORS[index % COLORS.length]} 
+                  fill={entry.name === otherLabel ? '#aaaaaa' : COLORS[index % COLORS.length]} 
                 />
               ))}
             </Pie>

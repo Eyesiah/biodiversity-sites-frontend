@@ -7,8 +7,11 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    const unit = data.module === 'area' ? 'ha' : 'km';
-    
+    let unit = 'ha'; // Default to ha
+    if (data.module !== 'area' && data.module !== 'mixed') {
+      unit = 'km';
+    }
+
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
@@ -21,7 +24,7 @@ const CustomTooltip = ({ active, payload }) => {
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
   const labelText = `${(percent * 100).toFixed(2)}%`;
-  if (percent < 0.05) {
+  if (percent < 0.03) {
     const radius = outerRadius + 25;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
@@ -93,7 +96,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
     let otherValue = 0;
 
     data.forEach(entry => {
-      if ((entry.value / total) < 0.01) {
+      if ((entry.value / total) < 0.02) {
         otherValue += entry.value;
         otherChartData.push(entry);
       } else {
@@ -102,7 +105,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
     });
 
     if (otherValue > 0) {
-      mainChartData.push({ name: 'Other improvements', value: otherValue, module: 'mixed' });
+      mainChartData.push({ name: 'Improvements <2%', value: otherValue, module: 'mixed' });
     }
 
     const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
@@ -110,7 +113,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
   }, [data, disableAggregation]);
 
   const otherImprovementsColor = useMemo(() => {
-    const otherIndex = chartData.findIndex(entry => entry.name === 'Other improvements');
+    const otherIndex = chartData.findIndex(entry => entry.name === 'Improvements <2%');
     return otherIndex !== -1 ? '#aaaaaa' : '#8884d8';
   }, [chartData]);
 
@@ -122,9 +125,9 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
         <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>{title}</h4>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
-            <Pie data={chartData} cx="50%" cy="50%" labelLine={(props) => props.percent < 0.05} label={renderCustomizedLabel} outerRadius="95%" fill="#8884d8" dataKey="value" nameKey="name">
+            <Pie data={chartData} cx="50%" cy="50%" labelLine={(props) => props.percent < 0.03} label={renderCustomizedLabel} outerRadius="100%" fill="#8884d8" dataKey="value" nameKey="name">
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.name === 'Other improvements' ? '#aaaaaa' : COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={entry.name === 'Improvements <2%' ? '#aaaaaa' : COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
