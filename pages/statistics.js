@@ -138,7 +138,7 @@ export default function StatisticsPage({ stats, siteAdditions }) {
             <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
             <Legend />
             {dataKeys.map((dataKey, i) => (
-              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} />
+              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} strokeWidth={3} />
             ))}
           </LineChart>
         </ResponsiveContainer>
