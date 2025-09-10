@@ -43,12 +43,12 @@ export default function AllocatedHabitatsChartPage({ pieChartData }) {
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
       <Head><title>Allocated Area Habitats Chart</title></Head>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1rem' }}>
        
         <button
           onClick={() => window.close()}
           className="linkButton"
-          style={{ fontSize: '1.5rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer' }}
+          style={{ fontSize: '1.5rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
         >
           Close
         </button>

@@ -47,7 +47,7 @@ export default function WatercourseAllocationsChartPage({ pieChartData }) {
         <button
           onClick={() => window.close()}
           className="linkButton"
-          style={{ fontSize: '1.5rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer' }}
+          style={{ fontSize: '1.5rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
         >
           Close
         </button>
