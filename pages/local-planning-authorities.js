@@ -196,7 +196,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
             <tr>
               <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-              <th onClick={() => requestSort('size')}>Area (ha){getSortIndicator('size')}</th>
+              <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
               <th onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</th>
             </tr>
           </thead>

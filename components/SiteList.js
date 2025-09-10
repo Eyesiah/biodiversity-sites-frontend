@@ -64,7 +64,7 @@ const SiteList = ({ sites }) => {
         <tr>
           <th onClick={() => requestSort('referenceNumber')}>BGS Reference{getSortIndicator('referenceNumber')}</th>
           <th onClick={() => requestSort('responsibleBodies')}>Responsible Body{getSortIndicator('responsibleBodies')}</th>
-          <th onClick={() => requestSort('siteSize')}>Area (ha){getSortIndicator('siteSize')}</th>
+          <th onClick={() => requestSort('siteSize')}>Size (ha){getSortIndicator('siteSize')}</th>
           <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
           <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
           <th onClick={() => requestSort('ncaName')}>National Charatcter Area (NCA){getSortIndicator('ncaName')}</th>
