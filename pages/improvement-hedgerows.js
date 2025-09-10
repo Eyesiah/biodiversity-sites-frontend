@@ -44,7 +44,7 @@ export default function ImprovementHedgerowsChartPage({ pieChartData }) {
         </button>
       </div>
       <div style={{ height: 'calc(100vh - 7rem)' }}>
-        <ImprovementPieChart data={pieChartData} title="Hedgerow Habitats Improved - by size" />
+        <ImprovementPieChart data={pieChartData} title="Hedgerow Habitats Improved - by size" showBreakdown={false} disableAggregation={true} />
       </div>
     </div>
   );

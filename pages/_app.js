@@ -51,6 +51,9 @@ function MyApp({ Component, pageProps }) {
       />
       {router.pathname !== '/allocated-habitats' &&
         router.pathname !== '/improvement-habitats' &&
+        router.pathname !== '/baseline-area-habitats' &&
+        router.pathname !== '/baseline-hedgerow-habitats' &&
+        router.pathname !== '/baseline-watercourse-habitats' &&
         router.pathname !== '/improvement-hedgerows' &&
         router.pathname !== '/improvement-watercourses' &&
         router.pathname !== '/hedgerow-allocations' &&

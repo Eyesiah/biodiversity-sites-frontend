@@ -79,7 +79,7 @@ const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
   );
 };
 
-export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size', disableAggregation = false }) => {
+export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size', disableAggregation = false, showBreakdown = true }) => {
   const { chartData, otherData } = useMemo(() => {
     if (!data || data.length === 0) {
       return { chartData: [], otherData: [] };
@@ -132,7 +132,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {otherData.length > 0 && (
+      {showBreakdown && otherData.length > 0 && (
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <OtherImprovementsBarChart data={otherData} color={otherImprovementsColor} />
         </div>

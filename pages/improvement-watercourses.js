@@ -44,7 +44,7 @@ export default function ImprovementWatercoursesChartPage({ pieChartData }) {
         </button>
       </div>
       <div style={{ height: 'calc(100vh - 7rem)' }}>
-        <ImprovementPieChart data={pieChartData} title="Watercourse Habitats Improved - by size" disableAggregation={true} />
+        <ImprovementPieChart data={pieChartData} title="Watercourse Habitats Improved - by size" disableAggregation={true} showBreakdown={false} />
       </div>
     </div>
   );

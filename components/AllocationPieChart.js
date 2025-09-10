@@ -46,7 +46,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-export const AllocationPieChart = ({ data, disableAggregation = false, title = 'Area habitats allocated - by size' }) => {
+export const AllocationPieChart = ({ data, disableAggregation = false, title = 'Area habitats allocated - by size', showBreakdown = true }) => {
   const { chartData, otherData } = useMemo(() => {
     if (!data || data.length === 0) {
       return { chartData: [], otherData: [] };
@@ -121,7 +121,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {otherData.length > 0 && (
+      {showBreakdown && otherData.length > 0 && (
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <OtherAllocationsBarChart data={otherData} color={otherAllocationsColor} />
         </div>
