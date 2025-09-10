@@ -145,7 +145,7 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
             <tr>
               <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-              <th onClick={() => requestSort('size')}>Area (ha){getSortIndicator('size')}</th>
+              <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
               <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
             </tr>
           </thead>
