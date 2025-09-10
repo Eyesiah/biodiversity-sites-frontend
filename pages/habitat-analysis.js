@@ -5,6 +5,7 @@ import { getHabitatDistinctiveness } from '../lib/habitat';
 import styles from '../styles/SiteDetails.module.css';
 import { formatNumber } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
+import Papa from 'papaparse';
 
 // This function runs at build time to fetch and process data.
 export async function getStaticProps() {
@@ -250,6 +251,42 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
   const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, filterAnalysisData]);
   const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, filterAnalysisData]);
 
+  const handleExport = () => {
+    const allData = [
+      ...filteredAreaAnalysis.rows.map(row => ({ Module: 'Area', ...row })),
+      ...filteredHedgerowAnalysis.rows.map(row => ({ Module: 'Hedgerow', ...row })),
+      ...filteredWatercourseAnalysis.rows.map(row => ({ Module: 'Watercourse', ...row })),
+    ];
+
+    const csvData = allData.map(row => ({
+      'Module': row.Module,
+      'Habitat': row.habitat,
+      'Distinctiveness': row.distinctiveness,
+      'Baseline Parcels': row.baselineParcels,
+      'Baseline Size': row.baseline,
+      'Baseline % Share': row.baselineShare,
+      'Improvement Sites': row.improvementSites,
+      'Improvement Parcels': row.improvementParcels,
+      'Improvement Size': row.improvement,
+      'Improvement % Share': row.improvementShare,
+      'Allocation Parcels': row.allocationParcels,
+      'Allocation Size': row.allocation,
+      'Allocation % Share': row.allocationShare,
+      '% of Improvements Allocated': row.improvementAllocation,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-habitat-analysis.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <>
       <Head>
@@ -258,24 +295,29 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
 
       <main className={styles.container}>
         <h1 className="title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>BGS Habitat Analysis</h1>
-        <div className="search-container sticky-search">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by habitat name..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by habitat name..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            Export to CSV
+          </button>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>

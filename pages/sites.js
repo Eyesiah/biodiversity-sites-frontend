@@ -6,6 +6,7 @@ import API_URL from '../config';
 import { fetchAllSites } from '../lib/api';
 import { processSiteDataForIndex } from '../lib/sites';
 import { formatNumber } from '../lib/format';
+import Papa from 'papaparse';
 
 export async function getStaticProps() {
   try {
@@ -65,6 +66,28 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
     );
   }, [sites, debouncedSearchTerm]);
 
+  const handleExport = () => {
+    const csvData = filteredSites.map(site => ({
+      'BGS Reference': site.referenceNumber,
+      'Responsible Body': site.responsibleBodies.join(', '),
+      'Area (ha)': formatNumber(site.siteSize),
+      '# Allocations': site.allocationsCount,
+      'Local Planning Authority (LPA)': site.lpaName,
+      'National Character Area (NCA)': site.ncaName,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-sites.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (error) {
     return (
       <div className="container">
@@ -93,24 +116,29 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
           )}
           </div>
         </div>
-        <div className="search-container">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            Export to CSV
+          </button>
         </div>
         <SiteList sites={filteredSites} />
       </main>

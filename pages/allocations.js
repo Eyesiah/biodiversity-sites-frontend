@@ -6,6 +6,7 @@ import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonIn
 import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
+import Papa from 'papaparse';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -132,6 +133,30 @@ export default function AllocationsPage({ allocations, error }) {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
+  const handleExport = () => {
+    const csvData = sortedAllocations.map(alloc => ({
+      'BGS Ref.': alloc.srn,
+      'Planning Ref.': alloc.pr,
+      'Planning address': alloc.pn,
+      'LPA': alloc.lpa,
+      'Distance (km)': typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d,
+      'Area Units': formatNumber(alloc.au || 0),
+      'Hedgerow Units': formatNumber(alloc.hu || 0),
+      'Watercourse Units': formatNumber(alloc.wu || 0),
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-allocations.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     setIsSearching(true);
     const timerId = setTimeout(() => {
@@ -218,34 +243,35 @@ export default function AllocationsPage({ allocations, error }) {
           <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> of <strong>{formatNumber(allocations.length, 0)}</strong> total allocations.
           </p>
         </div>
-        <div className="search-container sticky-search">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
-          {isSearching && <div className="loader" />}
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+            {isSearching && <div className="loader" />}
+          </div>
+          <button 
+            onClick={handleExport} 
+            className="linkButton" 
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            disabled={sortedAllocations.length === 0}
+          >
+            Export to CSV
+          </button>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Allocation Charts:</span>
