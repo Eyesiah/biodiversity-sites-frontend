@@ -222,7 +222,7 @@ export default function AllocationsPage({ allocations, error }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, or LPA."
+            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
