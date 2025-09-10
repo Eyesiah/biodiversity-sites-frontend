@@ -51,6 +51,8 @@ function MyApp({ Component, pageProps }) {
       />
       {router.pathname !== '/allocated-habitats' &&
         router.pathname !== '/improvement-habitats' &&
+        router.pathname !== '/improvement-hedgerows' &&
+        router.pathname !== '/improvement-watercourses' &&
         router.pathname !== '/hedgerow-allocations' &&
         router.pathname !== '/watercourse-allocations' && <Navigation />}
       <Component {...pageProps} />

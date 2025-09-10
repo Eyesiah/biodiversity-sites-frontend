@@ -7,12 +7,8 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
-    let unit = 'ha';
-    if (data.module === 'mixed') {
-      unit = 'mixed sizes';
-    } else if (data.module !== 'area') {
-      unit = 'km';
-    }
+    const unit = data.module === 'area' ? 'ha' : 'km';
+    
     return (
       <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
         <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
@@ -58,25 +54,20 @@ const CustomizedYAxisTick = (props) => {
 
 const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
   if (!data || data.length === 0) return null;
-  const chartHeight = Math.max(400, data.length * 40);
-
+  const chartHeight = Math.max(300, data.length * 40);
   return (
     <div style={{ width: '100%', height: chartHeight }}>
-      <h4 style={{ textAlign: 'center', fontSize: '1.4rem', color: '#000' }}>Other improvements Breakdown</h4>
+      <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Other improvements under 1%</h4>
       <ResponsiveContainer>
-        <BarChart layout="vertical" data={data} margin={{ top: 5, right: 60, left: 100, bottom: 20 }}>
+        <BarChart layout="vertical" data={data} margin={{ top: 5, right: 60, left: 120, bottom: 20 }}>
           <XAxis type="number" hide />
           <YAxis type="category" dataKey="name" width={200} tick={<CustomizedYAxisTick />} interval={0} />
           <Tooltip
             formatter={(value, name, props) => {
-              if (props.payload.name === 'Other habitats < 0.30%') {
-                const unit = 'mixed ha/km';
-              return `${formatNumber(props.payload.value, 2)} ${unit}`;
-              }
               const unit = props.payload.module === 'area' ? 'ha' : 'km';
               return `${formatNumber(props.payload.value, 2)} ${unit}`;
             }}
-            labelStyle={{ color: '#262626ff' }} itemStyle={{ color: '#000' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
+            labelStyle={{ color: '#000' }} itemStyle={{ color: '#000' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
           />
           <Legend />
           <Bar dataKey="percentage" fill={color} name="Size">
@@ -88,16 +79,21 @@ const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
   );
 };
 
-export const ImprovementPieChart = ({ data }) => {
+export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size', disableAggregation = false }) => {
   const { chartData, otherData } = useMemo(() => {
-    if (!data || data.length === 0) return { chartData: [], otherData: [] };
+    if (!data || data.length === 0) {
+      return { chartData: [], otherData: [] };
+    }
+    if (disableAggregation) {
+      return { chartData: data, otherData: [] };
+    }
     const total = data.reduce((sum, entry) => sum + entry.value, 0);
     const mainChartData = [];
     const otherChartData = [];
     let otherValue = 0;
 
     data.forEach(entry => {
-      if ((entry.value / total) < 0.03) {
+      if ((entry.value / total) < 0.01) {
         otherValue += entry.value;
         otherChartData.push(entry);
       } else {
@@ -109,26 +105,9 @@ export const ImprovementPieChart = ({ data }) => {
       mainChartData.push({ name: 'Other improvements', value: otherValue, module: 'mixed' });
     }
 
-    const finalOtherData = [];
-    let verySmallHabitatsValue = 0;
-    let verySmallHabitatsPercentage = 0;
-
-    otherChartData.forEach(entry => {
-      const percentage = total > 0 ? (entry.value / total) * 100 : 0;
-      if (percentage < 0.30) {
-        verySmallHabitatsValue += entry.value;
-        verySmallHabitatsPercentage += percentage;
-      } else {
-        finalOtherData.push({ ...entry, percentage });
-      }
-    });
-
-    if (verySmallHabitatsValue > 0) {
-      finalOtherData.push({ name: 'Other habitats < 0.30%', value: verySmallHabitatsValue, percentage: verySmallHabitatsPercentage, module: 'mixed' });
-    }
-
-    return { chartData: mainChartData, otherData: finalOtherData.sort((a, b) => b.value - a.value) };
-  }, [data]);
+    const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
+    return { chartData: mainChartData, otherData: otherDataWithTotalPercentage };
+  }, [data, disableAggregation]);
 
   const otherImprovementsColor = useMemo(() => {
     const otherIndex = chartData.findIndex(entry => entry.name === 'Other improvements');
@@ -140,7 +119,7 @@ export const ImprovementPieChart = ({ data }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', border: '1px solid #bdc3c7', borderRadius: '8px', padding: '1rem', backgroundColor: '#fff' }}>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>Improvement habitats by percentage & size</h4>
+        <h4 style={{ textAlign: 'center', color: '#000', fontSize: '2rem' }}>{title}</h4>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
             <Pie data={chartData} cx="50%" cy="50%" labelLine={(props) => props.percent < 0.05} label={renderCustomizedLabel} outerRadius="95%" fill="#8884d8" dataKey="value" nameKey="name">
