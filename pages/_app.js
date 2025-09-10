@@ -50,7 +50,14 @@ function MyApp({ Component, pageProps }) {
         data-website-id={umamiWebsiteId}
       />
       {router.pathname !== '/allocated-habitats' &&
-        router.pathname !== '/improvement-habitats' && <Navigation />}
+        router.pathname !== '/improvement-habitats' &&
+        router.pathname !== '/baseline-area-habitats' &&
+        router.pathname !== '/baseline-hedgerow-habitats' &&
+        router.pathname !== '/baseline-watercourse-habitats' &&
+        router.pathname !== '/improvement-hedgerows' &&
+        router.pathname !== '/improvement-watercourses' &&
+        router.pathname !== '/hedgerow-allocations' &&
+        router.pathname !== '/watercourse-allocations' && <Navigation />}
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         {pageProps.lastUpdated && (

@@ -20,7 +20,7 @@ export async function getStaticProps() {
               });
             }
           };
-          processHabitats(alloc.habitats?.areas, 'area');          
+          processHabitats(alloc.habitats?.hedgerows, 'hedgerow');          
         });
       }
     });
@@ -39,10 +39,10 @@ export async function getStaticProps() {
   }
 }
 
-export default function AllocatedHabitatsChartPage({ pieChartData }) {
+export default function HedgerowAllocationsChartPage({ pieChartData }) {
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
-      <Head><title>Allocated Area Habitats Chart</title></Head>
+      <Head><title>Hedgerow Habitats Allocated Chart</title></Head>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
        
         <button
@@ -54,7 +54,7 @@ export default function AllocatedHabitatsChartPage({ pieChartData }) {
         </button>
       </div>
       <div style={{ height: 'calc(100vh - 7rem)' }}>
-        <AllocationPieChart data={pieChartData} />
+        <AllocationPieChart data={pieChartData} disableAggregation={true} title="Hedgerow habitats allocated - by size" />
       </div>
     </div>
   );

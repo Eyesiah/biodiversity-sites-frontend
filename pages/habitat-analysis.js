@@ -277,20 +277,76 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
             </button>
           )}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', margin: '1rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Baseline Charts:</span>
         <button 
-          onClick={() => window.open('/improvement-habitats', 'chartWindow', 'width=600,height=450')}
+          onClick={() => {
+            const width = window.screen.width * 0.4;
+            const height = window.screen.height * 0.65;
+            window.open('/baseline-area-habitats', 'chartWindow', `width=${width},height=${height}`);
+          }}
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         >
-          Improvement Habitats Chart
+          Area Habitats
         </button>
         <button 
-          onClick={() => window.open('/allocated-habitats', 'chartWindow', 'width=600,height=450')}
+          onClick={() => {
+            const width = window.screen.width * 0.6;
+            const height = window.screen.height * 1;
+            window.open('/baseline-hedgerow-habitats', 'chartWindow', `width=${width},height=${height}`);
+          }}
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         >
-          Allocated Habitats Chart
+          Hedgerow Habitats
+        </button>
+        <button 
+          onClick={() => {
+            const width = window.screen.width * 0.4;
+            const height = window.screen.height * 0.65;
+            window.open('/baseline-watercourse-habitats', 'chartWindow', `width=${width},height=${height}`);
+          }}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Watercourse Habitats
+        </button>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
+        <button 
+          onClick={() => {
+            const width = window.screen.width * 0.4;
+            const height = window.screen.height * 0.65;
+            window.open('/improvement-habitats', 'chartWindow', `width=${width},height=${height}`);
+          }}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Area Habitats
+        </button>
+        <button 
+          onClick={() => {
+            const width = window.screen.width * 0.6;
+            const height = window.screen.height * 1;
+            window.open('/improvement-hedgerows', 'chartWindow', `width=${width},height=${height}`);
+          }}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Hedgerow Habitats
+        </button>
+        <button 
+          onClick={() => {
+            const width = window.screen.width * 0.4;
+            const height = window.screen.height * 0.65;
+            window.open('/improvement-watercourses', 'chartWindow', `width=${width},height=${height}`);
+          }}
+          className="linkButton"
+          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+        >
+          Watercourse Habitats
         </button>
       </div>
         <div className={styles.detailsGrid}>

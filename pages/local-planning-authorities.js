@@ -160,6 +160,15 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">

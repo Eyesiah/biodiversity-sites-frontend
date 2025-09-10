@@ -109,6 +109,15 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
           />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">
