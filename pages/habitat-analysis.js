@@ -278,7 +278,7 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
           )}
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Baseline Charts:</span>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
         <button 
           onClick={() => {
             const width = window.screen.width * 0.6;
