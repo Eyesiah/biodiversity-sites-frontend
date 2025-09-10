@@ -21,7 +21,7 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
   const chartHeight = Math.max(300, data.length * 35);
 
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'hidden' }}>
+    <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
       <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Baseline habitats less than 1%</h4>
       <ResponsiveContainer>
         <BarChart
