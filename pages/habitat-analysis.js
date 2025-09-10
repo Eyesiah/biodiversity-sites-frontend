@@ -281,8 +281,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Baseline Charts:</span>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.4;
-            const height = window.screen.height * 0.65;
+            const width = window.screen.width * 0.6;
+            const height = window.screen.height * 1;
             window.open('/baseline-area-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -317,8 +317,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.4;
-            const height = window.screen.height * 0.65;
+            const width = window.screen.width * 0.6;
+            const height = window.screen.height * 1;
             window.open('/improvement-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"

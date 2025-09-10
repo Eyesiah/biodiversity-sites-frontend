@@ -43,8 +43,7 @@ export default function WatercourseAllocationsChartPage({ pieChartData }) {
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem' }}>
       <Head><title>Watercourse Habitats Allocated Chart</title></Head>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-       
+      <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '1rem' }}>
         <button
           onClick={() => window.close()}
           className="linkButton"
