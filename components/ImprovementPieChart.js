@@ -57,10 +57,9 @@ const CustomizedYAxisTick = (props) => {
 
 const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
   if (!data || data.length === 0) return null;
-  const chartHeight = Math.max(300, data.length * 40);
   return (
-    <div style={{ width: '100%', height: chartHeight }}>
-      <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Other improvements under 1%</h4>
+    <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
+      <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}> Improvement habitats less than 1%</h4>
       <ResponsiveContainer>
         <BarChart layout="vertical" data={data} margin={{ top: 5, right: 60, left: 120, bottom: 20 }}>
           <XAxis type="number" hide />
@@ -96,7 +95,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
     let otherValue = 0;
 
     data.forEach(entry => {
-      if ((entry.value / total) < 0.02) {
+      if ((entry.value / total) < 0.01) {
         otherValue += entry.value;
         otherChartData.push(entry);
       } else {
@@ -105,7 +104,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
     });
 
     if (otherValue > 0) {
-      mainChartData.push({ name: 'Improvements <2%', value: otherValue, module: 'mixed' });
+      mainChartData.push({ name: 'Improvements <1%', value: otherValue, module: 'mixed' });
     }
 
     const otherDataWithTotalPercentage = otherChartData.map(entry => ({ ...entry, percentage: total > 0 ? (entry.value / total) * 100 : 0 })).sort((a, b) => b.value - a.value);
@@ -113,8 +112,8 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
   }, [data, disableAggregation]);
 
   const otherImprovementsColor = useMemo(() => {
-    const otherIndex = chartData.findIndex(entry => entry.name === 'Improvements <2%');
-    return otherIndex !== -1 ? '#aaaaaa' : '#8884d8';
+    const otherIndex = chartData.findIndex(entry => entry.name === 'Improvements <1%');
+    return otherIndex !== -1 ? '#889095ff' : '#8884d8';
   }, [chartData]);
 
   if (!chartData || chartData.length === 0) return <p>No improvement habitat data to display.</p>;
@@ -127,7 +126,7 @@ export const ImprovementPieChart = ({ data, title = 'Habitats Improved - by size
           <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
             <Pie data={chartData} cx="50%" cy="50%" labelLine={(props) => props.percent < 0.03} label={renderCustomizedLabel} outerRadius="100%" fill="#8884d8" dataKey="value" nameKey="name">
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.name === 'Improvements <2%' ? '#aaaaaa' : COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={entry.name === 'Improvements <1%' ? '#889095ff' : COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
