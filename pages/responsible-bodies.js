@@ -110,6 +110,29 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
   const hasEmail = useMemo(() => responsibleBodies.some(body => body.emails.length > 0), [responsibleBodies]);
   const hasTelephone = useMemo(() => responsibleBodies.some(body => body.telephone), [responsibleBodies]);
 
+  const handleExport = () => {
+    const csvData = filteredAndSortedBodies.map(body => ({
+      'Name': body.name,
+      'Designation Date': body.designationDate,
+      'Area of Expertise': body.expertise,
+      'Type of Organisation': body.organisationType,
+      'Address': body.address,
+      'Email': body.emails.join('; '),
+      'Telephone': body.telephone,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'responsible-bodies.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="container">
       <Head>
@@ -126,24 +149,29 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
             </p>
         )}
         </div>
-        <div className="search-container sticky-search">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by name, expertise, type, or address."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by name, expertise, type, or address."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+          </div>
+          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            Export to CSV
+          </button>
         </div>
         <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
           Not all the Responsible Bodies listed here are included in the BGS Site List page or share the same name.

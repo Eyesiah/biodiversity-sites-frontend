@@ -5,6 +5,7 @@ import path from 'path';
 import { formatNumber } from '../lib/format';
 import styles from '../styles/SiteDetails.module.css';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
+import Papa from 'papaparse';
 
 export async function getStaticProps() {
   try {
@@ -140,6 +141,26 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
 
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
 
+  const handleExport = () => {
+    const csvData = filteredAndSortedLPAs.map(lpa => ({
+      'ID': lpa.id,
+      'Name': lpa.name,
+      'Area (ha)': formatNumber(lpa.size, 0),
+      '# Adjacent LPAs': lpa.adjacentsCount,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'local-planning-authorities.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (error) {
     return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
   }
@@ -151,24 +172,23 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
       </Head>
       <main className="main">
         <h1 className="title">Local Planning Authorities</h1>
-        <div className="search-container sticky-search">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by LPA name."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by LPA name."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
+            )}
+          </div>
+          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            Export to CSV
+          </button>
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">

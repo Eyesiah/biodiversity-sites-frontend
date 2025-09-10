@@ -88,7 +88,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
     const otherIndex = chartData.findIndex(entry => entry.name === otherLabel);
     if (otherIndex !== -1) {
       // Check if the 'Other allocations' segment exists and return its specific color
-      return '#997a71ff';
+      return '#889095ff';
     }
     return '#8884d8'; // Fallback color
   }, [chartData]);
@@ -109,7 +109,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
               cy="50%"
               labelLine={(props) => props.percent < 0.04}
               label={renderCustomizedLabel}
-              outerRadius="100%"
+              outerRadius="95%"
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
@@ -117,7 +117,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={entry.name === otherLabel ? '#aaaaaa' : COLORS[index % COLORS.length]} 
+                  fill={entry.name === otherLabel ? '#889095ff' : COLORS[index % COLORS.length]} 
                 />
               ))}
             </Pie>

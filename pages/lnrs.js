@@ -5,6 +5,7 @@ import path from 'path';
 import { formatNumber } from '../lib/format';
 import { CollapsibleRow } from '../components/CollapsibleRow';
 import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
+import Papa from 'papaparse';
 
 export async function getStaticProps() {
   try {
@@ -89,6 +90,26 @@ export default function LNRSAreasPage({ lnrs, error }) {
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
 
+  const handleExport = () => {
+    const csvData = filteredAndSortedLNRS.map(item => ({
+      'ID': item.id,
+      'Name': item.name,
+      'Area (ha)': formatNumber(item.size, 0),
+      '# Adjacent LNRS': item.adjacents?.length || 0,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'lnrs-areas.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (error) {
     return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
   }
@@ -100,24 +121,23 @@ export default function LNRSAreasPage({ lnrs, error }) {
       </Head>
       <main className="main">
         <h1 className="title">Local Nature Recovery Strategies</h1>
-        <div className="search-container sticky-search">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by LNRS name."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by LNRS name."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
+            )}
+          </div>
+          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            Export to CSV
+          </button>
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">
