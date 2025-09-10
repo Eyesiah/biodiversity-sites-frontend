@@ -1,0 +1,223 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  background-color: #282c34; /* Charcoal Grey */
+  color: #f0f0f0;
+}
+
+a {
+  color: #87ceeb; /* A light blue for link visibility */
+  text-decoration: underline;
+}
+
+/* Add icon to external links */
+a[href^="http"]::after, a[href^="https"]::after {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  vertical-align: middle;
+  background-color: #0070f3;
+  mask-image: url('/icons/external-link.svg');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url('/icons/external-link.svg');
+  -webkit-mask-size: contain;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: #333; /* Dark grey for text */
+  background-color: #F9F6EE; /* Bone white background */
+  text-align: center;
+  padding: 2rem;
+}
+
+.main {
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.error {
+  color: #ff4d4d;
+}
+
+.raw-json {
+  text-align: left;
+  font-size: 0.75rem;
+  width: 80%;
+  margin: 2rem auto;
+  overflow-x: auto;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.summary {
+  width: 90%;
+  margin: 0 auto 1rem;
+  text-align: left;
+}
+
+.search-container {
+  position: relative;
+  width: 90%;
+  max-width: 500px;
+  margin: 1rem auto;
+}
+
+.sticky-search {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px; /* Adjust this value to sit below your main navigation */
+  background-color: #F9F6EE; /* Match the page background */
+  padding: 1rem 0;
+  z-index: 999; /* Ensure it stays on top of other content */
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem;
+  padding-right: 2.5rem; /* Make space for the button */
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: ivory;
+  color: #333;
+}
+
+.search-input::placeholder {
+  color: #888;
+  font-weight: bold;
+}
+
+.clear-search-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #666;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.clear-search-button:hover {
+  color: #000;
+}
+
+.site-table {
+  width: auto;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  background-color: #fff;
+  color: #333;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.site-table th,
+.site-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  vertical-align: top;
+}
+
+.site-table th {
+  background-color: #2c3e50; /* Midnight Blue */
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  position: sticky;
+  top: 0; /* Adjust this value if you have a sticky navigation bar */
+  z-index: 1;
+}
+
+.site-table tr:hover {
+  background-color: #ecf0f1; /* Clouds */
+}
+
+.site-table td {
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.site-table td a {
+  color: #2980b9; /* Belize Hole Blue */
+}
+
+.site-table td a:hover {
+  color: #3498db; /* Peter River Blue */
+}
+
+.numeric-data {
+  text-align: right;
+  font-family: monospace;
+}
+
+.prose {
+  text-align: left;
+  font-size: 1.1rem;
+  max-width: 800px;
+  line-height: 1.7;
+}
+
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+.prose h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.site-table .numeric-data {
+  text-align: right;
+  font-family: monospace;
+}
+
+.site-table .centered-data {
+  text-align: center;
+  font-family: monospace;
+}
+
+/* NProgress customization */
+#nprogress .bar {
+  background: #29d !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #29d !important;
+  border-left-color: #29d !important;
+}

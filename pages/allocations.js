@@ -108,6 +108,7 @@ const AllocationRow = ({ alloc }) => (
     <>
       <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
       <td>{alloc.pr}</td>
+      <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
@@ -120,7 +121,7 @@ const AllocationRow = ({ alloc }) => (
     dataUrl={`/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`}
     renderDetails={details => <AllocationHabitats habitats={details} />}
     dataExtractor={json => json.pageProps.habitats}
-      colSpan={7}
+      colSpan={8}
     />
   );
 
@@ -221,7 +222,7 @@ export default function AllocationsPage({ allocations, error }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, or LPA."
+            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
@@ -278,6 +279,7 @@ export default function AllocationsPage({ allocations, error }) {
             <tr>
               <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
               <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+              <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
               <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
               <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
               <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
@@ -287,7 +289,7 @@ export default function AllocationsPage({ allocations, error }) {
           </thead>
           <tbody>
             <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-              <td colSpan="3" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+              <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
               <td className="centered-data" style={{ border: '3px solid #ddd' }}>
                 {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
               </td>
