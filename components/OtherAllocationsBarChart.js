@@ -18,11 +18,11 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
   }
 
   // Dynamically calculate height based on the number of data items
-  const chartHeight = Math.max(400, data.length * 40);
+  const chartHeight = Math.max(300, data.length * 35);
 
   return (
     <div style={{ width: '100%', height: chartHeight }}>
-      <h4 style={{ textAlign: 'center', fontSize: '1.4rem', color: '#000' }}>Other allocations under 1%</h4>
+      <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Habitats less than 1%</h4>
       <ResponsiveContainer>
         <BarChart
           layout="vertical"
@@ -33,7 +33,7 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
           <YAxis type="category" dataKey="name" width={200} tick={<CustomizedYAxisTick />} interval={0} />
           <Tooltip 
             formatter={(value, name, props) => {
-              const unit = 'ha';
+              const unit = props.payload.module === 'area' ? 'ha' : 'km';
               return `${formatNumber(props.payload.value, 2)} ${unit}`;
             }} 
             labelStyle={{ color: '#262626ff' }} itemStyle={{ color: '#000' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}/>
