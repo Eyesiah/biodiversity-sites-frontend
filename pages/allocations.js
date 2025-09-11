@@ -267,7 +267,7 @@ export default function AllocationsPage({ allocations, error }) {
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations, arising from <strong>{uniquePlanningRefs}</strong> out of <strong>{totalUniquePlanningRefs}</strong> planning applications.
+          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{uniquePlanningRefs}</strong> out of <strong>{totalUniquePlanningRefs}</strong> planning applications.
           </p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
