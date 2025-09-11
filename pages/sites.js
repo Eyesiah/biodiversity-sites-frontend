@@ -1,12 +1,18 @@
 // This function runs on the server side before the page is rendered.
 
 import { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import SiteList from "../components/SiteList";
 import API_URL from '../config';
 import { fetchAllSites } from '../lib/api';
 import { processSiteDataForIndex } from '../lib/sites';
 import { formatNumber } from '../lib/format';
 import Papa from 'papaparse';
+
+const Map = dynamic(() => import('../components/Map'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 export async function getStaticProps() {
   try {
@@ -38,6 +44,7 @@ const DEBOUNCE_DELAY_MS = 300;
 export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 } }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [hoveredSite, setHoveredSite] = useState(null);
 
   // Debounce the search term
   useEffect(() => {
@@ -101,46 +108,53 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
   
   return (
     <div className="container">
-      <main className="main">
-        <h1 className="title">
-          Biodiversity Gain Sites
-        </h1>
-        <div className="summary">
-          <div className="summary" style={{ textAlign: 'center' }}>
-          {inputValue ? (
-            <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites</p>
-          ) : (
-            <p style={{ fontSize: '1.2rem' }}>
-              This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
-              They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created improvement habitat units.            </p>
-          )}
+      <main className="main">        
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+          <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
+            <Map sites={filteredSites} height="85vh" hoveredSite={hoveredSite} />
           </div>
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <div className="search-container" style={{ margin: 0 }}>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              autoFocus
-            />
-            {inputValue && (
-              <button
-                onClick={() => setInputValue('')}
-                className="clear-search-button"
-                aria-label="Clear search"
-              >
-                &times;
+          <div style={{ flex: '1 1 67%' }}>
+            <h1 className="title">
+              Biodiversity Gain Sites
+            </h1>
+            <div className="summary">
+              <div className="summary" style={{ textAlign: 'center' }}>
+              {inputValue ? (
+                <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites</p>
+              ) : (
+                <p style={{ fontSize: '1.2rem' }}>
+                  This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
+                  They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created improvement habitat units.            </p>
+              )}
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+              <div className="search-container" style={{ margin: 0 }}>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  autoFocus
+                />
+                {inputValue && (
+                  <button
+                    onClick={() => setInputValue('')}
+                    className="clear-search-button"
+                    aria-label="Clear search"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+              <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+                Export to CSV
               </button>
-            )}
+            </div>
+            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} />
           </div>
-          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-            Export to CSV
-          </button>
         </div>
-        <SiteList sites={filteredSites} />
       </main>
     </div>
   );

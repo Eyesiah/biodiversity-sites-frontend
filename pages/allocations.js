@@ -214,6 +214,9 @@ export default function AllocationsPage({ allocations, error }) {
       }
     }
 
+    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
+    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
+
     return {
       totalArea,
       totalHedgerow,
@@ -221,6 +224,8 @@ export default function AllocationsPage({ allocations, error }) {
       medianDistance,
     };
   }, [filteredAllocations]);
+    const uniquePlanningRefs = new Set(filteredAllocations.map(alloc => alloc.pr)).size;
+    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
   const distanceDistributionData = useMemo(() => {
     const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
@@ -262,7 +267,7 @@ export default function AllocationsPage({ allocations, error }) {
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> of <strong>{formatNumber(allocations.length, 0)}</strong> total allocations.
+          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{uniquePlanningRefs}</strong> out of <strong>{totalUniquePlanningRefs}</strong> planning applications.
           </p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
