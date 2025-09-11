@@ -295,10 +295,10 @@ export default function AllocationsPage({ allocations, error }) {
             Export to CSV
           </button>
         </div>
-        <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0.2rem' }}>
+        <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
           Totals are recalculated as your search string is entered.
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '1rem 0 4rem 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '4rem 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -332,9 +332,9 @@ export default function AllocationsPage({ allocations, error }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" dataKey="distance" name="Distance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
                 <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
-                <Tooltip formatter={(value, name) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : formatNumber(value, 2))} />
+                <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
                 <Legend />
-                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} />
+                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </div>
