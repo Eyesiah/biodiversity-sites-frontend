@@ -47,7 +47,7 @@ export const collateHabitats = (habitats, isImprovement) => {
   }));
 };
 
-const HabitatRow = ({ habitat, isImprovement }) => {
+const HabitatRow = ({ habitat, isImprovement, title }) => {
   const mainRow = (
     <>
       <td>{habitat.type}</td>
@@ -65,7 +65,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
           {isImprovement && <th>Intervention</th>}
           <th>Condition</th>
           <th># parcels</th>
-          <th>Area (ha)</th>
+          <th>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
           <th>HUs</th>
         </tr>
       </thead>
@@ -87,7 +87,7 @@ const HabitatRow = ({ habitat, isImprovement }) => {
     <CollapsibleRow
       mainRow={mainRow}
       collapsibleContent={collapsibleContent}
-      colSpan={isImprovement ? 5 : 4}
+      colSpan={5}
     />
   );
 };
@@ -116,7 +116,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
             </thead>
             <tbody>
             {habitats.map((habitat) => (
-                <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} />
+                <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} title={title} />
             ))}
             </tbody>
         </table>

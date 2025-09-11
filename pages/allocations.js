@@ -7,6 +7,7 @@ import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
 import Papa from 'papaparse';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -221,6 +222,27 @@ export default function AllocationsPage({ allocations, error }) {
     };
   }, [filteredAllocations]);
 
+  const distanceDistributionData = useMemo(() => {
+    const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
+    if (distances.length === 0) {
+      return [];
+    }
+
+    const cumulativeData = [];
+    const total = distances.length;
+
+    distances.forEach((distance, index) => {
+      const cumulativeCount = index + 1;
+      cumulativeData.push({
+        distance: distance,
+        cumulativeCount: cumulativeCount,
+        percentage: (cumulativeCount / total) * 100,
+      });
+    });
+
+    return cumulativeData;
+  }, [filteredAllocations]);
+
   if (error) {
     return (
       <div className="container">
@@ -273,33 +295,50 @@ export default function AllocationsPage({ allocations, error }) {
             Export to CSV
           </button>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Allocation Charts:</span>
-          <button 
-            onClick={() => openChartWindow('/allocated-habitats')}
-            className="linkButton"
-            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-          >
-            Area Habitats
-          </button>
-          <button 
-            onClick={() => openChartWindow('/hedgerow-allocations')}
-            className="linkButton"
-            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-          >
-            Hedgerow Habitats
-          </button>
-          <button 
-            onClick={() => openChartWindow('/watercourse-allocations')}
-            className="linkButton"
-            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-          >
-            Watercourse Habitats
-          </button>
-        </div>
-        <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+        <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0.2rem' }}>
           Totals are recalculated as your search string is entered.
-        </p>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '1rem 0 4rem 0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button 
+                onClick={() => openChartWindow('/allocated-habitats')}
+                className="linkButton"
+                style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+              >
+                Area Habitats
+              </button>
+              <button 
+                onClick={() => openChartWindow('/hedgerow-allocations')}
+                className="linkButton"
+                style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+              >
+                Hedgerow Habitats
+              </button>
+              <button 
+                onClick={() => openChartWindow('/watercourse-allocations')}
+                className="linkButton"
+                style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+              >
+                Watercourse Habitats
+              </button>
+            </div>
+          </div>
+          <div style={{ width: '550px', height: '300px' }}>
+            <h4 style={{ textAlign: 'center' }}>Distance Distribution (km)</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={distanceDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" dataKey="distance" name="Distance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+                <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+                <Tooltip formatter={(value, name) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : formatNumber(value, 2))} />
+                <Legend />
+                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
         <table className="site-table">
           <thead>
             <tr>
