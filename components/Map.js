@@ -20,13 +20,13 @@ const customIcon = new L.Icon({
 });
 
 // --- Map Component ---
-const Map = ({ sites }) => {
+const Map = ({ sites, height }) => {
   if (!sites || sites.length === 0) {
     return <p>No sites with location data available to display on the map.</p>;
   }
 
   return (
-    <MapContainer center={[54.5, -2.5]} zoom={6} style={{ height: 'calc(100vh - 80px)', width: '100%' }}>
+    <MapContainer center={[54.5, -2.5]} zoom={6} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer

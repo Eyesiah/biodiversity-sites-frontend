@@ -109,8 +109,8 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
     <div className="container">
       <main className="main">        
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-          <div style={{ flex: '1 1 33%', marginRight: '1rem' }}>
-            <Map sites={filteredSites} />
+          <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
+            <Map sites={filteredSites} height="85vh" />
           </div>
           <div style={{ flex: '1 1 67%' }}>
             <h1 className="title">
