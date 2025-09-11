@@ -44,6 +44,7 @@ const DEBOUNCE_DELAY_MS = 300;
 export default function HomePage({ sites, error, summary = { totalSites: 0, totalArea: 0, totalBaselineHUs: 0, totalCreatedHUs: 0 } }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [hoveredSite, setHoveredSite] = useState(null);
 
   // Debounce the search term
   useEffect(() => {
@@ -110,7 +111,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
       <main className="main">        
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
           <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
-            <Map sites={filteredSites} height="85vh" />
+            <Map sites={filteredSites} height="85vh" hoveredSite={hoveredSite} />
           </div>
           <div style={{ flex: '1 1 67%' }}>
             <h1 className="title">
@@ -151,7 +152,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
                 Export to CSV
               </button>
             </div>
-            <SiteList sites={filteredSites} />
+            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} />
           </div>
         </div>
       </main>
