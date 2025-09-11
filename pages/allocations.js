@@ -301,7 +301,7 @@ export default function AllocationsPage({ allocations, error }) {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '4rem 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <button 
                 onClick={() => openChartWindow('/allocated-habitats')}
                 className="linkButton"
