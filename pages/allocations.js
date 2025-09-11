@@ -298,7 +298,7 @@ export default function AllocationsPage({ allocations, error }) {
         <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
           Totals are recalculated as your search string is entered.
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '4rem 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '1rem 0 6rem 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -326,11 +326,11 @@ export default function AllocationsPage({ allocations, error }) {
             </div>
           </div>
           <div style={{ width: '550px', height: '300px' }}>
-            <h4 style={{ textAlign: 'center' }}>Distance Distribution (km)</h4>
+            <h4 style={{ textAlign: 'center' }}>Cumlative Distance Distribution (km) - The distance between the development site and the BGS offset site.</h4>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={distanceDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="distance" name="Distance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+                <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
                 <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
                 <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
                 <Legend />
