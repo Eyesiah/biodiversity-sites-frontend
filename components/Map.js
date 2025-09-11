@@ -47,21 +47,24 @@ const Map = ({ sites, height, hoveredSite }) => {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
-      {sites.filter(site => site.position != null).map(site => (
-        <Marker key={site.referenceNumber} position={site.position} icon={site.referenceNumber == hoveredSite?.referenceNumber ? highlightedSiteIcon : defaultSiteIcon} zIndexOffset={site.referenceNumber == hoveredSite?.referenceNumber ? 1000 : 0}>
-          <Popup>
-            <h2><Link href={`/sites/${site.referenceNumber}`}>
-              {site.referenceNumber}
-            </Link></h2>
-            <b>Responsible Body:</b> {site.summary.responsibleBody}<br />
-            <b>LPA:</b> {site.summary.lpaName}<br />
-            <b>NCA:</b> {site.summary.ncaName}<br />
-            <b>Allocations:</b> {site.summary.allocationsCount}<br />
-            <b>Total Size:</b> {formatNumber(site.summary.totalSize)} ha<br />
-            <br />
-          </Popup>
-        </Marker>
-      ))}
+      {sites.filter(site => site.position != null).map(site => {
+        const isHovered = site.referenceNumber == hoveredSite?.referenceNumber;
+        return (
+          <Marker key={site.referenceNumber} position={site.position} icon={isHovered ? highlightedSiteIcon : defaultSiteIcon} zIndexOffset={isHovered ? 1000 : 0}>
+            <Popup>
+              <h2><Link href={`/sites/${site.referenceNumber}`}>
+                {site.referenceNumber}
+              </Link></h2>
+              <b>Responsible Body:</b> {site.summary.responsibleBody}<br />
+              <b>LPA:</b> {site.summary.lpaName}<br />
+              <b>NCA:</b> {site.summary.ncaName}<br />
+              <b>Allocations:</b> {site.summary.allocationsCount}<br />
+              <b>Total Size:</b> {formatNumber(site.summary.totalSize)} ha<br />
+              <br />
+            </Popup>
+          </Marker>
+        )
+      })}
     </MapContainer>
   );
 };
