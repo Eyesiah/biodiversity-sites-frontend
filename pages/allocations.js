@@ -331,7 +331,7 @@ export default function AllocationsPage({ allocations, error }) {
             </div>
           </div>
           <div style={{ width: '550px', height: '300px' }}>
-            <h4 style={{ textAlign: 'center' }}>Cumlative Distance Distribution (km) - The distance between the development site and the BGS offset site.</h4>
+            <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the offsite BGS offset site.</h4>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={distanceDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
