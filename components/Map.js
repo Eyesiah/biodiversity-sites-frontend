@@ -58,6 +58,8 @@ const Map = ({ sites, height, hoveredSite }) => {
               <b>Responsible Body:</b> {site.summary.responsibleBody}<br />
               <b>LPA:</b> {site.summary.lpaName}<br />
               <b>NCA:</b> {site.summary.ncaName}<br />
+              <b>LSOA:</b> {site.lsoaName || 'N/A'}<br />
+              <b>LNRS:</b> {site.lnrsName || 'N/A'}<br />
               <b>Allocations:</b> {site.summary.allocationsCount}<br />
               <b>Total Size:</b> {formatNumber(site.summary.totalSize)} ha<br />
               <br />
@@ -70,4 +72,3 @@ const Map = ({ sites, height, hoveredSite }) => {
 };
 
 export default Map;
-
