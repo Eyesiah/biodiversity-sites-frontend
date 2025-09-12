@@ -41,11 +41,12 @@ function MapController({ lsoa }) {
 
 
 // --- Map Component ---
-const Map = ({ sites, height, hoveredSite }) => {
+const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null });
   const polygonCache = useRef({ lsoa: {}, lnrs: {} });
+  const markerRefs = useRef({});
 
-  const handleMarkerClick = async (site) => {
+  const fetchAndDisplayPolygons = async (site) => {
     setActivePolygons({ lsoa: null, lnrs: null });
 
     if (!site || !site.lsoaName || !site.lnrsName || site.lsoaName === 'N/A' || site.lnrsName === 'N/A') {
@@ -86,8 +87,20 @@ const Map = ({ sites, height, hoveredSite }) => {
     }
   };
 
+  useEffect(() => {
+    if (selectedSite) {
+      const marker = markerRefs.current[selectedSite.referenceNumber];
+      if (marker) {
+        fetchAndDisplayPolygons(selectedSite);
+        marker.openPopup();
+      }
+    }
+  }, [selectedSite]);
+
+
   const handlePopupClose = () => {
     setActivePolygons({ lsoa: null, lnrs: null });
+    onSiteSelect(null);
   };
 
   if (!sites || sites.length === 0) {
@@ -123,8 +136,9 @@ const Map = ({ sites, height, hoveredSite }) => {
             position={site.position} 
             icon={isHovered ? highlightedSiteIcon : defaultSiteIcon} 
             zIndexOffset={isHovered ? 1000 : 0}
+            ref={el => markerRefs.current[site.referenceNumber] = el}
             eventHandlers={{
-              click: () => handleMarkerClick(site),
+              click: () => onSiteSelect(site),
               popupclose: handlePopupClose,
             }}
           >
