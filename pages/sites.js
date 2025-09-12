@@ -1,9 +1,9 @@
 // This function runs on the server side before the page is rendered.
 
 import { useState, useMemo, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import SiteList from "../components/SiteList";
-import API_URL from '../config';
+import dynamic from 'next/dynamic'; 
+import Link from 'next/link';
+import { useSortableData } from '../lib/hooks';
 import { fetchAllSites } from '../lib/api';
 import { processSiteDataForIndex } from '../lib/sites';
 import { formatNumber } from '../lib/format';
@@ -37,6 +37,55 @@ export async function getStaticProps() {
     throw e;
   }
 }
+
+const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
+  const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(sites, { key: 'referenceNumber', direction: 'ascending' });
+
+  if (!sites || sites.length === 0) {
+    return <p>No site data available.</p>;
+  }
+
+  return (
+    <table className="site-table">
+      <thead>
+        <tr>
+          <th onClick={() => requestSort('referenceNumber')}>{getSortIndicator('referenceNumber')}BGS Reference</th>
+          <th onClick={() => requestSort('responsibleBodies')}>{getSortIndicator('responsibleBodies')}Responsible Body</th>
+          <th onClick={() => requestSort('siteSize')}>{getSortIndicator('siteSize')}Size (ha)</th>
+          <th onClick={() => requestSort('allocationsCount')}>{getSortIndicator('allocationsCount')}# Allocations</th>
+          <th onClick={() => requestSort('lpaName')}>{getSortIndicator('lpaName')}Local Planning Authority (LPA)</th>
+          <th onClick={() => requestSort('ncaName')}>{getSortIndicator('ncaName')}National Character Area (NCA)</th>
+          <th onClick={() => requestSort('lnrsName')}>{getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)</th>
+          <th onClick={() => requestSort('imdDecile')}>{getSortIndicator('imdDecile')}IMD Decile</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedSites.map((site) => (
+          <tr
+            key={site.referenceNumber}
+            onMouseEnter={() => onSiteHover(site)}
+            onMouseLeave={() => onSiteHover(null)}
+            onClick={() => onSiteClick(site)}
+            style={{ cursor: 'pointer' }}
+          >
+            <td>
+              <Link href={`/sites/${site.referenceNumber}`}>
+                {site.referenceNumber}
+              </Link>
+            </td>
+            <td>{Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}</td>
+            <td className="numeric-data">{formatNumber(site.siteSize)}</td>
+            <td className="centered-data">{site.allocationsCount}</td>
+            <td>{site.lpaName}</td>
+            <td>{site.ncaName}</td>
+            <td>{site.lnrsName}</td>
+            <td className="centered-data">{site.imdDecile}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
 
 const DEBOUNCE_DELAY_MS = 300;
 
@@ -74,7 +123,9 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
       (site.referenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
       (site.responsibleBodies?.join(', ').toLowerCase() || '').includes(lowercasedTerm) ||
       (site.lpaName?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.ncaName?.toLowerCase() || '').includes(lowercasedTerm)
+      (site.ncaName?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (site.lnrsName?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (site.imdDecile?.toString() || '').includes(lowercasedTerm)
     );
   }, [sites, debouncedSearchTerm]);
 
@@ -86,6 +137,8 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
       '# Allocations': site.allocationsCount,
       'Local Planning Authority (LPA)': site.lpaName,
       'National Character Area (NCA)': site.ncaName,
+      'Local Nature Recovery Strategy (LNRS)': site.lnrsName,
+      'IMD Decile': site.imdDecile,
     }));
 
     const csv = Papa.unparse(csvData);
