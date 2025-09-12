@@ -60,7 +60,7 @@ export default function ImdDecileDistributionChartPage({ chartData, error }) {
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={chartData} margin={{ top: 40, right: 30, left: 20, bottom: 15 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" name="IMD Decile Score" label={{ value: 'IMD Decile Score', position: 'insideBottom', offset: -10 }} />
+          <XAxis dataKey="name" name="BGS IMD Decile Score" label={{ value: 'BGS IMD Decile Score', position: 'insideBottom', offset: -10 }} />
           <YAxis />
           <Tooltip />
           <Bar dataKey="count">
