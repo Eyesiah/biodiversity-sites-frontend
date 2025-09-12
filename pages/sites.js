@@ -27,8 +27,8 @@ const fetchSpatialData = async (site) => {
     const [lsoaRes, lnrsRes] = await Promise.all([fetch(lsoaUrl), fetch(lnrsUrl)]);
     const [lsoaData, lnrsData] = await Promise.all([lsoaRes.json(), lnrsRes.json()]);
 
-    const lsoaName = lsoaData.features?.[0]?.attributes?.LSOA11NM || 'N/A';
-    const lnrsName = lnrsData.features?.[0]?.attributes?.Name || 'N/A';
+    const lsoaName = lsoaData.features?.[0]?.attributes?.LSOA11NM.trim() || 'N/A';
+    const lnrsName = lnrsData.features?.[0]?.attributes?.Name.trim() || 'N/A';
 
     return { ...site, lsoaName, lnrsName };
   } catch (error) {
