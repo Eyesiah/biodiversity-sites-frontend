@@ -4,8 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { formatNumber } from '../lib/format';
 import { CollapsibleRow } from '../components/CollapsibleRow';
-import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
-import Papa from 'papaparse';
+import styles from '../styles/SiteDetails.module.css';
+import { XMLBuilder } from 'fast-xml-parser';
 
 export async function getStaticProps() {
   try {
@@ -90,24 +90,32 @@ export default function LNRSAreasPage({ lnrs, error }) {
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
 
-  const handleExport = () => {
-    const csvData = filteredAndSortedLNRS.map(item => ({
-      'ID': item.id,
-      'Name': item.name,
-      'Area (ha)': formatNumber(item.size, 0),
-      '# Adjacent LNRS': item.adjacents?.length || 0,
-    }));
-
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const triggerDownload = (blob, filename) => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'lnrs-areas.csv');
+    link.setAttribute('download', filename);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleExportXML = () => {
+    const builder = new XMLBuilder({
+      format: true,
+      ignoreAttributes: false,
+      attributeNamePrefix: "@_",
+    });
+    const xmlDataStr = builder.build({ localNatureRecoveryStrategies: { lnrs: filteredAndSortedLNRS } });
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+    triggerDownload(blob, 'lnrs-areas.xml');
+  };
+
+  const handleExportJSON = () => {
+    const jsonDataStr = JSON.stringify({ lnrs: filteredAndSortedLNRS }, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    triggerDownload(blob, 'lnrs-areas.json');
   };
 
   if (error) {
@@ -135,9 +143,10 @@ export default function LNRSAreasPage({ lnrs, error }) {
               <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
             )}
           </div>
-          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-            Export to CSV
-          </button>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+            <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+          </div>
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">

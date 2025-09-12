@@ -12,6 +12,7 @@ import { HabitatsCard } from "../../components/HabitatsCard"
 import { CollapsibleRow } from "../../components/CollapsibleRow"
 import { HabitatSummaryTable } from "../../components/HabitatSummaryTable"
 import { DetailRow } from "../../components/DetailRow"
+import { XMLBuilder } from 'fast-xml-parser';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -167,6 +168,37 @@ const InfoModal = ({ modalState, onClose }) => {
       {renderContent()}
     </Modal>
   );
+};
+
+const handleExportXML = (site) => {
+  const builder = new XMLBuilder({
+    format: true,
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_",
+  });
+  const xmlDataStr = builder.build({ site });
+
+  const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `bgs-site-${site.referenceNumber}.xml`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const handleExportJSON = (site) => {
+  const jsonDataStr = JSON.stringify({ site }, null, 2);
+
+  const blob = new Blob([jsonDataStr], { type: 'application/json' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `bgs-site-${site.referenceNumber}.json`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 const SiteDetailsCard = ({ site }) => {
@@ -373,7 +405,13 @@ export default function SitePage({ site, error }) {
         <div className={styles.header}>
           <Link href="/sites" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
-          <h2>{site.referenceNumber}</h2>
+          <div className={styles.titleWithButtons}>
+            <h2>{site.referenceNumber}</h2>
+            <div className={styles.buttonGroup}>
+              <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
+              <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
+            </div>
+          </div>
         </div>
 
         <div className={styles.detailsGrid}>
