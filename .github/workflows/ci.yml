@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ prod ]
   schedule:
-    # Runs at 1am UTC every day
-    - cron: '0 1 * * *'
+    # Runs every 6 hours, starting at 3am
+    - cron: '0 3/6 * * *'
   workflow_dispatch:
 
 jobs:
