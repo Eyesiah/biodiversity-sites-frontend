@@ -153,6 +153,7 @@
 .table th,
 .table td {
   border: 1px solid #bdc3c7; /* Silver */
+  border-left: 1px solid white;
   padding: 0.5rem;
   text-align: left;
 }

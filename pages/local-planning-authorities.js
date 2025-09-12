@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { formatNumber } from '../lib/format';
 import styles from '../styles/SiteDetails.module.css';
+import { fetchAllSites } from '../lib/api';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
 
@@ -12,12 +13,29 @@ export async function getStaticProps() {
         const jsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
         const jsonData = fs.readFileSync(jsonPath, 'utf-8');
         const rawLpas = JSON.parse(jsonData);
-        const lpas = rawLpas.filter((lpa) => lpa.id && lpa.id.startsWith('E')).map((lpa) => ({
+
+        const allSites = await fetchAllSites();
+        const allocationCounts = {};
+        allSites.forEach(site => {
+            if (site.allocations) {
+                site.allocations.forEach(alloc => {
+                    const lpaName = alloc.localPlanningAuthority;
+                    allocationCounts[lpaName] = (allocationCounts[lpaName] || 0) + 1;
+                });
+            }
+        });
+
+        const lpas = rawLpas
+            // Only include English LPAs
+            .filter((lpa) => lpa.id && lpa.id.startsWith('E'))
+            .map((lpa) => ({
                 id: lpa.id,
                 name: lpa.name,
                 size: lpa.size / 10000,
-                adjacentsCount: lpa.adjacents ? lpa.adjacents.length : 0
+                adjacentsCount: lpa.adjacents ? lpa.adjacents.length : 0,
+                allocationsCount: allocationCounts[lpa.name] || 0,
             })).sort((a, b) => a.name.localeCompare(b.name));
+
         return {
             props: {
                 lpas,
@@ -70,13 +88,14 @@ const LpaDataRow = ({ lpa }) => (
         <td>{lpa.id}</td>
         <td>{lpa.name}</td>
         <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
+        <td className="centered-data">{lpa.allocationsCount}</td>
         <td className="centered-data">{lpa.adjacentsCount}</td>
       </>
     )}
     dataUrl={`/modals/lpas/${lpa.id}.json`}
     renderDetails={details => <LpaDetails lpa={details} />}
     dataExtractor={json => json.pageProps.lpa}
-    colSpan={4}
+    colSpan={5}
   />
 );
 
@@ -134,6 +153,15 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
     };
 
     const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
+
+    const summaryData = useMemo(() => {
+        const source = filteredAndSortedLPAs;
+        return {
+            totalSize: source.reduce((sum, lpa) => sum + (lpa.size || 0), 0),
+            totalAllocations: source.reduce((sum, lpa) => sum + (lpa.allocationsCount || 0), 0),
+            totalAdjacents: source.reduce((sum, lpa) => sum + (lpa.adjacentsCount || 0), 0),
+        };
+    }, [filteredAndSortedLPAs]);
 
     const triggerDownload = (blob, filename) => {
         const link = document.createElement('a');
@@ -196,10 +224,17 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                             <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
                             <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
                             <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
+                            <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
                             <th onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+                            <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
+                            <td className="numeric-data">{formatNumber(summaryData.totalSize, 0)}</td>
+                            <td className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</td>
+                            <td className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</td>
+                        </tr>
                         {filteredAndSortedLPAs.map((lpa) => (
                             <LpaDataRow key={lpa.id} lpa={lpa} />
                         ))}
