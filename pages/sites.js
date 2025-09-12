@@ -153,6 +153,12 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
     document.body.removeChild(link);
   };
 
+  const openChartWindow = (url) => {
+    const width = window.screen.width * 0.6;
+    const height = window.screen.height * 0.8;
+    window.open(url, 'chartWindow', `width=${width},height=${height}`);
+  };
+
   if (error) {
     return (
       <div className="container">
@@ -208,6 +214,9 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
               </div>
               <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
                 Export to CSV
+              </button>
+              <button onClick={() => openChartWindow('/imd-decile-distribution')} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+                IMD Decile Chart
               </button>
             </div>
             <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />

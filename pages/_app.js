@@ -57,7 +57,8 @@ function MyApp({ Component, pageProps }) {
         router.pathname !== '/improvement-hedgerows' &&
         router.pathname !== '/improvement-watercourses' &&
         router.pathname !== '/hedgerow-allocations' &&
-        router.pathname !== '/watercourse-allocations' && <Navigation />}
+        router.pathname !== '/watercourse-allocations' &&
+        router.pathname !== '/imd-decile-distribution' && <Navigation />}
       <Component {...pageProps} />
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         {pageProps.lastUpdated && (
