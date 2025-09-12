@@ -56,12 +56,11 @@ export default function ImdDecileDistributionChartPage({ chartData, error }) {
       <Head><title>IMD Decile Distribution</title></Head>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', marginBottom: '1rem' }}>
         <button onClick={() => window.close()} className="linkButton" style={{ justifySelf: 'start', fontSize: '1rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>Close</button>
-        <h2 style={{ margin: 0, textAlign: 'center' }}>BGS IMD Decile Summary</h2>
-      </div>
+     </div>
       <ResponsiveContainer width="100%" height="90%">
-        <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+        <BarChart data={chartData} margin={{ top: 40, right: 30, left: 20, bottom: 15 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" name="Score" label={{ value: 'Score', position: 'insideBottom', offset: -5 }} />
+          <XAxis dataKey="name" name="IMD Decile Score" label={{ value: 'IMD Decile Score', position: 'insideBottom', offset: -10 }} />
           <YAxis />
           <Tooltip />
           <Bar dataKey="count">
