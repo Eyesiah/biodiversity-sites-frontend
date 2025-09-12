@@ -149,15 +149,6 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
               <b>Responsible Body:</b> {site.summary.responsibleBody}<br />
               <b>LPA:</b> {site.summary.lpaName}<br />
               <b>NCA:</b> {site.summary.ncaName}<br />
-              <b>LSOA:</b> {site.lsoaName || 'N/A'}
-              <span style={{
-                display: 'inline-block',
-                width: '12px',
-                height: '12px',
-                marginLeft: '8px',
-                backgroundColor: lsoaStyle.color,
-                border: '1px solid #555'
-              }}></span><br />
               <b>LNRS:</b> {site.lnrsName || 'N/A'}
               <span style={{
                 display: 'inline-block',
@@ -167,6 +158,15 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
                 backgroundColor: lnrsStyle.color,
                 border: '1px solid #555'
               }}></span><br />
+              <b>LSOA:</b> {site.lsoaName || 'N/A'}
+              <span style={{
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                marginLeft: '8px',
+                backgroundColor: lsoaStyle.color,
+                border: '1px solid #555'
+              }}></span><br />              
               <b>Allocations:</b> {site.summary.allocationsCount}<br />
               <b>Total Size:</b> {formatNumber(site.summary.totalSize)} ha<br />
               <br />
