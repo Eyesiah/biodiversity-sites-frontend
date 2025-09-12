@@ -2,10 +2,10 @@ import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
 import fs from 'fs';
 import path from 'path';
-import { formatNumber } from '../lib/format';
+import { formatNumber, slugify } from '../lib/format';
+import styles from '../styles/SiteDetails.module.css';
 import { CollapsibleRow } from '../components/CollapsibleRow';
-import styles from '../styles/SiteDetails.module.css'; // Re-using some styles for collapsible rows
-import Papa from 'papaparse';
+import { XMLBuilder } from 'fast-xml-parser';
 
 export async function getStaticProps() {
   try {
@@ -15,9 +15,10 @@ export async function getStaticProps() {
     // Convert size from square meters to hectares
     rawNcas.forEach(nca => {
       nca.size = nca.size / 10000;
-      nca.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      if (nca.adjacents) {
+        nca.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      }
     });
-    // Sort by name by default
     const ncas = rawNcas.sort((a, b) => a.name.localeCompare(b.name));
 
     return {
@@ -55,8 +56,8 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
 
     if (debouncedSearchTerm) {
       const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-      filtered = filtered.filter(nca =>
-        (nca.name?.toLowerCase() || '').includes(lowercasedTerm)
+      filtered = filtered.filter(item =>
+        (item.name?.toLowerCase() || '').includes(lowercasedTerm)
       );
     }
 
@@ -90,24 +91,28 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
 
-  const handleExport = () => {
-    const csvData = filteredAndSortedNCAs.map(nca => ({
-      'ID': nca.id,
-      'Name': nca.name,
-      'Area (ha)': formatNumber(nca.size, 0),
-      '# Adjacent NCAs': nca.adjacents?.length || 0,
-    }));
-
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const triggerDownload = (blob, filename) => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'national-character-areas.csv');
+    link.setAttribute('download', filename);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleExportXML = () => {
+    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
+    const xmlDataStr = builder.build({ nationalCharacterAreas: { nca: filteredAndSortedNCAs } });
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+    triggerDownload(blob, 'national-character-areas.xml');
+  };
+
+  const handleExportJSON = () => {
+    const jsonDataStr = JSON.stringify({ ncas: filteredAndSortedNCAs }, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    triggerDownload(blob, 'national-character-areas.json');
   };
 
   if (error) {
@@ -135,9 +140,10 @@ export default function NationalCharacterAreasPage({ ncas, error }) {
               <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
             )}
           </div>
-          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-            Export to CSV
-          </button>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+            <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+          </div>
         </div>
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
         <table className="site-table">

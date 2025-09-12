@@ -5,8 +5,8 @@ import { fetchAllSites } from '../lib/api';
 import styles from '../styles/SiteDetails.module.css';
 import { HabitatsCard } from '../components/HabitatsCard';
 import { HabitatSummaryTable } from '../components/HabitatSummaryTable';
-import { DetailRow } from '../components/DetailRow';
-import Papa from 'papaparse';
+import { DetailRow } from '../components/DetailRow'
+import { XMLBuilder } from 'fast-xml-parser';
 import { formatNumber } from '../lib/format';
 
 export async function getStaticProps() {
@@ -112,33 +112,39 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
   const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, filterHabitats]);
   const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, filterHabitats]);
 
-  const handleExport = () => {
-    const baselineData = Object.values(filteredBaselineHabitats).flat();
-    const improvementData = Object.values(filteredImprovementHabitats).flat();
-
-    const allData = [
-      ...baselineData.map(row => ({ Category: 'Baseline', ...row })),
-      ...improvementData.map(row => ({ Category: 'Improvement', ...row })),
-    ];
-
-    const csvData = allData.map(row => ({
-      'Category': row.Category,
-      'Habitat': row.type,
-      'Distinctiveness': row.distinctiveness,
-      '# Parcels': row.parcels,
-      'Size': formatNumber(row.area),
-      'HUs': formatNumber(row.HUs || 0),
-    }));
-
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const triggerDownload = (blob, filename) => {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-habitat-summary.csv');
+    link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleExportXML = () => {
+    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
+    const dataToExport = {
+      habitatSummary: {
+        baseline: { habitat: Object.values(filteredBaselineHabitats).flat() },
+        improvement: { habitat: Object.values(filteredImprovementHabitats).flat() }
+      }
+    };
+    const xmlDataStr = builder.build(dataToExport);
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+    triggerDownload(blob, 'bgs-habitat-summary.xml');
+  };
+
+  const handleExportJSON = () => {
+    const dataToExport = {
+      habitatSummary: {
+        baseline: Object.values(filteredBaselineHabitats).flat(),
+        improvement: Object.values(filteredImprovementHabitats).flat()
+      }
+    };
+    const jsonDataStr = JSON.stringify(dataToExport, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    triggerDownload(blob, 'bgs-habitat-summary.json');
   };
 
   return (
@@ -188,9 +194,10 @@ export default function HabitatSummary({ totalSize, numSites, habitats, improvem
                 </button>
               )}
             </div>
-            <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-              Export to CSV
-            </button>
+            <div className={styles.buttonGroup}>
+              <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+              <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+            </div>
           </div>
 
           <HabitatsCard

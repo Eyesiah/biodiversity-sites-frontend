@@ -12,6 +12,7 @@ import { HabitatsCard } from "../../components/HabitatsCard"
 import { CollapsibleRow } from "../../components/CollapsibleRow"
 import { HabitatSummaryTable } from "../../components/HabitatSummaryTable"
 import { DetailRow } from "../../components/DetailRow"
+import { XMLBuilder } from 'fast-xml-parser';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -35,7 +36,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
 
-    const site = await fetchSite(params.referenceNumber)
+    const site = await fetchSite(params.referenceNumber, true)
     if (!site)
     {
       return { notFound: true };
@@ -117,7 +118,13 @@ const InfoModal = ({ modalState, onClose }) => {
           setIsLoading(false);
         }
       };
-      fetchData();
+
+      if (modalState.data) {
+        setData(modalState.data);
+      }
+      else {
+        fetchData()
+      }
     }
   }, [show, type, name]);
 
@@ -158,6 +165,15 @@ const InfoModal = ({ modalState, onClose }) => {
         </dl>
       );
     }
+    
+    if (type === 'lsoa' && data) {
+      return (
+        <dl>
+          <DetailRow label="Index of Multiple Deprivation (IMD) Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Index of Multiple Deprivation (IMD) Decile" value={data.IMDDecile ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+        </dl>
+      );
+    }
 
     return <p>Details could not be loaded.</p>;
   };
@@ -169,8 +185,39 @@ const InfoModal = ({ modalState, onClose }) => {
   );
 };
 
+const handleExportXML = (site) => {
+  const builder = new XMLBuilder({
+    format: true,
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_",
+  });
+  const xmlDataStr = builder.build({ site });
+
+  const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `bgs-site-${site.referenceNumber}.xml`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const handleExportJSON = (site) => {
+  const jsonDataStr = JSON.stringify({ site }, null, 2);
+
+  const blob = new Blob([jsonDataStr], { type: 'application/json' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', `bgs-site-${site.referenceNumber}.json`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 const SiteDetailsCard = ({ site }) => {
-  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '' });
+  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null });
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -180,8 +227,8 @@ const SiteDetailsCard = ({ site }) => {
     return distances.length % 2 === 0 ? (distances[mid - 1] + distances[mid]) / 2 : distances[mid];
   }, [site.allocations]);
 
-  const showModal = (type, name, title) => {
-    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title });
+  const showModal = (type, name, title, data) => {
+    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data });
   };
 
   return (
@@ -212,6 +259,12 @@ const SiteDetailsCard = ({ site }) => {
         label="LPA" 
         value={
           site.lpaArea?.name ? <button onClick={() => showModal('lpa', site.lpaArea.name, site.lpaArea.name)} className={styles.linkButton}>{site.lpaArea.name}</button> : 'N/A'
+        } 
+      />
+      <DetailRow 
+        label="LSOA" 
+        value={
+          site.lsoa?.name ? <button onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)} className={styles.linkButton}>{site.lsoa.name}</button> : 'N/A'
         } 
       />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
@@ -373,7 +426,13 @@ export default function SitePage({ site, error }) {
         <div className={styles.header}>
           <Link href="/sites" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
-          <h2>{site.referenceNumber}</h2>
+          <div className={styles.titleWithButtons}>
+            <h2>{site.referenceNumber}</h2>
+            <div className={styles.buttonGroup}>
+              <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
+              <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
+            </div>
+          </div>
         </div>
 
         <div className={styles.detailsGrid}>

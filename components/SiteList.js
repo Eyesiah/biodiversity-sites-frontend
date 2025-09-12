@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { formatNumber } from '../lib/format';
 
-const SiteList = ({ sites, onSiteHover }) => {
+const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
 
   const sortedSites = useMemo(() => {
@@ -72,7 +72,7 @@ const SiteList = ({ sites, onSiteHover }) => {
       </thead>
       <tbody>
         {sortedSites.map((site) => (
-          <tr key={site.referenceNumber} onMouseEnter={() => onSiteHover(site)} onMouseLeave={() => onSiteHover(null)}>
+          <tr key={site.referenceNumber} onMouseEnter={() => onSiteHover(site)} onMouseLeave={() => onSiteHover(null)} onClick={() => onSiteClick(site)} style={{ cursor: 'pointer' }}>
             <td>
               <Link href={`/sites/${site.referenceNumber}`}>
                 {site.referenceNumber}
