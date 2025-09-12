@@ -148,7 +148,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
 
     const handleExportXML = () => {
         const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
-        const xmlDataStr = builder.build({ lpas: filteredAndSortedLPAs });
+        const xmlDataStr = builder.build({ localPlanningAuthorities: { lpa: filteredAndSortedLPAs } });
         const blob = new Blob([xmlDataStr], { type: 'application/xml' });
         triggerDownload(blob, 'local-planning-authorities.xml');
     };

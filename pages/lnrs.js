@@ -107,7 +107,7 @@ export default function LNRSAreasPage({ lnrs, error }) {
       ignoreAttributes: false,
       attributeNamePrefix: "@_",
     });
-    const xmlDataStr = builder.build({ lnrs: filteredAndSortedLNRS });
+    const xmlDataStr = builder.build({ localNatureRecoveryStrategies: { lnrs: filteredAndSortedLNRS } });
     const blob = new Blob([xmlDataStr], { type: 'application/xml' });
     triggerDownload(blob, 'lnrs-areas.xml');
   };
