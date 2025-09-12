@@ -217,7 +217,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, error }) {
                         <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
                     </div>
                 </div>
-                <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
+                <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
                 <table className="site-table">
                     <thead>
                         <tr>
