@@ -14,49 +14,16 @@ const Map = dynamic(() => import('../components/Map'), {
   loading: () => <p>Loading map...</p>
 });
 
-const fetchSpatialData = async (site) => {
-  if (!site.position) {
-    return { ...site, lsoaName: 'N/A', lnrsName: 'N/A' };
-  }
-
-  const [lat, lon] = site.position;
-  const lsoaUrl = `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Lower_layer_Super_Output_Areas_Dec_2011_Boundaries_Full_Clipped_BFC_EW_V3_2022/FeatureServer/0/query?geometry=${lon},${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=LSOA11NM&returnGeometry=false&f=json`;
-  const lnrsUrl = `https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query?geometry=${lon},${lat}&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=Name&returnGeometry=false&f=json`;
-
-  try {
-    const [lsoaRes, lnrsRes] = await Promise.all([fetch(lsoaUrl), fetch(lnrsUrl)]);
-    const [lsoaData, lnrsData] = await Promise.all([lsoaRes.json(), lnrsRes.json()]);
-
-    const lsoaName = lsoaData.features?.[0]?.attributes?.LSOA11NM.trim() || 'N/A';
-    const lnrsName = lnrsData.features?.[0]?.attributes?.Name.trim() || 'N/A';
-
-    return { ...site, lsoaName, lnrsName };
-  } catch (error) {
-    console.error(`Failed to fetch spatial data for site ${site.referenceNumber}`, error);
-    return { ...site, lsoaName: 'Error', lnrsName: 'Error' };
-  }
-};
-
-
 export async function getStaticProps() {
   try {
-    const allSites = await fetchAllSites();
+    const allSites = await fetchAllSites(0, true);
     const { processedSites, summary } = processSiteDataForIndex(allSites);
-
-    const sitesWithSpatialData = [];
-    const batchSize = 20;
-    for (let i = 0; i < processedSites.length; i += batchSize) {
-      const batch = processedSites.slice(i, i + batchSize);
-      const batchPromises = batch.map(fetchSpatialData);
-      const resolvedBatch = await Promise.all(batchPromises);
-      sitesWithSpatialData.push(...resolvedBatch);
-    }
 
     // The value of the `props` key will be
     // passed to the `HomePage` component.
     return {
       props: {
-        sites: sitesWithSpatialData,
+        sites: processedSites,
         summary,
         lastUpdated: new Date().toISOString(),
         error: null

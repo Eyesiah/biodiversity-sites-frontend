@@ -36,7 +36,7 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   try {
 
-    const site = await fetchSite(params.referenceNumber)
+    const site = await fetchSite(params.referenceNumber, true)
     if (!site)
     {
       return { notFound: true };
@@ -118,7 +118,13 @@ const InfoModal = ({ modalState, onClose }) => {
           setIsLoading(false);
         }
       };
-      fetchData();
+
+      if (modalState.data) {
+        setData(modalState.data);
+      }
+      else {
+        fetchData()
+      }
     }
   }, [show, type, name]);
 
@@ -156,6 +162,15 @@ const InfoModal = ({ modalState, onClose }) => {
               </ul>
             </div>
           )}
+        </dl>
+      );
+    }
+    
+    if (type === 'lsoa' && data) {
+      return (
+        <dl>
+          <DetailRow label="Index of Multiple Deprivation (IMD) Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Index of Multiple Deprivation (IMD) Decile" value={data.IMDDecile ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
         </dl>
       );
     }
@@ -202,7 +217,7 @@ const handleExportJSON = (site) => {
 };
 
 const SiteDetailsCard = ({ site }) => {
-  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '' });
+  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null });
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -212,8 +227,8 @@ const SiteDetailsCard = ({ site }) => {
     return distances.length % 2 === 0 ? (distances[mid - 1] + distances[mid]) / 2 : distances[mid];
   }, [site.allocations]);
 
-  const showModal = (type, name, title) => {
-    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title });
+  const showModal = (type, name, title, data) => {
+    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data });
   };
 
   return (
@@ -244,6 +259,12 @@ const SiteDetailsCard = ({ site }) => {
         label="LPA" 
         value={
           site.lpaArea?.name ? <button onClick={() => showModal('lpa', site.lpaArea.name, site.lpaArea.name)} className={styles.linkButton}>{site.lpaArea.name}</button> : 'N/A'
+        } 
+      />
+      <DetailRow 
+        label="LSOA" 
+        value={
+          site.lsoa?.name ? <button onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)} className={styles.linkButton}>{site.lsoa.name}</button> : 'N/A'
         } 
       />
       <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
