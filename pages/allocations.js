@@ -5,9 +5,9 @@ import { fetchAllSites } from '../lib/api';
 import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '../lib/geo';
 import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
-import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
-import Papa from 'papaparse';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow'
+import { XMLBuilder } from 'fast-xml-parser';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -134,30 +134,32 @@ export default function AllocationsPage({ allocations, error }) {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleExport = () => {
-    const csvData = sortedAllocations.map(alloc => ({
-      'BGS Ref.': alloc.srn,
-      'Planning Ref.': alloc.pr,
-      'Planning address': alloc.pn,
-      'LPA': alloc.lpa,
-      'Distance (km)': typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d,
-      'Area Units': formatNumber(alloc.au || 0),
-      'Hedgerow Units': formatNumber(alloc.hu || 0),
-      'Watercourse Units': formatNumber(alloc.wu || 0),
-    }));
-
-    const csv = Papa.unparse(csvData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const handleExportXML = () => {
+    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
+    const xmlDataStr = builder.build({ allocations: { allocation: sortedAllocations } });
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-allocations.csv');
+    link.setAttribute('download', 'bgs-allocations.xml');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
+  const handleExportJSON = () => {
+    const jsonDataStr = JSON.stringify({ allocations: sortedAllocations }, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-allocations.json');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   useEffect(() => {
     setIsSearching(true);
     const timerId = setTimeout(() => {
@@ -291,14 +293,10 @@ export default function AllocationsPage({ allocations, error }) {
             )}
             {isSearching && <div className="loader" />}
           </div>
-          <button 
-            onClick={handleExport} 
-            className="linkButton" 
-            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            disabled={sortedAllocations.length === 0}
-          >
-            Export to CSV
-          </button>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
+            <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+          </div>
         </div>
         <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
           Totals are recalculated as your search string is entered.
