@@ -34,6 +34,18 @@ export default function About() {
         <p>Boundaries of NCAs are used to identify the NCA in which a BGS site is located.</p>
         <p><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles</ExternalLink></p>
 
+        <h3>6. Local Nature Recovery Strategy (LNRS)</h3>
+        <p>LNRS stands for Local Nature Recovery Strategy, a legally required system of spatial strategies in England, mandated by the Environment Act 2021. Each region creates an LNRS to identify and map important habitats, set priorities for habitat creation and improvement, and coordinate actions to restore, create, and connect habitats to support nature's recovery.</p>
+        <p><ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies-areas-and-responsible-authorities">LNRSs and their Profiles</ExternalLink></p>
+
+        <h3>7. Lower Layer Super Output Areas (LSOAs)</h3>
+        <p>A Lower Layer Super Output Area (LSOA) is a geographic statistical unit in the UK, used for the publication of small-area statistics. Each LSOA comprises between 4 and 5 Output Areas (OAs) and contains 1,000 to 3,000 people (between 400 and 1,200 households).</p>
+        <p><ExternalLink href="https://www.data.gov.uk/dataset/c481f2d3-91fc-4767-ae10-2efdf6d58996/lower-layer-super-output-areas-lsoas">LSOAs and their Profiles</ExternalLink></p>
+        
+        <h3>8. Index of Multiple Deprivation (IMD)</h3>
+        <p>An official measure used in England to assess relative deprivation in small geographic areas by combining data from seven different domains: Income, Employment, Education, Skills and Training, Health Deprivation and Disability, Crime, Barriers to Housing and Services, and Living Environment. The IMD helps identify areas with high concentrations of different types of deprivation, allowing users to understand and compare levels of disadvantage across the country.</p>
+        <p><ExternalLink href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019">IMDs and their Profiles</ExternalLink></p>
+        
         <h2>How we processed the data</h2>
         <p>We enhanced the base data extracted from the register in a number of ways:</p>
 
