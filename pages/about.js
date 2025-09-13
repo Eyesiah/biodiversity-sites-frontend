@@ -36,7 +36,7 @@ export default function About() {
         <p><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles.</ExternalLink></p>
 
         <h3>6. Local Nature Recovery Strategy (LNRS)</h3>
-        <p>LNRS stands for Local Nature Recovery Strategy, a legally required system of spatial strategies in England, mandated by the Environment Act 2021. Each region creates an LNRS to identify and map important habitats, set priorities for habitat creation and improvement, and coordinate actions to restore, create, and connect habitats to support nature's recovery.</p>
+        <p>LNRS stands for Local Nature Recovery Strategy, a legally required system of spatial strategies in England, mandated by the Environment Act 2021. Each region creates an LNRS to identify and map important habitats, set priorities for habitat creation and improvement, and coordinate actions to restore, create, and connect habitats to support nature&apos;s recovery.</p>
         <p><ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies-areas-and-responsible-authorities">LNRSs and their Profiles.</ExternalLink></p>
 
         <h3>7. Lower Layer Super Output Areas (LSOAs)</h3>
