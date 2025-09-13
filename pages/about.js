@@ -25,15 +25,28 @@ export default function About() {
         <p>Details of the responsible bodies are taken from the .GOV list <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies">Conservation covenants: list of designated responsible bodies</ExternalLink>.</p>
 
         <h3>3. Locations</h3>
-        <p>Site locations are given but the precise location of allocations has to be deduced from the address using Google&apos;s Geocoder. This sometimes doesn&apos;t work well, so some checking is needed. If it fails, the location falls back to the LPA&apos;s centroid.</p>
+        <p>BGS Site locations are given but the precise location of allocations addresses has to be deduced using the Google Geocoder. Where the address is incomplete or missing, the location falls back to the centre point of the LPA.</p>
 
         <h3>4. Local Planning Authorities (LPAs)</h3>
-        <p>Links to LPA planning portals for searching for an application have been manually gathered.</p>
+        <p>Links to the government list of LPA.</p>
+        <p><ExternalLink href="https://geoportal.statistics.gov.uk/datasets/local-planning-authorities-april-2023-names-and-codes-in-the-uk/explore"> List of all LPAs.</ExternalLink></p>
 
         <h3>5. National Character Areas (NCAs)</h3>
         <p>Boundaries of NCAs are used to identify the NCA in which a BGS site is located.</p>
-        <p><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles</ExternalLink></p>
+        <p><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles.</ExternalLink></p>
 
+        <h3>6. Local Nature Recovery Strategy (LNRS)</h3>
+        <p>LNRS stands for Local Nature Recovery Strategy, a legally required system of spatial strategies in England, mandated by the Environment Act 2021. Each region creates an LNRS to identify and map important habitats, set priorities for habitat creation and improvement, and coordinate actions to restore, create, and connect habitats to support nature&apos;s recovery.</p>
+        <p><ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies-areas-and-responsible-authorities">LNRSs and their Profiles.</ExternalLink></p>
+
+        <h3>7. Lower Layer Super Output Areas (LSOAs)</h3>
+        <p>A Lower Layer Super Output Area (LSOA) is a geographic statistical unit in the UK, used for the publication of small-area statistics. Each LSOA comprises between 4 and 5 Output Areas (OAs) and contains 1,000 to 3,000 people (between 400 and 1,200 households).</p>
+        <p><ExternalLink href="https://www.data.gov.uk/dataset/c481f2d3-91fc-4767-ae10-2efdf6d58996/lower-layer-super-output-areas-lsoas">LSOAs and their Profiles.</ExternalLink></p>
+        
+        <h3>8. Index of Multiple Deprivation (IMD)</h3>
+        <p>An official measure used in England to assess relative deprivation in small geographic areas by combining data from seven different domains: Income, Employment, Education, Skills and Training, Health Deprivation and Disability, Crime, Barriers to Housing and Services, and Living Environment. The IMD helps identify areas with high concentrations of different types of deprivation, allowing users to understand and compare levels of disadvantage across the country.</p>
+        <p><ExternalLink href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019">IMDs and their Profiles</ExternalLink></p>
+        
         <h2>How we processed the data</h2>
         <p>We enhanced the base data extracted from the register in a number of ways:</p>
 

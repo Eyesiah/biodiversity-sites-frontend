@@ -7,7 +7,7 @@ import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -174,8 +174,8 @@ export default function AllocationsPage({ allocations, error }) {
   }, [inputValue]);
 
   const openChartWindow = (url) => {
-    const width = window.screen.width * 0.6;
-    const height = window.screen.height * 1;
+    const width = window.screen.width * 0.5;
+    const height = window.screen.height * .65;
     window.open(url, 'chartWindow', `width=${width},height=${height}`);
   };
 
@@ -201,6 +201,9 @@ export default function AllocationsPage({ allocations, error }) {
     const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hu || 0), 0);
     const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.wu || 0), 0);
 
+    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
+    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
+
     const distances = source
       .map(alloc => alloc.d)
       .filter(d => typeof d === 'number')
@@ -216,18 +219,15 @@ export default function AllocationsPage({ allocations, error }) {
       }
     }
 
-    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
-    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
-
     return {
       totalArea,
       totalHedgerow,
       totalWatercourse,
       medianDistance,
+      uniquePlanningRefs,
+      totalUniquePlanningRefs,
     };
-  }, [filteredAllocations]);
-    const uniquePlanningRefs = new Set(filteredAllocations.map(alloc => alloc.pr)).size;
-    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
+  }, [filteredAllocations, allocations]);
 
   const distanceDistributionData = useMemo(() => {
     const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
@@ -250,6 +250,32 @@ export default function AllocationsPage({ allocations, error }) {
     return cumulativeData;
   }, [filteredAllocations]);
 
+ const habitatUnitDistributionData = useMemo(() => {
+    const allUnits = filteredAllocations.flatMap(alloc => [alloc.au, alloc.hu, alloc.wu]).filter(u => typeof u === 'number' && u > 0);
+    if (allUnits.length === 0) return [];
+    const totalCount = allUnits.length;
+
+    const bins = {
+      '0-1 HUs': 0,
+      '1-2 HUs': 0,
+      '2-3 HUs': 0,
+      '3-4 HUs': 0,
+      '4-5 HUs': 0,
+      '>5 HUs': 0,
+    };
+
+    for (const unit of allUnits) {
+      if (unit <= 1) bins['0-1 HUs']++;
+      else if (unit <= 2) bins['1-2 HUs']++;
+      else if (unit <= 3) bins['2-3 HUs']++;
+      else if (unit <= 4) bins['3-4 HUs']++;
+      else if (unit <= 5) bins['4-5 HUs']++;
+      else bins['>5 HUs']++;
+    }
+
+    return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
+  }, [filteredAllocations]);
+
   if (error) {
     return (
       <div className="container">
@@ -269,7 +295,7 @@ export default function AllocationsPage({ allocations, error }) {
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{uniquePlanningRefs}</strong> out of <strong>{totalUniquePlanningRefs}</strong> planning applications.
+          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.
           </p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
@@ -301,7 +327,7 @@ export default function AllocationsPage({ allocations, error }) {
         <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
           Totals are recalculated as your search string is entered.
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '1rem 0 6rem 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -328,18 +354,33 @@ export default function AllocationsPage({ allocations, error }) {
               </button>
             </div>
           </div>
-          <div style={{ width: '550px', height: '300px' }}>
-            <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={distanceDistributionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-                <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
-                <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
-                <Legend />
-                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <div style={{ width: '550px', height: '300px' }}>
+              <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={distanceDistributionData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+                  <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+                  <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
+                  <Legend />
+                  <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={{ width: '600px', height: '320px' }}>
+              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={habitatUnitDistributionData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" name="HUs" />
+                  <YAxis name="Count" />
+                  <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
+                  <Legend />
+                  <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
         <table className="site-table">

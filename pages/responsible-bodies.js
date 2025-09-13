@@ -5,6 +5,7 @@ import ExternalLink from '../components/ExternalLink';
 import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '../lib/format';
+import { useSortableData } from '../lib/hooks';
 
 export async function getStaticProps() {
   try {
@@ -43,7 +44,6 @@ export async function getStaticProps() {
 const DEBOUNCE_DELAY_MS = 300;
 
 export default function ResponsibleBodiesPage({ responsibleBodies }) {
-  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
@@ -57,9 +57,8 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
     };
   }, [inputValue]);
 
-  const filteredAndSortedBodies = useMemo(() => {
+  const filteredBodies = useMemo(() => {
     let filtered = [...responsibleBodies];
-
     if (debouncedSearchTerm) {
       const lowercasedTerm = debouncedSearchTerm.toLowerCase();
       filtered = filtered.filter(body =>
@@ -68,39 +67,13 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
         (body.organisationType?.toLowerCase() || '').includes(lowercasedTerm) ||
         (body.address?.toLowerCase() || '').includes(lowercasedTerm)
       );
+      return filtered;
     }
+    return responsibleBodies;
+  }, [responsibleBodies, debouncedSearchTerm]);
 
-    if (sortConfig.key) {
-      filtered.sort((a, b) => {
-        const aValue = a[sortConfig.key];
-        const bValue = b[sortConfig.key];
-        if (aValue < bValue) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
+  const { items: filteredAndSortedBodies, requestSort, getSortIndicator } = useSortableData(filteredBodies, { key: 'name', direction: 'ascending' });
 
-    return filtered;
-  }, [responsibleBodies, debouncedSearchTerm, sortConfig]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const getSortIndicator = (name) => {
-    if (sortConfig.key !== name) {
-      return '';
-    }
-    return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
-  };
 
   // Check which columns have data to decide whether to render them
   const hasDesignationDate = useMemo(() => responsibleBodies.some(body => body.designationDate), [responsibleBodies]);
