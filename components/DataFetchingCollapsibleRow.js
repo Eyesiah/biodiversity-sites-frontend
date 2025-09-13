@@ -9,8 +9,9 @@ export const DataFetchingCollapsibleRow = ({
   mainRow, 
   dataUrl, 
   renderDetails, 
-  dataExtractor, 
-  colSpan 
+  dataExtractor,
+  colSpan,
+  onRowClick
 }) => {
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +51,7 @@ export const DataFetchingCollapsibleRow = ({
       collapsibleContent={collapsibleContent}
       colSpan={colSpan}
       onToggle={onToggle}
+      onMainRowClick={onRowClick}
     />
   );
 };

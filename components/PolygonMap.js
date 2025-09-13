@@ -29,7 +29,7 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height = '85vh' }) => {
+const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height = '85vh', style = lnrsStyle }) => {
   const [geoJson, setGeoJson] = useState(null);
   const cache = useRef({});
   const [mapKey, setMapKey] = useState(Date.now());
@@ -43,7 +43,13 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
         setMapKey(name);
         return;
       }
-      const url = `${geoJsonUrl}?where=${nameProperty}='${name.replace(/'/g, "''")}'&outFields=*&returnGeometry=true&f=geojson`;
+      // Use a different field for the query if the geoJsonUrl indicates it's for LPAs
+      let queryField = geoJsonUrl.includes('LPA_APR_2023_UK_BUC_V2') ? 'LPA23NM' : nameProperty;
+      if (geoJsonUrl.includes('National_Character_Areas_England')) {
+        queryField = 'NCA_Name';
+      }
+
+      const url = `${geoJsonUrl}?where=${queryField}='${name.replace(/'/g, "''")}'&outFields=*&returnGeometry=true&f=geojson`;
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -61,7 +67,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
   return (
     <MapContainer key={mapKey} center={[52.8, -1.5]} zoom={6.5} style={{ height, width: '100%' }}>
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
-      {geoJson && <GeoJSON data={geoJson} style={lnrsStyle} />}
+      {geoJson && <GeoJSON data={geoJson} style={style} />}
       <MapController geoJson={geoJson} />
       {sites.map(site => (
         site.position && <Marker key={site.referenceNumber} position={site.position} icon={defaultSiteIcon}>
