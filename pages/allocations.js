@@ -253,6 +253,7 @@ export default function AllocationsPage({ allocations, error }) {
  const habitatUnitDistributionData = useMemo(() => {
     const allUnits = filteredAllocations.flatMap(alloc => [alloc.au, alloc.hu, alloc.wu]).filter(u => typeof u === 'number' && u > 0);
     if (allUnits.length === 0) return [];
+    const totalCount = allUnits.length;
 
     const bins = {
       '0-1': 0,
@@ -272,7 +273,7 @@ export default function AllocationsPage({ allocations, error }) {
       else bins['>5']++;
     }
 
-    return Object.entries(bins).map(([name, count]) => ({ name, count }));
+    return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
   }, [filteredAllocations]);
 
   if (error) {
@@ -374,7 +375,7 @@ export default function AllocationsPage({ allocations, error }) {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" name="HU Size" />
                   <YAxis name="Count" />
-                  <Tooltip />
+                  <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
                   <Legend />
                   <Bar dataKey="count" fill="#82ca9d" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
                 </BarChart>
