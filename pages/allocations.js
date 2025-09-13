@@ -256,21 +256,21 @@ export default function AllocationsPage({ allocations, error }) {
     const totalCount = allUnits.length;
 
     const bins = {
-      '0-1': 0,
-      '1-2': 0,
-      '2-3': 0,
-      '3-4': 0,
-      '4-5': 0,
-      '>5': 0,
+      '0-1 HUs': 0,
+      '1-2 HUs': 0,
+      '2-3 HUs': 0,
+      '3-4 HUs': 0,
+      '4-5 HUs': 0,
+      '>5 HUs': 0,
     };
 
     for (const unit of allUnits) {
-      if (unit <= 1) bins['0-1']++;
-      else if (unit <= 2) bins['1-2']++;
-      else if (unit <= 3) bins['2-3']++;
-      else if (unit <= 4) bins['3-4']++;
-      else if (unit <= 5) bins['4-5']++;
-      else bins['>5']++;
+      if (unit <= 1) bins['0-1 HUs']++;
+      else if (unit <= 2) bins['1-2 HUs']++;
+      else if (unit <= 3) bins['2-3 HUs']++;
+      else if (unit <= 4) bins['3-4 HUs']++;
+      else if (unit <= 5) bins['4-5 HUs']++;
+      else bins['>5 HUs']++;
     }
 
     return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
@@ -369,11 +369,11 @@ export default function AllocationsPage({ allocations, error }) {
               </ResponsiveContainer>
             </div>
             <div style={{ width: '600px', height: '320px' }}>
-              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Value Distribution</h4>
+              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={habitatUnitDistributionData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" name="HU Value" />
+                  <XAxis dataKey="name" name="HUs" />
                   <YAxis name="Count" />
                   <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
                   <Legend />
