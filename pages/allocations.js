@@ -192,9 +192,6 @@ export default function AllocationsPage({ allocations, error }) {
     );
   }, [allocations, debouncedSearchTerm]);
 
-  const uniquePlanningRefs = useMemo(() => new Set(filteredAllocations.map(alloc => alloc.pr)).size, [filteredAllocations]);
-  const totalUniquePlanningRefs = useMemo(() => new Set(allocations.map(alloc => alloc.pr)).size, [allocations]);
-
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
 
   const summaryData = useMemo(() => {
@@ -203,6 +200,9 @@ export default function AllocationsPage({ allocations, error }) {
     const totalArea = source.reduce((sum, alloc) => sum + (alloc.au || 0), 0);
     const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hu || 0), 0);
     const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.wu || 0), 0);
+
+    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
+    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
     const distances = source
       .map(alloc => alloc.d)
@@ -224,6 +224,8 @@ export default function AllocationsPage({ allocations, error }) {
       totalHedgerow,
       totalWatercourse,
       medianDistance,
+      uniquePlanningRefs,
+      totalUniquePlanningRefs,
     };
   }, [filteredAllocations]);
 
@@ -293,7 +295,7 @@ export default function AllocationsPage({ allocations, error }) {
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{uniquePlanningRefs}</strong> out of <strong>{totalUniquePlanningRefs}</strong> planning applications.
+          <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.
           </p>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">

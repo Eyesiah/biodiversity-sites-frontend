@@ -53,9 +53,10 @@ export default function ImdDecileDistributionChartPage({ chartData, error }) {
 
   return (
     <div style={{ backgroundColor: '#F9F6EE', padding: '1rem', height: '100vh' }}>
-      <Head><title>BGS IMD Decile Distribution</title></Head>
+      <Head><title>BGS IMD Decile Summary</title></Head>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', marginBottom: '1rem' }}>
         <button onClick={() => window.close()} className="linkButton" style={{ justifySelf: 'start', fontSize: '1rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>Close</button>
+        <h2 style={{ margin: 0, textAlign: 'center' }}>BGS IMD Decile Summary</h2>
      </div>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={chartData} margin={{ top: 40, right: 30, left: 20, bottom: 15 }}>
