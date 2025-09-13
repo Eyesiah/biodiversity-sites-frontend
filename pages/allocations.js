@@ -192,6 +192,9 @@ export default function AllocationsPage({ allocations, error }) {
     );
   }, [allocations, debouncedSearchTerm]);
 
+  const uniquePlanningRefs = useMemo(() => new Set(filteredAllocations.map(alloc => alloc.pr)).size, [filteredAllocations]);
+  const totalUniquePlanningRefs = useMemo(() => new Set(allocations.map(alloc => alloc.pr)).size, [allocations]);
+
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
 
   const summaryData = useMemo(() => {
@@ -216,9 +219,6 @@ export default function AllocationsPage({ allocations, error }) {
       }
     }
 
-    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
-    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
-
     return {
       totalArea,
       totalHedgerow,
@@ -226,8 +226,6 @@ export default function AllocationsPage({ allocations, error }) {
       medianDistance,
     };
   }, [filteredAllocations]);
-    const uniquePlanningRefs = new Set(filteredAllocations.map(alloc => alloc.pr)).size;
-    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
   const distanceDistributionData = useMemo(() => {
     const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);

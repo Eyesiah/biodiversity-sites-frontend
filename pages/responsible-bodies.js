@@ -2,7 +2,6 @@ import Head from 'next/head';
 import fs from 'fs';
 import path from 'path';
 import ExternalLink from '../components/ExternalLink';
-import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '../lib/format';
 import { useSortableData } from '../lib/hooks';
@@ -58,6 +57,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
   }, [inputValue]);
 
   const filteredBodies = useMemo(() => {
+    let filtered = [...responsibleBodies];
     if (debouncedSearchTerm) {
       const lowercasedTerm = debouncedSearchTerm.toLowerCase();
       filtered = filtered.filter(body =>
