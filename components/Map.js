@@ -25,10 +25,10 @@ const highlightedSiteIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-const lsoaStyle = { color: '#ff7800', weight: 3, opacity: 1, fillColor: '#ff7800', fillOpacity: 0.2 };
+const lsoaStyle = { color: '#f1c40f', weight: 3, opacity: 1, fillColor: '#f1c40f', fillOpacity: 0.2 };
 const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8 };
 const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.1 };
-const lpaStyle = { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.1 };
+const lpaStyle = { color: '#282c34', weight: 2, opacity: 0.8, fillColor: '#282c34', fillOpacity: 0.2 };
 
 function MapController({ lsoa }) {
   const map = useMap();
@@ -191,7 +191,7 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
                 display: 'inline-block',
                 width: '12px',
                 height: '12px',
-                marginLeft: '8px',
+                marginLeft: '5px',
                 backgroundColor: lpaStyle.color,
                 border: '1px solid #555'
               }}></span><br />
