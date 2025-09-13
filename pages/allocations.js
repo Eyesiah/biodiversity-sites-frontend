@@ -368,7 +368,7 @@ export default function AllocationsPage({ allocations, error }) {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div style={{ width: '550px', height: '300px' }}>
+            <div style={{ width: '550px', height: '320px' }}>
               <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Size Distribution</h4>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={habitatUnitDistributionData}>
