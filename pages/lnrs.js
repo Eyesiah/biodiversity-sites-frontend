@@ -175,7 +175,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         <td className="numeric-data">{formatNumber(item.size, 0)}</td>
                         <td>
                           <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
-                            Show
+                            Show map
                           </button>
                         </td>
                         <td className="centered-data">{item.adjacents?.length || 0}</td>
