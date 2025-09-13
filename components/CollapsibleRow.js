@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import styles from '../styles/SiteDetails.module.css';
 
-export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle }) => {
+export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle, onMainRowClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleToggle = () => {
+  const handleToggle = (e) => {
+    // If a specific main row click handler is provided, let it control logic.
+    if (onMainRowClick) {
+      onMainRowClick(e);
+    }
+    // Default behavior is to toggle.
     const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
+    setIsOpen(newIsOpen);    
     if (onToggle) {
       onToggle(newIsOpen);
     }

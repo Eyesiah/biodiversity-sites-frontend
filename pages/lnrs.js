@@ -1,11 +1,18 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import fs from 'fs';
 import path from 'path';
 import { formatNumber } from '../lib/format';
 import { CollapsibleRow } from '../components/CollapsibleRow';
+import { useSortableData } from '../lib/hooks';
 import styles from '../styles/SiteDetails.module.css';
 import { XMLBuilder } from 'fast-xml-parser';
+
+const PolygonMap = dynamic(() => import('../components/PolygonMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 export async function getStaticProps() {
   try {
@@ -38,9 +45,9 @@ export async function getStaticProps() {
 const DEBOUNCE_DELAY_MS = 300;
 
 export default function LNRSAreasPage({ lnrs, error }) {
-  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [selectedLnrs, setSelectedLnrs] = useState(null);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -50,7 +57,7 @@ export default function LNRSAreasPage({ lnrs, error }) {
     return () => clearTimeout(timerId);
   }, [inputValue]);
 
-  const filteredAndSortedLNRS = useMemo(() => {
+  const filteredLNRS = useMemo(() => {
     let filtered = [...lnrs];
 
     if (debouncedSearchTerm) {
@@ -59,33 +66,13 @@ export default function LNRSAreasPage({ lnrs, error }) {
         (item.name?.toLowerCase() || '').includes(lowercasedTerm)
       );
     }
-
-    if (sortConfig.key) {
-      filtered.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-
     return filtered;
-  }, [lnrs, debouncedSearchTerm, sortConfig]);
+  }, [lnrs, debouncedSearchTerm]);
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
+  const { items: filteredAndSortedLNRS, requestSort, getSortIndicator } = useSortableData(filteredLNRS, { key: 'name', direction: 'ascending' });
 
-  const getSortIndicator = (name) => {
-    if (sortConfig.key !== name) return '';
-    return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
+  const handleMapSelection = (item) => {
+    setSelectedLnrs(item);
   };
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
@@ -125,78 +112,96 @@ export default function LNRSAreasPage({ lnrs, error }) {
   return (
     <div className="container">
       <Head>
-        <title>Local Nature Recovery Strategies</title>
+        <title>Local Nature Recovery Strategy Sites</title>
       </Head>
       <main className="main">
-        <h1 className="title">Local Nature Recovery Strategies</h1>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-          <div className="search-container" style={{ margin: 0 }}>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search by LNRS name."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              autoFocus
+        <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+          <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
+            <PolygonMap 
+              selectedItem={selectedLnrs}
+              geoJsonUrl="https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query"
+              nameProperty="name"
             />
-            {inputValue && (
-              <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
-            )}
           </div>
-          <div className={styles.buttonGroup}>
-            <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
-            <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+          <div style={{ flex: '1 1 67%' }}>
+            <h1 className="title">Local Nature Recovery Strategy Sites</h1>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+              <div className="search-container" style={{ margin: 0 }}>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search by LNRS name."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  autoFocus
+                />
+                {inputValue && (
+                  <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
+                )}
+              </div>
+              <div className={styles.buttonGroup}>
+                <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+                <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+              </div>
+            </div>
+            <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
+            <table className="site-table">
+              <thead>
+                <tr>
+                  <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
+                  <th onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</th>
+                  <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
+                  <th>Map</th>
+                  <th onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAndSortedLNRS.map((item) => (
+                  <CollapsibleRow 
+                    key={item.id}
+                    mainRow={(
+                      <>
+                        <td>{item.id}</td>
+                        <td>{item.name}</td>
+                        <td className="numeric-data">{formatNumber(item.size, 0)}</td>
+                        <td>
+                          <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
+                            Show
+                          </button>
+                        </td>
+                        <td className="centered-data">{item.adjacents?.length || 0}</td>
+                      </>
+                    )}
+                    collapsibleContent={(
+                      <div style={{ padding: '0.5rem' }}>
+                        <h4>Adjacent LNRS Areas</h4>
+                        {item.adjacents && item.adjacents.length > 0 ? (
+                          <table className={styles.subTable}>
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Area (ha)</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {item.adjacents.map(adj => (
+                                <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <p>No adjacency data available.</p>
+                        )}
+                      </div>
+                    )}
+                    colSpan={5}
+                  />
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
-        <table className="site-table">
-          <thead>
-            <tr>
-              <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
-              <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-              <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-              <th onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAndSortedLNRS.map((item) => {
-              const mainRow = (
-                <>
-                  <td>{item.id}</td>
-                  <td>{item.name}</td>
-                  <td className="numeric-data">{formatNumber(item.size, 0)}</td>
-                  <td className="centered-data">{item.adjacents?.length || 0}</td>
-                </>
-              );
-
-              const collapsibleContent = (
-                <div style={{ padding: '0.5rem' }}>
-                  <h4>Adjacent LNRS Areas</h4>
-                  {item.adjacents && item.adjacents.length > 0 ? (
-                    <table className={styles.subTable}>
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Name</th>
-                          <th>Area (ha)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {item.adjacents.map(adj => (
-                          <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>No adjacency data available.</p>
-                  )}
-                </div>
-              );
-
-              return <CollapsibleRow key={item.id} mainRow={mainRow} collapsibleContent={collapsibleContent} colSpan={4} />;
-            })}
-          </tbody>
-        </table>
       </main>
     </div>
   );
