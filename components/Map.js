@@ -25,20 +25,6 @@ const highlightedSiteIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
-const lsoaStyle = { color: '#ff7800', weight: 3, opacity: 1, fillColor: '#ff7800', fillOpacity: 0.2 };
-const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8 };
-
-function MapController({ lsoa }) {
-  const map = useMap();
-  useEffect(() => {
-    if (lsoa) {
-      const layer = L.geoJSON(lsoa);
-      map.fitBounds(layer.getBounds());
-    }
-  }, [lsoa, map]);
-  return null;
-}
-
 
 // --- Map Component ---
 const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {

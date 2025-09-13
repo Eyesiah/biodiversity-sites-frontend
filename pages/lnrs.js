@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import fs from 'fs';
 import path from 'path';
+import { fetchAllSites } from '../lib/api';
 import { formatNumber } from '../lib/format';
 import { CollapsibleRow } from '../components/CollapsibleRow';
 import { useSortableData } from '../lib/hooks';
@@ -14,7 +15,7 @@ const PolygonMap = dynamic(() => import('../components/PolygonMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-export async function getStaticProps() {
+export async function getStaticProps() {  
   try {
     const jsonPath = path.join(process.cwd(), 'data', 'LNRSs.json');
     const jsonData = fs.readFileSync(jsonPath, 'utf-8');
@@ -26,10 +27,12 @@ export async function getStaticProps() {
     });
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
+    const allSites = await fetchAllSites(0, true);
 
     return {
       props: {
         lnrs,
+        sites: allSites.map(s => ({ referenceNumber: s.referenceNumber, lnrsName: s.lnrsName || null, position: [s.latitude, s.longitude], responsibleBodies: s.responsibleBodies || [], lpaName: s.lpaArea?.name || null, ncaName: s.nationalCharacterArea?.name || null, siteSize: s.siteSize || 0 })),
         lastUpdated: new Date().toISOString(),
         error: null,
       },
@@ -44,7 +47,7 @@ export async function getStaticProps() {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function LNRSAreasPage({ lnrs, error }) {
+export default function LNRSAreasPage({ lnrs, sites, error }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedLnrs, setSelectedLnrs] = useState(null);
@@ -70,6 +73,11 @@ export default function LNRSAreasPage({ lnrs, error }) {
   }, [lnrs, debouncedSearchTerm]);
 
   const { items: filteredAndSortedLNRS, requestSort, getSortIndicator } = useSortableData(filteredLNRS, { key: 'name', direction: 'ascending' });
+
+  const sitesInSelectedLNRS = useMemo(() => {
+    if (!selectedLnrs) return [];
+    return (sites || []).filter(site => site.lnrsName === selectedLnrs.name);
+  }, [selectedLnrs, sites]);
 
   const handleMapSelection = (item) => {
     setSelectedLnrs(item);
@@ -116,14 +124,15 @@ export default function LNRSAreasPage({ lnrs, error }) {
       </Head>
       <main className="main">
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-          <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
+          <div style={{ flex: '1 1 50%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
             <PolygonMap 
               selectedItem={selectedLnrs}
               geoJsonUrl="https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query"
               nameProperty="name"
+              sites={sitesInSelectedLNRS}
             />
           </div>
-          <div style={{ flex: '1 1 67%' }}>
+          <div style={{ flex: '1 1 50%' }}>
             <h1 className="title">Local Nature Recovery Strategy Sites</h1>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
               <div className="search-container" style={{ margin: 0 }}>
