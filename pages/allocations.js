@@ -368,16 +368,16 @@ export default function AllocationsPage({ allocations, error }) {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div style={{ width: '550px', height: '320px' }}>
-              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Size Distribution</h4>
+            <div style={{ width: '600px', height: '320px' }}>
+              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Value Distribution</h4>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={habitatUnitDistributionData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" name="HU Size" />
+                  <XAxis dataKey="name" name="HU Value" />
                   <YAxis name="Count" />
                   <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
                   <Legend />
-                  <Bar dataKey="count" fill="#82ca9d" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+                  <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
