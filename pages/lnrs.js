@@ -20,14 +20,23 @@ export async function getStaticProps() {
     const jsonPath = path.join(process.cwd(), 'data', 'LNRSs.json');
     const jsonData = fs.readFileSync(jsonPath, 'utf-8');
     const rawLnrs = JSON.parse(jsonData);
+    const allSites = await fetchAllSites(0, true);
+
+    const siteCountsByLnrs = allSites.reduce((acc, site) => {
+      if (site.lnrsName) {
+        acc[site.lnrsName] = (acc[site.lnrsName] || 0) + 1;
+      }
+      return acc;
+    }, {});
+
     // Convert size from square meters to hectares
     rawLnrs.forEach(lnrs => {
       lnrs.size = lnrs.size / 10000;
+      lnrs.siteCount = siteCountsByLnrs[lnrs.name] || 0;
       lnrs.adjacents.forEach(adj => adj.size = adj.size / 10000);
     });
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
-    const allSites = await fetchAllSites(0, true);
 
     return {
       props: {
@@ -161,6 +170,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                   <th onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</th>
                   <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
                   <th>Map</th>
+                  <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
                   <th onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</th>
                 </tr>
               </thead>
@@ -178,6 +188,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                             Show map
                           </button>
                         </td>
+                        <td className="centered-data">{item.siteCount}</td>
                         <td className="centered-data">{item.adjacents?.length || 0}</td>
                       </>
                     )}
@@ -204,7 +215,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         )}
                       </div>
                     )}
-                    colSpan={5}
+                    colSpan={6}
                   />
                 ))}
               </tbody>
