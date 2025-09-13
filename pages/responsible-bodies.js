@@ -2,6 +2,7 @@ import Head from 'next/head';
 import fs from 'fs';
 import path from 'path';
 import ExternalLink from '../components/ExternalLink';
+import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '../lib/format';
 import { useSortableData } from '../lib/hooks';
