@@ -7,7 +7,7 @@ import { formatNumber, slugify } from '../lib/format';
 import { useSortableData, getSortClassName } from '../lib/hooks';
 import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '../styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
@@ -250,6 +250,31 @@ export default function AllocationsPage({ allocations, error }) {
     return cumulativeData;
   }, [filteredAllocations]);
 
+ const habitatUnitDistributionData = useMemo(() => {
+    const allUnits = filteredAllocations.flatMap(alloc => [alloc.au, alloc.hu, alloc.wu]).filter(u => typeof u === 'number' && u > 0);
+    if (allUnits.length === 0) return [];
+
+    const bins = {
+      '0-1': 0,
+      '1-2': 0,
+      '2-3': 0,
+      '3-4': 0,
+      '4-5': 0,
+      '>5': 0,
+    };
+
+    for (const unit of allUnits) {
+      if (unit <= 1) bins['0-1']++;
+      else if (unit <= 2) bins['1-2']++;
+      else if (unit <= 3) bins['2-3']++;
+      else if (unit <= 4) bins['3-4']++;
+      else if (unit <= 5) bins['4-5']++;
+      else bins['>5']++;
+    }
+
+    return Object.entries(bins).map(([name, count]) => ({ name, count }));
+  }, [filteredAllocations]);
+
   if (error) {
     return (
       <div className="container">
@@ -301,7 +326,7 @@ export default function AllocationsPage({ allocations, error }) {
         <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
           Totals are recalculated as your search string is entered.
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '2rem', margin: '1rem 0 6rem 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -328,18 +353,33 @@ export default function AllocationsPage({ allocations, error }) {
               </button>
             </div>
           </div>
-          <div style={{ width: '550px', height: '300px' }}>
-            <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={distanceDistributionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-                <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
-                <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
-                <Legend />
-                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+          <div style={{ display: 'flex', gap: '2rem' }}>
+            <div style={{ width: '550px', height: '300px' }}>
+              <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={distanceDistributionData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+                  <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+                  <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
+                  <Legend />
+                  <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            <div style={{ width: '550px', height: '300px' }}>
+              <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Size Distribution</h4>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={habitatUnitDistributionData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" name="HU Size" />
+                  <YAxis name="Count" />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count" fill="#82ca9d" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
         <table className="site-table">
