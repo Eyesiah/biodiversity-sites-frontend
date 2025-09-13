@@ -25,7 +25,7 @@ export default function About() {
         <p>Details of the responsible bodies are taken from the .GOV list <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies">Conservation covenants: list of designated responsible bodies</ExternalLink>.</p>
 
         <h3>3. Locations</h3>
-        <p>Site locations are given but the precise location of allocations has to be deduced from the address using Google&apos;s Geocoder. This sometimes doesn&apos;t work well, so some checking is needed. If it fails, the location falls back to the LPA&apos;s centroid.</p>
+        <p>Site locations are given but the precise location of allocations has to be deduced from the address using the Google Geocoder. This sometimes doesn&apos;t work well, so some checking is needed. If it fails, the location falls back to the LPA&apos;s centroid.</p>
 
         <h3>4. Local Planning Authorities (LPAs)</h3>
         <p>Links to the government list of LPA.</p>
