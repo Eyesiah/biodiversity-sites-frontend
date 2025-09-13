@@ -126,7 +126,7 @@ const InfoModal = ({ modalState, onClose }) => {
         fetchData()
       }
     }
-  }, [show, type, name]);
+  }, [show, type, name, modalState.data]);
 
   const renderContent = () => {
     if (isLoading) return <p>Loading...</p>;
