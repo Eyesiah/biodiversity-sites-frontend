@@ -227,7 +227,7 @@ export default function AllocationsPage({ allocations, error }) {
       uniquePlanningRefs,
       totalUniquePlanningRefs,
     };
-  }, [filteredAllocations]);
+  }, [filteredAllocations, allocations]);
 
   const distanceDistributionData = useMemo(() => {
     const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
