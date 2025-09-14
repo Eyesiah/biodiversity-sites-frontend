@@ -9,7 +9,13 @@ import { useSortableData } from '@/lib/hooks';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteForListView } from '@/lib/sites';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
-import SiteList from '@/components/SiteList'
+import SiteList from '@/components/SiteList';
+import dynamic from 'next/dynamic';
+
+const SiteMap = dynamic(() => import('../components/Maps/SiteMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 export async function getStaticProps() {
   try {
@@ -62,26 +68,26 @@ export async function getStaticProps() {
 }
 
 
-const BodyRow = ({ body }) => {
+const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
   const mainRow = (
     <>
       <td>{body.name}</td>
-      {<td>{body.sites.length}</td>}
-      {<td>{body.designationDate}</td>}
-      {<td>{body.expertise}</td>}
-      {<td>{body.organisationType}</td>}
-      {<td>{body.address}</td>}
-      {<td>
+      <td>{body.sites.length}</td>
+      <td>{body.designationDate}</td>
+      <td>{body.expertise}</td>
+      <td>{body.organisationType}</td>
+      <td>{body.address}</td>
+      <td>
         {body.emails.map(email => (
           <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
         ))}
-      </td>}
-      {<td>{body.telephone}</td>}
+      </td>
+      <td>{body.telephone}</td>
     </>
   )
 
   const collapsibleContent = (
-    <SiteList sites={body.sites} />
+    <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} />
   )
 
   return (
@@ -89,6 +95,8 @@ const BodyRow = ({ body }) => {
       mainRow={mainRow}
       collapsibleContent={collapsibleContent}
       colSpan={8}
+      onToggle={onToggle}
+      isOpen={isOpen}
     />
   );
 }
@@ -98,6 +106,27 @@ const DEBOUNCE_DELAY_MS = 300;
 export default function ResponsibleBodiesPage({ responsibleBodies }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [mapSites, setMapSites] = useState([]);
+  const [hoveredSite, setHoveredSite] = useState(null);
+  const [selectedSite, setSelectedSite] = useState(null);
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const handleToggle = (bodyName, isOpen) => {
+    setExpandedRows(prev => ({ ...prev, [bodyName]: isOpen }));
+  };
+
+  useEffect(() => {
+    const sites = [];
+    for (const bodyName in expandedRows) {
+      if (expandedRows[bodyName]) {
+        const body = responsibleBodies.find(b => b.name === bodyName);
+        if (body) {
+          sites.push(...body.sites);
+        }
+      }
+    }
+    setMapSites(sites);
+  }, [expandedRows, responsibleBodies]);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -157,6 +186,11 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
         <title>Responsible Bodies</title>        
       </Head>
         <main className="main">
+          <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+            <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
+              <SiteMap sites={mapSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
+            </div>
+            <div style={{ flex: '1 1 67%' }}>
         <h1 className="title">Designated Responsible Bodies</h1>
         <div className="summary" style={{ textAlign: 'center' }}>           
           {inputValue ? (
@@ -209,10 +243,19 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           </thead>
           <tbody>
             {filteredAndSortedBodies.map((body) => (
-              <BodyRow body={body} key={body.name} />              
+                    <BodyRow
+                      body={body}
+                      key={body.name}
+                      isOpen={expandedRows[body.name] || false}
+                      onToggle={(isOpen) => handleToggle(body.name, isOpen)}
+                      onSiteHover={setHoveredSite}
+                      onSiteClick={setSelectedSite}
+                    />              
             ))}
           </tbody>
         </table>
+            </div>
+          </div>
       </main>
     </div>
   );

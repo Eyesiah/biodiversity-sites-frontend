@@ -116,10 +116,6 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     onSiteSelect(null);
   };
 
-  if (!sites || sites.length === 0) {
-    return <p>No sites with location data available to display on the map.</p>;
-  }
-
   return (
     <BaseMap center={[52.8, -1.5]} zoom={6.5} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }}>
       <MapController lsoa={activePolygons.lsoa} />
