@@ -61,6 +61,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedNca, setSelectedNca] = useState(null);
+  const [openRowId, setOpenRowId] = useState(null);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -86,6 +87,11 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
     if (!selectedNca) return [];
     return (sites || []).filter(site => site.ncaName === selectedNca.name);
   }, [selectedNca, sites]);
+
+  const handleMapSelection = (item) => {
+    setSelectedNca(item);
+    setOpenRowId(item.id === openRowId ? null : item.id);
+  };
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
 
@@ -170,13 +176,15 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                 {filteredAndSortedNCAs.map((nca) => (
                   <CollapsibleRow
                     key={nca.id}
+                    isOpen={openRowId === nca.id}
+                    setIsOpen={(isOpen) => setOpenRowId(isOpen ? nca.id : null)}
                     mainRow={(
                       <>
                         <td>{nca.id}</td>
                         <td>{nca.name}</td>
                         <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
                         <td>
-                          <button onClick={(e) => { e.stopPropagation(); setSelectedNca(nca); }} className="linkButton">
+                          <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
                             Show map
                           </button>
                         </td>
@@ -189,8 +197,17 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                         <h4>Adjacent NCAs</h4>
                         {nca.adjacents && nca.adjacents.length > 0 ? (
                           <table className={styles.subTable}>
-                            <thead><tr><th>ID</th><th>Name</th><th>Area (ha)</th></tr></thead>
-                            <tbody>{nca.adjacents.map(adj => (<tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>))}</tbody>
+                            <thead><tr><th>ID</th><th>Name</th><th>Area (ha)</th><th>Map</th></tr></thead>
+                            <tbody>
+                              {nca.adjacents.map(adj => {
+                                const adjacentNcaObject = ncas.find(n => n.id === adj.id);
+                                return (
+                                  <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td>
+                                  <td><button onClick={(e) => { e.stopPropagation(); handleMapSelection(adjacentNcaObject); }} className="linkButton">Show map</button></td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
                           </table>
                         ) : (<p>No adjacency data available.</p>)}
                       </div>

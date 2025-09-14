@@ -44,6 +44,7 @@ export async function getStaticProps() {
             .map((lpa) => ({
                 id: lpa.id,
                 name: lpa.name,
+                adjacents: lpa.adjacents || [],
                 size: lpa.size / 10000,
                 adjacentsCount: lpa.adjacents ? lpa.adjacents.length : 0,
                 siteCount: siteCounts[lpa.name] || 0,
@@ -63,7 +64,7 @@ export async function getStaticProps() {
     }
 }
 
-function LpaDetails({ lpa }) {
+function LpaDetails({ lpa, onAdjacentClick, lpas }) {
     if (!lpa) {
         return null;
     }
@@ -77,16 +78,19 @@ function LpaDetails({ lpa }) {
               <th>ID</th>
               <th>Name</th>
               <th>Area (ha)</th>
+              <th>Map</th>
             </tr>
           </thead>
           <tbody>
-            {lpa.adjacents.map(adj => (
-              <tr key={adj.id}>
-                <td>{adj.id}</td>
-                <td>{adj.name}</td>
-                <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-              </tr>
-            ))}
+            {lpa.adjacents.map(adj => {
+              const adjacentLpaObject = lpas?.find(l => l.id === adj.id);
+              return (
+                <tr key={adj.id}>
+                  <td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td>
+                  <td><button onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} className="linkButton">Show map</button></td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       ) : (
@@ -96,7 +100,7 @@ function LpaDetails({ lpa }) {
   );
 }
 
-const LpaDataRow = ({ lpa, onRowClick }) => (
+const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen }) => (
   <DataFetchingCollapsibleRow
     className={styles.clickableRow}
     mainRow={(
@@ -115,9 +119,11 @@ const LpaDataRow = ({ lpa, onRowClick }) => (
       </>
     )}
     dataUrl={`/modals/lpas/${lpa.id}.json`}
-    renderDetails={details => <LpaDetails lpa={details} />}
+    renderDetails={details => <LpaDetails lpa={details} onAdjacentClick={onRowClick} lpas={lpas} />}
     dataExtractor={json => json.pageProps.lpa}
     colSpan={7}
+    isOpen={isOpen}
+    setIsOpen={setIsOpen}
   />
 );
 
@@ -127,6 +133,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
     const [inputValue, setInputValue] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedLpa, setSelectedLpa] = useState(null);
+    const [openRowId, setOpenRowId] = useState(null);
 
 
     useEffect(() => {
@@ -257,7 +264,14 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                                     <td className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</td>
                                 </tr>
                                 {filteredAndSortedLPAs.map((lpa) => (
-                                    <LpaDataRow key={lpa.id} lpa={lpa} onRowClick={setSelectedLpa} />
+                                    <LpaDataRow 
+                                        key={lpa.id} 
+                                        lpa={lpa} 
+                                        onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
+                                        lpas={lpas} 
+                                        isOpen={openRowId === lpa.id}
+                                        setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
+                                    />
                                 ))}
                             </tbody>
                         </table>

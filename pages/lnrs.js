@@ -33,7 +33,8 @@ export async function getStaticProps() {
     rawLnrs.forEach(lnrs => {
       lnrs.size = lnrs.size / 10000;
       lnrs.siteCount = siteCountsByLnrs[lnrs.name] || 0;
-      lnrs.adjacents.forEach(adj => adj.size = adj.size / 10000);
+      // Ensure adjacents exist before processing
+      (lnrs.adjacents || []).forEach(adj => adj.size = adj.size / 10000);
     });
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
@@ -60,6 +61,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedLnrs, setSelectedLnrs] = useState(null);
+  const [openRowId, setOpenRowId] = useState(null);
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -90,6 +92,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
 
   const handleMapSelection = (item) => {
     setSelectedLnrs(item);
+    setOpenRowId(item.id === openRowId ? null : item.id);
   };
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
@@ -179,6 +182,8 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                 {filteredAndSortedLNRS.map((item) => (
                   <CollapsibleRow 
                     key={item.id}
+                    isOpen={openRowId === item.id}
+                    setIsOpen={(isOpen) => setOpenRowId(isOpen ? item.id : null)}
                     mainRow={(
                       <>
                         <td>{item.id}</td>
@@ -206,9 +211,18 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                               </tr>
                             </thead>
                             <tbody>
-                              {item.adjacents.map(adj => (
-                                <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td></tr>
-                              ))}
+                              {item.adjacents.map(adj => {
+                                // Find the full LNRS object for the adjacent area to pass to the map
+                                const adjacentLnrsObject = lnrs.find(l => l.id === adj.id);
+                                return (
+                                  <tr key={adj.id}>
+                                    <td>{adj.id}</td>
+                                    <td>{adj.name}</td>
+                                    <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
+                                    <td><button onClick={(e) => { e.stopPropagation(); handleMapSelection(adjacentLnrsObject); }} className="linkButton">Show map</button></td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         ) : (

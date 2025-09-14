@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CollapsibleRow } from './CollapsibleRow';
 
 /**
@@ -11,31 +11,36 @@ export const DataFetchingCollapsibleRow = ({
   renderDetails, 
   dataExtractor,
   colSpan,
-  onRowClick
+  onRowClick,
+  isOpen,
+  setIsOpen
 }) => {
   const [details, setDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const onToggle = async (isOpen) => {
-    if (isOpen && !details && !isLoading) {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const buildId = window.__NEXT_DATA__.buildId;
-        const res = await fetch(`/_next/data/${buildId}${dataUrl}`);
-        if (!res.ok) {
-          throw new Error(`Failed to fetch data: ${res.status}`);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isOpen && !details && !isLoading) {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const buildId = window.__NEXT_DATA__.buildId;
+          const res = await fetch(`/_next/data/${buildId}${dataUrl}`);
+          if (!res.ok) {
+            throw new Error(`Failed to fetch data: ${res.status}`);
+          }
+          const json = await res.json();
+          setDetails(dataExtractor(json));
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
         }
-        const json = await res.json();
-        setDetails(dataExtractor(json));
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
       }
-    }
-  };
+    };
+    fetchData();
+  }, [isOpen, details, isLoading, dataUrl, dataExtractor]);
 
   const collapsibleContent = (
     <div style={{ padding: '0.5rem' }}>
@@ -50,8 +55,9 @@ export const DataFetchingCollapsibleRow = ({
       mainRow={mainRow}
       collapsibleContent={collapsibleContent}
       colSpan={colSpan}
-      onToggle={onToggle}
       onMainRowClick={onRowClick}
+      isOpen={isOpen}
+      setIsOpen={setIsOpen}
     />
   );
 };
