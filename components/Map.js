@@ -213,7 +213,7 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
                 backgroundColor: lnrsStyle.color,
                 border: '1px solid #555'
               }}></span><br />
-              <b>LSOA:</b> {site.lsoaName || 'N/A'}
+              <b>LSOA IMD Decile:</b> {site.imdDecile || 'N/A'}
               <span style={{
                 display: 'inline-block',
                 width: '12px',
