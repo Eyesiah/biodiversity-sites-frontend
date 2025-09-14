@@ -3,12 +3,12 @@ import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import fs from 'fs';
 import path from 'path';
-import { formatNumber } from '../lib/format';
-import styles from '../styles/SiteDetails.module.css';
-import { fetchAllSites } from '../lib/api';
-import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow';
+import { formatNumber } from 'lib/format';
+import styles from 'styles/SiteDetails.module.css';
+import { fetchAllSites } from 'lib/api';
+import { DataFetchingCollapsibleRow } from 'components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
-import { useSortableData } from '../lib/hooks';
+import { useSortableData } from 'lib/hooks';
 
 const PolygonMap = dynamic(() => import('../components/Maps/PolygonMap'), {
     ssr: false,

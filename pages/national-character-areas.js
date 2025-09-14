@@ -2,16 +2,17 @@ import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import fs from 'fs';
-import ExternalLink from '../components/ExternalLink';
+import ExternalLink from 'components/ExternalLink';
 import path from 'path';
-import { fetchAllSites } from '../lib/api';
-import { formatNumber, slugify } from '../lib/format';
-import styles from '../styles/SiteDetails.module.css';
-import { CollapsibleRow } from '../components/CollapsibleRow';
-import { useSortableData } from '../lib/hooks';
+import { fetchAllSites } from 'lib/api';
+import { formatNumber, slugify } from 'lib/format';
+import styles from 'styles/SiteDetails.module.css';
+import { CollapsibleRow } from 'components/CollapsibleRow';
+import { useSortableData } from 'lib/hooks';
 import { XMLBuilder } from 'fast-xml-parser';
+import { processSitesForListView } from 'lib/sites'
 
-const PolygonMap = dynamic(() => import('../components/MapsPolygonMap'), {
+const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -43,7 +44,7 @@ export async function getStaticProps() {
     return {
       props: {
         ncas,
-        sites: allSites.map(s => ({ referenceNumber: s.referenceNumber, ncaName: s.nationalCharacterArea?.name || null, position: [s.latitude, s.longitude], responsibleBodies: s.responsibleBodies || [], lpaName: s.lpaArea?.name || null, siteSize: s.siteSize || 0, lnrsName: s.lnrsName || null })),
+        sites: processSitesForListView(allSites),
         lastUpdated: new Date().toISOString(),
         error: null,
       },

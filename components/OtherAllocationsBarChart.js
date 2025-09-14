@@ -1,5 +1,5 @@
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Text, LabelList } from 'recharts';
-import { formatNumber } from '../lib/format';
+import { formatNumber } from 'lib/format';
 
 const CustomizedYAxisTick = (props) => {
   const { x, y, payload } = props;

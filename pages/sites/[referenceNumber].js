@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import styles from '../../styles/SiteDetails.module.css';
-import { fetchAllSites, fetchSite } from '../../lib/api';
-import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '../../lib/geo';
-import { useSortableData, getSortClassName } from '../../lib/hooks';
-import ExternalLink from '../../components/ExternalLink';
-import Modal from '../../components/Modal';
-import { formatNumber, slugify, normalizeBodyName } from '../../lib/format';
+import styles from 'styles/SiteDetails.module.css';
+import { fetchAllSites, fetchSite } from 'lib/api';
+import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from 'lib/geo';
+import { useSortableData, getSortClassName } from 'lib/hooks';
+import ExternalLink from 'components/ExternalLink';
+import Modal from 'components/Modal';
+import { formatNumber, slugify, normalizeBodyName } from 'lib/format';
 import { HabitatsCard } from "../../components/HabitatsCard"
 import { CollapsibleRow } from "../../components/CollapsibleRow"
 import { HabitatSummaryTable } from "../../components/HabitatSummaryTable"

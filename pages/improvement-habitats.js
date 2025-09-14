@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { fetchAllSites } from '../lib/api';
-import { ImprovementPieChart } from '../components/ImprovementPieChart';
+import { fetchAllSites } from 'lib/api';
+import { ImprovementPieChart } from 'components/ImprovementPieChart';
 
 export async function getStaticProps() {
   try {

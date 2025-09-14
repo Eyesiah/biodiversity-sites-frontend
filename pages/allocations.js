@@ -1,14 +1,14 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import { fetchAllSites } from '../lib/api';
-import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '../lib/geo';
-import { formatNumber, slugify } from '../lib/format';
-import { useSortableData, getSortClassName } from '../lib/hooks';
-import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibleRow'
+import { fetchAllSites } from 'lib/api';
+import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from 'lib/geo';
+import { formatNumber, slugify } from 'lib/format';
+import { useSortableData, getSortClassName } from 'lib/hooks';
+import { DataFetchingCollapsibleRow } from 'components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
-import styles from '../styles/SiteDetails.module.css';
+import styles from 'styles/SiteDetails.module.css';
 
 export async function getStaticProps() {
   try {

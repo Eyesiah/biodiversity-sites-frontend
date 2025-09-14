@@ -1,4 +1,4 @@
-import clientPromise from '../lib/mongodb';
+import clientPromise from 'lib/mongodb';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
 

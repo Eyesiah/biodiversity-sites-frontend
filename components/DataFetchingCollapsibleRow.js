@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CollapsibleRow } from './CollapsibleRow';
+import { CollapsibleRow } from 'components/CollapsibleRow';
 
 /**
  * A reusable component that renders a collapsible table row and fetches 

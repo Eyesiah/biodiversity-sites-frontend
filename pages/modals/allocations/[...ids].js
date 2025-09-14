@@ -1,7 +1,5 @@
-import { fetchSite, fetchAllSites } from '../../../lib/api';
-import { slugify } from '../../../lib/format';
-import HabitatSummaryTable from '../../../components/HabitatSummaryTable';
-import styles from '../../../styles/Modal.module.css';
+import { fetchSite, fetchAllSites } from 'lib/api';
+import { slugify } from 'lib/format';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {

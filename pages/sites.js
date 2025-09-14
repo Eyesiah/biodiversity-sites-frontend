@@ -3,10 +3,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic'; 
 import Link from 'next/link';
-import { useSortableData } from '../lib/hooks';
-import { fetchAllSites } from '../lib/api';
-import { processSiteDataForIndex } from '../lib/sites';
-import { formatNumber } from '../lib/format';
+import { useSortableData } from 'lib/hooks';
+import { fetchAllSites } from 'lib/api';
+import { processSiteDataForIndex } from 'lib/sites';
+import { formatNumber } from 'lib/format';
 import Papa from 'papaparse';
 
 const SiteMap = dynamic(() => import('../components/Maps/SiteMap'), {

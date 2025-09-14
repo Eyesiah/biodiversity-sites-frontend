@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
-import { slugify, normalizeBodyName } from '../../../lib/format';
-import { fetchAllSites } from '../../../lib/api';
+import { slugify, normalizeBodyName } from 'lib/format';
+import { fetchAllSites } from 'lib/api';
 
 export async function getStaticPaths() {
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');

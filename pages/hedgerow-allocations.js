@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import { fetchAllSites } from '../lib/api';
-import { AllocationPieChart } from '../components/AllocationPieChart';
+import { fetchAllSites } from 'lib/api';
+import { AllocationPieChart } from 'components/AllocationPieChart';
 
 export async function getStaticProps() {
   try {

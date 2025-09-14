@@ -1,13 +1,13 @@
 
 import Head from 'next/head';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { fetchAllSites } from '../lib/api';
-import styles from '../styles/SiteDetails.module.css';
-import { HabitatsCard } from '../components/HabitatsCard';
-import { HabitatSummaryTable } from '../components/HabitatSummaryTable';
-import { DetailRow } from '../components/DetailRow'
+import { fetchAllSites } from 'lib/api';
+import styles from 'styles/SiteDetails.module.css';
+import { HabitatsCard } from 'components/HabitatsCard';
+import { HabitatSummaryTable } from 'components/HabitatSummaryTable';
+import { DetailRow } from 'components/DetailRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { formatNumber } from '../lib/format';
+import { formatNumber } from 'lib/format';
 
 export async function getStaticProps() {
   try {
