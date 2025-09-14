@@ -1,35 +1,10 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { Marker, Popup, GeoJSON, useMap } from 'react-leaflet';
+import { GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
-import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { formatNumber } from '../../lib/format';
-import BaseMap from './BaseMap';
-
-const defaultSiteIcon = new L.Icon({
-    iconUrl: '/icons/greenMarker.svg',
-    iconRetinaUrl: '/icons/greenMarker.svg',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-const highlightedSiteIcon = new L.Icon({
-    iconUrl: '/icons/blueMarker.svg',
-    iconRetinaUrl: '/icons/blueMarker.svg',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
-const lsoaStyle = { color: '#f1c40f', weight: 3, opacity: 1, fillColor: '#f1c40f', fillOpacity: 0.2 };
-const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
-const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
-const lpaStyle = { color: '#282c34', weight: 2, opacity: 0.8, fillColor: '#282c34', fillOpacity: 0.3 };
+import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from 'components/Maps/BaseMap';
 
 function MapController({ lsoa }) {
   const map = useMap();
@@ -154,68 +129,9 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
       {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
       {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
 
-      {sites.filter(site => site.position != null).map(site => {
-        const isHovered = site.referenceNumber == hoveredSite?.referenceNumber;
-        return (
-          <Marker 
-            key={site.referenceNumber} 
-            position={site.position} 
-            icon={isHovered ? highlightedSiteIcon : defaultSiteIcon} 
-            zIndexOffset={isHovered ? 1000 : 0}
-            ref={el => markerRefs.current[site.referenceNumber] = el}
-            eventHandlers={{
-              click: () => onSiteSelect(site),
-              popupclose: handlePopupClose,
-            }}
-          >
-            <Popup>
-              <h2><Link href={`/sites/${site.referenceNumber}`}>
-                {site.referenceNumber}
-              </Link></h2>
-              <b>Responsible Body:</b> {site.summary.responsibleBody}<br />
-              <b>LPA:</b> {site.lpaName || 'N/A'}
-              <span style={{
-                display: 'inline-block',
-                width: '12px',
-                height: '12px',
-                marginLeft: '5px',
-                backgroundColor: lpaStyle.color,
-                border: '1px solid #555'
-              }}></span><br />
-              <b>NCA:</b> {site.ncaName || 'N/A'}
-              <span style={{
-                display: 'inline-block',
-                width: '12px',
-                height: '12px',
-                marginLeft: '8px',
-                backgroundColor: ncaStyle.color,
-                border: '1px solid #555'
-              }}></span><br />
-              <b>LNRS:</b> {site.lnrsName || 'N/A'}
-              <span style={{
-                display: 'inline-block',
-                width: '12px',
-                height: '12px',
-                marginLeft: '8px',
-                backgroundColor: lnrsStyle.color,
-                border: '1px solid #555'
-              }}></span><br />
-              <b>LSOA IMD Decile:</b> {site.imdDecile || 'N/A'}
-              <span style={{
-                display: 'inline-block',
-                width: '12px',
-                height: '12px',
-                marginLeft: '8px',
-                backgroundColor: lsoaStyle.color,
-                border: '1px solid #555'
-              }}></span><br />              
-              <b>Allocations:</b> {site.summary.allocationsCount}<br />
-              <b>Total Size:</b> {formatNumber(site.summary.totalSize)} ha<br />
-              <br />
-            </Popup>
-          </Marker>
-        )
-      })}
+      {sites.filter(site => site.position != null).map(site => (
+          <SiteMapMarker site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
+      ))}
     </BaseMap>
   );
 };

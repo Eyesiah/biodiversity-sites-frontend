@@ -2,20 +2,7 @@ import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import Link from 'next/link';
-import { formatNumber } from '../../lib/format';
-import BaseMap from './BaseMap';
-
-const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
-const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOpacity: 0.5 }; // Pink
-const defaultSiteIcon = new L.Icon({
-    iconUrl: '/icons/greenMarker.svg',
-    iconRetinaUrl: '/icons/greenMarker.svg',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
+import { BaseMap, SiteMapMarker, lnrsStyle, adjacentStyle } from 'components/Maps/BaseMap';
 
 function MapController({ geoJson }) {
   const map = useMap();
@@ -108,17 +95,9 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
       ))}
       {geoJson && <GeoJSON data={geoJson} style={style} />}
       <MapController geoJson={geoJson} />
-      {sites.map(site => (
-        site.position && <Marker key={site.referenceNumber} position={site.position} icon={defaultSiteIcon}>
-          <Popup>
-            <h2><Link href={`/sites/${site.referenceNumber}`}>{site.referenceNumber}</Link></h2>
-            <b>Responsible Body:</b> {site.responsibleBodies.join(', ')}<br />
-            <b>LPA:</b> {site.lpaName}<br />
-            <b>NCA:</b> {site.ncaName}<br />
-            <b>LNRS:</b> {site.lnrsName}<br />
-            <b>Total Size:</b> {formatNumber(site.siteSize)} ha
-          </Popup>
-        </Marker>
+
+      {sites.filter(site => site.position != null).map(site => (
+        <SiteMapMarker site={site} withColorKeys={false} />
       ))}
     </BaseMap>
   );
