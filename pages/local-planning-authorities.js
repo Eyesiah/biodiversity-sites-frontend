@@ -64,7 +64,7 @@ export async function getStaticProps() {
     }
 }
 
-function LpaDetails({ lpa, onAdjacentClick, lpas }) {
+function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
     if (!lpa) {
         return null;
     }
@@ -100,7 +100,7 @@ function LpaDetails({ lpa, onAdjacentClick, lpas }) {
   );
 }
 
-const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen }) => (
+const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMapSelection }) => (
   <DataFetchingCollapsibleRow
     className={styles.clickableRow}
     mainRow={(
@@ -119,7 +119,7 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen }) => (
       </>
     )}
     dataUrl={`/modals/lpas/${lpa.id}.json`}
-    renderDetails={details => <LpaDetails lpa={details} onAdjacentClick={onRowClick} lpas={lpas} />}
+    renderDetails={details => <LpaDetails lpa={details} onAdjacentClick={handleAdjacentMapSelection} lpas={lpas} />}
     dataExtractor={json => json.pageProps.lpa}
     colSpan={7}
     isOpen={isOpen}
@@ -134,6 +134,10 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedLpa, setSelectedLpa] = useState(null);
     const [openRowId, setOpenRowId] = useState(null);
+
+    const handleAdjacentMapSelection = (item) => {
+        setSelectedLpa(item);
+    };
 
 
     useEffect(() => {
@@ -269,6 +273,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                                         lpa={lpa} 
                                         onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
                                         lpas={lpas} 
+                                        handleAdjacentMapSelection={handleAdjacentMapSelection}
                                         isOpen={openRowId === lpa.id}
                                         setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
                                     />

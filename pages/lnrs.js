@@ -92,7 +92,11 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
 
   const handleMapSelection = (item) => {
     setSelectedLnrs(item);
-    setOpenRowId(item.id === openRowId ? null : item.id);
+    setOpenRowId(item.id);
+  };
+
+  const handleAdjacentMapSelection = (item) => {
+    setSelectedLnrs(item);
   };
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
@@ -219,7 +223,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                                     <td>{adj.id}</td>
                                     <td>{adj.name}</td>
                                     <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                                    <td><button onClick={(e) => { e.stopPropagation(); handleMapSelection(adjacentLnrsObject); }} className="linkButton">Show map</button></td>
+                                    <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentLnrsObject); }} className="linkButton">Show map</button></td>
                                   </tr>
                                 );
                               })}

@@ -90,7 +90,11 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
 
   const handleMapSelection = (item) => {
     setSelectedNca(item);
-    setOpenRowId(item.id === openRowId ? null : item.id);
+    setOpenRowId(item.id);
+  };
+
+  const handleAdjacentMapSelection = (item) => {
+    setSelectedNca(item);
   };
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
@@ -203,7 +207,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                                 const adjacentNcaObject = ncas.find(n => n.id === adj.id);
                                 return (
                                   <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                                  <td><button onClick={(e) => { e.stopPropagation(); handleMapSelection(adjacentNcaObject); }} className="linkButton">Show map</button></td>
+                                  <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Show map</button></td>
                                   </tr>
                                 );
                               })}
