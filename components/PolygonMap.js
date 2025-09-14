@@ -115,6 +115,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
             <b>Responsible Body:</b> {site.responsibleBodies.join(', ')}<br />
             <b>LPA:</b> {site.lpaName}<br />
             <b>NCA:</b> {site.ncaName}<br />
+            <b>LNRS:</b> {site.lnrsName}<br />
             <b>Total Size:</b> {formatNumber(site.siteSize)} ha
           </Popup>
         </Marker>
