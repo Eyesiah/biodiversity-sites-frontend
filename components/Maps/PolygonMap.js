@@ -97,7 +97,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
       <MapController geoJson={geoJson} />
 
       {sites.filter(site => site.position != null).map(site => (
-        <SiteMapMarker site={site} withColorKeys={false} />
+        <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
       ))}
     </BaseMap>
   );

@@ -130,7 +130,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
       {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
 
       {sites.filter(site => site.position != null).map(site => (
-          <SiteMapMarker site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
+          <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
       ))}
     </BaseMap>
   );
