@@ -84,7 +84,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
     return filtered;
   }, [lnrs, debouncedSearchTerm]);
 
-  const { items: filteredAndSortedLNRS, requestSort, getSortIndicator } = useSortableData(filteredLNRS, { key: 'name', direction: 'ascending' });
+  const { items: filteredAndSortedLNRS, requestSort, getSortIndicator } = useSortableData(filteredLNRS, { key: 'siteCount', direction: 'descending' });
 
   const sitesInSelectedLNRS = useMemo(() => {
     if (!selectedLnrs) return [];

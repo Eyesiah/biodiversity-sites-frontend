@@ -161,7 +161,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
         return filtered;
     }, [lpas, debouncedSearchTerm]);
 
-    const { items: filteredAndSortedLPAs, requestSort, getSortIndicator } = useSortableData(filteredLPAs, { key: 'name', direction: 'ascending' });
+    const { items: filteredAndSortedLPAs, requestSort, getSortIndicator } = useSortableData(filteredLPAs, { key: 'siteCount', direction: 'descending' });
 
     const sitesInSelectedLPA = useMemo(() => {
         if (!selectedLpa) return [];

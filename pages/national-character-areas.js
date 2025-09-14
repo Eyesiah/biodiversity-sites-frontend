@@ -83,7 +83,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
     return filtered;
   }, [ncas, debouncedSearchTerm]);
 
-  const { items: filteredAndSortedNCAs, requestSort, getSortIndicator } = useSortableData(filteredNCAs, { key: 'name', direction: 'ascending' });
+  const { items: filteredAndSortedNCAs, requestSort, getSortIndicator } = useSortableData(filteredNCAs, { key: 'siteCount', direction: 'descending' });
 
   const sitesInSelectedNCA = useMemo(() => {
     if (!selectedNca) return [];
