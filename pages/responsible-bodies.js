@@ -126,6 +126,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
       }
     }
     setMapSites(sites);
+    setSelectedSite(null);
   }, [expandedRows, responsibleBodies]);
 
   useEffect(() => {

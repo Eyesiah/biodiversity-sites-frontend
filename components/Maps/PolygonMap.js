@@ -85,7 +85,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
   }, [selectedItem, geoJsonUrl, nameProperty, sites]);
 
   return (
-    <BaseMap key={mapKey} center={[52.8, -1.5]} zoom={6.5} style={{ height, width: '100%' }}>
+    <BaseMap key={mapKey} style={{ height, width: '100%' }}>
       {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
         <GeoJSON 
           key={`${mapKey}-adj-${index}`} 
