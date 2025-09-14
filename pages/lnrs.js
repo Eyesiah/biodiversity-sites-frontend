@@ -171,12 +171,13 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
               </div>
             </div>            
             <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
-            <p style={{ fontStyle: 'italic' }}>When a site map is selected, the adjacent sites are shown coloured pink.</p>
+            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent sites are shown coloured pink.</p>
             <table className="site-table">
               <thead>
                 <tr>
                   <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
                   <th onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</th>
+                  <th onClick={() => requestSort('responsibleAuthority')}>Responsible Authority{getSortIndicator('responsibleAuthority')}</th>
                   <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
                   <th>Map</th>
                   <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
@@ -193,6 +194,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                       <>
                         <td>{item.id}</td>
                         <td>{item.name}</td>
+                        <td>{item.responsibleAuthority}</td>
                         <td className="numeric-data">{formatNumber(item.size, 0)}</td>
                         <td>
                           <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
@@ -235,7 +237,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         )}
                       </div>
                     )}
-                    colSpan={6}
+                    colSpan={7}
                   />
                 ))}
               </tbody>

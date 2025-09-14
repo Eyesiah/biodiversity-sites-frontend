@@ -14,7 +14,8 @@
         "name": "North Yorkshire and York",
         "size": 24272672998
       }
-    ]
+    ],
+    "responsibleAuthority": "Tees Valley Mayoral Combined Authority"
   },
   {
     "id": "03",
@@ -46,7 +47,8 @@
         "name": "North Yorkshire and York",
         "size": 24272672998
       }
-    ]
+    ],
+    "responsibleAuthority": "Durham County Council"
   },
   {
     "id": "01",
@@ -68,7 +70,8 @@
         "name": "Cumbria",
         "size": 21355207289
       }
-    ]
+    ],
+    "responsibleAuthority": "North East Combined Authority"
   },
   {
     "id": "04",
@@ -85,7 +88,8 @@
         "name": "North of Tyne",
         "size": 16207491161
       }
-    ]
+    ],
+    "responsibleAuthority": "Gateshead Council"
   },
   {
     "id": "02",
@@ -112,7 +116,8 @@
         "name": "North Yorkshire and York",
         "size": 24272672998
       }
-    ]
+    ],
+    "responsibleAuthority": "Westmorland and Furness Council"
   },
   {
     "id": "10",
@@ -134,7 +139,8 @@
         "name": "Lancashire",
         "size": 9357409901
       }
-    ]
+    ],
+    "responsibleAuthority": "Liverpool City Region Combined Authority"
   },
   {
     "id": "13",
@@ -166,7 +172,8 @@
         "name": "Staffordshire and Stoke-on-Trent",
         "size": 7444202942
       }
-    ]
+    ],
+    "responsibleAuthority": "Cheshire West and Chester Council"
   },
   {
     "id": "11",
@@ -198,7 +205,8 @@
         "name": "Derbyshire",
         "size": 7295916167
       }
-    ]
+    ],
+    "responsibleAuthority": "Greater Manchester Combined Authority"
   },
   {
     "id": "06",
@@ -230,7 +238,8 @@
         "name": "West Yorkshire",
         "size": 5794349015
       }
-    ]
+    ],
+    "responsibleAuthority": "Lancashire County Council"
   },
   {
     "id": "09",
@@ -252,7 +261,8 @@
         "name": "South Yorkshire",
         "size": 4377942944
       }
-    ]
+    ],
+    "responsibleAuthority": "East Riding of Yorkshire Council"
   },
   {
     "id": "16",
@@ -294,7 +304,8 @@
         "name": "Norfolk",
         "size": 14950562329
       }
-    ]
+    ],
+    "responsibleAuthority": "Lincolnshire County Council"
   },
   {
     "id": "07",
@@ -336,7 +347,8 @@
         "name": "West Yorkshire",
         "size": 5794349015
       }
-    ]
+    ],
+    "responsibleAuthority": "North Yorkshire Council"
   },
   {
     "id": "12",
@@ -373,7 +385,8 @@
         "name": "Nottinghamshire and Nottingham",
         "size": 5996236335
       }
-    ]
+    ],
+    "responsibleAuthority": "South Yorkshire Mayoral Combined Authority"
   },
   {
     "id": "08",
@@ -405,7 +418,8 @@
         "name": "Derbyshire",
         "size": 7295916167
       }
-    ]
+    ],
+    "responsibleAuthority": "West Yorkshire Combined Authority"
   },
   {
     "id": "14",
@@ -447,7 +461,8 @@
         "name": "Staffordshire and Stoke-on-Trent",
         "size": 7444202942
       }
-    ]
+    ],
+    "responsibleAuthority": "Derbyshire County Council"
   },
   {
     "id": "15",
@@ -474,7 +489,8 @@
         "name": "Leicestershire, Leicester and Rutland",
         "size": 6927825493
       }
-    ]
+    ],
+    "responsibleAuthority": "Derbyshire County Council"
   },
   {
     "id": "19",
@@ -516,7 +532,8 @@
         "name": "West Northamptonshire",
         "size": 3674741273
       }
-    ]
+    ],
+    "responsibleAuthority": "Leicestershire County Council"
   },
   {
     "id": "25",
@@ -553,7 +570,8 @@
         "name": "West Northamptonshire",
         "size": 3674741273
       }
-    ]
+    ],
+    "responsibleAuthority": "North Northamptonshire Council"
   },
   {
     "id": "20",
@@ -575,7 +593,8 @@
         "name": "Gloucestershire",
         "size": 7073471274
       }
-    ]
+    ],
+    "responsibleAuthority": "Hertfordshire County Council"
   },
   {
     "id": "21",
@@ -612,7 +631,8 @@
         "name": "Gloucestershire",
         "size": 7073471274
       }
-    ]
+    ],
+    "responsibleAuthority": "Worcestershire County Council"
   },
   {
     "id": "23",
@@ -654,7 +674,8 @@
         "name": "West Northamptonshire",
         "size": 3674741273
       }
-    ]
+    ],
+    "responsibleAuthority": "Warwickshire County Council"
   },
   {
     "id": "17",
@@ -681,7 +702,8 @@
         "name": "Staffordshire and Stoke-on-Trent",
         "size": 7444202942
       }
-    ]
+    ],
+    "responsibleAuthority": "Shropshire County Council"
   },
   {
     "id": "18",
@@ -723,7 +745,8 @@
         "name": "West Midlands",
         "size": 2429348648
       }
-    ]
+    ],
+    "responsibleAuthority": "Staffordshire County Council"
   },
   {
     "id": "22",
@@ -745,7 +768,8 @@
         "name": "Staffordshire and Stoke-on-Trent",
         "size": 7444202942
       }
-    ]
+    ],
+    "responsibleAuthority": "West Midlands Combined Authority"
   },
   {
     "id": "26",
@@ -787,7 +811,8 @@
         "name": "Greater Essex",
         "size": 10302525019
       }
-    ]
+    ],
+    "responsibleAuthority": "Cambridgeshire and Peterborough Combined Authority"
   },
   {
     "id": "27",
@@ -809,7 +834,8 @@
         "name": "Suffolk",
         "size": 10243992192
       }
-    ]
+    ],
+    "responsibleAuthority": "Norfolk County Council"
   },
   {
     "id": "28",
@@ -831,7 +857,8 @@
         "name": "Greater Essex",
         "size": 10302525019
       }
-    ]
+    ],
+    "responsibleAuthority": "Suffolk County Council"
   },
   {
     "id": "32",
@@ -858,7 +885,8 @@
         "name": "Buckinghamshire and Milton Keynes",
         "size": 4902038033
       }
-    ]
+    ],
+    "responsibleAuthority": "Central Bedfordshire Council"
   },
   {
     "id": "33",
@@ -890,7 +918,8 @@
         "name": "Buckinghamshire and Milton Keynes",
         "size": 4902038033
       }
-    ]
+    ],
+    "responsibleAuthority": "Hertfordshire County Council"
   },
   {
     "id": "34",
@@ -922,7 +951,8 @@
         "name": "Kent and Medway",
         "size": 9948714979
       }
-    ]
+    ],
+    "responsibleAuthority": "Essex County Council"
   },
   {
     "id": "39",
@@ -959,7 +989,8 @@
         "name": "Kent and Medway",
         "size": 9948714979
       }
-    ]
+    ],
+    "responsibleAuthority": "Greater London Authority"
   },
   {
     "id": "37",
@@ -996,7 +1027,8 @@
         "name": "Wiltshire and Swindon",
         "size": 8915973372
       }
-    ]
+    ],
+    "responsibleAuthority": "Royal Borough of Windsor and Maidenhead Council"
   },
   {
     "id": "31",
@@ -1038,7 +1070,8 @@
         "name": "West Northamptonshire",
         "size": 3674741273
       }
-    ]
+    ],
+    "responsibleAuthority": "Buckinghamshire Council"
   },
   {
     "id": "30",
@@ -1075,7 +1108,8 @@
         "name": "West Northamptonshire",
         "size": 3674741273
       }
-    ]
+    ],
+    "responsibleAuthority": "Oxfordshire County Council"
   },
   {
     "id": "48",
@@ -1097,7 +1131,8 @@
         "name": "Kent and Medway",
         "size": 9948714979
       }
-    ]
+    ],
+    "responsibleAuthority": "East Sussex County Council"
   },
   {
     "id": "38",
@@ -1134,7 +1169,8 @@
         "name": "Kent and Medway",
         "size": 9948714979
       }
-    ]
+    ],
+    "responsibleAuthority": "Surrey County Council"
   },
   {
     "id": "47",
@@ -1156,7 +1192,8 @@
         "name": "Hampshire",
         "size": 9748495088
       }
-    ]
+    ],
+    "responsibleAuthority": "West Sussex County Council"
   },
   {
     "id": "45",
@@ -1188,13 +1225,15 @@
         "name": "Dorset",
         "size": 6743326348
       }
-    ]
+    ],
+    "responsibleAuthority": "Hampshire County Council"
   },
   {
     "id": "46",
     "name": "Isle of Wight",
     "size": 977576259.7,
-    "adjacents": []
+    "adjacents": [],
+    "responsibleAuthority": "Isle of Wight Council"
   },
   {
     "id": "40",
@@ -1221,7 +1260,8 @@
         "name": "Surrey",
         "size": 4258270185
       }
-    ]
+    ],
+    "responsibleAuthority": "Isle of Wight Council"
   },
   {
     "id": "35",
@@ -1243,7 +1283,8 @@
         "name": "Somerset",
         "size": 8907398284
       }
-    ]
+    ],
+    "responsibleAuthority": "West of England Combined Authority"
   },
   {
     "id": "29",
@@ -1280,7 +1321,8 @@
         "name": "Wiltshire and Swindon",
         "size": 8915973372
       }
-    ]
+    ],
+    "responsibleAuthority": "Gloucestershire County Council"
   },
   {
     "id": "36",
@@ -1322,7 +1364,8 @@
         "name": "Somerset",
         "size": 8907398284
       }
-    ]
+    ],
+    "responsibleAuthority": "Wiltshire Council"
   },
   {
     "id": "44",
@@ -1349,7 +1392,8 @@
         "name": "Devon",
         "size": 17064079175
       }
-    ]
+    ],
+    "responsibleAuthority": "Dorset Council"
   },
   {
     "id": "43",
@@ -1376,7 +1420,8 @@
         "name": "Devon",
         "size": 17064079175
       }
-    ]
+    ],
+    "responsibleAuthority": "Somerset Council"
   },
   {
     "id": "41",
@@ -1388,7 +1433,8 @@
         "name": "Devon",
         "size": 17064079175
       }
-    ]
+    ],
+    "responsibleAuthority": "Cornwall Council"
   },
   {
     "id": "42",
@@ -1410,7 +1456,8 @@
         "name": "Cornwall and the Isles of Scilly",
         "size": 8933919810
       }
-    ]
+    ],
+    "responsibleAuthority": "Devon County Council"
   },
   {
     "id": "24",
@@ -1442,6 +1489,7 @@
         "name": "Oxfordshire",
         "size": 6798257341
       }
-    ]
+    ],
+    "responsibleAuthority": "West Northamptonshire Council"
   }
 ]
