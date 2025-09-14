@@ -1,9 +1,10 @@
-import { MapContainer, TileLayer, GeoJSON, useMap, Marker, Popup, LayersControl } from 'react-leaflet';
+import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import Link from 'next/link';
-import { formatNumber } from '../lib/format';
+import { formatNumber } from '../../lib/format';
+import BaseMap from './BaseMap';
 
 const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
 const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOpacity: 0.5 }; // Pink
@@ -97,8 +98,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
   }, [selectedItem, geoJsonUrl, nameProperty, sites]);
 
   return (
-    <MapContainer key={mapKey} center={[52.8, -1.5]} zoom={6.5} style={{ height, width: '100%' }}>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' />
+    <BaseMap key={mapKey} center={[52.8, -1.5]} zoom={6.5} style={{ height, width: '100%' }}>
       {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
         <GeoJSON 
           key={`${mapKey}-adj-${index}`} 
@@ -120,7 +120,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
           </Popup>
         </Marker>
       ))}
-    </MapContainer>
+    </BaseMap>
   );
 };
 

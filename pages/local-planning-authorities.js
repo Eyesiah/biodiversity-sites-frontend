@@ -10,7 +10,7 @@ import { DataFetchingCollapsibleRow } from '../components/DataFetchingCollapsibl
 import { XMLBuilder } from 'fast-xml-parser';
 import { useSortableData } from '../lib/hooks';
 
-const PolygonMap = dynamic(() => import('../components/PolygonMap'), {
+const PolygonMap = dynamic(() => import('../components/Maps/PolygonMap'), {
     ssr: false,
     loading: () => <p>Loading map...</p>
 });

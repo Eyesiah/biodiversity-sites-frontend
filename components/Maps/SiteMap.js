@@ -1,11 +1,12 @@
-// --- Map Component ---
+// --- SiteMap Component ---
 // This component renders the actual map.
-import { MapContainer, TileLayer, Marker, Popup, LayersControl, GeoJSON, useMap } from 'react-leaflet';
+import { Marker, Popup, GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { formatNumber } from '../lib/format';
+import { formatNumber } from '../../lib/format';
+import BaseMap from './BaseMap';
 
 const defaultSiteIcon = new L.Icon({
     iconUrl: '/icons/greenMarker.svg',
@@ -41,8 +42,8 @@ function MapController({ lsoa }) {
   return null;
 }
 
-// --- Map Component ---
-const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
+// --- SiteMap Component ---
+const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
@@ -145,22 +146,8 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
   }
 
   return (
-    <MapContainer center={[52.8, -1.5]} zoom={6.5} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }}>
+    <BaseMap center={[52.8, -1.5]} zoom={6.5} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }}>
       <MapController lsoa={activePolygons.lsoa} />
-      <LayersControl position="topright">
-        <LayersControl.BaseLayer checked name="OpenStreetMap">
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-        </LayersControl.BaseLayer>
-        <LayersControl.BaseLayer  name="Satellite">
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          />
-        </LayersControl.BaseLayer>
-      </LayersControl>
 
       {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
       {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
@@ -229,8 +216,8 @@ const Map = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
           </Marker>
         )
       })}
-    </MapContainer>
+    </BaseMap>
   );
 };
 
-export default Map;
+export default SiteMap;

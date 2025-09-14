@@ -10,7 +10,7 @@ import { useSortableData } from '../lib/hooks';
 import styles from '../styles/SiteDetails.module.css';
 import { XMLBuilder } from 'fast-xml-parser';
 
-const PolygonMap = dynamic(() => import('../components/PolygonMap'), {
+const PolygonMap = dynamic(() => import('../components/MapPolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

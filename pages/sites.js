@@ -9,7 +9,7 @@ import { processSiteDataForIndex } from '../lib/sites';
 import { formatNumber } from '../lib/format';
 import Papa from 'papaparse';
 
-const Map = dynamic(() => import('../components/Map'), {
+const SiteMap = dynamic(() => import('../components/Maps/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -175,7 +175,7 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
       <main className="main">        
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
           <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
-            <Map sites={filteredSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
+            <SiteMap sites={filteredSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
           </div>
           <div style={{ flex: '1 1 67%' }}>
             <h1 className="title">

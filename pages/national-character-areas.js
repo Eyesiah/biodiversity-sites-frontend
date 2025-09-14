@@ -11,7 +11,7 @@ import { CollapsibleRow } from '../components/CollapsibleRow';
 import { useSortableData } from '../lib/hooks';
 import { XMLBuilder } from 'fast-xml-parser';
 
-const PolygonMap = dynamic(() => import('../components/PolygonMap'), {
+const PolygonMap = dynamic(() => import('../components/MapsPolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
