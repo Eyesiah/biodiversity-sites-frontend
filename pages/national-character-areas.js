@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import fs from 'fs';
+import ExternalLink from '../components/ExternalLink';
 import path from 'path';
 import { fetchAllSites } from '../lib/api';
 import { formatNumber, slugify } from '../lib/format';
@@ -185,7 +186,9 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                     setIsOpen={(isOpen) => setOpenRowId(isOpen ? nca.id : null)}
                     mainRow={(
                       <>
-                        <td>{nca.id}</td>
+                        <td>
+                          <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(nca.name)}/`}>{nca.id}</ExternalLink>
+                        </td>
                         <td>{nca.name}</td>
                         <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
                         <td>
