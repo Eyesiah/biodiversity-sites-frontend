@@ -210,7 +210,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                             geoJsonUrl="https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LPA_APR_2023_UK_BUC_V2/FeatureServer/0/query"
                             nameProperty="name"
                             sites={sitesInSelectedLPA}
-                            style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.1 }}
+                            style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
                         />
                     </div>
                     <div style={{ flex: '1 1 50%' }}>

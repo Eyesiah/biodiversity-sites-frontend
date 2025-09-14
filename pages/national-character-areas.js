@@ -130,7 +130,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
               geoJsonUrl="https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query"
               nameProperty="name"
               sites={sitesInSelectedNCA}
-              style={{ color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.1 }}
+              style={{ color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
             />
           </div>
           <div style={{ flex: '1 1 50%' }}>

@@ -139,6 +139,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
               geoJsonUrl="https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query"
               nameProperty="name"
               sites={sitesInSelectedLNRS}
+              style={{ color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }}
             />
           </div>
           <div style={{ flex: '1 1 50%' }}>
