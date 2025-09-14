@@ -169,8 +169,9 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                 <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
                 <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
               </div>
-            </div>
+            </div>            
             <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
+            <p style={{ fontStyle: 'italic' }}>When a site map is selected, the adjacent sites are shown coloured pink.</p>
             <table className="site-table">
               <thead>
                 <tr>
