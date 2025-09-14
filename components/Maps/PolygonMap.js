@@ -21,6 +21,7 @@ function MapController({ geoJson }) {
 const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height = '85vh', style = lnrsStyle }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
+  const [error, setError] = useState(null);
   const cache = useRef({});
   const [mapKey, setMapKey] = useState(Date.now());
 
@@ -31,6 +32,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
       // Reset state when starting a new fetch to clear previous polygons
       setGeoJson(null);
       setAdjacentGeoJson(null);
+      setError(null);
 
       if (!selectedItem || !selectedItem[nameProperty]) return;
       const name = selectedItem[nameProperty];
@@ -61,7 +63,11 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
         const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
 
         if (mainData.error || !mainData.features || mainData.features.length === 0) {
-          throw new Error(mainData.error?.message || "Invalid GeoJSON response for main item");
+          const errorMessage = mainData.error?.message || "No polygon data found for the selected item.";
+          if (!isCancelled) {
+            setError(errorMessage);
+          }
+          return;
         }
         
         if (!isCancelled) {
@@ -75,7 +81,8 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
       } catch (error) {
         console.error("Failed to fetch polygon data:", error);
         if (!isCancelled) {
-          // Ensure state is cleared on error to avoid displaying stale data
+          setError("Failed to fetch polygon data. Please check the console for details.");
+          // Ensure state is cleared on error
           setGeoJson(null);
           setAdjacentGeoJson(null);
         }
@@ -86,6 +93,11 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
 
   return (
     <BaseMap key={mapKey} style={{ height, width: '100%' }}>
+      {error && (
+        <div style={{ position: 'absolute', top: '10px', left: '50px', zIndex: 1000, backgroundColor: 'white', padding: '10px', borderRadius: '5px', border: '1px solid red' }}>
+          <p style={{ color: 'red', margin: 0 }}>{error}</p>
+        </div>
+      )}
       {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
         <GeoJSON 
           key={`${mapKey}-adj-${index}`} 
