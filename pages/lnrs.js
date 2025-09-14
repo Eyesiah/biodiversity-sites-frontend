@@ -171,7 +171,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
               </div>
             </div>            
             <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLNRS.length, 0)}</strong> of <strong>{formatNumber(lnrs.length, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
-            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent sites are shown coloured pink.</p>
+            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LNRS sites are shown coloured pink.</p>
             <table className="site-table">
               <thead>
                 <tr>

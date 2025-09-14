@@ -246,7 +246,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                             </div>
                         </div>
                         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
-                        <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent sites are shown coloured pink.</p>
+                        <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LPAs are shown coloured pink.</p>
                         <table className="site-table">
                             <thead>
                                 <tr>
