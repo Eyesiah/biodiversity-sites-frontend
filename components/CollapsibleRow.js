@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import styles from 'styles/SiteDetails.module.css';
+import styles from '@/styles/SiteDetails.module.css';
 
 export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle, onMainRowClick, isOpen: externalIsOpen, setIsOpen: setExternalIsOpen }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);

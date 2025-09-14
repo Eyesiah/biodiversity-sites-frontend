@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import ExternalLink from 'components/ExternalLink';
+import ExternalLink from '@/components/ExternalLink';
 
 export default function About() {
   return (

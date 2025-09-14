@@ -1,7 +1,7 @@
-import { useSortableData, getSortClassName } from 'lib/hooks';
-import { formatNumber } from 'lib/format';
+import { useSortableData, getSortClassName } from '@/lib/hooks';
+import { formatNumber } from '@/lib/format';
 import { useState } from 'react';
-import styles from 'styles/SiteDetails.module.css';
+import styles from '@/styles/SiteDetails.module.css';
 import {CollapsibleRow} from "components/CollapsibleRow"
 
 // Helper function to collate habitat data

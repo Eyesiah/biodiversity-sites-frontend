@@ -2,15 +2,15 @@ import Head from 'next/head';
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import fs from 'fs';
-import ExternalLink from 'components/ExternalLink';
+import ExternalLink from '@/components/ExternalLink';
 import path from 'path';
-import { fetchAllSites } from 'lib/api';
-import { formatNumber, slugify } from 'lib/format';
-import styles from 'styles/SiteDetails.module.css';
-import { CollapsibleRow } from 'components/CollapsibleRow';
-import { useSortableData } from 'lib/hooks';
+import { fetchAllSites } from '@/lib/api';
+import { formatNumber, slugify } from '@/lib/format';
+import styles from '@/styles/SiteDetails.module.css';
+import { CollapsibleRow } from '@/components/CollapsibleRow';
+import { useSortableData } from '@/lib/hooks';
 import { XMLBuilder } from 'fast-xml-parser';
-import { processSitesForListView } from 'lib/sites'
+import { processSitesForListView } from '@/lib/sites'
 
 const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,

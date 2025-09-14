@@ -1,5 +1,5 @@
-import { fetchSite, fetchAllSites } from 'lib/api';
-import { slugify } from 'lib/format';
+import { fetchSite, fetchAllSites } from '@/lib/api';
+import { slugify } from '@/lib/format';
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {

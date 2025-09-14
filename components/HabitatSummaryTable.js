@@ -1,5 +1,5 @@
-import { formatNumber } from 'lib/format';
-import styles from 'styles/SiteDetails.module.css';
+import { formatNumber } from '@/lib/format';
+import styles from '@/styles/SiteDetails.module.css';
 
 export const HabitatSummaryTable = ({ site }) => {
   const habitats = site.habitats || {};

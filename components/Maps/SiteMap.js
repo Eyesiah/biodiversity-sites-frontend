@@ -4,7 +4,7 @@ import { GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from 'components/Maps/BaseMap';
+import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from '@/components/Maps/BaseMap';
 
 function MapController({ lsoa }) {
   const map = useMap();

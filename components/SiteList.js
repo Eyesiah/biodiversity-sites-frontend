@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { formatNumber } from 'lib/format';
+import { formatNumber } from '@/lib/format';
 
 const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });

@@ -1,6 +1,6 @@
-import clientPromise from 'lib/mongodb';
-import { fetchAllSites } from 'lib/api';
-import { processSiteDataForIndex } from 'lib/sites';
+import clientPromise from '@/lib/mongodb';
+import { fetchAllSites } from '@/lib/api';
+import { processSiteDataForIndex } from '@/lib/sites';
 
 async function handler(req, res) {
   // Protect the endpoint with a secret

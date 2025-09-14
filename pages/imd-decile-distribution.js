@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { fetchAllSites } from 'lib/api';
+import { fetchAllSites } from '@/lib/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 
 export async function getStaticProps() {

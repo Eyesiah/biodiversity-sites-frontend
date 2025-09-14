@@ -2,7 +2,7 @@
 import { Marker, Popup, MapContainer, TileLayer, LayersControl } from 'react-leaflet';
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
-import { formatNumber } from 'lib/format';
+import { formatNumber } from '@/lib/format';
 
 const defaultSiteIcon = new L.Icon({
     iconUrl: '/icons/greenMarker.svg',
