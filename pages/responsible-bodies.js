@@ -4,8 +4,12 @@ import path from 'path';
 import ExternalLink from '@/components/ExternalLink';
 import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
-import { formatNumber } from '@/lib/format';
+import { slugify, formatNumber, normalizeBodyName } from '@/lib/format';
 import { useSortableData } from '@/lib/hooks';
+import { fetchAllSites } from '@/lib/api';
+import { processSiteForListView } from '@/lib/sites';
+import { CollapsibleRow } from '@/components/CollapsibleRow';
+import SiteList from '@/components/SiteList'
 
 export async function getStaticProps() {
   try {
@@ -25,7 +29,23 @@ export async function getStaticProps() {
       address: item['Address'] || '',
       emails: item['Email'] ? item['Email'].split('; ') : [],
       telephone: item['Telephone'] || '',
+      sites: []
     }));
+    
+    // allocate sites to bodies
+    const allSites = await fetchAllSites(0, true);
+    allSites.forEach(site => {
+      if (site.responsibleBodies) {
+        site.responsibleBodies.forEach(body => {          
+          const bodyName = slugify(normalizeBodyName(body))
+          let bodyItem = bodyItems.find(body => slugify(normalizeBodyName(body.name)) == bodyName)
+          if (bodyItem)
+          {
+            bodyItem.sites.push(processSiteForListView(site))
+          }
+        });
+      }
+    });
 
     return {
       props: {
@@ -39,6 +59,38 @@ export async function getStaticProps() {
     // to serve the stale (old) page instead of showing an error.
     throw e;
   }
+}
+
+
+const BodyRow = ({ body }) => {
+  const mainRow = (
+    <>
+      <td>{body.name}</td>
+      {<td>{body.sites.length}</td>}
+      {<td>{body.designationDate}</td>}
+      {<td>{body.expertise}</td>}
+      {<td>{body.organisationType}</td>}
+      {<td>{body.address}</td>}
+      {<td>
+        {body.emails.map(email => (
+          <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
+        ))}
+      </td>}
+      {<td>{body.telephone}</td>}
+    </>
+  )
+
+  const collapsibleContent = (
+    <SiteList sites={body.sites} />
+  )
+
+  return (
+    <CollapsibleRow
+      mainRow={mainRow}
+      collapsibleContent={collapsibleContent}
+      colSpan={8}
+    />
+  );
 }
 
 const DEBOUNCE_DELAY_MS = 300;
@@ -74,18 +126,10 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
 
   const { items: filteredAndSortedBodies, requestSort, getSortIndicator } = useSortableData(filteredBodies, { key: 'name', direction: 'ascending' });
 
-
-  // Check which columns have data to decide whether to render them
-  const hasDesignationDate = useMemo(() => responsibleBodies.some(body => body.designationDate), [responsibleBodies]);
-  const hasExpertise = useMemo(() => responsibleBodies.some(body => body.expertise), [responsibleBodies]);
-  const hasOrganisationType = useMemo(() => responsibleBodies.some(body => body.organisationType), [responsibleBodies]);
-  const hasAddress = useMemo(() => responsibleBodies.some(body => body.address), [responsibleBodies]);
-  const hasEmail = useMemo(() => responsibleBodies.some(body => body.emails.length > 0), [responsibleBodies]);
-  const hasTelephone = useMemo(() => responsibleBodies.some(body => body.telephone), [responsibleBodies]);
-
   const handleExport = () => {
     const csvData = filteredAndSortedBodies.map(body => ({
       'Name': body.name,
+      '# BGS Sites': body.sites.length,
       'Designation Date': body.designationDate,
       'Area of Expertise': body.expertise,
       'Type of Organisation': body.organisationType,
@@ -105,6 +149,7 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
     link.click();
     document.body.removeChild(link);
   };
+
 
   return (
     <div className="container">
@@ -153,29 +198,18 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
           <thead>
             <tr>
               <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-              {hasDesignationDate && <th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
-              {hasExpertise && <th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
-              {hasOrganisationType && <th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
-              {hasAddress && <th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
-              {hasEmail && <th>Email</th>}
-              {hasTelephone && <th>Telephone</th>}
+              <th onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</th>
+              {<th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
+              {<th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
+              {<th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
+              {<th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
+              {<th>Email</th>}
+              {<th>Telephone</th>}
             </tr>
           </thead>
           <tbody>
             {filteredAndSortedBodies.map((body) => (
-              <tr key={body.name}>
-                <td>{body.name}</td>
-                {hasDesignationDate && <td>{body.designationDate}</td>}
-                {hasExpertise && <td>{body.expertise}</td>}
-                {hasOrganisationType && <td>{body.organisationType}</td>}
-                {hasAddress && <td>{body.address}</td>}
-                {hasEmail && <td>
-                  {body.emails.map(email => (
-                    <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
-                  ))}
-                </td>}
-                {hasTelephone && <td>{body.telephone}</td>}
-              </tr>
+              <BodyRow body={body} key={body.name} />              
             ))}
           </tbody>
         </table>

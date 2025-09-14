@@ -72,7 +72,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
       </thead>
       <tbody>
         {sortedSites.map((site) => (
-          <tr key={site.referenceNumber} onMouseEnter={() => onSiteHover(site)} onMouseLeave={() => onSiteHover(null)} onClick={() => onSiteClick(site)} style={{ cursor: 'pointer' }}>
+          <tr key={site.referenceNumber} onMouseEnter={() => {if (onSiteHover) onSiteHover(site)}} onMouseLeave={() => {if (onSiteHover) onSiteHover(null)}} onClick={() => { if (onSiteClick) onSiteClick(site)}} style={{ cursor: 'pointer' }}>
             <td>
               <Link href={`/sites/${site.referenceNumber}`}>
                 {site.referenceNumber}
