@@ -28,9 +28,9 @@ export const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity
 export const lpaStyle = { color: '#282c34', weight: 2, opacity: 0.8, fillColor: '#282c34', fillOpacity: 0.3 };
 export const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOpacity: 0.5 }; // Pink
 
-export const BaseMap = ({ children, ...props }) => {
+export const BaseMap = ({ height=null, children, ...props }) => {
   return (
-    <MapContainer {...props}>
+    <MapContainer center={[52.8, -1.5]} zoom={6.5} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }} {...props}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer

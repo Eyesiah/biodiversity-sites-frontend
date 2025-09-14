@@ -108,6 +108,9 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
         marker.openPopup();
       }
     }
+    else {
+      setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
+    }
   }, [selectedSite]);
 
 
@@ -117,7 +120,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
   };
 
   return (
-    <BaseMap center={[52.8, -1.5]} zoom={6.5} style={{ height: height || 'calc(100vh - 80px)', width: '100%' }}>
+    <BaseMap height={height}>
       <MapController lsoa={activePolygons.lsoa} />
 
       {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
