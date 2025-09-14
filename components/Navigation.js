@@ -1,7 +1,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import styles from '../styles/Navigation.module.css';
+import styles from '@/styles/Navigation.module.css';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);

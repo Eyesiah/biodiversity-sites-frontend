@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { formatNumber } from '../lib/format';
-import { OtherAllocationsBarChart } from './OtherAllocationsBarChart';
+import { formatNumber } from '@/lib/format';
+import { OtherAllocationsBarChart } from '@/components/OtherAllocationsBarChart';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c', '#8dd1e1'];
 
@@ -91,7 +91,7 @@ export const AllocationPieChart = ({ data, disableAggregation = false, title = '
       return '#889095ff';
     }
     return '#8884d8'; // Fallback color
-  }, [chartData]);
+  }, [chartData, otherLabel]);
 
   if (!chartData || chartData.length === 0) {
     return <p>No allocation habitat data to display.</p>;

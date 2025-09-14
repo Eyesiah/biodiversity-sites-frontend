@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { slugify, normalizeBodyName } from '../../../lib/format';
+import { slugify, normalizeBodyName } from '@/lib/format';
 
 export async function getStaticPaths() {
   const lpaJsonPath = path.join(process.cwd(), 'data', 'LPAs.json');

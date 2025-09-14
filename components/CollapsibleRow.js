@@ -1,13 +1,24 @@
 import { useState } from 'react';
-import styles from '../styles/SiteDetails.module.css';
+import styles from '@/styles/SiteDetails.module.css';
 
-export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle, onMainRowClick, isOpen: externalIsOpen, setIsOpen: setExternalIsOpen }) => {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleToggle = () => {
+  // If isOpen is controlled externally, use that value. Otherwise, use internal state.
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+  const handleToggle = (e) => {
+    if (onMainRowClick) {
+      onMainRowClick(e);
+    }
     const newIsOpen = !isOpen;
-    setIsOpen(newIsOpen);
+    // If not controlled externally, update internal state.
+    if (setExternalIsOpen) {
+      setExternalIsOpen(newIsOpen);
+    } else {
+      setInternalIsOpen(newIsOpen);
+    }
     if (onToggle) {
       onToggle(newIsOpen);
     }

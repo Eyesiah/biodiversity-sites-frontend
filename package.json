@@ -8,21 +8,22 @@
     "mongodb": "^6.19.0",
     "next": "^15.5.2",
     "nprogress": "^0.2.0",
-    "papaparse": "^5.5.3",
     "react": "^18",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
     "recharts": "^3.1.2"
   },
   "scripts": {
-    "dev": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "cross-env": "^10.0.0",
     "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "14.2.5",
+    "papaparse": "^5.5.3"
   }
 }

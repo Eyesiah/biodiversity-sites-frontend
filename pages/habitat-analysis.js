@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { fetchAllSites } from '../lib/api';
-import { getHabitatDistinctiveness } from '../lib/habitat';
-import styles from '../styles/SiteDetails.module.css';
-import { formatNumber } from '../lib/format';
-import { useSortableData, getSortClassName } from '../lib/hooks';
+import { fetchAllSites } from '@/lib/api';
+import { getHabitatDistinctiveness } from '@/lib/habitat';
+import styles from '@/styles/SiteDetails.module.css';
+import { formatNumber } from '@/lib/format';
+import { useSortableData, getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
 
 // This function runs at build time to fetch and process data.
