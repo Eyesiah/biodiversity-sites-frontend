@@ -424,7 +424,6 @@ export default function SitePage({ site, error }) {
 
       <main className={styles.container}>
         <div className={styles.header}>
-          <Link href="/sites" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
           <div className={styles.titleWithButtons}>
             <h2>{site.referenceNumber}</h2>
