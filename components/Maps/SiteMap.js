@@ -4,7 +4,8 @@ import { GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from '@/components/Maps/BaseMap';
+import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/Maps/BaseMap';
+import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL } from '@/config';
 
 function MapController({ lsoa }) {
   const map = useMap();
@@ -40,10 +41,8 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     if (lsoaFromCache) {
       fetchPromises.push(Promise.resolve(lsoaFromCache));
     } else {
-      const lsoaName = site.lsoaName.replace(/'/g, "''");
       if (site.lsoaName && site.lsoaName !== 'N/A') {
-        const lsoaUrl = `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Lower_layer_Super_Output_Areas_Dec_2011_Boundaries_Full_Clipped_BFC_EW_V3_2022/FeatureServer/0/query?where=LSOA11NM='${lsoaName}'&outFields=&returnGeometry=true&f=geojson`;
-        fetchPromises.push(fetch(lsoaUrl).then(res => res.json()));
+        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, 'LSOA11NM', site.lsoaName));
       } else {
         fetchPromises.push(Promise.resolve(null)); // Push null if no LSOA name
       }
@@ -52,10 +51,8 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     if (lnrsFromCache) {
       fetchPromises.push(Promise.resolve(lnrsFromCache));
     } else {
-      const lnrsName = site.lnrsName.replace(/'/g, "''");
       if (site.lnrsName && site.lnrsName !== 'N/A') {
-        const lnrsUrl = `https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query?where=Name='${lnrsName}'&outFields=&returnGeometry=true&f=geojson`;
-        fetchPromises.push(fetch(lnrsUrl).then(res => res.json()));
+        fetchPromises.push(getPolys(ARCGIS_LNRS_URL, 'Name', site.lnrsName));
       } else {
         fetchPromises.push(Promise.resolve(null));
       }
@@ -64,10 +61,8 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     if (ncaFromCache) {
       fetchPromises.push(Promise.resolve(ncaFromCache));
     } else {
-      const ncaName = site.ncaName.replace(/'/g, "''");
       if (site.ncaName && site.ncaName !== 'N/A') {
-        const ncaUrl = `https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query?where=NCA_Name='${ncaName}'&outFields=&returnGeometry=true&f=geojson`;
-        fetchPromises.push(fetch(ncaUrl).then(res => res.json()));
+        fetchPromises.push(getPolys(ARCGIS_NCA_URL, 'NCA_Name', site.ncaName));
       } else {
         fetchPromises.push(Promise.resolve(null));
       }
@@ -76,10 +71,8 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     if (lpaFromCache) {
       fetchPromises.push(Promise.resolve(lpaFromCache));
     } else {
-      const lpaName = site.lpaName.replace(/'/g, "''");
       if (site.lpaName && site.lpaName !== 'N/A') {
-        const lpaUrl = `https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LPA_APR_2023_UK_BUC_V2/FeatureServer/0/query?where=LPA23NM='${lpaName}'&outFields=&returnGeometry=true&f=geojson`;
-        fetchPromises.push(fetch(lpaUrl).then(res => res.json()));
+        fetchPromises.push(getPolys(ARCGIS_LPA_URL, 'LPA23NM', site.lpaName));
       } else {
         fetchPromises.push(Promise.resolve(null));
       }

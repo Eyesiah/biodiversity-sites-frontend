@@ -253,7 +253,7 @@ const SiteDetailsCard = ({ site }) => {
       />
       <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
-      {site.latitude && site.longitude && <DetailRow label="Map" value={<ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink>} />}
+      {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
       <DetailRow label="NCA" value={site.nationalCharacterArea?.name ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.nationalCharacterArea.name)}`}>{site.nationalCharacterArea.name}</ExternalLink> : 'N/A'} />
       <DetailRow 
         label="LPA" 
@@ -424,7 +424,6 @@ export default function SitePage({ site, error }) {
 
       <main className={styles.container}>
         <div className={styles.header}>
-          <Link href="/sites" className={styles.backLink}>&larr; Back to Site List</Link>
           <h1>Biodiversity Gain Site</h1>
           <div className={styles.titleWithButtons}>
             <h2>{site.referenceNumber}</h2>

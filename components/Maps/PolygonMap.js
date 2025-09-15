@@ -2,7 +2,7 @@ import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lnrsStyle, adjacentStyle } from '@/components/Maps/BaseMap';
+import { BaseMap, SiteMapMarker, lnrsStyle, adjacentStyle, getPolys } from '@/components/Maps/BaseMap';
 
 function MapController({ geoJson }) {
   const map = useMap();
@@ -47,23 +47,17 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
         queryField = 'Name';
       }
 
-      const url = `${geoJsonUrl}?where=${queryField}='${name.replace(/'/g, "''")}'&outFields=*&returnGeometry=true&f=geojson`;
-      
-      const adjacentPromises = (selectedItem.adjacents || []).map(adj => {
-        const adjName = adj.name.replace(/'/g, "''");
-        const adjUrl = `${geoJsonUrl}?where=${queryField}='${adjName}'&outFields=*&returnGeometry=true&f=geojson`;
-        return fetch(adjUrl).then(res => res.json());
-      });
+      const adjacentPromises = (selectedItem.adjacents || []).map(adj => getPolys(geoJsonUrl, queryField, adj.name));
 
       try {
         const mainGeoJsonPromise = cache.current[name] 
           ? Promise.resolve(cache.current[name]) 
-          : fetch(url).then(res => res.json());
+          : getPolys(geoJsonUrl, queryField, name);
 
         const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
 
         if (mainData.error || !mainData.features || mainData.features.length === 0) {
-          const errorMessage = mainData.error?.message || "No polygon data found for the selected item.";
+          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : "No polygon data found for the selected item.";
           if (!isCancelled) {
             setError(errorMessage);
           }

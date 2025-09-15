@@ -59,6 +59,11 @@ export default function About() {
         <p>The LPA, NCA and LNRS of a site or allocation is computed by lookup of the location within the area boundary - a rather slow operation without the help of a GIS index.</p>
         <p>The data is refreshed on a six-hourly basis.</p>
 
+        <h2>Acknowledgements</h2>
+        <p>Digital boundaries and reference maps:</p>     
+        <p>© Natural England 2023. Contains OS data © Crown Copyright [and database right] 2023</p>
+        <p>Contains GeoPlace data © Local Government Information House Limited copyright and database right 2023</p>
+
         <h2>Exports</h2>
         <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq">https://bristoltrees.space/wfs/wfs-server.xq</ExternalLink>.</p>
 
