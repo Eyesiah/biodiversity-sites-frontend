@@ -22,11 +22,11 @@ export async function getStaticProps() {
     const jsonPath = path.join(process.cwd(), 'data', 'NCAs.json');
     const jsonData = fs.readFileSync(jsonPath, 'utf-8');
     const rawNcas = JSON.parse(jsonData);
-    const allSites = await fetchAllSites(0, true);
+    const allSites = await fetchAllSites(true);
 
     const siteCountsByNCA = allSites.reduce((acc, site) => {
-      if (site.nationalCharacterArea?.name) {
-        acc[site.nationalCharacterArea.name] = (acc[site.nationalCharacterArea.name] || 0) + 1;
+      if (site.ncaName) {
+        acc[site.ncaName] = (acc[site.ncaName] || 0) + 1;
       }
       return acc;
     }, {});

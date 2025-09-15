@@ -4,7 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 export async function getStaticProps() {
   try {
-    const allSites = await fetchAllSites(0, true);
+    const allSites = await fetchAllSites(true);
 
     const decileCounts = allSites.reduce((acc, site) => {
       const decile = site.lsoa?.IMDDecile ?? 'N/A';
