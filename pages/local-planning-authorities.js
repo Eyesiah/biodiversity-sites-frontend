@@ -9,6 +9,7 @@ import { fetchAllSites } from '@/lib/api';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
 import { useSortableData } from '@/lib/hooks';
+import { ARCGIS_LPA_URL } from '@/config'
 
 const PolygonMap = dynamic(() => import('../components/Maps/PolygonMap'), {
     ssr: false,
@@ -218,7 +219,7 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                     <div style={{ flex: '1 1 50%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
                         <PolygonMap
                             selectedItem={selectedLpa}
-                            geoJsonUrl="https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LPA_APR_2023_UK_BUC_V2/FeatureServer/0/query"
+                            geoJsonUrl={ARCGIS_LPA_URL}
                             nameProperty="name"
                             sites={sitesInSelectedLPA}
                             style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}

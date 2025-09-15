@@ -10,6 +10,7 @@ import { useSortableData } from '@/lib/hooks';
 import styles from '@/styles/SiteDetails.module.css';
 import { XMLBuilder } from 'fast-xml-parser';
 import { processSitesForListView} from '@/lib/sites'
+import { ARCGIS_LNRS_URL } from '@/config'
 
 const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,
@@ -144,7 +145,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
           <div style={{ flex: '1 1 50%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
             <PolygonMap 
               selectedItem={selectedLnrs}
-              geoJsonUrl="https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/LNRS_Area/FeatureServer/0/query"
+              geoJsonUrl={ARCGIS_LNRS_URL}
               nameProperty="name"
               sites={sitesInSelectedLNRS}
               style={{ color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }}

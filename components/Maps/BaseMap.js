@@ -22,6 +22,13 @@ const highlightedSiteIcon = new L.Icon({
     shadowSize: [41, 41]
 });
 
+export async function getPolys(geoJsonUrl, queryField, value) {
+  const encodedValue = encodeURIComponent(value.replace(/'/g, "''"));
+  const url = `${geoJsonUrl}?where=${queryField}='${encodedValue}'&outFields=*&returnGeometry=true&f=geojson`;
+  const res = await fetch(url)
+  return await res.json();
+}
+
 export const lsoaStyle = { color: '#f1c40f', weight: 3, opacity: 1, fillColor: '#f1c40f', fillOpacity: 0.2 };
 export const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
 export const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
