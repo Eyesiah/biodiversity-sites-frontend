@@ -25,7 +25,7 @@ export async function getStaticProps() {
     const rawLnrs = JSON.parse(jsonData);
     const allSites = await fetchAllSites(true);
 
-    const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`);
+    const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`, {cache: 'force-cache', next: { revalidate: 3600 } });
     const lnrsArcGISData = await lnrsArcGISRes.json();
 
     const siteCountsByLnrs = allSites.reduce((acc, site) => {
