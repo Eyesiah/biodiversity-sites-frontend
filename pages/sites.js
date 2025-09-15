@@ -16,7 +16,7 @@ const SiteMap = dynamic(() => import('../components/Maps/SiteMap'), {
 
 export async function getStaticProps() {
   try {
-    const allSites = await fetchAllSites(0, true);
+    const allSites = await fetchAllSites(true);
     const { processedSites, summary } = processSiteDataForIndex(allSites);
 
     // The value of the `props` key will be

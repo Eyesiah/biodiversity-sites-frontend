@@ -22,7 +22,7 @@ export async function getStaticProps() {
         const jsonData = fs.readFileSync(jsonPath, 'utf-8');
         const rawLpas = JSON.parse(jsonData);
 
-        const allSites = await fetchAllSites(0, true);
+        const allSites = await fetchAllSites(true);
         const allocationCounts = {};
         const siteCounts = {};
 
@@ -33,8 +33,8 @@ export async function getStaticProps() {
                     allocationCounts[lpaName] = (allocationCounts[lpaName] || 0) + 1;
                 });
             }
-            if (site.lpaArea?.name) {
-                const lpaName = site.lpaArea.name;
+            if (site.lpaName) {
+                const lpaName = site.lpaName;
                 siteCounts[lpaName] = (siteCounts[lpaName] || 0) + 1;
             }
         });
@@ -55,7 +55,7 @@ export async function getStaticProps() {
         return {
             props: {
                 lpas,
-                sites: allSites.map(s => ({ referenceNumber: s.referenceNumber, lpaName: s.lpaArea?.name || null, position: [s.latitude, s.longitude], responsibleBodies: s.responsibleBodies || [], ncaName: s.nationalCharacterArea?.name || null, siteSize: s.siteSize || 0, lnrsName: s.lnrsName || null })),
+                sites: allSites.map(s => ({ referenceNumber: s.referenceNumber, lpaName: s.lpaName || null, position: [s.latitude, s.longitude], responsibleBodies: s.responsibleBodies || [], ncaName: s.ncaName || null, siteSize: s.siteSize || 0, lnrsName: s.lnrsName || null })),
                 lastUpdated: new Date().toISOString(),
                 error: null
             }

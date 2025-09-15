@@ -39,7 +39,7 @@ export async function getStaticProps() {
     }));
     
     // allocate sites to bodies
-    const allSites = await fetchAllSites(0, true);
+    const allSites = await fetchAllSites(true);
     allSites.forEach(site => {
       if (site.responsibleBodies) {
         site.responsibleBodies.forEach(body => {          

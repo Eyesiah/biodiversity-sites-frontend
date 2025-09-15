@@ -17,7 +17,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
   try {
-    const sites = await fetchAllSites(1000);
+    const sites = await fetchAllSites();
     const paths = sites.map(site => ({
       params: { referenceNumber: site.referenceNumber },
     }));
@@ -254,11 +254,11 @@ const SiteDetailsCard = ({ site }) => {
       <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
       <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
       {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
-      <DetailRow label="NCA" value={site.nationalCharacterArea?.name ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.nationalCharacterArea.name)}`}>{site.nationalCharacterArea.name}</ExternalLink> : 'N/A'} />
+      <DetailRow label="NCA" value={site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'} />
       <DetailRow 
         label="LPA" 
         value={
-          site.lpaArea?.name ? <button onClick={() => showModal('lpa', site.lpaArea.name, site.lpaArea.name)} className={styles.linkButton}>{site.lpaArea.name}</button> : 'N/A'
+          site.lpaName ? <button onClick={() => showModal('lpa', site.lpaName, site.lpaName)} className={styles.linkButton}>{site.lpaName}</button> : 'N/A'
         } 
       />
       <DetailRow 
