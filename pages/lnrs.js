@@ -11,6 +11,7 @@ import styles from '@/styles/SiteDetails.module.css';
 import { XMLBuilder } from 'fast-xml-parser';
 import { processSitesForListView} from '@/lib/sites'
 import { ARCGIS_LNRS_URL } from '@/config'
+import ExternalLink from '@/components/ExternalLink';
 
 const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,
@@ -24,6 +25,9 @@ export async function getStaticProps() {
     const rawLnrs = JSON.parse(jsonData);
     const allSites = await fetchAllSites(0, true);
 
+    const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`);
+    const lnrsArcGISData = await lnrsArcGISRes.json();
+
     const siteCountsByLnrs = allSites.reduce((acc, site) => {
       if (site.lnrsName) {
         acc[site.lnrsName] = (acc[site.lnrsName] || 0) + 1;
@@ -31,13 +35,23 @@ export async function getStaticProps() {
       return acc;
     }, {});
 
-    // Convert size from square meters to hectares
     rawLnrs.forEach(lnrs => {
+      // Convert size from square meters to hectares
       lnrs.size = lnrs.size / 10000;
       lnrs.siteCount = siteCountsByLnrs[lnrs.name] || 0;
       // Ensure adjacents exist before processing
       (lnrs.adjacents || []).forEach(adj => adj.size = adj.size / 10000);
+      // add link to published from argisData
+
+      const arcGISLNRS = lnrsArcGISData.features.find(f => f.attributes.Name == lnrs.name);
+      if (arcGISLNRS) {
+        lnrs.publicationStatus = arcGISLNRS.attributes.Status || 'N/A';
+        if (arcGISLNRS.attributes.Link_to_published) {
+          lnrs.link = arcGISLNRS.attributes.Link_to_published;
+        }
+      }
     });
+
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
 
@@ -48,6 +62,7 @@ export async function getStaticProps() {
         lastUpdated: new Date().toISOString(),
         error: null,
       },
+      revalidate: 3600, // In seconds
     };
   } catch (e) {
     // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
@@ -198,7 +213,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         <td>{item.id}</td>
                         <td>{item.name}</td>
                         <td>{item.responsibleAuthority}</td>
-                        <td>{item.publicationStatus}</td>
+                        <td>{item.link ? <ExternalLink href={item.link}>{item.publicationStatus}</ExternalLink> : item.publicationStatus}</td>
                         <td className="numeric-data">{formatNumber(item.size, 0)}</td>
                         <td>
                           <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
