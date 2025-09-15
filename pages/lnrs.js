@@ -179,6 +179,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                   <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
                   <th onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</th>
                   <th onClick={() => requestSort('responsibleAuthority')}>Responsible Authority{getSortIndicator('responsibleAuthority')}</th>
+                  <th onClick={() => requestSort('publicationStatus')}>Publication Status{getSortIndicator('publicationStatus')}</th>
                   <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
                   <th>Map</th>
                   <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
@@ -196,6 +197,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         <td>{item.id}</td>
                         <td>{item.name}</td>
                         <td>{item.responsibleAuthority}</td>
+                        <td>{item.publicationStatus}</td>
                         <td className="numeric-data">{formatNumber(item.size, 0)}</td>
                         <td>
                           <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
@@ -238,7 +240,7 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                         )}
                       </div>
                     )}
-                    colSpan={7}
+                    colSpan={8}
                   />
                 ))}
               </tbody>
