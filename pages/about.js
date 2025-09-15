@@ -45,10 +45,11 @@ export default function About() {
         
         <h3>8. Index of Multiple Deprivation (IMD)</h3>
         <p>An official measure used in England to assess relative deprivation in small geographic areas by combining data from seven different domains: Income, Employment, Education, Skills and Training, Health Deprivation and Disability, Crime, Barriers to Housing and Services, and Living Environment. The IMD helps identify areas with high concentrations of different types of deprivation, allowing users to understand and compare levels of disadvantage across the country.</p>
+        <p>Levels of deprivation are shown in deciles - between 1 to 10 - with band 1 being within the most deprived 10% areas of the country and band 10 being within the least deprived 10% of the country.</p>
         <p><ExternalLink href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019">IMDs and their Profiles</ExternalLink></p>
         
         <h2>How we processed the data</h2>
-        <p>We enhanced the base data extracted from the register in a number of ways:</p>
+        <p>We enhanced the base data extracted from the BGS register in a number of ways:</p>
 
         <h3>1. Site Habitats - HU calculations</h3>
         <p>Baseline parcels are as per the standard formula – Habitat Unit (HU) = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (where SS is set to Low, 1).</p>
