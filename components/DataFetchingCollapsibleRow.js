@@ -20,7 +20,7 @@ export const DataFetchingCollapsibleRow = ({
   const [error, setError] = useState(null);
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
-  if (isOpen == null || setIsOpen != null) {
+  if (isOpen == null || setIsOpen == null) {
     if (isOpen != null || setIsOpen != null) {
       throw new Error('Both isOpen and setIsOpen are required but only one was set');
     }
