@@ -9,7 +9,15 @@
   border-bottom: 2px solid #34495e; /* Wet Asphalt */
   display: flex;
   align-items: center;
-  justify-content: space-between;
+}
+
+.logoLink {
+  margin-right: 2rem; /* Add some space between the logo and the menu items */
+}
+
+.logo {
+  border-radius: 50%;
+  display: block;
 }
 
 .hamburger {
@@ -59,8 +67,4 @@
   .menu.open {
     display: flex;
   }
-}
-
-.imageLink::after {
-  content: none !important;
 }

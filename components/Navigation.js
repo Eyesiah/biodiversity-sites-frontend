@@ -1,9 +1,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import styles from '@/styles/Navigation.module.css';
-import ExternalLink from '@/components/ExternalLink';
 import Image from 'next/image';
+import styles from '@/styles/Navigation.module.css';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +17,15 @@ export default function Navigation() {
 
   return (
     <nav className={styles.nav}>
+      <Link href="/about" className={styles.logoLink}>
+        <Image
+          src="/BTFLogodefault.jpg"
+          alt="BTF Logo"
+          width={40}
+          height={40}
+          className={styles.logo}
+        />
+      </Link>
       <button
         className={styles.hamburger}
         onClick={toggleMenu}
@@ -38,16 +46,6 @@ export default function Navigation() {
         <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
         <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
         <Link href="/statistics" className={styles.link} onClick={closeMenu}>Register Statistics</Link>
-        <div>
-          <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
-            <Image
-              src="/BTFLogodefault.jpg"
-              alt="BTF Logo"
-              width={50}
-              height={50}
-            />
-          </ExternalLink>
-        </div>
       </div>
     </nav>
   );
