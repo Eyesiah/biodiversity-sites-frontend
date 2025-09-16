@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.mapColumn {
+  flex: 1 1 33%;
+  margin-right: 1rem;
+  position: sticky;
+  top: 80px;
+  align-self: flex-start;
+}
+
+.contentColumn {
+  flex: 1 1 67%;
+}
