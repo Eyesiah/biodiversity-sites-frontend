@@ -112,7 +112,11 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
   const [expandedRows, setExpandedRows] = useState({});
 
   const handleToggle = (bodyName, isOpen) => {
-    setExpandedRows(prev => ({ ...prev, [bodyName]: isOpen }));
+    if (isOpen) {
+      setExpandedRows({ [bodyName]: true });
+    } else {
+      setExpandedRows({});
+    }
   };
 
   useEffect(() => {
