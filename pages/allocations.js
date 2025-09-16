@@ -123,7 +123,7 @@ const AllocationRow = ({ alloc }) => (
     dataUrl={`/modals/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}.json`}
     renderDetails={details => <AllocationHabitats habitats={details} />}
     dataExtractor={json => json.pageProps.habitats}
-      colSpan={8}
+    colSpan={8}
     />
   );
 

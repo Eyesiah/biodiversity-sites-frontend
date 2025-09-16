@@ -9,7 +9,8 @@ import { fetchAllSites } from '@/lib/api';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
 import { useSortableData } from '@/lib/hooks';
-import { ARCGIS_LPA_URL } from '@/config'
+import { ARCGIS_LPA_URL } from '@/config';
+import MapContentLayout from '@/components/MapContentLayout';
 
 const PolygonMap = dynamic(() => import('../components/Maps/PolygonMap'), {
     ssr: false,
@@ -215,8 +216,8 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                 <title>Local Planning Authorities</title>
             </Head>
             <main className="main">
-                <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-                    <div style={{ flex: '1 1 50%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }}>
+                <MapContentLayout
+                    map={
                         <PolygonMap
                             selectedItem={selectedLpa}
                             geoJsonUrl={ARCGIS_LPA_URL}
@@ -224,66 +225,68 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                             sites={sitesInSelectedLPA}
                             style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
                         />
-                    </div>
-                    <div style={{ flex: '1 1 50%' }}>
-                        <h1 className="title">Local Planning Authorities</h1>
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-                            <div className="search-container" style={{ margin: 0 }}>
-                                <input
-                                    type="text"
-                                    className="search-input"
-                                    placeholder="Search by LPA name or ID."
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    autoFocus
-                                />
-                                {inputValue && (
-                                    <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
-                                )}
-                            </div>
-                            <div className={styles.buttonGroup}>
-                                <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
-                                <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
-                            </div>
-                        </div>
-                        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
-                        <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LPAs are shown coloured pink.</p>
-                        <table className="site-table">
-                            <thead>
-                                <tr>
-                                    <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
-                                    <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                                    <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                                    <th>Map</th>
-                                    <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
-                                    <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
-                                    <th onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-                                    <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td className="centered-data">{formatNumber(summaryData.totalSites, 0)}</td>
-                                    <td className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</td>
-                                    <td className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</td>
-                                </tr>
-                                {filteredAndSortedLPAs.map((lpa) => (
-                                    <LpaDataRow 
-                                        key={lpa.id} 
-                                        lpa={lpa} 
-                                        onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
-                                        lpas={lpas} 
-                                        handleAdjacentMapSelection={handleAdjacentMapSelection}
-                                        isOpen={openRowId === lpa.id}
-                                        setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
+                    }
+                    content={
+                        <>
+                            <h1 className="title">Local Planning Authorities</h1>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+                                <div className="search-container" style={{ margin: 0 }}>
+                                    <input
+                                        type="text"
+                                        className="search-input"
+                                        placeholder="Search by LPA name or ID."
+                                        value={inputValue}
+                                        onChange={(e) => setInputValue(e.target.value)}
+                                        autoFocus
                                     />
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                    {inputValue && (
+                                        <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
+                                    )}
+                                </div>
+                                <div className={styles.buttonGroup}>
+                                    <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+                                    <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+                                </div>
+                            </div>
+                            <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedLPAs.length, 0)}</strong> of <strong>{formatNumber(lpas.length, 0)}</strong> LPAs.</p>
+                            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LPAs are shown coloured pink.</p>
+                            <table className="site-table">
+                                <thead>
+                                    <tr>
+                                        <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
+                                        <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
+                                        <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
+                                        <th>Map</th>
+                                        <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
+                                        <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
+                                        <th onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+                                        <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td className="centered-data">{formatNumber(summaryData.totalSites, 0)}</td>
+                                        <td className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</td>
+                                        <td className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</td>
+                                    </tr>
+                                    {filteredAndSortedLPAs.map((lpa) => (
+                                        <LpaDataRow 
+                                            key={lpa.id} 
+                                            lpa={lpa} 
+                                            onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
+                                            lpas={lpas} 
+                                            handleAdjacentMapSelection={handleAdjacentMapSelection}
+                                            isOpen={openRowId === lpa.id}
+                                            setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
+                                        />
+                                    ))}
+                                </tbody>
+                            </table>
+                        </>
+                    }
+                />
             </main>
         </div>
     );

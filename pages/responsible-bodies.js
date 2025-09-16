@@ -11,6 +11,7 @@ import { processSiteForListView } from '@/lib/sites';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
 import SiteList from '@/components/SiteList';
 import dynamic from 'next/dynamic';
+import MapContentLayout from '@/components/MapContentLayout';
 
 const SiteMap = dynamic(() => import('../components/Maps/SiteMap'), {
   ssr: false,
@@ -112,7 +113,11 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
   const [expandedRows, setExpandedRows] = useState({});
 
   const handleToggle = (bodyName, isOpen) => {
-    setExpandedRows(prev => ({ ...prev, [bodyName]: isOpen }));
+    if (isOpen) {
+      setExpandedRows({ [bodyName]: true });
+    } else {
+      setExpandedRows({});
+    }
   };
 
   useEffect(() => {
@@ -187,76 +192,78 @@ export default function ResponsibleBodiesPage({ responsibleBodies }) {
         <title>Responsible Bodies</title>        
       </Head>
         <main className="main">
-          <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-            <div style={{ flex: '1 1 33%', marginRight: '1rem', position: 'sticky', top: '80px', alignSelf: 'flex-start' }} >
+          <MapContentLayout
+            map={
               <SiteMap sites={mapSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
-            </div>
-            <div style={{ flex: '1 1 67%' }}>
-              <h1 className="title">Designated Responsible Bodies</h1>
-              <div className="summary" style={{ textAlign: 'center' }}>           
-                {inputValue ? (
-                  <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
-                ) : (
-                  <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
-                      These <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
-                  </p>
-              )}
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-                <div className="search-container" style={{ margin: 0 }}>
-                  <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search by name, expertise, type, or address."
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    autoFocus
-                  />
-                  {inputValue && (
-                    <button
-                      onClick={() => setInputValue('')}
-                      className="clear-search-button"
-                      aria-label="Clear search"
-                    >
-                      &times;
-                    </button>
-                  )}
+            }
+            content={
+              <>
+                <h1 className="title">Designated Responsible Bodies</h1>
+                <div className="summary" style={{ textAlign: 'center' }}>           
+                  {inputValue ? (
+                    <p>Displaying <strong>{formatNumber(filteredAndSortedBodies.length, 0)}</strong> of <strong>{formatNumber(responsibleBodies.length, 0)}</strong> bodies</p>
+                  ) : (
+                    <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
+                        These <strong>{formatNumber(responsibleBodies.length, 0)}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
+                    </p>
+                )}
                 </div>
-                <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-                  Export to CSV
-                </button>
-              </div>
-              <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
-                Not all the Responsible Bodies listed here are included in the BGS Site List page or share the same name.
-              </p>
-              <table className="site-table">
-                <thead>
-                  <tr>
-                    <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                    <th onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</th>
-                    {<th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
-                    {<th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
-                    {<th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
-                    {<th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
-                    {<th>Email</th>}
-                    {<th>Telephone</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAndSortedBodies.map((body) => (
-                    <BodyRow
-                      body={body}
-                      key={body.name}
-                      isOpen={expandedRows[body.name] || false}
-                      onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                      onSiteHover={setHoveredSite}
-                      onSiteClick={setSelectedSite}
-                    />              
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+                  <div className="search-container" style={{ margin: 0 }}>
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Search by name, expertise, type, or address."
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      autoFocus
+                    />
+                    {inputValue && (
+                      <button
+                        onClick={() => setInputValue('')}
+                        className="clear-search-button"
+                        aria-label="Clear search"
+                      >
+                        &times;
+                      </button>
+                    )}
+                  </div>
+                  <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+                    Export to CSV
+                  </button>
+                </div>
+                <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
+                  Not all the Responsible Bodies listed here are included in the BGS Site List page or share the same name.
+                </p>
+                <table className="site-table">
+                  <thead>
+                    <tr>
+                      <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
+                      <th onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</th>
+                      {<th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
+                      {<th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
+                      {<th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
+                      {<th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
+                      {<th>Email</th>}
+                      {<th>Telephone</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAndSortedBodies.map((body) => (
+                      <BodyRow
+                        body={body}
+                        key={body.name}
+                        isOpen={expandedRows[body.name] || false}
+                        onToggle={(isOpen) => handleToggle(body.name, isOpen)}
+                        onSiteHover={setHoveredSite}
+                        onSiteClick={setSelectedSite}
+                      />              
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            }
+          />
       </main>
     </div>
   );
