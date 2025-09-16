@@ -9,7 +9,7 @@ export default function About() {
         <title>About</title>
       </Head>
       <main className="main prose">
-        <div style={{ position: 'absolute', top: '5rem', left: '5rem' }}>
+        <div style={{ position: 'absolute', top: '5rem', left: '2rem' }}>
           <ExternalLink href="https://bristoltreeforum.org/">
             <Image
               src="/BTFLogodefault.jpg"
