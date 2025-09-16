@@ -9,16 +9,6 @@ export default function About() {
         <title>About</title>
       </Head>
       <main className="main prose">
-        <div style={{ position: 'absolute', top: '5rem', left: '2rem' }}>
-          <ExternalLink href="https://bristoltreeforum.org/">
-            <Image
-              src="/BTFLogodefault.jpg"
-              alt="BTF Logo"
-              width={200}
-              height={200}
-            />
-          </ExternalLink>
-        </div>
         <h1 className="title">Biodiversity Gain Sites in England</h1>
 
         <p>England&apos;s <ExternalLink href="https://www.google.com/search?q=Biodiversity+Net+Gain+(BNG)">Biodiversity Net Gain (BNG)</ExternalLink> requirement, which aims to leave nature in a measurably better state after a development project, means that developers must now achieve at least a 10% increase in the biodiversity of a parcel of land following its development. If this is not possible, Biodiversity Gain Sites (BGS) have been made available. These sites are locations where habitats for wildlife are created or improved. If biodiversity gains can&apos;t be delivered within a development site - by creating or enhancing its existing habitats - they must be delivered elsewhere, by developers paying for the same types of habitat at a different location. Landowners have registered their land for this purpose and will sell <ExternalLink href="https://www.google.com/search?q=biodiversity+units">biodiversity units</ExternalLink> to developers.</p>
