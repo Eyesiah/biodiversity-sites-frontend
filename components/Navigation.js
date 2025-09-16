@@ -1,9 +1,9 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import styles from '@/styles/Navigation.module.css';
-import ExternalLink from '@/components/ExternalLink';
 import Image from 'next/image';
+import ExternalLink from './ExternalLink';
+import styles from '@/styles/Navigation.module.css';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +18,15 @@ export default function Navigation() {
 
   return (
     <nav className={styles.nav}>
+       <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+        <Image
+          src="/BTFLogodefault.jpg"
+          alt="BTF Logo"
+          width={40}
+          height={40}
+          className={styles.logo}
+        />
+      </ExternalLink>
       <button
         className={styles.hamburger}
         onClick={toggleMenu}
@@ -38,16 +47,16 @@ export default function Navigation() {
         <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
         <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
         <Link href="/statistics" className={styles.link} onClick={closeMenu}>Register Statistics</Link>
-        <div>
-          <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+      </div>
+      <div className={styles.rightLogoLink}>
+        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
             <Image
-              src="/BTFLogodefault.jpg"
-              alt="BTF Logo"
-              width={50}
-              height={50}
+                src="/ToBlogo192.jpg"
+                alt="ToB Logo"
+                width={40}
+                height={40}
             />
-          </ExternalLink>
-        </div>
+        </ExternalLink>
       </div>
     </nav>
   );
