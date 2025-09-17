@@ -323,8 +323,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.6;
-            const height = window.screen.height * 1;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/baseline-area-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -334,8 +334,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         </button>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.6;
-            const height = window.screen.height * 1;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/baseline-hedgerow-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -345,8 +345,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         </button>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.4;
-            const height = window.screen.height * 0.65;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/baseline-watercourse-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -359,8 +359,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.6;
-            const height = window.screen.height * 1;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/improvement-habitats', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -370,8 +370,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         </button>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.6;
-            const height = window.screen.height * 1;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/improvement-hedgerows', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"
@@ -381,8 +381,8 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
         </button>
         <button 
           onClick={() => {
-            const width = window.screen.width * 0.4;
-            const height = window.screen.height * 0.65;
+            const width = window.screen.width * 0.5;
+            const height = window.screen.height * 0.5;
             window.open('/improvement-watercourses', 'chartWindow', `width=${width},height=${height}`);
           }}
           className="linkButton"

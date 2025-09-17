@@ -3,11 +3,13 @@ import 'styles/globals.css';
 import Head from 'next/head';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 function MyApp({ Component, pageProps }) {
+  const [isLoading, setIsLoading] = useState(false);
+
   const umamiWebsiteId =
     process.env.NODE_ENV === 'production'
       ? '4b0b86b1-e0ca-46d3-9439-936cdad532a5'
@@ -17,9 +19,11 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const handleStart = (url) => {
+      setIsLoading(true);
       NProgress.start();
     };
     const handleStop = () => {
+      setIsLoading(false);
       NProgress.done();
     };
 
@@ -33,6 +37,18 @@ function MyApp({ Component, pageProps }) {
       router.events.off('routeChangeError', handleStop);
     };
   }, [router]);
+
+  const isChartPage = 
+    router.pathname === '/allocated-habitats' ||
+    router.pathname === '/improvement-habitats' ||
+    router.pathname === '/baseline-area-habitats' ||
+    router.pathname === '/baseline-hedgerow-habitats' ||
+    router.pathname === '/baseline-watercourse-habitats' ||
+    router.pathname === '/improvement-hedgerows' ||
+    router.pathname === '/improvement-watercourses' ||
+    router.pathname === '/hedgerow-allocations' ||
+    router.pathname === '/watercourse-allocations' ||
+    router.pathname === '/imd-decile-distribution';
 
   return (
     <>
@@ -49,17 +65,14 @@ function MyApp({ Component, pageProps }) {
         src="/api/umami/script"
         data-website-id={umamiWebsiteId}
       />
-      {router.pathname !== '/allocated-habitats' &&
-        router.pathname !== '/improvement-habitats' &&
-        router.pathname !== '/baseline-area-habitats' &&
-        router.pathname !== '/baseline-hedgerow-habitats' &&
-        router.pathname !== '/baseline-watercourse-habitats' &&
-        router.pathname !== '/improvement-hedgerows' &&
-        router.pathname !== '/improvement-watercourses' &&
-        router.pathname !== '/hedgerow-allocations' &&
-        router.pathname !== '/watercourse-allocations' &&
-        router.pathname !== '/imd-decile-distribution' && <Navigation />}
-      <Component {...pageProps} />
+      {!isChartPage && <Navigation />}
+      {isLoading && isChartPage ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <div className="loader"></div>
+        </div>
+      ) : (
+        <Component {...pageProps} />
+      )}
       <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
         {pageProps.lastUpdated && (
           <p>
