@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       // create the data array to return
       data = allSites.map(s => ({
         'reference-number': s.referenceNumber,
-        'responsible-body': s.responsibleBodies, // Keep as array
+        'responsible-body': s.responsibleBodies.join(', '),
         'LPA': s.lpaName,
         'NCA': s.ncaName,
         'area-ha': s.siteSize,
