@@ -199,9 +199,9 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                     <th onClick={() => requestSort('responsibleAuthority')}>Responsible Authority{getSortIndicator('responsibleAuthority')}</th>
                     <th onClick={() => requestSort('publicationStatus')}>Publication Status{getSortIndicator('publicationStatus')}</th>
                     <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                    <th>Map</th>
                     <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
                     <th onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</th>
+                    <th>Map</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -217,13 +217,13 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                           <td>{item.responsibleAuthority}</td>
                           <td>{item.link ? <ExternalLink href={item.link}>{item.publicationStatus}</ExternalLink> : item.publicationStatus}</td>
                           <td className="numeric-data">{formatNumber(item.size, 0)}</td>
-                          <td>
-                            <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
-                              Show map
-                            </button>
-                          </td>
                           <td className="centered-data">{item.siteCount}</td>
                           <td className="centered-data">{item.adjacents?.length || 0}</td>
+                          <td>
+                            <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
+                              Display Map
+                            </button>
+                          </td>
                         </>
                       )}
                       collapsibleContent={(
@@ -236,6 +236,8 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                                   <th>ID</th>
                                   <th>Name</th>
                                   <th>Area (ha)</th>
+                                  <th># BGS Sites</th>
+                                  <th>Map</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -247,7 +249,8 @@ export default function LNRSAreasPage({ lnrs, sites, error }) {
                                       <td>{adj.id}</td>
                                       <td>{adj.name}</td>
                                       <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                                      <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentLnrsObject); }} className="linkButton">Show map</button></td>
+                                      <td className="centered-data">{adjacentLnrsObject?.siteCount || 0}</td>
+                                      <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentLnrsObject); }} className="linkButton">Display Map</button></td>
                                     </tr>
                                   );
                                 })}
