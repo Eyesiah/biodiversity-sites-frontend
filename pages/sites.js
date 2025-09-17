@@ -155,8 +155,8 @@ export default function HomePage({ sites, error, summary = { totalSites: 0, tota
   };
 
   const openChartWindow = (url) => {
-    const width = window.screen.width * 0.65;
-    const height = window.screen.height * 0.4;
+    const width = window.screen.width * 0.5;
+    const height = window.screen.height * 0.5;
     window.open(url, 'chartWindow', `width=${width},height=${height}`);
   };
 
