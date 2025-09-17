@@ -174,37 +174,26 @@ export default function StatisticsPage({ stats, siteAdditions }) {
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs'],
-                  ['#ff7300', '#00C49F', '#d4a6f2'],
-                  ['Total Baseline Habitat Units', 'Total Created Habitat Units', 'Total Allocated Habitat Units'],
-                  'Habitat Units'
-                )}
-              </div>
-              <div style={{ flex: 1 }}>                
-                {renderMultiLineChart(
-                  ['totalArea'],
-                  ['#ffc658'],
-                  ['Area'],
-                  'Total Sites Area (ha)'
-                )}
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              <div style={{ flex: 1, marginRight: '20px' }}>
-                {renderMultiLineChart(
-                  ['baselineAreaSize', 'baselineHedgerowSize', 'baselineWatercourseSize'],
-                  ['#ff7300', '#00C49F', '#d4a6f2'],
-                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
-                  'Baseline Sizes'
+                  ['totalArea', 'baselineAreaSize', 'improvementsAreaSize'],
+                  ['#ffc658', '#ff7300', '#ffb870'],
+                  ['Total Site Area (ha)', 'Baseline Area (ha)', 'Improvement Area (ha)'],
+                  'Site Area (ha): Total, Baseline & Improvement'
                 )}
               </div>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['improvementsAreaSize', 'improvementsHedgerowSize', 'improvementsWatercourseSize'],
-                  ['#ff7300', '#00C49F', '#d4a6f2'],
-                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
-                  'Improvement Sizes'
+                  ['baselineHedgerowSize', 'improvementsHedgerowSize'],
+                  ['#00C49F', '#70d9c4'],
+                  ['Baseline Hedgerow (km)', 'Improvement Hedgerow (km)'],
+                  'Hedgerow (km): Baseline vs. Improvement Sizes'
+                )}
+              </div>
+              <div style={{ flex: 1 }}>
+                {renderMultiLineChart(
+                  ['baselineWatercourseSize', 'improvementsWatercourseSize'],
+                  ['#d4a6f2', '#e9d3f9'],
+                  ['Baseline Watercourse (km)', 'Improvement Watercourse (km)'],
+                  'Watercourse (km): Baseline vs. Improvement Sizes'
                 )}
               </div>
             </div>
@@ -212,12 +201,24 @@ export default function StatisticsPage({ stats, siteAdditions }) {
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
+                  ['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs'],
+                  ['#ff7300', '#00C49F', '#d4a6f2'],
+                  ['Total Baseline Habitat Units', 'Total Created Habitat Units', 'Total Allocated Habitat Units'],
+                  'Habitat Units'
+                )}
+              </div>
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                {renderMultiLineChart(
                   ['baselineParcels', 'improvementsParcels', 'allocatedParcels'],
                   ['#ff7300', '#00C49F', '#d4a6f2'],
                   ['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels'],
-                  'Num Parcels'
+                  'Parcels Count'
                 )}
               </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
+              
 
               { siteAdditions && siteAdditions.length > 0 && <div style={{ flex: 1, marginRight: '20px' }}>
                 <h2>Site Register Addition Date</h2>

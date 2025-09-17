@@ -22,8 +22,8 @@ export default function Navigation() {
         <Image
           src="/BTFLogodefault.jpg"
           alt="BTF Logo"
-          width={40}
-          height={40}
+          width={45}
+          height={45}
           className={styles.logo}
         />
       </ExternalLink>
@@ -53,8 +53,8 @@ export default function Navigation() {
             <Image
                 src="/ToBlogo192.jpg"
                 alt="ToB Logo"
-                width={40}
-                height={40}
+                width={45}
+                height={45}
             />
         </ExternalLink>
       </div>

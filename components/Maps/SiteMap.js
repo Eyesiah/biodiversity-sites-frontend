@@ -1,6 +1,7 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { GeoJSON, useMap } from 'react-leaflet';
+import { GeoJSON, useMap, Tooltip } from 'react-leaflet';
+import { Polyline } from 'react-leaflet/Polyline'
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -15,6 +16,15 @@ function MapController({ lsoa }) {
       if (layer.getBounds().isValid()) map.fitBounds(layer.getBounds());
     }
   }, [lsoa, map]);
+  return null;
+}
+
+function PolylinePane() {
+  const map = useMap();
+  useEffect(() => {
+    const pane = map.createPane('polyline-pane');
+    pane.style.zIndex = 450;
+  }, [map]);
   return null;
 }
 
@@ -95,9 +105,9 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
 
   useEffect(() => {
     if (selectedSite) {
+      fetchAndDisplayPolygons(selectedSite);
       const marker = markerRefs.current[selectedSite.referenceNumber];
       if (marker) {
-        fetchAndDisplayPolygons(selectedSite);
         marker.openPopup();
       }
     }
@@ -109,12 +119,13 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
 
   const handlePopupClose = () => {
     setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-    onSiteSelect(null);
+    if (onSiteSelect) {onSiteSelect(null)};
   };
 
   return (
     <BaseMap height={height}>
       <MapController lsoa={activePolygons.lsoa} />
+      <PolylinePane />
 
       {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
       {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
@@ -124,6 +135,29 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
       {sites.filter(site => site.position != null).map(site => (
           <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
       ))}
+
+      {selectedSite && selectedSite.allocations &&
+        selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
+          return (
+            <Polyline
+              key={index}
+              pane="polyline-pane"
+              positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
+              pathOptions={{ color: '#0d6efd', weight: 3 }}
+              eventHandlers={{
+                mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),
+                mouseout: (e) => e.target.setStyle({ color: '#0d6efd', weight: 3 }),
+              }}
+            >
+              <Tooltip>
+                <div><strong>{alloc.projectName || 'N/A'}</strong></div>
+                <div>Planning Ref: {alloc.planningReference}</div>
+                <div>LPA: {alloc.localPlanningAuthority}</div>
+                <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km` : 'N/A'}</div>
+              </Tooltip>
+            </Polyline>
+          );
+        })}
     </BaseMap>
   );
 };

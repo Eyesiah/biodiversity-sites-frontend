@@ -5,7 +5,7 @@ import fs from 'fs';
 import ExternalLink from '@/components/ExternalLink';
 import path from 'path';
 import { fetchAllSites } from '@/lib/api';
-import { formatNumber, slugify } from '@/lib/format';
+import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import styles from '@/styles/SiteDetails.module.css';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
 import { useSortableData } from '@/lib/hooks';
@@ -88,7 +88,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
 
   const sitesInSelectedNCA = useMemo(() => {
     if (!selectedNca) return [];
-    return (sites || []).filter(site => site.ncaName === selectedNca.name);
+    return (sites || []).filter(site => slugify(normalizeBodyName(site.ncaName)) === slugify(normalizeBodyName(selectedNca.name)));
   }, [selectedNca, sites]);
 
   const handleMapSelection = (item) => {
@@ -176,9 +176,9 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                     <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
                     <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
                     <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                    <th>Map</th>
                     <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
                     <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
+                    <th>Map</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -194,13 +194,13 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                           </td>
                           <td>{nca.name}</td>
                           <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
-                          <td>
-                            <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
-                              Show map
-                            </button>
-                          </td>
                           <td className="centered-data">{nca.siteCount}</td>
                           <td className="centered-data">{nca.adjacents?.length || 0}</td>
+                          <td>
+                            <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
+                              Display Map
+                            </button>
+                          </td>
                         </>
                       )}
                       collapsibleContent={(
@@ -208,13 +208,21 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
                           <h4>Adjacent NCAs</h4>
                           {nca.adjacents && nca.adjacents.length > 0 ? (
                             <table className={styles.subTable}>
-                              <thead><tr><th>ID</th><th>Name</th><th>Area (ha)</th><th>Map</th></tr></thead>
+                              <thead>
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Name</th>
+                                  <th>Area (ha)</th>
+                                  <th># BGS Sites</th>
+                                  <th>Map</th>
+                                </tr>
+                              </thead>
                               <tbody>
                                 {nca.adjacents.map(adj => {
                                   const adjacentNcaObject = ncas.find(n => n.id === adj.id);
                                   return (
-                                    <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                                    <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Show map</button></td>
+                                    <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td><td className="centered-data">{adjacentNcaObject?.siteCount || 0}</td>
+                                    <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Display Map</button></td>
                                     </tr>
                                   );
                                 })}

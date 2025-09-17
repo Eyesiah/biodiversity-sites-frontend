@@ -80,6 +80,7 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
               <th>ID</th>
               <th>Name</th>
               <th>Area (ha)</th>
+              <th># BGS Sites</th>
               <th>Map</th>
             </tr>
           </thead>
@@ -88,8 +89,11 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
               const adjacentLpaObject = lpas?.find(l => l.id === adj.id);
               return (
                 <tr key={adj.id}>
-                  <td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                  <td><button onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} className="linkButton">Show map</button></td>
+                  <td>{adj.id}</td>
+                  <td>{adj.name}</td>
+                  <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
+                  <td className="centered-data">{adjacentLpaObject?.siteCount || 0}</td>
+                  <td><button onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} className="linkButton">Display Map</button></td>
                 </tr>
               );
             })}
@@ -110,14 +114,14 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
         <td>{lpa.id}</td>
         <td>{lpa.name}</td>
         <td className="numeric-data">{formatNumber(lpa.size, 0)}</td>
-        <td>
-            <button onClick={(e) => { e.stopPropagation(); onRowClick(lpa); }} className="linkButton">
-                Show map
-            </button>
-        </td>
         <td className="centered-data">{lpa.siteCount}</td>
         <td className="centered-data">{lpa.allocationsCount}</td>
         <td className="centered-data">{lpa.adjacentsCount}</td>
+        <td>
+            <button onClick={(e) => { e.stopPropagation(); onRowClick(lpa); }} className="linkButton">
+                Display Map
+            </button>
+        </td>
       </>
     )}
     dataUrl={`/modals/lpas/${lpa.id}.json`}
@@ -256,20 +260,20 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                                         <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
                                         <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
                                         <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                                        <th>Map</th>
                                         <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
                                         <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
                                         <th onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</th>
+                                        <th>Map</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
                                         <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
                                         <td></td>
-                                        <td></td>
                                         <td className="centered-data">{formatNumber(summaryData.totalSites, 0)}</td>
                                         <td className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</td>
                                         <td className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</td>
+                                        <td></td>
                                     </tr>
                                     {filteredAndSortedLPAs.map((lpa) => (
                                         <LpaDataRow 

@@ -86,7 +86,7 @@ export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handl
     >
       <Popup>
         <h2><Link href={`/sites/${site.referenceNumber}`}>{site.referenceNumber}</Link></h2>
-        <b>Responsible Body:</b> {site.summary?.responsibleBody ?? site.responsibleBody}<br />
+        <b>Responsible Body:</b> {site.responsibleBody}<br />
         <b>LPA:</b> {site.lpaName || 'N/A'}
         {withColorKeys && site.lpaName && site.lpaName != 'N/A' && <ColorKey color={lpaStyle.color}/>}
         <br />
@@ -99,8 +99,8 @@ export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handl
         <b>LSOA IMD Decile:</b> {site.imdDecile || 'N/A'}
         {withColorKeys && site.imdDecile && site.imdDecile != 'N/A' && <ColorKey color={lsoaStyle.color}/>}
         <br />              
-        <b>Allocations:</b> {site.summary?.allocationsCount ?? site.allocationsCount}<br />
-        <b>Total Size:</b> {formatNumber(site.summary?.totalSize ?? site.totalSize)} ha<br />
+        <b>Allocations:</b> {site.allocationsCount}<br />
+        <b>Total Size:</b> {formatNumber(site.siteSize)} ha<br />
         <br />
       </Popup>
     </Marker>
