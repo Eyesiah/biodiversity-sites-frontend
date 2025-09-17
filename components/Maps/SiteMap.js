@@ -19,6 +19,15 @@ function MapController({ lsoa }) {
   return null;
 }
 
+function PolylinePane() {
+  const map = useMap();
+  useEffect(() => {
+    const pane = map.createPane('polyline-pane');
+    pane.style.zIndex = 450;
+  }, [map]);
+  return null;
+}
+
 // --- SiteMap Component ---
 const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
@@ -116,6 +125,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
   return (
     <BaseMap height={height}>
       <MapController lsoa={activePolygons.lsoa} />
+      <PolylinePane />
 
       {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
       {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
@@ -131,6 +141,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
           return (
             <Polyline
               key={index}
+              pane="polyline-pane"
               positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
               pathOptions={{ color: '#0d6efd', weight: 3 }}
               eventHandlers={{
