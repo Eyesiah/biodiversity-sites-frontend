@@ -5,7 +5,7 @@ import fs from 'fs';
 import ExternalLink from '@/components/ExternalLink';
 import path from 'path';
 import { fetchAllSites } from '@/lib/api';
-import { formatNumber, slugify } from '@/lib/format';
+import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import styles from '@/styles/SiteDetails.module.css';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
 import { useSortableData } from '@/lib/hooks';
@@ -88,7 +88,7 @@ export default function NationalCharacterAreasPage({ ncas, sites, error }) {
 
   const sitesInSelectedNCA = useMemo(() => {
     if (!selectedNca) return [];
-    return (sites || []).filter(site => site.ncaName === selectedNca.name);
+    return (sites || []).filter(site => slugify(normalizeBodyName(site.ncaName)) === slugify(normalizeBodyName(selectedNca.name)));
   }, [selectedNca, sites]);
 
   const handleMapSelection = (item) => {
