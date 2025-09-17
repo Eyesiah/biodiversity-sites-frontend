@@ -53,6 +53,7 @@ export default function About() {
         <p>We enhanced the base data extracted from the BGS register in a number of ways:</p>
 
         <h3>1. Site Habitats - HU calculations</h3>
+        <p><ExternalLink href="https://bristoltreeforum.org/2024/10/28/biodiversity-gain-metric-calculating-habitat-units">Habitat Units explained</ExternalLink></p>
         <p>Baseline parcels are as per the standard formula – Habitat Unit (HU) = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (where SS is set to Low, 1).</p>
 
         <h3>2. Improvements</h3>
