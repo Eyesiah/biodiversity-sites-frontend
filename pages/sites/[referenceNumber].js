@@ -433,21 +433,22 @@ export default function SitePage({ site, error }) {
       </Head>
 
       <main className={styles.container}>
-        <div className={styles.header}>
-          <h1>Biodiversity Gain Site</h1>
-          <div className={styles.titleWithButtons}>
-            <h2>{site.referenceNumber}</h2>
-            <div className={styles.buttonGroup}>
-              <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
-              <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
-            </div>
-          </div>
-        </div>
+        
         <MapContentLayout
           map={
-            <SiteMap sites={[site]} selectedSite={site} height="85vh" />
+            <SiteMap sites={[site]} selectedSite={site} height="80vh" />
           }
-          content={(
+          content={(<>
+            <div className={styles.header}>
+              <h1>Biodiversity Gain Site</h1>
+              <div className={styles.titleWithButtons}>
+                <h2>{site.referenceNumber}</h2>
+                <div className={styles.buttonGroup}>
+                  <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
+                  <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
+                </div>
+              </div>
+            </div>
             <div className={styles.detailsGrid}>
               <SiteDetailsCard site={site} />
 
@@ -469,6 +470,7 @@ export default function SitePage({ site, error }) {
               />
 
             </div>
+            </>
           )}          
         />
       </main>
