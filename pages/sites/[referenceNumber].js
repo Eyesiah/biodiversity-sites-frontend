@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import styles from '@/styles/SiteDetails.module.css';
 import { fetchAllSites, fetchSite } from '@/lib/api';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '@/lib/geo';
@@ -13,6 +14,12 @@ import { CollapsibleRow } from "../../components/CollapsibleRow"
 import { HabitatSummaryTable } from "../../components/HabitatSummaryTable"
 import { DetailRow } from "../../components/DetailRow"
 import { XMLBuilder } from 'fast-xml-parser';
+import MapContentLayout from '@/components/MapContentLayout';
+
+const SiteMap = dynamic(() => import('../../components/Maps/SiteMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 // This function tells Next.js which paths to pre-render at build time.
 export async function getStaticPaths() {
@@ -45,25 +52,24 @@ export async function getStaticProps({ params }) {
     // process allocation location data
     if (site.allocations) {
       await Promise.all(site.allocations.map(async (alloc) => {
-        let allocCoords = null;
 
         // 1. Always try to geocode the address, using the LPA for context.
         if (alloc.projectName) {
-          allocCoords = await getCoordinatesForAddress(alloc.projectName, alloc.localPlanningAuthority);
+          alloc.coords = await getCoordinatesForAddress(alloc.projectName, alloc.localPlanningAuthority);
         }
 
         // 2. If geocoding the full address fails, fall back to just the LPA.
-        if (!allocCoords && alloc.localPlanningAuthority) {
-          allocCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
+        if (!alloc.coords && alloc.localPlanningAuthority) {
+          alloc.coords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
         }
 
         // 3. If we have coordinates for the allocation, calculate the distance.
-        if (allocCoords && site.latitude && site.longitude) {
+        if (alloc.coords && site.latitude && site.longitude) {
           alloc.distance = getDistanceFromLatLonInKm(
             site.latitude,
             site.longitude,
-            allocCoords.latitude,
-            allocCoords.longitude
+            alloc.coords.latitude,
+            alloc.coords.longitude
           );
         } else {
           alloc.distance = 'unknown';
@@ -414,6 +420,10 @@ export default function SitePage({ site, error }) {
       </>
     );
   }
+  
+  if (site.latitude && site.longitude) {
+    site.position = [site.latitude, site.longitude];
+  }
 
   return (
     <>
@@ -433,28 +443,34 @@ export default function SitePage({ site, error }) {
             </div>
           </div>
         </div>
+        <MapContentLayout
+          map={
+            <SiteMap sites={[site]} selectedSite={site} height="85vh" />
+          }
+          content={(
+            <div className={styles.detailsGrid}>
+              <SiteDetailsCard site={site} />
 
-        <div className={styles.detailsGrid}>
-          <SiteDetailsCard site={site} />
+              <HabitatsCard
+                title="Baseline Habitats (click any habitat cell for more detail)"
+                habitats = {site.habitats}
+                isImprovement={false}
+              />
 
-          <HabitatsCard
-            title="Baseline Habitats (click any habitat cell for more detail)"
-            habitats = {site.habitats}
-            isImprovement={false}
-          />
+              <HabitatsCard
+                title="Improvement Habitats (click any habitat cell for more detail)"
+                habitats = {site.improvements}
+                isImprovement={true}
+              />
 
-          <HabitatsCard
-            title="Improvement Habitats (click any habitat cell for more detail)"
-            habitats = {site.improvements}
-            isImprovement={true}
-          />
+              <AllocationsCard 
+                title="Allocations (click any allocation for more detail)"
+                allocations={site.allocations}
+              />
 
-          <AllocationsCard 
-            title="Allocations (click any allocation for more detail)"
-            allocations={site.allocations}
-          />
-
-        </div>
+            </div>
+          )}          
+        />
       </main>
     </>
   );
