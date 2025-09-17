@@ -193,18 +193,26 @@ export default function StatisticsPage({ stats, siteAdditions }) {
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['baselineAreaSize', 'baselineHedgerowSize', 'baselineWatercourseSize'],
-                  ['#ff7300', '#00C49F', '#d4a6f2'],
-                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
-                  'Baseline Sizes'
+                  ['baselineAreaSize', 'improvementsAreaSize'],
+                  ['#ff7300', '#ffb870'],
+                  ['Baseline Area (ha)', 'Improvement Area (ha)'],
+                  'Area: Baseline vs. Improvement Sizes'
                 )}
               </div>
               <div style={{ flex: 1, marginRight: '20px' }}>
                 {renderMultiLineChart(
-                  ['improvementsAreaSize', 'improvementsHedgerowSize', 'improvementsWatercourseSize'],
-                  ['#ff7300', '#00C49F', '#d4a6f2'],
-                  ['Total Area Size (ha)', 'Total Hedgerow Size (km)', 'Total Watercourses Size (km)'],
-                  'Improvement Sizes'
+                  ['baselineHedgerowSize', 'improvementsHedgerowSize'],
+                  ['#00C49F', '#70d9c4'],
+                  ['Baseline Hedgerow (km)', 'Improvement Hedgerow (km)'],
+                  'Hedgerow: Baseline vs. Improvement Sizes'
+                )}
+              </div>
+              <div style={{ flex: 1 }}>
+                {renderMultiLineChart(
+                  ['baselineWatercourseSize', 'improvementsWatercourseSize'],
+                  ['#d4a6f2', '#e9d3f9'],
+                  ['Baseline Watercourse (km)', 'Improvement Watercourse (km)'],
+                  'Watercourse: Baseline vs. Improvement Sizes'
                 )}
               </div>
             </div>
