@@ -64,10 +64,7 @@ export async function getStaticProps() {
       revalidate: 3600, // Re-generate the page every hour
     };
   } catch (e) {
-    console.error(e);
-    return {
-      props: { stats: [], siteAdditions: [] },
-    };
+    throw e;
   }
 }
 
