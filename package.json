@@ -4,18 +4,18 @@
   "private": false,
   "license": "MIT",
   "dependencies": {
-    "fast-xml-parser": "^5.2.5",
-    "leaflet": "^1.9.4",
-    "mongodb": "^6.19.0",
-    "mt-osgridref": "^0.1.0",
-    "next": "^15.5.2",
-    "node-cache": "^5.1.2",
-    "nprogress": "^0.2.0",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-leaflet": "^4.2.1",
-    "recharts": "^3.1.2",
-    "xmlbuilder2": "^3.1.1"
+    "fast-xml-parser": "5.2.5",
+    "leaflet": "1.9.4",
+    "mongodb": "6.19.0",
+    "mt-osgridref": "0.1.0",
+    "next": "15.5.3",
+    "node-cache": "5.1.2",
+    "nprogress": "0.2.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-leaflet": "5.0.0",
+    "recharts": "3.2.1",
+    "xmlbuilder2": "3.1.1"
   },
   "scripts": {
     "dev": "next dev",
@@ -24,10 +24,10 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "cross-env": "^10.0.0",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.5",
-    "papaparse": "^5.5.3"
+    "@eslint/eslintrc": "3.3.1",
+    "cross-env": "10.0.0",
+    "eslint": "9.35.0",
+    "eslint-config-next": "15.5.3",
+    "papaparse": "5.5.3"
   }
 }
