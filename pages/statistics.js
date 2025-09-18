@@ -7,6 +7,15 @@ export async function getStaticProps() {
     const client = await clientPromise;
     const db = client.db();
 
+    if (db == null) {
+      return {
+        props: {
+          error: 'Error: Unable to access the stats database.'
+        },
+        revalidate: 10,
+      };
+    }
+
     const statsData = await db
       .collection('statistics')
       .find({})
@@ -64,10 +73,7 @@ export async function getStaticProps() {
       revalidate: 3600, // Re-generate the page every hour
     };
   } catch (e) {
-    console.error(e);
-    return {
-      props: { stats: [], siteAdditions: [] },
-    };
+    throw e;
   }
 }
 
@@ -87,7 +93,13 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export default function StatisticsPage({ stats, siteAdditions }) {
+export default function StatisticsPage({ error, stats, siteAdditions }) {
+
+  if (error)
+  {
+    return <h1>{error}</h1>;
+  }
+
   const renderMultiLineChart = (dataKeys, strokeColors, names, title) => {
     const filteredData = stats.filter(stat =>
       dataKeys.some(key => stat[key] != null && stat[key] !== 0)
