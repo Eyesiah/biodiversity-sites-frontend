@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/Maps/BaseMap';
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL } from '@/config';
+import MapKey from '@/components/Maps/MapKey';
 
 function MapController({ lsoa }) {
   const map = useMap();
@@ -123,42 +124,49 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
   };
 
   return (
-    <BaseMap height={height}>
-      <MapController lsoa={activePolygons.lsoa} />
-      <PolylinePane />
+    <div>
+      <BaseMap height={height}>
+        <MapController lsoa={activePolygons.lsoa} />
+        <PolylinePane />
 
-      {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
-      {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
-      {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
-      {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
+        {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
+        {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
+        {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
+        {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
 
-      {sites.filter(site => site.position != null).map(site => (
-          <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
-      ))}
+        {sites.filter(site => site.position != null).map(site => (
+            <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
+        ))}
 
-      {selectedSite && selectedSite.allocations &&
-        selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
-          return (
-            <Polyline
-              key={index}
-              pane="polyline-pane"
-              positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
-              pathOptions={{ color: '#0d6efd', weight: 3 }}
-              eventHandlers={{
-                mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),
-                mouseout: (e) => e.target.setStyle({ color: '#0d6efd', weight: 3 }),
-              }}
-            >
-              <Tooltip>
-                <div><strong>{alloc.projectName || 'N/A'}</strong></div>
-                <div>Planning Ref: {alloc.planningReference}</div>
-                <div>LPA: {alloc.localPlanningAuthority}</div>
-                <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km` : 'N/A'}</div>
-              </Tooltip>
-            </Polyline>
-          );
-        })}
-    </BaseMap>
+        {selectedSite && selectedSite.allocations &&
+          selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
+            return (
+              <Polyline
+                key={index}
+                pane="polyline-pane"
+                positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
+                pathOptions={{ color: '#0d6efd', weight: 3 }}
+                eventHandlers={{
+                  mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),
+                  mouseout: (e) => e.target.setStyle({ color: '#0d6efd', weight: 3 }),
+                }}
+              >
+                <Tooltip>
+                  <div><strong>{alloc.projectName || 'N/A'}</strong></div>
+                  <div>Planning Ref: {alloc.planningReference}</div>
+                  <div>LPA: {alloc.localPlanningAuthority}</div>
+                  <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km` : 'N/A'}</div>
+                </Tooltip>
+              </Polyline>
+            );
+          })}
+      </BaseMap>
+      {!onSiteSelect && <MapKey keys={[
+        { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
+        { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
+        { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },
+      ]} />}
+    </div>
   );
 };
 
