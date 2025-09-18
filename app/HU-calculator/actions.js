@@ -1,17 +1,35 @@
 "use server"
 
-import { calculateBaselineHU, calculateImprovementHU } from "@/lib/habitat";
+import { calcDifficultyFactor, calcTemporalRisk, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
+import { formatNumber } from "@/lib/format";
 
-export async function calcHU(formData) {
-    const size = Number(formData.get("size"));
+export async function calcHU(prevState, formData) {
+    const size = formData.get("size");
     const habitat = formData.get("habitat");
     const condition = formData.get("condition");
     const improvementType = formData.get("improvementType");
 
     const isBaseline = improvementType == "none" || improvementType == null || improvementType == '';
-    const hu = isBaseline ? calculateBaselineHU(size, habitat, condition) : calculateImprovementHU(size, habitat, condition, improvementType);
-    return {
-      HU: hu
+
+    let result = {
+      hu: isBaseline ? calculateBaselineHU(Number(size), habitat, condition) : calculateImprovementHU(Number(size), habitat, condition, improvementType),        
+      distinctiveness: getHabitatDistinctiveness(habitat),
+      distinctivenessScore: getDistinctivenessScore(habitat),
+      conditionScore: getConditionScore(condition),
     }
     
+    if (!isBaseline) {
+      result.temporalRisk= calcTemporalRisk(habitat, condition);
+      result.difficultyFactor = calcDifficultyFactor(habitat);
+    }
+
+    const newState = {
+        size: size,
+        habitat: habitat,
+        condition: condition,
+        improvementType: improvementType,
+        result: result
+    };
+
+    return newState;
 }
