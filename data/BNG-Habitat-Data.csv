@@ -131,22 +131,22 @@ Artificial hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,15,10,5,2
 Artificial features of hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,1
 Artificial hard structures with integrated greening of grey infrastructure (IGGI),Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,0
 Watercourse footprint,V.low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Species-rich native hedgerow with trees - associated with bank or ditch,V.High,8,Low,1,Low,1,3,,2,,1,1,,10,,20,,
-Species-rich native hedgerow with trees,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,,
-Species-rich native hedgerow - associated with bank or ditch,High,6,Low,1,Low,1,3,,2,,1,1,,5,,12,,
-Native hedgerow with trees - associated with bank or ditch,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,,
-Species-rich native hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,,
-Native hedgerow - associated with bank or ditch,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,,
-Native hedgerow with trees,Medium,4,Low,1,Low,1,3,,2,,1,1,,10,,20,,
-Ecologically valuable line of trees,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,,
-Ecologically valuable line of trees - associated with bank or ditch,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,,
-Native hedgerow,Low,2,Low,1,Low,1,3,,2,,1,1,,5,,12,,
-Line of trees,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,,
-Line of trees - associated with bank or ditch,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,,
-Non-native and ornamental hedgerow,V.Low,1,Low,1,Low,1,3,,2,,1,1,,Not possible,,Not possible,,
-Priority habitat,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,,
-Other rivers and streams,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,,
-Ditches,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,,
-Canals,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,,
-Culvert,Low,2,Medium,0.67,N/A,1,Not Possible,Not Possible,Not Possible,Not Possible,1,,,,,,,
+Species-rich native hedgerow with trees - associated with bank or ditch,V.High,8,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
+Species-rich native hedgerow with trees,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
+Species-rich native hedgerow - associated with bank or ditch,High,6,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
+Native hedgerow with trees - associated with bank or ditch,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
+Species-rich native hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
+Native hedgerow - associated with bank or ditch,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
+Native hedgerow with trees,Medium,4,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
+Ecologically valuable line of trees,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
+Ecologically valuable line of trees - associated with bank or ditch,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
+Native hedgerow,Low,2,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
+Line of trees,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
+Line of trees - associated with bank or ditch,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
+Non-native and ornamental hedgerow,V.Low,1,Low,1,Low,1,3,,2,,1,1,,Not possible,,Not possible,1,1
+Priority habitat,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
+Other rivers and streams,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
+Ditches,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
+Canals,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
+Culvert,Low,2,Medium,0.67,N/A,1,Not Possible,Not Possible,Not Possible,Not Possible,1,,,,,,1,1
 undefined,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0,0
