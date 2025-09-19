@@ -1,7 +1,6 @@
 "use server"
 
-import { calcDifficultyFactor, calcTemporalRisk, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
-import { formatNumber } from "@/lib/format";
+import { calcDifficultyFactor, calcTemporalRisk, getTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
 
 export async function calcHU(prevState, formData) {
     const size = formData.get("size");
@@ -19,6 +18,7 @@ export async function calcHU(prevState, formData) {
     }
     
     if (!isBaseline) {
+      result.getTimeToTarget = getTimeToTarget(habitat, condition);
       result.temporalRisk= calcTemporalRisk(habitat, condition);
       result.difficultyFactor = calcDifficultyFactor(habitat);
     }

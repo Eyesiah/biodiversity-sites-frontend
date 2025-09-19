@@ -5,12 +5,16 @@ import Script from 'next/script';
 export const metadata = {
   title: 'BGS Register',
   description: 'Biodiversity Gain Sites Register',
-  viewport: 'width=device-width, initial-scale=1',
   icons: {
     apple: '/ToBlogo192.png',
     icon: '/favicon.ico',
   },
   manifest: '/manifest.json',
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {

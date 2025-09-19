@@ -68,7 +68,8 @@ export async function getStaticProps() {
     return {
       props: {
         stats: processedData,
-        siteAdditions
+        siteAdditions,
+        lastUpdated: new Date().toISOString(),
       },
       revalidate: 3600, // Re-generate the page every hour
     };
@@ -150,7 +151,7 @@ export default function StatisticsPage({ error, stats, siteAdditions }) {
             <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
             <Legend />
             {dataKeys.map((dataKey, i) => (
-              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} strokeWidth={3} />
+              <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} strokeWidth={3} dot={{ r: 0 }} />
             ))}
           </LineChart>
         </ResponsiveContainer>
