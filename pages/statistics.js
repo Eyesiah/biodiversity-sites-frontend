@@ -68,7 +68,8 @@ export async function getStaticProps() {
     return {
       props: {
         stats: processedData,
-        siteAdditions
+        siteAdditions,
+        lastUpdated: new Date().toISOString(),
       },
       revalidate: 3600, // Re-generate the page every hour
     };
