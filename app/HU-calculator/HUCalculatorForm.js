@@ -45,7 +45,7 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             </tr>
             <tr>
               <td>Improvement Type</td>
-              <td><select name="improvementType" defaultValue={state.improvementType}>
+              <td><select name="improvementType" defaultValue={state.improvementType} key={JSON.stringify(state.result)}>
                 <option value="none">None</option>
                 <option value="creation">Creation</option>
                 <option value="enhanced">Improvement</option>
