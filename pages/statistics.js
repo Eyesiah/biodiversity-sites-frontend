@@ -94,6 +94,15 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const CommaSeperatedSiteLink = ({site, index, count}) => {
+  return (
+  <>    
+    <Link href={`/sites/${site}`}>{site}</Link>
+    {index < count - 1 && ', '}
+  </>
+  );
+};
+
 export default function StatisticsPage({ error, stats, siteAdditions }) {
 
   if (error)
@@ -246,11 +255,10 @@ export default function StatisticsPage({ error, stats, siteAdditions }) {
                     {siteAdditions.map((addition) => (
                       <tr key={addition.date}>
                         <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
-                        <td>{addition.sites.map((site, index) => (
-                          <>
-                            <Link href={`/sites/${site}`}>{site}</Link>
-                            {index < addition.sites.length - 1 && ', '}
-                          </> ))}
+                        <td>
+                          {addition.sites.map((site, index) => (
+                            <CommaSeperatedSiteLink key={index} site={site} index={index} count={addition.sites.length} />
+                          ))}
                         </td>
                       </tr>
                     ))}
