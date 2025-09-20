@@ -7,6 +7,9 @@ import styles from '@/styles/SiteDetails.module.css';
 import Footer from '@/components/Footer';
 import { collateHabitats } from '@/lib/habitat';
 
+// Revalidate this page at most once every hour (3600 seconds)
+export const revalidate = 3600;
+
 export const metadata = {
   title: 'Habitat Summary',
 };
