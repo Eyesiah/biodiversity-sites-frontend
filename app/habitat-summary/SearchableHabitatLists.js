@@ -3,14 +3,11 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import { HabitatsCard } from '@/components/HabitatsCard';
-import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
-import { DetailRow } from '@/components/DetailRow';
 import { XMLBuilder } from 'fast-xml-parser';
-import { formatNumber } from '@/lib/format';
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function HabitatSummaryClientPage({ totalSize, numSites, habitats, improvements, allocations }) {
+export default function SearchableHabitatLists({ habitats, improvements }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
@@ -77,27 +74,7 @@ export default function HabitatSummaryClientPage({ totalSize, numSites, habitats
   };
 
   return (
-    <main className={styles.container}>
-      <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Habitats Summary</h1>
-
-      <div className={styles.detailsGrid}>
-
-        <section className={styles.card}>
-          <h3>BGS Register Summary</h3>
-
-          <div>
-            <DetailRow label="Number of BGS sites" value={numSites} />
-            <DetailRow label="Total BGS site area (ha)" value={formatNumber(totalSize)} />
-            <div className={styles.detailRow}>
-              <dt className={styles.detailLabel}>Habitat Summary</dt>
-              <dd className={styles.detailValue}>
-                <HabitatSummaryTable site={{habitats: habitats, improvements: improvements, allocations: allocations}} />
-              </dd>
-            </div>
-          </div>
-
-        </section>
-
+      <>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
           <div className="search-container" style={{ margin: 0 }}>
             <input
@@ -135,8 +112,6 @@ export default function HabitatSummaryClientPage({ totalSize, numSites, habitats
           habitats = {filteredImprovementHabitats}
           isImprovement={true}
         />
-      </div>
-
-    </main>
+    </>
   );
 }
