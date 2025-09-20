@@ -33,11 +33,7 @@ export default function RootLayout({ children }) {
         />
         <Navigation />
         <main className="main">{children}</main>
-        <footer style={{ textAlign: 'center', padding: '1rem', fontSize: '0.8rem', color: '#aaa' }}>
-          <p>
-            Version: {process.env.APP_VERSION}-{process.env.GIT_COMMIT_HASH}
-          </p>
-        </footer>
+        
       </body>
     </html>
   );
