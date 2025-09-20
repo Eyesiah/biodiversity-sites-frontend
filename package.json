@@ -5,9 +5,9 @@
   "license": "MIT",
   "dependencies": {
     "fast-xml-parser": "5.2.5",
+    "geodesy": "^2.4.0",
     "leaflet": "1.9.4",
     "mongodb": "6.19.0",
-    "mt-osgridref": "0.1.0",
     "next": "15.5.3",
     "node-cache": "5.1.2",
     "nprogress": "0.2.0",
