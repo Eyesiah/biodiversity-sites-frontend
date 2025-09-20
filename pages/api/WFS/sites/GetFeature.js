@@ -1,6 +1,5 @@
 import { fetchAllSites } from "@/lib/api";
-import LatLon from 'mt-latlon';
-import OsGridRef from 'mt-osgridref';
+import OsGridRef from 'geodesy/osgridref.js';
 import { create } from 'xmlbuilder2';
 
 export default async function handler(req, res) {
@@ -10,10 +9,9 @@ export default async function handler(req, res) {
 
   // first get the easting/northings
   allSites.forEach(s => {
-    var latlon = new LatLon(s.latitude, s.longitude);
-    var point = OsGridRef.latLongToOsGrid(latlon);
-    s.easting = point.easting;
-    s.northing = point.northing;
+    var gridref = OsGridRef.parse(s.gridReference);
+    s.easting = gridref.easting;
+    s.northing = gridref.northing;
   });
 
   // create the data array to return
