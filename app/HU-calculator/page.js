@@ -1,6 +1,6 @@
-import styles from '@/styles/SiteDetails.module.css';
 import HUCalculatorForm from './HUCalculatorForm';
 import { getAllConditions, getAllHabitats } from '@/lib/habitat';
+import Footer from '@/components/Footer';
 
 export default function HUCalculatorPage({}) {
 
@@ -8,8 +8,13 @@ export default function HUCalculatorPage({}) {
   const conditions = getAllConditions();
 
   return (
-    <section>
-      <HUCalculatorForm habitats={habitats} conditions={conditions}></HUCalculatorForm>
-    </section>
+    <>
+      <main>
+        <section>
+          <HUCalculatorForm habitats={habitats} conditions={conditions}></HUCalculatorForm>
+        </section>
+      </main>
+      <Footer lastUpdated={Date.now()} />
+    </>
   )
 }
