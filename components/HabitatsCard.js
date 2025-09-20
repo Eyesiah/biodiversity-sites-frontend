@@ -4,49 +4,6 @@ import { useState } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import {CollapsibleRow} from "components/CollapsibleRow"
 
-// Helper function to collate habitat data
-export const collateHabitats = (habitats, isImprovement) => {
-  if (!habitats) return [];
-
-  const collated = habitats.reduce((acc, habitat) => {
-    const key = habitat.type;
-    if (!acc[key]) {
-      acc[key] = {
-        type: habitat.type,
-        distinctiveness: habitat.distinctiveness,
-        parcels: 0,
-        area: 0,
-        HUs: 0,
-        subRows: {},
-      };
-    }
-    acc[key].parcels += 1;
-    acc[key].area += habitat.size;
-    acc[key].HUs += habitat.HUs;
-
-    const subKey = isImprovement ? `${habitat.interventionType}-${habitat.condition}` : habitat.condition;
-    if (!acc[key].subRows[subKey]) {
-      acc[key].subRows[subKey] = {
-        condition: habitat.condition,
-        interventionType: habitat.interventionType,
-        parcels: 0,
-        area: 0,
-        HUs: 0,
-      };
-    }
-    acc[key].subRows[subKey].parcels += 1;
-    acc[key].subRows[subKey].area += habitat.size;
-    acc[key].subRows[subKey].HUs += habitat.HUs;
-
-    return acc;
-  }, {});
-
-  return Object.values(collated).map(habitat => ({
-    ...habitat,
-    subRows: Object.values(habitat.subRows),
-  }));
-};
-
 const HabitatRow = ({ habitat, isImprovement, title }) => {
   const mainRow = (
     <>
@@ -128,9 +85,9 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
 export function HabitatsCard ({title, habitats, isImprovement}) {
   const [isOpen, setIsOpen] = useState(true);
 
-  const collatedAreas = collateHabitats(habitats?.areas, isImprovement);
-  const collatedHedgerows = collateHabitats(habitats?.hedgerows, isImprovement);
-  const collatedWatercourses = collateHabitats(habitats?.watercourses, isImprovement);  
+  const collatedAreas = habitats?.areas;
+  const collatedHedgerows = habitats?.areas;
+  const collatedWatercourses = habitats?.watercourses;
   
   const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
   const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });

@@ -16,6 +16,58 @@ import { DetailRow } from "../../components/DetailRow"
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 
+
+// Helper function to collate habitat data
+const collateHabitats = (habitats, isImprovement) => {
+  if (!habitats) return [];
+
+  const collated = habitats.reduce((acc, habitat) => {
+    const key = habitat.type;
+    if (!acc[key]) {
+      acc[key] = {
+        type: habitat.type,
+        distinctiveness: habitat.distinctiveness,
+        parcels: 0,
+        area: 0,
+        HUs: 0,
+        subRows: {},
+      };
+    }
+    acc[key].parcels += 1;
+    acc[key].area += habitat.size;
+    acc[key].HUs += habitat.HUs;
+
+    const subKey = isImprovement ? `${habitat.interventionType}-${habitat.condition}` : habitat.condition;
+    if (!acc[key].subRows[subKey]) {
+      acc[key].subRows[subKey] = {
+        condition: habitat.condition,
+        interventionType: habitat.interventionType,
+        parcels: 0,
+        area: 0,
+        HUs: 0,
+      };
+    }
+    acc[key].subRows[subKey].parcels += 1;
+    acc[key].subRows[subKey].area += habitat.size;
+    acc[key].subRows[subKey].HUs += habitat.HUs;
+
+    return acc;
+  }, {});
+
+  return Object.values(collated).map(habitat => ({
+    ...habitat,
+    subRows: Object.values(habitat.subRows),
+  }));
+};
+
+const collateAllHabitats = (habObj, isImprovement) => {
+  return {
+    areas: collateHabitats(habObj.areas, isImprovement),
+    hedgerows: collateHabitats(habObj.hedgerows, isImprovement),
+    watercourses: collateHabitats(habObj.watercourses, isImprovement)
+  }
+}
+
 const SiteMap = dynamic(() => import('../../components/Maps/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
@@ -454,13 +506,13 @@ export default function SitePage({ site, error }) {
 
               <HabitatsCard
                 title="Baseline Habitats (click any habitat cell for more detail)"
-                habitats = {site.habitats}
+                habitats = {collateAllHabitats(site.habitats, false)}
                 isImprovement={false}
               />
 
               <HabitatsCard
                 title="Improvement Habitats (click any habitat cell for more detail)"
-                habitats = {site.improvements}
+                habitats = {collateAllHabitats(site.improvements, true)}
                 isImprovement={true}
               />
 
