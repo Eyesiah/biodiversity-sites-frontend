@@ -5,7 +5,7 @@ import { DetailRow } from '@/components/DetailRow';
 import { formatNumber } from '@/lib/format';
 import styles from '@/styles/SiteDetails.module.css';
 import Footer from '@/components/Footer';
-import { collateHabitats } from '@/lib/habitat';
+import { collateAllHabitats } from '@/lib/habitat';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -59,13 +59,8 @@ export default async function HabitatSummaryPage() {
     }
   });
 
-  const collateAllHabitats = (habObj, isImprovement) => {
-    return {
-      areas: collateHabitats(habObj.areas, isImprovement),
-      hedgerows: collateHabitats(habObj.hedgerows, isImprovement),
-      watercourses: collateHabitats(habObj.watercourses, isImprovement)
-    }
-  }
+  const collatedHabitats = collateAllHabitats(allHabitats, false);
+  const collatedImprovements = collateAllHabitats(allImprovements, true);
 
   return (
     <>
@@ -83,14 +78,14 @@ export default async function HabitatSummaryPage() {
               <div className={styles.detailRow}>
                 <dt className={styles.detailLabel}>Habitat Summary</dt>
                 <dd className={styles.detailValue}>
-                  <HabitatSummaryTable site={{ habitats: allHabitats, improvements: allImprovements, allocations: allSites.flatMap(s => s.allocations || []) }} />
+                  <HabitatSummaryTable site={{ habitats: collatedHabitats, improvements: collatedImprovements, allocations: allSites.flatMap(s => s.allocations || []) }} />
                 </dd>
               </div>
             </div>
 
           </section>
         </div>
-        <SearchableHabitatLists habitats={collateAllHabitats(allHabitats, false)} improvements={collateAllHabitats(allImprovements, true)} />
+        <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} />
       </main>
       <Footer lastUpdated={lastUpdated} />
     </>
