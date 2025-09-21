@@ -13,11 +13,11 @@ export default async function SiteListPage() {
   const lastUpdated = Date.now();
   
   return (
-    <div className="container">
-      <main className="main">
+    <>
+      <main className="container">
         <SiteListPageContent sites={processedSites} summary={summary}/>
       </main>
       <Footer lastUpdated={lastUpdated} />
-    </div>
+    </>
   );
 }
