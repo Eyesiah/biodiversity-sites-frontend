@@ -3,12 +3,17 @@ import OsGridRef from 'geodesy/osgridref.js';
 import { create } from 'xmlbuilder2';
 import { formatNumber } from '@/lib/format'
 import NodeCache from 'node-cache';
+import { NextResponse } from 'next/server';
+
+export const revalidate = 3600; // Re-generate page at most once per hour
 
 // Cache for 1 hour
 const cache = new NodeCache({ stdTTL: 3600 });
 
-export default async function handler(req, res) {
-  const { mode, format } = req.query;
+export async function GET(request, { params }) {
+  const { searchParams } = new URL(request.url);
+  const mode = searchParams.get("mode");
+  const format = searchParams.get("format");
 
   let data = null;
   let rootElementName = ''
@@ -63,13 +68,11 @@ export default async function handler(req, res) {
     dataElementName = 'site';
 
   } else {
-    res.status(400).send(`Unknown mode '${mode}'`);
-    return;
+    return new NextResponse(`Unknown mode '${mode}'`, { status: 400 });
   }
 
   if (data == null) {
-    res.status(500).send(`Data wasn't created`);
-    return;
+    return new NextResponse(`Data wasn't created`, { status: 500 });
   }
 
   if (format == null || format === 'xml') {
@@ -92,11 +95,12 @@ export default async function handler(req, res) {
     
     const xml = root.end({ prettyPrint: true });
 
-    res.setHeader('Content-Type', 'application/xml');
-    res.status(200).send(xml);
+    return new NextResponse(xml, {
+      status: 200,
+      headers: { "Content-Type": "application/xml" },
+    });
   } else if (format === 'json') {
-    res.setHeader('Content-Type', 'application/json');
-    res.status(200).send(JSON.stringify(data, null, 2));
+    return NextResponse.json(data);
   }
 }
 
