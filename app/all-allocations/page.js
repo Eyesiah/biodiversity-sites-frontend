@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import { fetchAllSites } from '@/lib/api';
 import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '@/lib/geo';
 import AllAllocationsList from './AllAllocationsList';
@@ -6,6 +5,10 @@ import Footer from '@/components/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
+
+export const metadata = {
+  title: 'All BGS Allocations',
+};
 
 export default async function AllocationsPage() {
 
@@ -60,9 +63,6 @@ export default async function AllocationsPage() {
 
   return (
     <div className="container">
-      <Head>
-        <title>All BGS Allocations</title>
-      </Head>
       <main className="main">
         <h1 className="title">All BGS Allocations</h1>
         <AllAllocationsList allocations={allocations}/>

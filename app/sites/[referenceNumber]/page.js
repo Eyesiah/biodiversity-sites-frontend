@@ -1,9 +1,9 @@
-import Head from 'next/head';
 import styles from '@/styles/SiteDetails.module.css';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '@/lib/geo';
 import { collateAllHabitats } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
+import Footer from '@/components/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -18,9 +18,20 @@ export async function generateStaticParams() {
   return paths;
 }
 
+export async function generateMetadata({ params }) {
+  const { referenceNumber } = params;
+  const site = await fetchSite(referenceNumber);
+
+  return {
+    title: `BGS Details: ${site.referenceNumber}`,
+    description: `Details for Biodiversity Gain Site ${site.referenceNumber}`,
+  };
+}
+
 export default async function SitePage({params}) {
 
   const { referenceNumber } = await params;
+  const lastUpdated = Date.now();
 
   const site = await fetchSite(referenceNumber, true)
   if (!site)
@@ -76,14 +87,10 @@ export default async function SitePage({params}) {
 
   return (
     <>
-      <Head>
-        <title>{`BGS Details: ${site.referenceNumber}`}</title>
-        <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`}/>
-      </Head>
-
       <main className={styles.container}>
         <SitePageContent site={site}/>
       </main>
+      <Footer lastUpdated={lastUpdated} />
     </>
   );
 }
