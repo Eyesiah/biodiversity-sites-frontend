@@ -6,7 +6,12 @@ import Link from 'next/link';
 import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/MapContentLayout';
-import SiteMap from '@/components/Maps/SiteMap'
+import dynamic from 'next/dynamic';
+
+const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 const DEBOUNCE_DELAY_MS = 300;
 
