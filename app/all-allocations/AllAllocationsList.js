@@ -1,0 +1,338 @@
+'use client'
+
+import Link from 'next/link';
+import { useState, useMemo, useEffect } from 'react';
+import { formatNumber, slugify } from '@/lib/format';
+import { useSortableData, getSortClassName } from '@/lib/hooks';
+import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
+import { XMLBuilder } from 'fast-xml-parser';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
+import styles from '@/styles/SiteDetails.module.css';
+
+const AllocationHabitats = ({ habitats }) => {
+
+  if (habitats.length === 0) {
+    return <p>No habitat details for this allocation.</p>;
+  }
+
+  return (
+    <table className={styles.subTable}>
+      <thead>
+        <tr>
+          <th>Module</th>
+          <th>Habitat</th>
+          <th>Distinctiveness</th>
+          <th>Condition</th>
+          <th>Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        {habitats.map((habitat, index) => (
+          <tr key={index}>
+            <td>{habitat.module}</td>
+            <td>{habitat.type}</td>
+            <td>{habitat.distinctiveness}</td>
+            <td>{habitat.condition}</td>
+            <td className={styles.numericData}>{formatNumber(habitat.size)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+const AllocationRow = ({ alloc }) => (
+  <DataFetchingCollapsibleRow
+    mainRow={(
+    <>
+      <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
+      <td>{alloc.pr}</td>
+      <td>{alloc.pn}</td>
+      <td>{alloc.lpa}</td>
+      <td className="centered-data">
+        {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
+      </td>
+      <td className="numeric-data">{formatNumber(alloc.au || 0)}</td>
+      <td className="numeric-data">{formatNumber(alloc.hu || 0)}</td>
+      <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
+    </>
+    )}
+    dataUrl={`/api/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}`}
+    renderDetails={details => <AllocationHabitats habitats={details} />}
+    dataExtractor={json => json}
+    colSpan={8}
+    />
+  );
+
+const DEBOUNCE_DELAY_MS = 300;
+
+export default function AllAllocationsList({ allocations }) {
+  
+  const [inputValue, setInputValue] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleExportXML = () => {
+    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
+    const xmlDataStr = builder.build({ allocations: { allocation: sortedAllocations } });
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-allocations.xml');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportJSON = () => {
+    const jsonDataStr = JSON.stringify({ allocations: sortedAllocations }, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'bgs-allocations.json');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  useEffect(() => {
+    setIsSearching(true);
+    const timerId = setTimeout(() => {
+      setDebouncedSearchTerm(inputValue);
+      setIsSearching(false);
+    }, DEBOUNCE_DELAY_MS);
+
+    return () => {
+      clearTimeout(timerId);
+      setIsSearching(false);
+    }
+  }, [inputValue]);
+
+  const openChartWindow = (url) => {
+    const width = window.screen.width * 0.5;
+    const height = window.screen.height * 0.5;
+    window.open(url, 'chartWindow', `width=${width},height=${height}`);
+  };
+
+  const filteredAllocations = useMemo(() => {
+    if (!debouncedSearchTerm) {
+      return allocations;
+    }
+    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
+    return allocations.filter(alloc =>
+      (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm)
+    );
+  }, [allocations, debouncedSearchTerm]);
+
+  const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
+
+  const summaryData = useMemo(() => {
+    const source = filteredAllocations;
+
+    const totalArea = source.reduce((sum, alloc) => sum + (alloc.au || 0), 0);
+    const totalHedgerow = source.reduce((sum, alloc) => sum + (alloc.hu || 0), 0);
+    const totalWatercourse = source.reduce((sum, alloc) => sum + (alloc.wu || 0), 0);
+
+    const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
+    const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
+
+    const distances = source
+      .map(alloc => alloc.d)
+      .filter(d => typeof d === 'number')
+      .sort((a, b) => a - b);
+
+    let medianDistance = null;
+    if (distances.length > 0) {
+      const mid = Math.floor(distances.length / 2);
+      if (distances.length % 2 === 0) {
+        medianDistance = (distances[mid - 1] + distances[mid]) / 2;
+      } else {
+        medianDistance = distances[mid];
+      }
+    }
+
+    return {
+      totalArea,
+      totalHedgerow,
+      totalWatercourse,
+      medianDistance,
+      uniquePlanningRefs,
+      totalUniquePlanningRefs,
+    };
+  }, [filteredAllocations, allocations]);
+
+  const distanceDistributionData = useMemo(() => {
+    const distances = filteredAllocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
+    if (distances.length === 0) {
+      return [];
+    }
+
+    const cumulativeData = [];
+    const total = distances.length;
+
+    distances.forEach((distance, index) => {
+      const cumulativeCount = index + 1;
+      cumulativeData.push({
+        distance: distance,
+        cumulativeCount: cumulativeCount,
+        percentage: (cumulativeCount / total) * 100,
+      });
+    });
+
+    return cumulativeData;
+  }, [filteredAllocations]);
+
+ const habitatUnitDistributionData = useMemo(() => {
+    const allUnits = filteredAllocations.flatMap(alloc => [alloc.au, alloc.hu, alloc.wu]).filter(u => typeof u === 'number' && u > 0);
+    if (allUnits.length === 0) return [];
+    const totalCount = allUnits.length;
+
+    const bins = {
+      '0-1 HUs': 0,
+      '1-2 HUs': 0,
+      '2-3 HUs': 0,
+      '3-4 HUs': 0,
+      '4-5 HUs': 0,
+      '>5 HUs': 0,
+    };
+
+    for (const unit of allUnits) {
+      if (unit <= 1) bins['0-1 HUs']++;
+      else if (unit <= 2) bins['1-2 HUs']++;
+      else if (unit <= 3) bins['2-3 HUs']++;
+      else if (unit <= 4) bins['3-4 HUs']++;
+      else if (unit <= 5) bins['4-5 HUs']++;
+      else bins['>5 HUs']++;
+    }
+
+    return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
+  }, [filteredAllocations]);
+
+  return (
+    <>
+      <div className="summary" style={{ textAlign: 'center' }}>
+        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.
+        </p>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+        <div className="search-container" style={{ margin: 0 }}>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            autoFocus
+          />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
+          {isSearching && <div className="loader" />}
+        </div>
+        <div className={styles.buttonGroup}>
+          <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
+          <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+        </div>
+      </div>
+      <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
+        Totals are recalculated as your search string is entered.
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <button 
+              onClick={() => openChartWindow('/allocated-habitats')}
+              className="linkButton"
+              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            >
+              Area Habitats
+            </button>
+            <button 
+              onClick={() => openChartWindow('/hedgerow-allocations')}
+              className="linkButton"
+              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            >
+              Hedgerow Habitats
+            </button>
+            <button 
+              onClick={() => openChartWindow('/watercourse-allocations')}
+              className="linkButton"
+              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            >
+              Watercourse Habitats
+            </button>
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: '2rem' }}>
+          <div style={{ width: '550px', height: '300px' }}>
+            <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={distanceDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+                <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+                <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
+                <Legend />
+                <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ width: '600px', height: '320px' }}>
+            <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={habitatUnitDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" name="HUs" />
+                <YAxis name="Count" />
+                <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
+                <Legend />
+                <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+      <table className="site-table">
+        <thead>
+          <tr>
+            <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
+            <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+            <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
+            <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+            <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
+            <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
+            <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
+            <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+            <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+            <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+              {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
+            </td>
+            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
+            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
+            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
+          </tr>
+          {sortedAllocations.map((alloc) => (
+            <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+}

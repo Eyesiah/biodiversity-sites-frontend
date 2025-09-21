@@ -1,26 +1,16 @@
-import { fetchSite, fetchAllSites } from '@/lib/api';
+import { NextResponse } from 'next/server';
+import { fetchSite } from '@/lib/api';
 import { slugify } from '@/lib/format';
 
-// This function tells Next.js which paths to pre-render at build time.
-export async function getStaticPaths() {
-  const allSites = await fetchAllSites();
-  const paths = allSites.flatMap(site =>
-    (site.allocations || []).map(alloc => ({
-      params: { ids: [site.referenceNumber, slugify(alloc.planningReference.trim())] },
-    }))
-  );
+export const revalidate = 3600; // Re-generate page at most once per hour
 
-  return { paths, fallback: 'blocking' };
-}
-
-// This function fetches the data for a specific allocation.
-export async function getStaticProps({ params }) {
+export async function GET(request, { params }) {
   const [siteReferenceNumber, planningReference] = params.ids;
 
   try {
     const site = await fetchSite(siteReferenceNumber);
     if (!site) {
-      return { notFound: true };
+        return new NextResponse('Site not found', { status: 404 });
     }
 
     const matchingAllocations = (site.allocations || []).filter(
@@ -45,19 +35,9 @@ export async function getStaticProps({ params }) {
       ]);
     }
 
-    return {
-      props: {          
-        habitats: flattenedHabitats
-      },
-      revalidate: 3600, // Re-generate page at most once per hour
-    };
+    return NextResponse.json(flattenedHabitats);
   } catch (error) {
     console.error(`Error fetching data for allocation ${siteReferenceNumber}/${planningReference}:`, error);
-    return { notFound: true };
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
-}
-
-// This page is only used for its getStaticProps data, not for rendering.
-export default function AllocationsHabitatsPage() {
-  return null;
 }
