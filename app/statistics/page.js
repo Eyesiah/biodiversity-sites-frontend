@@ -75,8 +75,8 @@ export default async function StatisticsPage() {
   });
   
   return (
-    <div className="container">
-      <main className="main">
+    <div>
+      <main className="container">
         <h1 className="title">BGS Register Statistics</h1>
         {stats.length > 0 ? (
           <>
