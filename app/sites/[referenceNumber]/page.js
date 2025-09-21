@@ -4,6 +4,7 @@ import { fetchSite, fetchAllSites } from '@/lib/api';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '@/lib/geo';
 import { collateAllHabitats } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
+import Footer from '@/components/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -21,6 +22,7 @@ export async function generateStaticParams() {
 export default async function SitePage({params}) {
 
   const { referenceNumber } = await params;
+  const lastUpdated = Date.now();
 
   const site = await fetchSite(referenceNumber, true)
   if (!site)
@@ -84,6 +86,7 @@ export default async function SitePage({params}) {
       <main className={styles.container}>
         <SitePageContent site={site}/>
       </main>
+      <Footer lastUpdated={lastUpdated} />
     </>
   );
 }
