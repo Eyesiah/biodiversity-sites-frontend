@@ -1,3 +1,5 @@
+'use client'
+
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
 import { useState } from 'react';
