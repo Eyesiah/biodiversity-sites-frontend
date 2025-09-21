@@ -6,10 +6,18 @@ import { NextResponse } from 'next/server';
 
 export const revalidate = 3600; // Re-generate page at most once per hour
 
-export async function GET(request, { params }) {
-  const { searchParams } = new URL(request.url);
-  const mode = searchParams.get("mode");
-  const format = searchParams.get("format");
+export function generateStaticParams() {
+  return [
+    { mode: 'sites', format: 'xml' },
+    { mode: 'sites', format: 'json' }
+  ]
+}
+
+export async function GET(_, { params }) {
+  
+  const paramData = await params;
+  const mode = paramData.mode;
+  const format = paramData.format;
 
   let data = null;
   let rootElementName = ''
