@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import styles from '@/styles/SiteDetails.module.css';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { getDistanceFromLatLonInKm, getCoordinatesForAddress, getCoordinatesForLPA } from '@/lib/geo';
@@ -17,6 +16,16 @@ export async function generateStaticParams() {
   });
 
   return paths;
+}
+
+export async function generateMetadata({ params }) {
+  const { referenceNumber } = params;
+  const site = await fetchSite(referenceNumber);
+
+  return {
+    title: `BGS Details: ${site.referenceNumber}`,
+    description: `Details for Biodiversity Gain Site ${site.referenceNumber}`,
+  };
 }
 
 export default async function SitePage({params}) {
@@ -78,11 +87,6 @@ export default async function SitePage({params}) {
 
   return (
     <>
-      <Head>
-        <title>{`BGS Details: ${site.referenceNumber}`}</title>
-        <meta name="description" content={`Details for Biodiversity Gain Site ${site.referenceNumber}`}/>
-      </Head>
-
       <main className={styles.container}>
         <SitePageContent site={site}/>
       </main>
