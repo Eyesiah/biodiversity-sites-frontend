@@ -19,7 +19,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const { referenceNumber } = params;
+
+  const { referenceNumber } = await params;
   const site = await fetchSite(referenceNumber);
 
   return {

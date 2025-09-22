@@ -1,153 +1,13 @@
-import Head from 'next/head';
+'use client'
+
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { fetchAllSites } from '@/lib/api';
-import { getHabitatDistinctiveness } from '@/lib/habitat';
 import styles from '@/styles/SiteDetails.module.css';
 import { formatNumber } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
 
-// This function runs at build time to fetch and process data.
-export async function getStaticProps() {
-  try {
-    const allSites = await fetchAllSites();
-
-    const analysis = {
-      areas: {},
-      hedgerows: {},
-      watercourses: {},
-    };
-
-    // Helper to initialize a habitat entry
-    const initHabitat = (habitatName) => ({
-      habitat: habitatName,
-      distinctiveness: getHabitatDistinctiveness(habitatName),
-      baseline: 0,
-      baselineParcels: 0,
-      improvementSites: new Set(),
-      improvement: 0,
-      improvementParcels: 0,
-      allocation: 0,
-      allocationParcels: 0,
-    });
-
-    // Process each site
-    allSites.forEach(site => {
-
-      const processCategory = (category) => {
-        // Baseline
-        if (site.habitats && site.habitats[category]) {
-          site.habitats[category].forEach(h => {
-            const habitatName = h.type;
-            if (!analysis[category][habitatName]) {
-              analysis[category][habitatName] = initHabitat(habitatName);
-            }
-            analysis[category][habitatName].baseline += h.size;
-            analysis[category][habitatName].baselineParcels += 1;
-          });
-        }
-
-        // Improvements
-        if (site.improvements && site.improvements[category]) {
-          site.improvements[category].forEach(h => {
-            const habitatName = h.type;
-            if (!analysis[category][habitatName]) {
-              analysis[category][habitatName] = initHabitat(habitatName);
-            }
-            analysis[category][habitatName].improvement += h.size;
-            analysis[category][habitatName].improvementParcels += 1;
-            analysis[category][habitatName].improvementSites.add(site.referenceNumber);
-          });
-        }
-
-        // Allocations
-        if (site.allocations) {
-          site.allocations.forEach(alloc => {
-            if (alloc.habitats && alloc.habitats[category]) {
-              alloc.habitats[category].forEach(h => {
-                const habitatName = h.type;
-                if (!analysis[category][habitatName]) {
-                  analysis[category][habitatName] = initHabitat(habitatName);
-                }
-                analysis[category][habitatName].allocation += h.size;
-                analysis[category][habitatName].allocationParcels += 1;
-              });
-            }
-          });
-        }
-      };
-
-      processCategory('areas');
-      processCategory('hedgerows');
-      processCategory('watercourses');
-    });
-
-    // Convert sets to counts and calculate totals
-    const finalizeData = (category) => {
-      let totalBaseline = 0;
-      let totalImprovement = 0;
-      let totalAllocation = 0;
-      let totalBaselineParcels = 0;
-      let totalImprovementParcels = 0;
-      let totalAllocationParcels = 0;
-
-      const processedData = Object.values(analysis[category]).map(h => {
-        totalBaseline += h.baseline;
-        totalImprovement += h.improvement;
-        totalAllocation += h.allocation;
-        totalBaselineParcels += h.baselineParcels;
-        totalImprovementParcels += h.improvementParcels;
-        totalAllocationParcels += h.allocationParcels;
-        return {
-          ...h,
-          improvementSites: h.improvementSites.size,
-        };
-      });
-
-      // Calculate percentages
-      const totalImprovementSites = processedData.reduce((acc, h) => acc + h.improvementSites, 0);
-
-      processedData.forEach(h => {
-        h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
-        h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
-        h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
-        h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
-      });
-
-      return {
-        rows: processedData.sort((a, b) => a.habitat.localeCompare(b.habitat)),
-        totals: {
-          baseline: totalBaseline,
-          improvement: totalImprovement,
-          allocation: totalAllocation,
-          improvementParcels: totalImprovementParcels,
-          baselineParcels: totalBaselineParcels,
-          allocationParcels: totalAllocationParcels,
-          improvementSites: totalImprovementSites,
-          improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
-        },
-      };
-    };
-
-    return {
-      props: {
-        areaAnalysis: finalizeData('areas'),
-        hedgerowAnalysis: finalizeData('hedgerows'),
-        watercourseAnalysis: finalizeData('watercourses'),
-        lastUpdated: new Date().toISOString(),
-      },
-      revalidate: 3600, // Re-generate the page at most once per hour
-    };
-  } catch (e) {
-    // By throwing an error, we signal to Next.js that this regeneration attempt has failed.
-    // If a previous version of the page was successfully generated, Next.js will continue
-    // to serve the stale (old) page instead of showing an error.
-    throw e;
-  }
-}
-
-// Reusable component to render an analysis table
 const AnalysisTable = ({ title, data, unit }) => {
+  
   const [isOpen, setIsOpen] = useState(true);
   const { items: sortedRows, requestSort, sortConfig } = useSortableData(data.rows);
 
@@ -224,7 +84,9 @@ const AnalysisTable = ({ title, data, unit }) => {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
+export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
+
+  
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
@@ -289,35 +151,29 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
 
   return (
     <>
-      <Head>
-        <title>Habitat Analysis</title>
-      </Head>
-
-      <main className={styles.container}>
-        <h1 className="title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>BGS Habitat Analysis</h1>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-          <div className="search-container" style={{ margin: 0 }}>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search by habitat name..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              autoFocus
-            />
-            {inputValue && (
-              <button
-                onClick={() => setInputValue('')}
-                className="clear-search-button"
-                aria-label="Clear search"
-              >
-                &times;
-              </button>
-            )}
-          </div>
-          <button onClick={handleExport} className="linkButton" style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-            Export to CSV
-          </button>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+        <div className="search-container" style={{ margin: 0 }}>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by habitat name..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            autoFocus
+          />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
+        </div>
+        <button onClick={handleExport} className="linkButton" style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+          Export to CSV
+        </button>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
@@ -391,12 +247,12 @@ export default function HabitatAnalysis({ areaAnalysis, hedgerowAnalysis, waterc
           Watercourse Habitats
         </button>
       </div>
-        <div className={styles.detailsGrid}>
-          <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
-          <AnalysisTable title="Hedgerow Habitats" data={filteredHedgerowAnalysis} unit="km" />
-          <AnalysisTable title="Watercourses Habitats" data={filteredWatercourseAnalysis} unit="km" />
-        </div>
-      </main>
+      <div className={styles.detailsGrid}>
+        <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
+        <AnalysisTable title="Hedgerow Habitats" data={filteredHedgerowAnalysis} unit="km" />
+        <AnalysisTable title="Watercourses Habitats" data={filteredWatercourseAnalysis} unit="km" />
+      </div>
     </>
-  );
+  )
+
 }

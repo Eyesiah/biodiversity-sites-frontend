@@ -3,26 +3,31 @@ import path from 'path';
 import Papa from 'papaparse';
 import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
+import { NextResponse } from 'next/server';
 
-export async function getStaticPaths() {
+export const revalidate = 3600; // Re-generate page at most once per hour
+
+export async function generateStaticParams() {
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
   const csvData = fs.readFileSync(csvPath, 'utf-8');
   const parsedData = Papa.parse(csvData, { header: true, skipEmptyLines: true });
 
   const paths = parsedData.data.map(item => ({
-    params: { bodyName: slugify(normalizeBodyName(item['Name'] || '')) },
+    bodyName: slugify(normalizeBodyName(item['Name'] || '')),
   }));
 
-  return { paths, fallback: false };
+  return paths;
 }
 
-export async function getStaticProps({ params }) {
+export async function GET(request, { params }) {
+  const paramData = await params;
+
   // Fetch and parse responsible bodies data
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
   const csvData = fs.readFileSync(csvPath, 'utf-8');
   const parsedData = Papa.parse(csvData, { header: true, skipEmptyLines: true });
 
-  const bodyData = parsedData.data.find(item => slugify(normalizeBodyName(item['Name'] || '')) === params.bodyName);
+  const bodyData = parsedData.data.find(item => slugify(normalizeBodyName(item['Name'] || '')) === paramData.bodyName);
 
   // Fetch all sites to calculate count for this specific responsible body
   const allSitesForCount = await fetchAllSites();
@@ -47,15 +52,5 @@ export async function getStaticProps({ params }) {
     siteCount: siteCount,
   };
 
-  return {
-    props: {
-      body,
-    },
-    revalidate: 3600, // Re-generate at most once per hour
-  };
-}
-
-// This page is only used for its getStaticProps data, not for rendering.
-export default function BodyDataPage() {
-  return null;
+  return NextResponse.json({body: body});
 }

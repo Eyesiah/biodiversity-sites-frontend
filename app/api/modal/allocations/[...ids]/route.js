@@ -16,7 +16,8 @@ export async function generateStaticParams() {
 }
 
 export async function GET(request, { params }) {
-  const [siteReferenceNumber, planningReference] = params.ids;
+  const paramData = await params;
+  const [siteReferenceNumber, planningReference] = paramData.ids;
 
   try {
     const site = await fetchSite(siteReferenceNumber);

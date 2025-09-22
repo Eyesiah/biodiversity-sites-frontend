@@ -1,70 +1,19 @@
-import Head from 'next/head';
+'use client'
+
 import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import fs from 'fs';
-import path from 'path';
 import { formatNumber } from '@/lib/format';
 import styles from '@/styles/SiteDetails.module.css';
-import { fetchAllSites } from '@/lib/api';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
 import { useSortableData } from '@/lib/hooks';
 import { ARCGIS_LPA_URL } from '@/config';
 import MapContentLayout from '@/components/MapContentLayout';
 
-const PolygonMap = dynamic(() => import('../components/Maps/PolygonMap'), {
+const PolygonMap = dynamic(() => import('@/components/Maps/PolygonMap'), {
     ssr: false,
     loading: () => <p>Loading map...</p>
 });
-
-export async function getStaticProps() {
-    try {
-        const jsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
-        const jsonData = fs.readFileSync(jsonPath, 'utf-8');
-        const rawLpas = JSON.parse(jsonData);
-
-        const allSites = await fetchAllSites(true);
-        const allocationCounts = {};
-        const siteCounts = {};
-
-        allSites.forEach(site => {
-            if (site.allocations) {
-                site.allocations.forEach(alloc => {
-                    const lpaName = alloc.localPlanningAuthority;
-                    allocationCounts[lpaName] = (allocationCounts[lpaName] || 0) + 1;
-                });
-            }
-            if (site.lpaName) {
-                const lpaName = site.lpaName;
-                siteCounts[lpaName] = (siteCounts[lpaName] || 0) + 1;
-            }
-        });
-
-        const lpas = rawLpas
-            // Only include English LPAs
-            .filter((lpa) => lpa.id && lpa.id.startsWith('E'))
-            .map((lpa) => ({
-                id: lpa.id,
-                name: lpa.name,
-                adjacents: lpa.adjacents || [],
-                size: lpa.size / 10000,
-                adjacentsCount: lpa.adjacents ? lpa.adjacents.length : 0,
-                siteCount: siteCounts[lpa.name] || 0,
-                allocationsCount: allocationCounts[lpa.name] || 0,
-            })).sort((a, b) => a.name.localeCompare(b.name));
-
-        return {
-            props: {
-                lpas,
-                sites: allSites.map(s => ({ referenceNumber: s.referenceNumber, lpaName: s.lpaName || null, position: [s.latitude, s.longitude], responsibleBodies: s.responsibleBodies || [], ncaName: s.ncaName || null, siteSize: s.siteSize || 0, lnrsName: s.lnrsName || null })),
-                lastUpdated: new Date().toISOString(),
-                error: null
-            }
-        };
-    } catch (e) {
-        throw e;
-    }
-}
 
 function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
     if (!lpa) {
@@ -124,9 +73,9 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
         </td>
       </>
     )}
-    dataUrl={`/modals/lpas/${lpa.id}.json`}
+    dataUrl={`/api/modal/lpa/${lpa.id}`}
     renderDetails={details => <LpaDetails lpa={details} onAdjacentClick={handleAdjacentMapSelection} lpas={lpas} />}
-    dataExtractor={json => json.pageProps.lpa}
+    dataExtractor={json => json.lpa}
     colSpan={7}
     isOpen={isOpen}
     setIsOpen={setIsOpen}
@@ -135,7 +84,9 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
+
+export default function LPAContent({ lpas, sites }) {
+  
     const [inputValue, setInputValue] = useState('');
     const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedLpa, setSelectedLpa] = useState(null);
@@ -210,17 +161,9 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
         triggerDownload(blob, 'local-planning-authorities.json');
     };
 
-    if (error) {
-        return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
-    }
-
     return (
-        <div className="container">
-            <Head>
-                <title>Local Planning Authorities</title>
-            </Head>
-            <main className="main">
-                <MapContentLayout
+      <>
+                      <MapContentLayout
                     map={
                         <PolygonMap
                             selectedItem={selectedLpa}
@@ -291,7 +234,6 @@ export default function LocalPlanningAuthoritiesPage({ lpas, sites, error }) {
                         </>
                     }
                 />
-            </main>
-        </div>
-    );
+      </>
+    )
 }
