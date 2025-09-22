@@ -57,7 +57,7 @@ const AllocationRow = ({ alloc }) => (
       <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
     </>
     )}
-    dataUrl={`/api/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}`}
+    dataUrl={`/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}`}
     renderDetails={details => <AllocationHabitats habitats={details} />}
     dataExtractor={json => json}
     colSpan={8}

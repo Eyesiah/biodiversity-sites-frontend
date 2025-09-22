@@ -1,8 +1,10 @@
 'use client'
+
 import Modal from '@/components/Modal';
 import { useState, useEffect } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import { DetailRow } from '@/components/DetailRow'
+import { formatNumber } from '@/lib/format'
 
 export const InfoModal = ({ modalState, onClose }) => {
   const { show, type, name, title } = modalState;
@@ -15,11 +17,10 @@ export const InfoModal = ({ modalState, onClose }) => {
         setIsLoading(true);
         setData(null);
         try {
-          const buildId = window.__NEXT_DATA__.buildId;
-          const res = await fetch(`/_next/data/${buildId}/modals/${type}/${name}.json`);
+          const res = await fetch(`/api/modal/${type}/${name}`);
           if (!res.ok) throw new Error(`Failed to fetch details: ${res.status}`);
           const json = await res.json();
-          setData(json.pageProps);
+          setData(json);
         } catch (error) {
           console.error(error);
         } finally {
