@@ -10,11 +10,15 @@ export async function generateStaticParams() {
   const lpaJsonData = fs.readFileSync(lpaJsonPath, 'utf-8');
   const allLpas = JSON.parse(lpaJsonData);
 
-  const paths = allLpas.map(lpa => ({
+  const namePaths = allLpas.map(lpa => ({
     lpaName: slugify(normalizeBodyName(lpa.name)) ,
   }));
+  
+  const idPaths = allLpas.map(lpa => ({
+    lpaName: lpa.id,
+  }));
 
-  return paths;
+  return [...namePaths, ...idPaths];
 }
 
 export async function GET(request, { params }) {
@@ -23,7 +27,10 @@ export async function GET(request, { params }) {
   const lpaJsonData = fs.readFileSync(lpaJsonPath, 'utf-8');
   const allLpas = JSON.parse(lpaJsonData);
 
-  const lpa = allLpas.find(l => slugify(normalizeBodyName(l.name)) === paramData.lpaName);
+  let lpa = allLpas.find(l => slugify(normalizeBodyName(l.name)) === paramData.lpaName);
+  if (lpa == null) {    
+    lpa = allLpas.find(l => l.id === paramData.lpaName);
+  }
 
   if (lpa && lpa.adjacents) {
     lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);

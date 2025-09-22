@@ -1,13 +1,13 @@
-import Head from 'next/head';
 import ExternalLink from '@/components/ExternalLink';
 import Footer from '@/components/Footer';
+
+export const metadata = {
+  title: 'About',
+};
 
 export default function About() {
   return (
     <>
-      <Head>
-        <title>About</title>
-      </Head>
       <div className="container">
         <main className="main prose">
           <h1 className="title">Biodiversity Gain Sites in England</h1>
