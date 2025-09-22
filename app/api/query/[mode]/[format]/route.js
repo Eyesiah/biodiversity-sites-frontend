@@ -38,8 +38,8 @@ export async function GET(_, { params }) {
     data = allSites.map(s => ({
       'reference-number': s.referenceNumber,
       'responsible-body': s.responsibleBodies.join(', '),
-      'latitude': s.latitude,
-      'longitude': s.longitude,
+      'latitude': formatNumber(s.latitude, 6),
+      'longitude': formatNumber(s.longitude, 6),
       'easting': s.easting,
       'northing': s.northing,
       'LPA': s.lpaName,

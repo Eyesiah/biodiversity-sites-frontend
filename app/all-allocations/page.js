@@ -62,8 +62,8 @@ export default async function AllocationsPage() {
   const lastUpdated = Date.now();
 
   return (
-    <div className="container">
-      <main className="main">
+    <div>
+      <main className="container">
         <h1 className="title">All BGS Allocations</h1>
         <AllAllocationsList allocations={allocations}/>
       </main>
