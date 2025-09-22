@@ -1,8 +1,19 @@
 import { NextResponse } from 'next/server';
-import { fetchSite } from '@/lib/api';
+import { fetchSite, fetchAllSites } from '@/lib/api';
 import { slugify } from '@/lib/format';
 
 export const revalidate = 3600; // Re-generate page at most once per hour
+
+export async function generateStaticParams() {
+  const allSites = await fetchAllSites();
+  const paths = allSites.flatMap(site =>
+    (site.allocations || []).map(alloc => ({
+      ids: [site.referenceNumber, slugify(alloc.planningReference.trim())]
+    }))
+  );
+
+  return paths;
+}
 
 export async function GET(request, { params }) {
   const [siteReferenceNumber, planningReference] = params.ids;
