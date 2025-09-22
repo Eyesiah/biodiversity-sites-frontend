@@ -3,8 +3,8 @@
 import { HabitatsCard } from "@/components/HabitatsCard"
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
-import { SiteDetailsCard} from '@/components/SiteDetailsCard'
-import { AllocationsCard } from '@/components/AllocationsCard'
+import { SiteDetailsCard} from './SiteDetailsCard'
+import { AllocationsCard } from './AllocationsCard'
 import styles from '@/styles/SiteDetails.module.css';
 import dynamic from 'next/dynamic';
 
