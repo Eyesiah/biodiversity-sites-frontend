@@ -1,6 +1,6 @@
-import Head from 'next/head';
 import { fetchAllSites } from '@/lib/api';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import ChartPage from '@/components/ChartPage';
 
 export async function getStaticProps() {
   try {
@@ -24,7 +24,7 @@ export async function getStaticProps() {
       props: {
         chartData,
       },
-      revalidate: 3600, // Re-generate the page at most once per hour
+      revalidate: 3600,
     };
   } catch (e) {
     console.error(e);
@@ -50,12 +50,8 @@ export default function ImdDecileDistributionChartPage({ chartData, error }) {
   }
 
   return (
-    <div style={{ backgroundColor: '#F9F6EE', padding: '1rem', height: '100vh' }}>
-      <Head><title>IMD Decile Distribution</title></Head>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', marginBottom: '1rem' }}>
-        <button onClick={() => window.close()} className="linkButton" style={{ justifySelf: 'start', fontSize: '1rem', padding: '0.5rem 1rem', border: '1px solid #ccc', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}>Close</button>
-     </div>
-      <ResponsiveContainer width="100%" height="90%">
+    <ChartPage title="IMD Decile Distribution">
+      <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 40, right: 30, left: 20, bottom: 15 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" name="BGS IMD Decile Score" label={{ value: 'BGS IMD Decile Score', position: 'insideBottom', offset: -10 }} />
@@ -66,6 +62,6 @@ export default function ImdDecileDistributionChartPage({ chartData, error }) {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </ChartPage>
   );
 }
