@@ -249,21 +249,21 @@ export default function AllAllocationsList({ allocations }) {
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <ChartModalButton
-              url="/allocated-habitats"
+              url="/charts/allocated-habitats"
               title="Area Habitats"
               buttonText="Area Habitats"
               className="linkButton"
               style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
             <ChartModalButton
-              url="/hedgerow-allocations"
+              url="/charts/hedgerow-allocations"
               title="Hedgerow Habitats"
               buttonText="Hedgerow Habitats"
               className="linkButton"
               style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
             <ChartModalButton
-              url="/watercourse-allocations"
+              url="/charts/watercourse-allocations"
               title="Watercourse Habitats"
               buttonText="Watercourse Habitats"
               className="linkButton"

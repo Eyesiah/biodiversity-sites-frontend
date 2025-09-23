@@ -203,21 +203,21 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
         <ChartModalButton
-          url="/improvement-habitats"
+          url="/charts/improvement-habitats"
           title="Improvement Area Habitats"
           buttonText="Area Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
-          url="/improvement-hedgerows"
+          url="/charts/improvement-hedgerows"
           title="Improvement Hedgerow Habitats"
           buttonText="Hedgerow Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
-          url="/improvement-watercourses"
+          url="/charts/improvement-watercourses"
           title="Improvement Watercourse Habitats"
           buttonText="Watercourse Habitats"
           className="linkButton"

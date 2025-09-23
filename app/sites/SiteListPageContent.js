@@ -174,7 +174,7 @@ export default function SiteListPageContent({sites, summary}) {
               Export to CSV
             </button>
             <ChartModalButton
-              url="/imd-decile-distribution"
+              url="/charts/imd-decile-distribution"
               title="IMD Decile Distribution"
               buttonText="IMD Decile Chart"
               className="linkButton"
