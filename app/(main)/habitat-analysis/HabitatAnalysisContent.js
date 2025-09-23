@@ -5,6 +5,7 @@ import styles from '@/styles/SiteDetails.module.css';
 import { formatNumber } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
+import ChartModalButton from '@/components/ChartModalButton';
 
 const AnalysisTable = ({ title, data, unit }) => {
   
@@ -177,75 +178,51 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/baseline-area-habitats', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        <ChartModalButton
+          url="/baseline-area-habitats"
+          title="Baseline Area Habitats"
+          buttonText="Area Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Area Habitats
-        </button>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/baseline-hedgerow-habitats', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        />
+        <ChartModalButton
+          url="/baseline-hedgerow-habitats"
+          title="Baseline Hedgerow Habitats"
+          buttonText="Hedgerow Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Hedgerow Habitats
-        </button>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/baseline-watercourse-habitats', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        />
+        <ChartModalButton
+          url="/baseline-watercourse-habitats"
+          title="Baseline Watercourse Habitats"
+          buttonText="Watercourse Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Watercourse Habitats
-        </button>
+        />
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/improvement-habitats', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        <ChartModalButton
+          url="/charts/improvement-habitats"
+          title="Improvement Area Habitats"
+          buttonText="Area Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Area Habitats
-        </button>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/improvement-hedgerows', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        />
+        <ChartModalButton
+          url="/charts/improvement-hedgerows"
+          title="Improvement Hedgerow Habitats"
+          buttonText="Hedgerow Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Hedgerow Habitats
-        </button>
-        <button 
-          onClick={() => {
-            const width = window.screen.width * 0.5;
-            const height = window.screen.height * 0.5;
-            window.open('/improvement-watercourses', 'chartWindow', `width=${width},height=${height}`);
-          }}
+        />
+        <ChartModalButton
+          url="/charts/improvement-watercourses"
+          title="Improvement Watercourse Habitats"
+          buttonText="Watercourse Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        >
-          Watercourse Habitats
-        </button>
+        />
       </div>
       <div className={styles.detailsGrid}>
         <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
