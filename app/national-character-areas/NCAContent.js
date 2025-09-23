@@ -4,12 +4,11 @@ import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import ExternalLink from '@/components/ExternalLink';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
-import { triggerDownload } from '@/lib/utils';
-import styles from '@/styles/SiteDetails.module.css';
+import { exportToXml, exportToJson } from '@/lib/utils';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
-import { useSearchAndSort } from '@/lib/hooks';
-import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
+import SearchableTableLayout from '@/components/SearchableTableLayout';
+import styles from '@/styles/SiteDetails.module.css';
 
 const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,
@@ -19,18 +18,6 @@ const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
 export default function NCAContent({ ncas, sites, error }) {
   const [selectedNca, setSelectedNca] = useState(null);
   const [openRowId, setOpenRowId] = useState(null);
-
-  const { 
-    inputValue, 
-    setInputValue, 
-    sortedItems: filteredAndSortedNCAs, 
-    requestSort, 
-    getSortIndicator 
-  } = useSearchAndSort(
-    ncas,
-    (item, term) => (item.name?.toLowerCase() || '').includes(term),
-    { key: 'siteCount', direction: 'descending' }
-  );
 
   const sitesInSelectedNCA = useMemo(() => {
     if (!selectedNca) return [];
@@ -47,19 +34,6 @@ export default function NCAContent({ ncas, sites, error }) {
   };
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
-
-  const handleExportXML = () => {
-    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
-    const xmlDataStr = builder.build({ nationalCharacterAreas: { nca: filteredAndSortedNCAs } });
-    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
-    triggerDownload(blob, 'national-character-areas.xml');
-  };
-
-  const handleExportJSON = () => {
-    const jsonDataStr = JSON.stringify({ ncas: filteredAndSortedNCAs }, null, 2);
-    const blob = new Blob([jsonDataStr], { type: 'application/json' });
-    triggerDownload(blob, 'national-character-areas.json');
-  };
 
   if (error) {
     return <p className="error">Error fetching data: {error}</p>;
@@ -79,93 +53,91 @@ export default function NCAContent({ ncas, sites, error }) {
         content={
         <>
             <h1 className="title">National Character Areas</h1>
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-            <div className="search-container" style={{ margin: 0 }}>
-                <input
-                type="text"
-                className="search-input"
+            <SearchableTableLayout
+                initialItems={ncas}
+                filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
+                initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
                 placeholder="Search by NCA name."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                autoFocus
-                />
-                {inputValue && (
-                <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
+                exportConfig={{
+                    onExportXml: (items) => exportToXml(items, 'nationalCharacterAreas', 'nca', 'national-character-areas.xml'),
+                    onExportJson: (items) => exportToJson(items, 'ncas', 'national-character-areas.json')
+                }}
+                summary={(filteredCount, totalCount) => (
+                    <p style={{ fontSize: '1.2rem' }}>
+                        Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
+                    </p>
                 )}
-            </div>
-            <div className={styles.buttonGroup}>
-                <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
-                <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
-            </div>
-            </div>            
-            <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(filteredAndSortedNCAs.length, 0)}</strong> of <strong>{formatNumber(ncas.length, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.</p>
-            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent NCAs are shown coloured pink.</p>
-            <table className="site-table">
-            <thead>
-                <tr>
-                <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
-                <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
-                <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
-                <th>Map</th>
-                </tr>
-            </thead>
-            <tbody>
-                {filteredAndSortedNCAs.map((nca) => (
-                <CollapsibleRow
-                    key={nca.id}
-                    isOpen={openRowId === nca.id}
-                    setIsOpen={(isOpen) => setOpenRowId(isOpen ? nca.id : null)}
-                    mainRow={(
-                    <>
-                        <td>
-                        <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(nca.name)}/`}>{nca.id}</ExternalLink>
-                        </td>
-                        <td>{nca.name}</td>
-                        <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
-                        <td className="centered-data">{nca.siteCount}</td>
-                        <td className="centered-data">{nca.adjacents?.length || 0}</td>
-                        <td>
-                        <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
-                            Display Map
-                        </button>
-                        </td>
-                    </>
-                    )}
-                    collapsibleContent={(
-                    <div style={{ padding: '0.5rem' }}>
-                        <h4>Adjacent NCAs</h4>
-                        {nca.adjacents && nca.adjacents.length > 0 ? (
-                        <table className={styles.subTable}>
-                            <thead>
+            >
+                {({ sortedItems, requestSort, getSortIndicator }) => (
+                    <table className="site-table">
+                        <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Area (ha)</th>
-                                <th># BGS Sites</th>
-                                <th>Map</th>
+                            <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
+                            <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
+                            <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
+                            <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
+                            <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
+                            <th>Map</th>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {nca.adjacents.map(adj => {
-                                const adjacentNcaObject = ncas.find(n => n.id === adj.id);
-                                return (
-                                <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td><td className="centered-data">{adjacentNcaObject?.siteCount || 0}</td>
-                                <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Display Map</button></td>
-                                </tr>
-                                );
-                            })}
-                            </tbody>
-                        </table>
-                        ) : (<p>No adjacency data available.</p>)}
-                    </div>
-                    )}
-                    colSpan={6}
-                />
-                ))}
-            </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            {sortedItems.map((nca) => (
+                            <CollapsibleRow
+                                key={nca.id}
+                                isOpen={openRowId === nca.id}
+                                setIsOpen={(isOpen) => setOpenRowId(isOpen ? nca.id : null)}
+                                mainRow={(
+                                <>
+                                    <td>
+                                    <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(nca.name)}/`}>{nca.id}</ExternalLink>
+                                    </td>
+                                    <td>{nca.name}</td>
+                                    <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
+                                    <td className="centered-data">{nca.siteCount}</td>
+                                    <td className="centered-data">{nca.adjacents?.length || 0}</td>
+                                    <td>
+                                    <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
+                                        Display Map
+                                    </button>
+                                    </td>
+                                </>
+                                )}
+                                collapsibleContent={(
+                                <div style={{ padding: '0.5rem' }}>
+                                    <h4>Adjacent NCAs</h4>
+                                    {nca.adjacents && nca.adjacents.length > 0 ? (
+                                    <table className={styles.subTable}>
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Area (ha)</th>
+                                            <th># BGS Sites</th>
+                                            <th>Map</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {nca.adjacents.map(adj => {
+                                            const adjacentNcaObject = ncas.find(n => n.id === adj.id);
+                                            return (
+                                            <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td><td className="centered-data">{adjacentNcaObject?.siteCount || 0}</td>
+                                            <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Display Map</button></td>
+                                            </tr>
+                                            );
+                                        })}
+                                        </tbody>
+                                    </table>
+                                    ) : (<p>No adjacency data available.</p>)}
+                                </div>
+                                )}
+                                colSpan={6}
+                            />
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </SearchableTableLayout>
+            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent NCAs are shown coloured pink.</p>
         </>
         }
     />
