@@ -1,14 +1,14 @@
-import { AllocationPieChart } from '@/components/AllocationPieChart';
-import { ImprovementPieChart } from '@/components/ImprovementPieChart';
+import ChartRenderer from './ChartRenderer';
 import { getChartData } from '@/lib/charts';
 import { fetchAllSites } from '@/lib/api';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
-import Head from 'next/head';
+
+// Revalidate this page at most once every hour (3600 seconds)
+export const revalidate = 3600;
 
 const chartConfig = {
     'watercourse-allocations': {
         title: "Watercourse Habitats Allocated Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Watercourse habitats allocated - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.allocations) {
@@ -24,7 +24,7 @@ const chartConfig = {
     },
     'allocated-habitats': {
         title: "Allocated Area Habitats Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { title: "Allocated Area Habitats Chart" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.allocations) {
@@ -40,7 +40,7 @@ const chartConfig = {
     },
     'baseline-area-habitats': {
         title: "Baseline Area Habitats Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { title: "Baseline Area Habitats - by size", otherLabel: "Area habitats <1%" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.areas) {
@@ -54,7 +54,7 @@ const chartConfig = {
     },
     'baseline-hedgerow-habitats': {
         title: "Baseline Hedgerow Habitats Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Baseline Hedgerow Habitats - by size", showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.hedgerows) {
@@ -68,7 +68,7 @@ const chartConfig = {
     },
     'baseline-watercourse-habitats': {
         title: "Baseline Watercourse Habitats Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Baseline Watercourse Habitats - by size", showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.watercourses) {
@@ -82,7 +82,7 @@ const chartConfig = {
     },
     'hedgerow-allocations': {
         title: "Hedgerow Habitats Allocated Chart",
-        chartComponent: AllocationPieChart,
+        chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Hedgerow habitats allocated - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.allocations) {
@@ -98,7 +98,7 @@ const chartConfig = {
     },
     'improvement-habitats': {
         title: "Improvement Habitats Chart",
-        chartComponent: ImprovementPieChart,
+        chartType: 'ImprovementPieChart',
         chartProps: { title: "Area Habitats Improved - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.areas?.forEach(habitat => {
@@ -110,7 +110,7 @@ const chartConfig = {
     },
     'improvement-hedgerows': {
         title: "Improvement Hedgerow Habitats Chart",
-        chartComponent: ImprovementPieChart,
+        chartType: 'ImprovementPieChart',
         chartProps: { title: "Hedgerow Habitats Improved - by size", showBreakdown: false, disableAggregation: true },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.hedgerows?.forEach(habitat => {
@@ -122,7 +122,7 @@ const chartConfig = {
     },
     'improvement-watercourses': {
         title: "Improvement Watercourse Habitats Chart",
-        chartComponent: ImprovementPieChart,
+        chartType: 'ImprovementPieChart',
         chartProps: { title: "Watercourse Habitats Improved - by size", disableAggregation: true, showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.watercourses?.forEach(habitat => {
@@ -134,19 +134,7 @@ const chartConfig = {
     },
     'imd-decile-distribution': {
         title: "IMD Decile Distribution",
-        chartComponent: ({ data }) => (
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data} margin={{ top: 40, right: 30, left: 20, bottom: 15 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" name="BGS IMD Decile Score" label={{ value: 'BGS IMD Decile Score', position: 'insideBottom', offset: -10 }} />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#dcab1bff">
-                        <LabelList content={CustomLabel} />
-                    </Bar>
-                </BarChart>
-            </ResponsiveContainer>
-        ),
+        chartType: 'BarChart',
         chartProps: {},
         dataFetcher: async () => {
             try {
@@ -172,20 +160,24 @@ const chartConfig = {
     }
 };
 
-const CustomLabel = (props) => {
-    const { x, y, width, value } = props;
-    if (value > 0) {
-        return (
-            <text x={x + width / 2} y={y} dy={-4} fill="#666" textAnchor="middle" fontSize={14} fontWeight="bold">
-                {value}
-            </text>
-        );
-    }
-    return null;
-};
+export async function generateStaticParams() {
+  return Object.keys(chartConfig).map((chartName) => ({
+    chartName,
+  }));
+}
+
+export async function generateMetadata({ params }) {
+
+  const { chartName } = await params;
+  const config = chartConfig[chartName];
+
+  return {
+    title: config.title
+  };
+}
 
 export default async function Chart({ params }) {
-    const { chartName } = params;
+    const { chartName } = await params;
     const config = chartConfig[chartName];
 
     if (!config) {
@@ -199,20 +191,19 @@ export default async function Chart({ params }) {
         return <div>Error: {error}</div>;
     }
 
-    const ChartComponent = config.chartComponent;
-
-    return (    
+    return (
+      
       <div style={{ backgroundColor: '#F9F6EE', padding: '1rem', height: '100vh' }}>
-        <Head><title>{title}</title></Head>
         <div style={{ height: '100%' }}>
-            <ChartComponent data={data} {...config.chartProps} />
+          <ChartRenderer
+            chartType={config.chartType}
+            data={data}
+            chartProps={config.chartProps}
+            title={config.title}
+        />
         </div>
       </div>
-    );
-}
 
-export async function generateStaticParams() {
-  return Object.keys(chartConfig).map((chartName) => ({
-    chartName,
-  }));
+        
+    );
 }
