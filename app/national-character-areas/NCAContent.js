@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import ExternalLink from '@/components/ExternalLink';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
+import { triggerDownload } from '@/lib/utils';
 import styles from '@/styles/SiteDetails.module.css';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
-import { useSortableData } from '@/lib/hooks';
+import { useSearchAndSort } from '@/lib/hooks';
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 
@@ -15,33 +16,21 @@ const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-const DEBOUNCE_DELAY_MS = 300;
-
 export default function NCAContent({ ncas, sites, error }) {
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedNca, setSelectedNca] = useState(null);
   const [openRowId, setOpenRowId] = useState(null);
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(inputValue);
-    }, DEBOUNCE_DELAY_MS);
-    return () => clearTimeout(timerId);
-  }, [inputValue]);
-
-  const filteredNCAs = useMemo(() => {
-    let filtered = [...ncas];
-    if (debouncedSearchTerm) {
-      const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-      filtered = filtered.filter(item =>
-        (item.name?.toLowerCase() || '').includes(lowercasedTerm)
-      );
-    }
-    return filtered;
-  }, [ncas, debouncedSearchTerm]);
-
-  const { items: filteredAndSortedNCAs, requestSort, getSortIndicator } = useSortableData(filteredNCAs, { key: 'siteCount', direction: 'descending' });
+  const { 
+    inputValue, 
+    setInputValue, 
+    sortedItems: filteredAndSortedNCAs, 
+    requestSort, 
+    getSortIndicator 
+  } = useSearchAndSort(
+    ncas,
+    (item, term) => (item.name?.toLowerCase() || '').includes(term),
+    { key: 'siteCount', direction: 'descending' }
+  );
 
   const sitesInSelectedNCA = useMemo(() => {
     if (!selectedNca) return [];
@@ -58,17 +47,6 @@ export default function NCAContent({ ncas, sites, error }) {
   };
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
-
-  const triggerDownload = (blob, filename) => {
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleExportXML = () => {
     const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });

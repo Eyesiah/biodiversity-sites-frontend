@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
+import { triggerDownload } from '@/lib/utils';
 import styles from '@/styles/SiteDetails.module.css';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow';
 import { XMLBuilder } from 'fast-xml-parser';
-import { useSortableData } from '@/lib/hooks';
+import { useSearchAndSort } from '@/lib/hooks';
 import { ARCGIS_LPA_URL } from '@/config';
 import MapContentLayout from '@/components/MapContentLayout';
 
@@ -82,43 +83,28 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
   />
 );
 
-const DEBOUNCE_DELAY_MS = 300;
-
-
 export default function LPAContent({ lpas, sites }) {
   
-    const [inputValue, setInputValue] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedLpa, setSelectedLpa] = useState(null);
     const [openRowId, setOpenRowId] = useState(null);
+
+    const { 
+        inputValue, 
+        setInputValue, 
+        sortedItems: filteredAndSortedLPAs, 
+        requestSort, 
+        getSortIndicator 
+    } = useSearchAndSort(
+        lpas,
+        (lpa, term) => 
+            (lpa.name?.toLowerCase() || '').includes(term) ||
+            (lpa.id?.toLowerCase() || '').includes(term),
+        { key: 'siteCount', direction: 'descending' }
+    );
 
     const handleAdjacentMapSelection = (item) => {
         setSelectedLpa(item);
     };
-
-
-    useEffect(() => {
-        const timerId = setTimeout(() => {
-            setDebouncedSearchTerm(inputValue);
-        }, DEBOUNCE_DELAY_MS);
-
-        return () => clearTimeout(timerId);
-    }, [inputValue]);
-
-    const filteredLPAs = useMemo(() => {
-        let filtered = [...lpas];
-
-        if (debouncedSearchTerm) {
-            const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-            filtered = filtered.filter(lpa =>
-                (lpa.name?.toLowerCase() || '').includes(lowercasedTerm) ||
-                (lpa.id?.toLowerCase() || '').includes(lowercasedTerm)
-            );
-        }
-        return filtered;
-    }, [lpas, debouncedSearchTerm]);
-
-    const { items: filteredAndSortedLPAs, requestSort, getSortIndicator } = useSortableData(filteredLPAs, { key: 'siteCount', direction: 'descending' });
 
     const sitesInSelectedLPA = useMemo(() => {
         if (!selectedLpa) return [];
@@ -136,17 +122,6 @@ export default function LPAContent({ lpas, sites }) {
             totalAdjacents: source.reduce((sum, lpa) => sum + (lpa.adjacentsCount || 0), 0),
         };
     }, [filteredAndSortedLPAs]);
-
-    const triggerDownload = (blob, filename) => {
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', filename);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
 
     const handleExportXML = () => {
         const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });

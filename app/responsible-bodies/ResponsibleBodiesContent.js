@@ -3,7 +3,8 @@
 import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { slugify, formatNumber, normalizeBodyName } from '@/lib/format';
-import { useSortableData } from '@/lib/hooks';
+import { triggerDownload } from '@/lib/utils';
+import { useSearchAndSort } from '@/lib/hooks';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
 import SiteList from '@/components/SiteList';
 import dynamic from 'next/dynamic';
@@ -48,16 +49,28 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     );
   }
   
-  const DEBOUNCE_DELAY_MS = 300;
-  
   export default function ResponsibleBodiesContent({ responsibleBodies }) {
-    const [inputValue, setInputValue] = useState('');
-    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [mapSites, setMapSites] = useState([]);
     const [hoveredSite, setHoveredSite] = useState(null);
     const [selectedSite, setSelectedSite] = useState(null);
     const [expandedRows, setExpandedRows] = useState({});
   
+    const { 
+        inputValue, 
+        setInputValue, 
+        sortedItems: filteredAndSortedBodies, 
+        requestSort, 
+        getSortIndicator 
+    } = useSearchAndSort(
+        responsibleBodies,
+        (body, term) =>
+          (body.name?.toLowerCase() || '').includes(term) ||
+          (body.expertise?.toLowerCase() || '').includes(term) ||
+          (body.organisationType?.toLowerCase() || '').includes(term) ||
+          (body.address?.toLowerCase() || '').includes(term),
+        { key: 'sites.length', direction: 'descending' }
+    );
+
     const handleToggle = (bodyName, isOpen) => {
       if (isOpen) {
         setExpandedRows({ [bodyName]: true });
@@ -80,33 +93,6 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
       setSelectedSite(null);
     }, [expandedRows, responsibleBodies]);
   
-    useEffect(() => {
-      const timerId = setTimeout(() => {
-        setDebouncedSearchTerm(inputValue);
-      }, DEBOUNCE_DELAY_MS);
-  
-      return () => {
-        clearTimeout(timerId);
-      };
-    }, [inputValue]);
-  
-    const filteredBodies = useMemo(() => {
-      let filtered = [...responsibleBodies];
-      if (debouncedSearchTerm) {
-        const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-        filtered = filtered.filter(body =>
-          (body.name?.toLowerCase() || '').includes(lowercasedTerm) ||
-          (body.expertise?.toLowerCase() || '').includes(lowercasedTerm) ||
-          (body.organisationType?.toLowerCase() || '').includes(lowercasedTerm) ||
-          (body.address?.toLowerCase() || '').includes(lowercasedTerm)
-        );
-        return filtered;
-      }
-      return responsibleBodies;
-    }, [responsibleBodies, debouncedSearchTerm]);
-  
-    const { items: filteredAndSortedBodies, requestSort, getSortIndicator } = useSortableData(filteredBodies, { key: 'sites.length', direction: 'descending' });
-  
     const handleExport = () => {
       const csvData = filteredAndSortedBodies.map(body => ({
         'Name': body.name,
@@ -121,14 +107,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
   
       const csv = Papa.unparse(csvData);
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', 'responsible-bodies.csv');
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      triggerDownload(blob, 'responsible-bodies.csv');
     };
   
   

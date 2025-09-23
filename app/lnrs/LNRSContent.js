@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
+import { triggerDownload } from '@/lib/utils';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
-import { useSortableData } from '@/lib/hooks';
+import { useSearchAndSort } from '@/lib/hooks';
 import styles from '@/styles/SiteDetails.module.css';
 import { XMLBuilder } from 'fast-xml-parser';
 import ExternalLink from '@/components/ExternalLink';
@@ -16,35 +17,21 @@ const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-const DEBOUNCE_DELAY_MS = 300;
-
 export default function LNRSContent({ lnrs, sites, error }) {
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedLnrs, setSelectedLnrs] = useState(null);
   const [openRowId, setOpenRowId] = useState(null);
 
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(inputValue);
-    }, DEBOUNCE_DELAY_MS);
-
-    return () => clearTimeout(timerId);
-  }, [inputValue]);
-
-  const filteredLNRS = useMemo(() => {
-    let filtered = [...lnrs];
-
-    if (debouncedSearchTerm) {
-      const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-      filtered = filtered.filter(item =>
-        (item.name?.toLowerCase() || '').includes(lowercasedTerm)
-      );
-    }
-    return filtered;
-  }, [lnrs, debouncedSearchTerm]);
-
-  const { items: filteredAndSortedLNRS, requestSort, getSortIndicator } = useSortableData(filteredLNRS, { key: 'siteCount', direction: 'descending' });
+  const { 
+    inputValue, 
+    setInputValue, 
+    sortedItems: filteredAndSortedLNRS, 
+    requestSort, 
+    getSortIndicator 
+  } = useSearchAndSort(
+    lnrs,
+    (item, term) => (item.name?.toLowerCase() || '').includes(term),
+    { key: 'siteCount', direction: 'descending' }
+  );
 
   const sitesInSelectedLNRS = useMemo(() => {
     if (!selectedLnrs) return [];
@@ -61,17 +48,6 @@ export default function LNRSContent({ lnrs, sites, error }) {
   };
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
-
-  const triggerDownload = (blob, filename) => {
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleExportXML = () => {
     const builder = new XMLBuilder({
@@ -91,7 +67,7 @@ export default function LNRSContent({ lnrs, sites, error }) {
   };
 
   if (error) {
-    return <div className="container"><p className="error">Error fetching data: {error}</p></div>;
+    return <p className="error">Error fetching data: {error}</p>;
   }
 
   return (
