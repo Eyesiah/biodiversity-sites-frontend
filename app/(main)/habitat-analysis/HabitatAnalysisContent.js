@@ -179,21 +179,21 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
         <ChartModalButton
-          url="/baseline-area-habitats"
+          url="/charts/baseline-area-habitats"
           title="Baseline Area Habitats"
           buttonText="Area Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
-          url="/baseline-hedgerow-habitats"
+          url="/charts/baseline-hedgerow-habitats"
           title="Baseline Hedgerow Habitats"
           buttonText="Hedgerow Habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
-          url="/baseline-watercourse-habitats"
+          url="/charts/baseline-watercourse-habitats"
           title="Baseline Watercourse Habitats"
           buttonText="Watercourse Habitats"
           className="linkButton"
