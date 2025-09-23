@@ -11,7 +11,7 @@ import MapContentLayout from '@/components/MapContentLayout';
 import ExternalLink from '@/components/ExternalLink';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 
-const SiteMap = dynamic(() => import('../../components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
