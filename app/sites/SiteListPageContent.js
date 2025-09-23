@@ -7,6 +7,7 @@ import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
+import ChartModalButton from '@/components/ChartModalButton';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -128,12 +129,6 @@ export default function SiteListPageContent({sites, summary}) {
     document.body.removeChild(link);
   };
 
-  const openChartWindow = (url) => {
-    const width = window.screen.width * 0.5;
-    const height = window.screen.height * 0.5;
-    window.open(url, 'chartWindow', `width=${width},height=${height}`);
-  };
-
   return (
     <MapContentLayout
       map={
@@ -178,9 +173,13 @@ export default function SiteListPageContent({sites, summary}) {
             <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
               Export to CSV
             </button>
-            <button onClick={() => openChartWindow('/imd-decile-distribution')} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-              IMD Decile Chart
-            </button>
+            <ChartModalButton
+              url="/imd-decile-distribution"
+              title="IMD Decile Distribution"
+              buttonText="IMD Decile Chart"
+              className="linkButton"
+              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            />
           </div>
           <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
         </>
