@@ -88,7 +88,7 @@ export function HabitatsCard ({title, habitats, isImprovement}) {
   const [isOpen, setIsOpen] = useState(true);
 
   const collatedAreas = habitats?.areas;
-  const collatedHedgerows = habitats?.areas;
+  const collatedHedgerows = habitats?.hedgerows;
   const collatedWatercourses = habitats?.watercourses;
   
   const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
