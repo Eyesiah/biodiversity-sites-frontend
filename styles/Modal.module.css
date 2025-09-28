@@ -22,6 +22,17 @@
   text-align: left;
 }
 
+.modalContentLarge {
+  background-color: #3a4049;
+  color: #bebbbb;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 90vw;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+
 .modalHeader {
   display: flex;
   justify-content: space-between;

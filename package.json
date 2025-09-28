@@ -1,19 +1,19 @@
 {
-  "name": "trees-frontend",
+  "name": "biodiversity-sites-frontend",
   "version": "0.1.0",
   "private": false,
   "license": "MIT",
   "dependencies": {
     "fast-xml-parser": "5.2.5",
+    "geodesy": "^2.4.0",
     "leaflet": "1.9.4",
     "mongodb": "6.19.0",
-    "mt-osgridref": "0.1.0",
     "next": "15.5.3",
-    "node-cache": "5.1.2",
     "nprogress": "0.2.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-leaflet": "5.0.0",
+    "react-select": "^5.10.2",
     "recharts": "3.2.1",
     "xmlbuilder2": "3.1.1"
   },

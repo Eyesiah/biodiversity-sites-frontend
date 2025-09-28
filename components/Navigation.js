@@ -1,3 +1,4 @@
+'use client'
 
 import Link from 'next/link';
 import { useState } from 'react';
@@ -41,7 +42,7 @@ export default function Navigation() {
         <Link href="/sites" className={styles.link} onClick={closeMenu}>BGS Sites List</Link>
         <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>BGS Habitat Summary</Link>
         <Link href="/habitat-analysis" className={styles.link} onClick={closeMenu}>BGS Habitat Analysis</Link>
-        <Link href="/allocations" className={styles.link} onClick={closeMenu}>All BGS Allocations</Link>
+        <Link href="/all-allocations" className={styles.link} onClick={closeMenu}>All BGS Allocations</Link>
         <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Responsible Bodies</Link>
         <Link href="/local-planning-authorities" className={styles.link} onClick={closeMenu}>Local Planning Authorities</Link>
         <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
