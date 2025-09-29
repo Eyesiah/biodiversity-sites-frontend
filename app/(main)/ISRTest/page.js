@@ -7,9 +7,9 @@ export default async function Page() {
   const lastUpdated = Date.now();
   return (
     <>
-    <main>
+    <div>
       <h1>Testing ISR</h1>
-    </main>
+    </div>
     <Footer lastUpdated={lastUpdated} />
     </>
   )

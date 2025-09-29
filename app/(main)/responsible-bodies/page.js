@@ -64,11 +64,11 @@ export default async function ResponsibleBodiesPage() {
   const { responsibleBodies, error, lastUpdated } = await getResponsibleBodiesData();
 
   return (
-    <div className="container">
-      <main className="main">
+    <>
+      <div className="container">
         <ResponsibleBodiesContent responsibleBodies={responsibleBodies} error={error} />
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
-    </div>
+    </>
   );
 }

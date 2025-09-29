@@ -9,7 +9,7 @@ export default function About() {
   return (
     <>
       <div className="container">
-        <main className="main prose">
+        <div className="main prose">
           <h1 className="title">Biodiversity Gain Sites in England</h1>
 
           <p>Biodiversity gain sites in England are locations where new or improved habitats are created to achieve England&apos;s <ExternalLink href="https://www.google.com/search?q=Biodiversity+Net+Gain+(BNG)">Biodiversity Net Gain (BNG)</ExternalLink> requirement. Developers must now achieve at least a 10% increase in the biodiversity of a parcel of land following its development. If this is not possible within the development site itself - by creating or enhancing its existing habitats - the biodiversity gain must be delivered elsewhere, by developers paying for the same types of habitat at a different location. For this purpose, Biodiversity Gain Sites (BGS) have been made available by landowners, who will sell <ExternalLink href="https://www.google.com/search?q=biodiversity+units">biodiversity units</ExternalLink> to developers.</p>
@@ -75,7 +75,7 @@ export default function About() {
           <p>This is a <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink> project that displays Biodiversity Gain Sites data scraped from <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">https://environment.data.gov.uk/biodiversity-net-gain</ExternalLink>.</p>
           <p>View the source code at <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend">GitHub</ExternalLink></p>
     
-        </main>
+        </div>
         </div>
       <Footer />
     </>

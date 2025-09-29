@@ -30,7 +30,7 @@ function PolylinePane() {
 }
 
 // --- SiteMap Component ---
-const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
+const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
@@ -125,7 +125,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
 
   return (
     <div>
-      <BaseMap height={height}>
+      <BaseMap>
         <MapController lsoa={activePolygons.lsoa} />
         <PolylinePane />
 

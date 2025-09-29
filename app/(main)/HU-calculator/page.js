@@ -9,11 +9,11 @@ export default function HUCalculatorPage({}) {
 
   return (
     <>
-      <main>
+      <div>
         <section>
           <HUCalculatorForm habitats={habitats} conditions={conditions}></HUCalculatorForm>
         </section>
-      </main>
+      </div>
       <Footer lastUpdated={Date.now()} />
     </>
   )

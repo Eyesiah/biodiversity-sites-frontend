@@ -86,7 +86,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
   }, [selectedItem, geoJsonUrl, nameProperty, sites]);
 
   return (
-    <BaseMap key={mapKey} style={{ height, width: '100%' }}>
+    <BaseMap key={mapKey}>
       {error && (
         <div style={{ position: 'absolute', top: '10px', left: '50px', zIndex: 1000, backgroundColor: 'white', padding: '10px', borderRadius: '5px', border: '1px solid red' }}>
           <p style={{ color: 'red', margin: 0 }}>{error}</p>

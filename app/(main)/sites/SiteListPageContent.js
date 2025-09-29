@@ -132,7 +132,7 @@ export default function SiteListPageContent({sites, summary}) {
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={filteredSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
+        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
         <>

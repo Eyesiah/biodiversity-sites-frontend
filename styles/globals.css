@@ -7,6 +7,24 @@ body {
   color: #f0f0f0;
 }
 
+.topContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navRow {
+  flex: 0 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.mainRow {
+  flex: 1;
+  overflow-y: auto;
+}
+
 a {
   color: #87ceeb; /* A light blue for link visibility */
   text-decoration: underline;

@@ -64,7 +64,7 @@ export default async function HabitatSummaryPage() {
 
   return (
     <>
-      <main className={styles.container}>
+      <div className={styles.container}>
         <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Habitats Summary</h1>
 
         <div className={styles.detailsGrid}>
@@ -86,7 +86,7 @@ export default async function HabitatSummaryPage() {
           </section>
         </div>
         <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} />
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
     </>
   )
