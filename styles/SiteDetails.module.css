@@ -124,6 +124,8 @@
   color: #000; /* Black */
   margin: 0;
   text-align: right;
+  flex: 1; /* Make the container grow and shrink as needed */
+  min-width: 0; /* Allows the container to shrink smaller than its content */
 }
 
 .documentLink {
@@ -203,7 +205,6 @@
   font-size: 1rem;
   color: #000;
   border-radius: 8px;
-  overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -269,8 +270,8 @@
 }
 
 .tableContainer {
-  display: flex;
   overflow-x: auto;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
