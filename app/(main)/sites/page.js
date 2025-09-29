@@ -18,9 +18,9 @@ export default async function SiteListPage() {
   
   return (
     <>
-      <main className="container">
+      <div className="container">
         <SiteListPageContent sites={processedSites} summary={summary}/>
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

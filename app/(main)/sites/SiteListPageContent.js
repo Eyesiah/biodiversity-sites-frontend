@@ -132,7 +132,7 @@ export default function SiteListPageContent({sites, summary}) {
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={filteredSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
+        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
         <>
@@ -181,7 +181,9 @@ export default function SiteListPageContent({sites, summary}) {
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
           </div>
-          <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
+          <div className="table-container">
+            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
+          </div>
         </>
       }
     />      

@@ -18,7 +18,7 @@ const KeyItem = ({ color, label, fillOpacity = 1 }) => (
 
 const MapKey = ({ keys }) => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: '0.5rem', backgroundColor: '#F9F6EE', borderRadius: '5px', marginTop: '0.5rem' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', padding: '0.25rem', backgroundColor: '#F9F6EE', borderRadius: '2px', marginTop: '0.25rem' }}>
       {keys.map(keyItem => (
         <KeyItem key={keyItem.label} color={keyItem.color} label={keyItem.label} fillOpacity={keyItem.fillOpacity} />
       ))}
