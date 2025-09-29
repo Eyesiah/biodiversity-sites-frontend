@@ -123,9 +123,12 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
     if (onSiteSelect) {onSiteSelect(null)};
   };
 
+  const displayKey = onSiteSelect == null;
+  const mapHeight = displayKey ? 'calc(100% - 1rem)' : '100%'
+
   return (
-    <div>
-      <BaseMap>
+    <div style={{ height: 'calc(100vh - 10rem)', width: '100%' }}>
+      <BaseMap style={{ height: mapHeight }}>
         <MapController lsoa={activePolygons.lsoa} />
         <PolylinePane />
 
@@ -161,7 +164,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
             );
           })}
       </BaseMap>
-      {!onSiteSelect && <MapKey keys={[
+      {displayKey && <MapKey keys={[
         { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
         { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
         { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },

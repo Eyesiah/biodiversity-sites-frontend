@@ -48,7 +48,7 @@ export default function SitePageContent({site}) {
   return (  
     <MapContentLayout
       map={
-        <SiteMap sites={[site]} selectedSite={site} height="80vh" />
+        <SiteMap sites={[site]} selectedSite={site} />
       }
       content={(<>
         <div className={styles.header}>

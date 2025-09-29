@@ -37,7 +37,7 @@ export const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOp
 
 export const BaseMap = ({ children, ...props }) => {
   return (
-    <MapContainer center={[52.9522, -2.0153]} zoom={6.75} zoomSnap={0.05} style={{ height: 'calc(100vh - 10rem)', width: '100%' }} {...props}>
+    <MapContainer center={[52.9522, -2.0153]} zoom={6.75} zoomSnap={0.05} {...props}>
       <LayersControl position="topright">
         <LayersControl.BaseLayer checked name="OpenStreetMap">
           <TileLayer
