@@ -258,3 +258,9 @@ a[href^="http"]::after, a[href^="https"]::after {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #333;
 }
+
+/* Utility class to make wide tables scrollable on small screens */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}

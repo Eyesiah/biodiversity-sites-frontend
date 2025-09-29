@@ -181,7 +181,9 @@ export default function SiteListPageContent({sites, summary}) {
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
           </div>
-          <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
+          <div className="table-container">
+            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
+          </div>
         </>
       }
     />      
