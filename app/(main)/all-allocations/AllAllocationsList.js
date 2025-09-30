@@ -203,6 +203,26 @@ export default function AllAllocationsList({ allocations }) {
     return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
   }, [filteredAllocations]);
 
+  const imdDistributionData = useMemo(() => {
+    const bins = Array.from({ length: 10 }, (_, i) => ({
+      decile: `${i + 1}`,
+      developmentSites: 0,
+      bgsSites: 0,
+    }));
+
+    filteredAllocations.forEach(alloc => {
+      if (typeof alloc.imd === 'number' && alloc.imd >= 1 && alloc.imd <= 10) {
+        bins[alloc.imd - 1].developmentSites++;
+      }
+      if (typeof alloc.simd === 'number' && alloc.simd >= 1 && alloc.simd <= 10) {
+        bins[alloc.simd - 1].bgsSites++;
+      }
+    });
+
+    return bins;
+  }, [filteredAllocations]);
+
+
   return (
     <>
       <div className="summary" style={{ textAlign: 'center' }}>
@@ -214,7 +234,7 @@ export default function AllAllocationsList({ allocations }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
+            placeholder="Search by BGS or Planning Ref, Address, or LPA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
@@ -238,7 +258,7 @@ export default function AllAllocationsList({ allocations }) {
       <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
         Totals are recalculated as your search string is entered.
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -265,7 +285,7 @@ export default function AllAllocationsList({ allocations }) {
             />
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <div style={{ width: '550px', height: '300px' }}>
             <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
             <ResponsiveContainer width="100%" height="100%">
@@ -289,6 +309,20 @@ export default function AllAllocationsList({ allocations }) {
                 <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
                 <Legend />
                 <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ width: '600px', height: '320px' }}>
+            <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={imdDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="decile" name="IMD Decile" />
+                <YAxis name="Number of Sites" allowDecimals={false} />
+                <Tooltip formatter={(value) => [value, 'Sites']} />
+                <Legend />
+                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"/>
+                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"/>
               </BarChart>
             </ResponsiveContainer>
           </div>
