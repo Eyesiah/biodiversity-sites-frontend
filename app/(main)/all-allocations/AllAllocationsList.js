@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import { formatNumber, slugify } from '@/lib/format';
+import { formatNumber, slugify, calcMedian } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
@@ -42,14 +42,16 @@ const AllocationHabitats = ({ habitats }) => {
   );
 };
 
-const AllocationRow = ({ alloc }) => (
-  <DataFetchingCollapsibleRow
+const AllocationRow = ({ alloc }) => {
+  const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
+  return (<DataFetchingCollapsibleRow
     mainRow={(
     <>
       <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
       <td>{alloc.pr}</td>
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
+      <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
       </td>
@@ -63,7 +65,8 @@ const AllocationRow = ({ alloc }) => (
     dataExtractor={json => json}
     colSpan={8}
     />
-  );
+  )
+};
 
 const DEBOUNCE_DELAY_MS = 300;
 
@@ -137,26 +140,17 @@ export default function AllAllocationsList({ allocations }) {
     const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
     const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
-    const distances = source
-      .map(alloc => alloc.d)
-      .filter(d => typeof d === 'number')
-      .sort((a, b) => a - b);
-
-    let medianDistance = null;
-    if (distances.length > 0) {
-      const mid = Math.floor(distances.length / 2);
-      if (distances.length % 2 === 0) {
-        medianDistance = (distances[mid - 1] + distances[mid]) / 2;
-      } else {
-        medianDistance = distances[mid];
-      }
-    }
-
+    let medianDistance = calcMedian(source, 'd');
+    let medianIMD = calcMedian(source, 'imd');
+    let medianSiteIMD = calcMedian(source, 'simd');
+    
     return {
       totalArea,
       totalHedgerow,
       totalWatercourse,
       medianDistance,
+      medianIMD,
+      medianSiteIMD,
       uniquePlanningRefs,
       totalUniquePlanningRefs,
     };
@@ -307,6 +301,7 @@ export default function AllAllocationsList({ allocations }) {
             <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
             <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
             <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+            <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
             <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
             <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
             <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
@@ -316,6 +311,9 @@ export default function AllAllocationsList({ allocations }) {
         <tbody>
           <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
             <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+            <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+              {summaryData.medianIMD !== null ? `${formatNumber(summaryData.medianIMD, 0)} → ${formatNumber(summaryData.medianSiteIMD, 0)} (median)` : 'N/A'}
+            </td>
             <td className="centered-data" style={{ border: '3px solid #ddd' }}>
               {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
             </td>

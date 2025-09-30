@@ -1,5 +1,4 @@
 import { fetchAllSites } from '@/lib/api';
-import { getCoordinatesForAddress, getCoordinatesForLPA, getDistanceFromLatLonInKm } from '@/lib/geo';
 import AllAllocationsList from './AllAllocationsList';
 import Footer from '@/components/Footer';
 
@@ -12,38 +11,12 @@ export const metadata = {
 
 export default async function AllocationsPage() {
 
-  const allSites = await fetchAllSites();
+  const allSites = await fetchAllSites(true, true);
   
   const allocationPromises = allSites.flatMap(site => {
     if (!site.allocations) return [];
     return site.allocations.map(async (alloc) => {
-      let allocCoords = null;
-
-      if (alloc.projectName) {
-        allocCoords = await getCoordinatesForAddress(alloc.projectName, alloc.localPlanningAuthority);
-      }
-
-      if (!allocCoords && alloc.localPlanningAuthority) {
-        allocCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
-      }
-
-      let distance = 'unknown';
-      if (allocCoords && site.latitude && site.longitude) {
-        distance = getDistanceFromLatLonInKm(
-          site.latitude,
-          site.longitude,
-          allocCoords.latitude,
-          allocCoords.longitude
-        );
-
-        if (distance > 688 && alloc.localPlanningAuthority) {
-          const lpaCoords = await getCoordinatesForLPA(alloc.localPlanningAuthority);
-          if (lpaCoords) {
-            distance = getDistanceFromLatLonInKm(site.latitude, site.longitude, lpaCoords.latitude, lpaCoords.longitude);
-          }
-        }
-      }
-
+      
       return {
         pr: alloc.planningReference,
         lpa: alloc.localPlanningAuthority,
@@ -52,7 +25,9 @@ export default async function AllocationsPage() {
         hu: alloc.hedgerowUnits,
         wu: alloc.watercoursesUnits,
         srn: site.referenceNumber,
-        d: distance,
+        d: alloc.distance,
+        imd: alloc.lsoa?.IMDDecile || 'N/A',
+        simd: site.lsoa?.IMDDecile || 'N/A'
       };
     });
   });

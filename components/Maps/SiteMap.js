@@ -42,7 +42,9 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
       return;
     }
 
-    const lsoaFromCache = polygonCache.current.lsoa[site.lsoaName];
+    const lsoaName = site.lsoaName ?? site.lsoa.name;
+
+    const lsoaFromCache = polygonCache.current.lsoa[lsoaName];
     const lnrsFromCache = polygonCache.current.lnrs[site.lnrsName];
     const ncaFromCache = polygonCache.current.nca[site.ncaName];
     const lpaFromCache = polygonCache.current.lpa[site.lpaName];
@@ -52,8 +54,8 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
     if (lsoaFromCache) {
       fetchPromises.push(Promise.resolve(lsoaFromCache));
     } else {
-      if (site.lsoaName && site.lsoaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, 'LSOA11NM', site.lsoaName));
+      if (lsoaName && lsoaName !== 'N/A') {
+        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, 'LSOA11NM', lsoaName));
       } else {
         fetchPromises.push(Promise.resolve(null)); // Push null if no LSOA name
       }
@@ -168,6 +170,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
         { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
         { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
         { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },
+        { color: lsoaStyle.color, label: 'LSOA', fillOpacity: lsoaStyle.fillOpacity },
       ]} />}
     </div>
   );
