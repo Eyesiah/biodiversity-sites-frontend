@@ -234,7 +234,7 @@ export default function AllAllocationsList({ allocations }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
+            placeholder="Search by BGS or Planning Ref, Address, or LPA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
@@ -321,8 +321,8 @@ export default function AllAllocationsList({ allocations }) {
                 <YAxis name="Number of Sites" allowDecimals={false} />
                 <Tooltip formatter={(value) => [value, 'Sites']} />
                 <Legend />
-                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites" />
-                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites" />
+                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"><LabelList dataKey="developmentSites" position="top" /></Bar>
+                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"><LabelList dataKey="bgsSites" position="top" /></Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
