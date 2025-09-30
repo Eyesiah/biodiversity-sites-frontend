@@ -321,8 +321,8 @@ export default function AllAllocationsList({ allocations }) {
                 <YAxis name="Number of Sites" allowDecimals={false} />
                 <Tooltip formatter={(value) => [value, 'Sites']} />
                 <Legend />
-                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"><LabelList dataKey="developmentSites" position="top" /></Bar>
-                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"><LabelList dataKey="bgsSites" position="top" /></Bar>
+                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"/>
+                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"/>
               </BarChart>
             </ResponsiveContainer>
           </div>
