@@ -28,34 +28,34 @@ Gorse scrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
 Hawthorn scrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
 Hazel scrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,15,12,10,7,5,1,1
 Lowland heathland,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,12,10,7,5,1,1
-Mixed scrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,25,20,15,10,1,1
-Mountain heaths and willow scrub,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Rhododendron scrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,30+,30+,25,23,15,1,1
-Dunes with sea buckthorn (H2160),High,6,Medium,0.67,Low,1,3,2.5,2,1.5,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Other sea buckthorn scrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,10,7,5,3,1,1,1
+Mixed scrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
+Mountain heaths and willow scrub,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,25,23,15,1,1
+Rhododendron scrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
+Dunes with sea buckthorn (H2160),High,6,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
+Other sea buckthorn scrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
 Willow scrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
 Upland heathland,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30,25,20,15,10,1,1
 Aquifer fed naturally fluctuating water bodies,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30,20,15,10,1,1,1
-Ornamental lake or pond,Low,2,Low,1,High,0.33,3,2.5,2,1.5,1,5,4,3,2,1,1,1
+Ornamental lake or pond,Low,2,Low,1,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
 High alkalinity lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
 Low alkalinity lakes,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,30,20,10,7,5,1,1
 Marl lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
 Moderate alkalinity lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-Peat lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
+Peat lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,5,4,3,2,1,1,1
 Ponds (priority habitat),High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ponds (non-priority habitat),Medium,4,Low,1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Reservoirs,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Temporary lakes ponds and pools (H3170),High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Calaminarian grasslands,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,2,1,1
+Ponds (non-priority habitat),Medium,4,Low,1,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,1,1,1
+Reservoirs,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
+Temporary lakes ponds and pools (H3170),High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,2,1,1
+Calaminarian grasslands,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
 Coastal sand dunes,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Coastal vegetated shingle,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
+Coastal vegetated shingle,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
 Ruderal/Ephemeral,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Tall forbs,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Inland rock outcrop and scree habitats,High,6,High,0.33,Low,1,3,2.5,2,1.5,1,30+,25,20,15,10,1,1
-Limestone pavement,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
+Tall forbs,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,30+,25,20,15,10,1,1
+Inland rock outcrop and scree habitats,High,6,High,0.33,Low,1,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
+Limestone pavement,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
 Maritime cliff and slopes,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Other inland rock and scree,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Allotments,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,1,1,1,1,1,1,1
+Other inland rock and scree,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,1,1,1,1,1,1,1
+Allotments,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
 "Artificial unvegetated, unsealed surface",V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,0
 Bioswale,Low,2,Medium,0.67,Low,1,3,2.5,2,1.5,1,3,2,1,1,1,1,1
 Intensive green roof,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
