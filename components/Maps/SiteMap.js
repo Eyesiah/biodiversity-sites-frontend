@@ -9,14 +9,23 @@ import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPo
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL } from '@/config';
 import MapKey from '@/components/Maps/MapKey';
 
-function MapController({ lsoa }) {
+function MapController({ lsoa, lnrs, nca, lpa }) {
   const map = useMap();
   useEffect(() => {
-    if (lsoa) {
-      const layer = L.geoJSON(lsoa);
-      if (layer.getBounds().isValid()) map.fitBounds(layer.getBounds());
+    const bounds = L.latLngBounds([]);
+    [lsoa, lnrs, nca, lpa].forEach((geo) => {
+      if (geo) {
+        const layer = L.geoJSON(geo);
+        if (layer.getBounds().isValid()) {
+          bounds.extend(layer.getBounds());
+        }
+      }
+    });
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds);
     }
-  }, [lsoa, map]);
+  }, [lsoa, lnrs, nca, lpa, map]);
   return null;
 }
 
@@ -131,7 +140,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
   return (
     <div style={{ height: 'calc(100vh - 10rem)', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }}>
-        <MapController lsoa={activePolygons.lsoa} />
+        <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} />
         <PolylinePane />
 
         {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
