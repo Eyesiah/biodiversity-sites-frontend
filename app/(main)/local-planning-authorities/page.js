@@ -60,9 +60,9 @@ export default async function LocalPlanningAuthoritiesPage() {
   
   return (
     <>
-      <main className="container">
+      <div className="container">
         <LPAContent lpas={lpas} sites={sites}  />
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

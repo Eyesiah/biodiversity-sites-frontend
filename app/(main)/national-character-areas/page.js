@@ -53,11 +53,11 @@ export default async function NationalCharacterAreasPage() {
   const { ncas, sites, error, lastUpdated } = await getNCAData();
 
   return (
-    <div className="container">
-      <main className="main">
+    <>
+      <div className="container">
         <NCAContent ncas={ncas} sites={sites} error={error} />
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
-    </div>
+    </>
   );
 }

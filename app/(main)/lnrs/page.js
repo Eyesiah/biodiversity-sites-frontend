@@ -70,11 +70,11 @@ export default async function LNRSAreasPage() {
   const { lnrs, sites, error, lastUpdated } = await getLnrsData();
 
   return (
-    <div className="container">
-      <main className="main">
+    <>
+      <div className="container">
         <LNRSContent lnrs={lnrs} sites={sites} error={error} />
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
-    </div>
+    </>
   );
 }

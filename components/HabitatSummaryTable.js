@@ -40,51 +40,53 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasAllocations = site.allocations != null;
 
   return (
-    <table className={`${styles.subTable} ${styles.inlineTable}`}>
-      <thead>
-        <tr>
-          <th>Habitat</th>
-          <th># Parcels</th>
-          <th>Baseline Size</th>
-          <th>Baseline HUs</th>
-          <th>Improvements Size</th>
-          {hasAllocations && <th>Allocations Size</th>}
-          {hasAllocations && <th>% Allocated</th>}
-          {hasAllocations && <th>Allocations HUs</th>}
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Areas (ha)</td>
-          <td className={styles.numericData}>{formatNumber(baselineAreaParcels, 0)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineArea, 2)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementArea, 2)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
-          {hasAllocations && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
-        </tr>
-        <tr>
-          <td>Hedgerows (km)</td>
-          <td className={styles.numericData}>{formatNumber(baselineHedgerowParcels, 0)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineHedgerow, 2)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementHedgerow, 2)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
-          {hasAllocations && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
-        </tr>
-        <tr>
-          <td>Watercourses (km)</td>
-          <td className={styles.numericData}>{formatNumber(baselineWatercourseParcels, 0)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineWatercourse, 2)}</td>
-          <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
-          <td className={styles.numericData}>{formatNumber(improvementWatercourse, 2)}</td>
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
-          {hasAllocations && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
-          {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
-        </tr>
-      </tbody>
-    </table>
+    <div className={styles.tableContainer}>
+      <table className={`${styles.subTable} ${styles.inlineTable}`}>
+        <thead>
+          <tr>
+            <th>Habitat</th>
+            <th># Parcels</th>
+            <th>Baseline Size</th>
+            <th>Baseline HUs</th>
+            <th>Improvements Size</th>
+            {hasAllocations && <th>Allocations Size</th>}
+            {hasAllocations && <th>% Allocated</th>}
+            {hasAllocations && <th>Allocations HUs</th>}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Areas (ha)</td>
+            <td className={styles.numericData}>{formatNumber(baselineAreaParcels, 0)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineArea, 2)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
+            <td className={styles.numericData}>{formatNumber(improvementArea, 2)}</td>
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
+            {hasAllocations && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
+          </tr>
+          <tr>
+            <td>Hedgerows (km)</td>
+            <td className={styles.numericData}>{formatNumber(baselineHedgerowParcels, 0)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineHedgerow, 2)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
+            <td className={styles.numericData}>{formatNumber(improvementHedgerow, 2)}</td>
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
+            {hasAllocations && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
+          </tr>
+          <tr>
+            <td>Watercourses (km)</td>
+            <td className={styles.numericData}>{formatNumber(baselineWatercourseParcels, 0)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineWatercourse, 2)}</td>
+            <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
+            <td className={styles.numericData}>{formatNumber(improvementWatercourse, 2)}</td>
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
+            {hasAllocations && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };

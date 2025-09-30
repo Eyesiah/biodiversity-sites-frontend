@@ -38,9 +38,9 @@ export default async function SitePage({params}) {
   if (!site)
   {
     return (
-        <main className={styles.container}>
+        <div className={styles.container}>
           <p>Site not found</p>
-        </main>);
+        </div>);
   }
 
   // process allocation location data
@@ -88,9 +88,9 @@ export default async function SitePage({params}) {
 
   return (
     <>
-      <main className={styles.container}>
+      <div className={styles.container}>
         <SitePageContent site={site}/>
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

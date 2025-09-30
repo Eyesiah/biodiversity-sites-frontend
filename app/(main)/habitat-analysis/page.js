@@ -138,10 +138,10 @@ export default async function HabitatAnalysis() {
   
   return (
     <>
-      <main className={styles.container}>
+      <div className={styles.container}>
         <h1 className="title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>BGS Habitat Analysis</h1>
         <HabitatAnalysisContent areaAnalysis={areaAnalysis} hedgerowAnalysis={hedgerowAnalysis} watercourseAnalysis={watercourseAnalysis}/>        
-      </main>
+      </div>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

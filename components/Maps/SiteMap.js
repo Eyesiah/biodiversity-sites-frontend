@@ -30,7 +30,7 @@ function PolylinePane() {
 }
 
 // --- SiteMap Component ---
-const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => {
+const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
@@ -123,9 +123,12 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
     if (onSiteSelect) {onSiteSelect(null)};
   };
 
+  const displayKey = onSiteSelect == null;
+  const mapHeight = displayKey ? 'calc(100% - 1rem)' : '100%'
+
   return (
-    <div>
-      <BaseMap height={height}>
+    <div style={{ height: 'calc(100vh - 10rem)', width: '100%' }}>
+      <BaseMap style={{ height: mapHeight }}>
         <MapController lsoa={activePolygons.lsoa} />
         <PolylinePane />
 
@@ -161,7 +164,7 @@ const SiteMap = ({ sites, height, hoveredSite, selectedSite, onSiteSelect }) => 
             );
           })}
       </BaseMap>
-      {!onSiteSelect && <MapKey keys={[
+      {displayKey && <MapKey keys={[
         { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
         { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
         { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },

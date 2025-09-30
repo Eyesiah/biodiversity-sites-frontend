@@ -31,9 +31,14 @@ export default function RootLayout({ children }) {
           src="/api/umami/script"
           data-website-id={umamiWebsiteId}
         />
-        <Navigation />
-        <main className="main">{children}</main>
-        
+        <div className="topContainer">
+          <div className="navRow">
+            <Navigation />
+          </div>
+          <div className="mainRow">
+            <main className="main">{children}</main>
+          </div>
+        </div>
       </body>
     </html>
   );
