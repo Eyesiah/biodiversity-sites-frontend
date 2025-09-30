@@ -51,6 +51,7 @@ const AllocationRow = ({ alloc }) => {
     <>
       <td>{alloc.planningReference}</td>
       <td>{alloc.localPlanningAuthority}</td>
+      <td className={styles.numericData} style={{ textAlign: 'center' }}>{alloc.lsoa.IMDDecile || 'N/A'}</td>
       <td className={styles.numericData} style={{ textAlign: 'center' }}>
         {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
       </td>
@@ -90,6 +91,7 @@ export const AllocationsCard = ({allocations, title}) => {
                   <tr>
                     <th onClick={() => requestSortAllocations('planningReference')} className={getSortClassName('planningReference', sortConfigAllocations)}>Reference</th>
                     <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
+                    <th onClick={() => requestSortAllocations('lsoa.IMDDecile')} className={getSortClassName('lsoa.IMDDecile', sortConfigAllocations)}>IMD Decile</th>
                     <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)} style={{ textAlign: 'center' }}>Distance (km)</th>
                     <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
                     <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>

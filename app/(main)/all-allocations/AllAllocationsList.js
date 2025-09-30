@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import { formatNumber, slugify } from '@/lib/format';
+import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
@@ -42,14 +42,16 @@ const AllocationHabitats = ({ habitats }) => {
   );
 };
 
-const AllocationRow = ({ alloc }) => (
-  <DataFetchingCollapsibleRow
+const AllocationRow = ({ alloc }) => {
+  const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
+  return (<DataFetchingCollapsibleRow
     mainRow={(
     <>
       <td><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></td>
       <td>{alloc.pr}</td>
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
+      <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
       </td>
@@ -63,7 +65,8 @@ const AllocationRow = ({ alloc }) => (
     dataExtractor={json => json}
     colSpan={8}
     />
-  );
+  )
+};
 
 const DEBOUNCE_DELAY_MS = 300;
 
@@ -137,26 +140,17 @@ export default function AllAllocationsList({ allocations }) {
     const uniquePlanningRefs = new Set(source.map(alloc => alloc.pr)).size;
     const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
-    const distances = source
-      .map(alloc => alloc.d)
-      .filter(d => typeof d === 'number')
-      .sort((a, b) => a - b);
-
-    let medianDistance = null;
-    if (distances.length > 0) {
-      const mid = Math.floor(distances.length / 2);
-      if (distances.length % 2 === 0) {
-        medianDistance = (distances[mid - 1] + distances[mid]) / 2;
-      } else {
-        medianDistance = distances[mid];
-      }
-    }
-
+    let medianDistance = calcMedian(source, 'd');
+    let meanIMD = calcMean(source, 'imd');
+    let meanSiteIMD = calcMean(source, 'simd');
+    
     return {
       totalArea,
       totalHedgerow,
       totalWatercourse,
       medianDistance,
+      meanIMD,
+      meanSiteIMD,
       uniquePlanningRefs,
       totalUniquePlanningRefs,
     };
@@ -209,6 +203,26 @@ export default function AllAllocationsList({ allocations }) {
     return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
   }, [filteredAllocations]);
 
+  const imdDistributionData = useMemo(() => {
+    const bins = Array.from({ length: 10 }, (_, i) => ({
+      decile: `${i + 1}`,
+      developmentSites: 0,
+      bgsSites: 0,
+    }));
+
+    filteredAllocations.forEach(alloc => {
+      if (typeof alloc.imd === 'number' && alloc.imd >= 1 && alloc.imd <= 10) {
+        bins[alloc.imd - 1].developmentSites++;
+      }
+      if (typeof alloc.simd === 'number' && alloc.simd >= 1 && alloc.simd <= 10) {
+        bins[alloc.simd - 1].bgsSites++;
+      }
+    });
+
+    return bins;
+  }, [filteredAllocations]);
+
+
   return (
     <>
       <div className="summary" style={{ textAlign: 'center' }}>
@@ -220,7 +234,7 @@ export default function AllAllocationsList({ allocations }) {
           <input
             type="text"
             className="search-input"
-            placeholder="Search by BGS Ref, Planning Ref, Address, or LPA."
+            placeholder="Search by BGS or Planning Ref, Address, or LPA."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
@@ -244,7 +258,7 @@ export default function AllAllocationsList({ allocations }) {
       <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
         Totals are recalculated as your search string is entered.
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -271,7 +285,7 @@ export default function AllAllocationsList({ allocations }) {
             />
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '2rem' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <div style={{ width: '550px', height: '300px' }}>
             <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
             <ResponsiveContainer width="100%" height="100%">
@@ -298,6 +312,20 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <div style={{ width: '600px', height: '320px' }}>
+            <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={imdDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="decile" name="IMD Decile" />
+                <YAxis name="Number of Sites" allowDecimals={false} />
+                <Tooltip formatter={(value) => [value, 'Sites']} />
+                <Legend />
+                <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"/>
+                <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
       <table className="site-table">
@@ -307,6 +335,7 @@ export default function AllAllocationsList({ allocations }) {
             <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
             <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
             <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+            <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
             <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
             <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
             <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
@@ -316,6 +345,9 @@ export default function AllAllocationsList({ allocations }) {
         <tbody>
           <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
             <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+            <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+              {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
+            </td>
             <td className="centered-data" style={{ border: '3px solid #ddd' }}>
               {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
             </td>

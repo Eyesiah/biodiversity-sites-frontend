@@ -72,6 +72,7 @@ const ColorKey = ({color}) => {
 }
 
 export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handlePopupClose=null, markerRefs, onSiteSelect=null}) => {
+  const imdDecile = site.imdDecile ?? site.lsoa.IMDDecile;
   return (
     <Marker 
       key={site.referenceNumber} 
@@ -96,8 +97,8 @@ export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handl
         <b>LNRS:</b> {site.lnrsName || 'N/A'}
         {withColorKeys && site.lnrsName && site.lnrsName != 'N/A' &&  <ColorKey color={lnrsStyle.color}/>}
         <br />
-        <b>LSOA IMD Decile:</b> {site.imdDecile || 'N/A'}
-        {withColorKeys && site.imdDecile && site.imdDecile != 'N/A' && <ColorKey color={lsoaStyle.color}/>}
+        <b>LSOA IMD Decile:</b> {imdDecile || 'N/A'}
+        {withColorKeys && imdDecile && imdDecile != 'N/A' && <ColorKey color={lsoaStyle.color}/>}
         <br />              
         <b>Allocations:</b> {site.allocationsCount}<br />
         <b>Total Size:</b> {formatNumber(site.siteSize)} ha<br />
