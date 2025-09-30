@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useMemo, useEffect } from 'react';
-import { formatNumber, slugify, calcMedian } from '@/lib/format';
+import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
@@ -141,16 +141,16 @@ export default function AllAllocationsList({ allocations }) {
     const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
     let medianDistance = calcMedian(source, 'd');
-    let medianIMD = calcMedian(source, 'imd');
-    let medianSiteIMD = calcMedian(source, 'simd');
+    let meanIMD = calcMean(source, 'imd');
+    let meanSiteIMD = calcMean(source, 'simd');
     
     return {
       totalArea,
       totalHedgerow,
       totalWatercourse,
       medianDistance,
-      medianIMD,
-      medianSiteIMD,
+      meanIMD,
+      meanSiteIMD,
       uniquePlanningRefs,
       totalUniquePlanningRefs,
     };
@@ -312,7 +312,7 @@ export default function AllAllocationsList({ allocations }) {
           <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
             <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
             <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-              {summaryData.medianIMD !== null ? `${formatNumber(summaryData.medianIMD, 0)} → ${formatNumber(summaryData.medianSiteIMD, 0)} (median)` : 'N/A'}
+              {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
             </td>
             <td className="centered-data" style={{ border: '3px solid #ddd' }}>
               {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
