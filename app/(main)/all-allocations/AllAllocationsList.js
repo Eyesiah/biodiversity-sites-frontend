@@ -227,7 +227,7 @@ export default function AllAllocationsList({ allocations }) {
     <>
       <div className="summary" style={{ textAlign: 'center' }}>        
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
-        <p>The IMD transfer column shows the decile score moving from the devlopment site the the BGS site.</p>        
+        <p>The IMD transfer column shows the decile score moving from the devlopment site to the BGS site.</p>        
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
         <div className="search-container" style={{ margin: 0 }}>
