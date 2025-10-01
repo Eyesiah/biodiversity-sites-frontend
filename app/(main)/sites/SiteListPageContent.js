@@ -136,9 +136,6 @@ export default function SiteListPageContent({sites, summary}) {
       }
       content={
         <>
-          <h1 className="title">
-            Biodiversity Gain Sites
-          </h1>
           <div className="summary">
             <div className="summary" style={{ textAlign: 'center' }}>
             {inputValue ? (

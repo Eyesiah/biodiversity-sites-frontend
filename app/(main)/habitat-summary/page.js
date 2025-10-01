@@ -11,7 +11,7 @@ import { collateAllHabitats } from '@/lib/habitat';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'Habitat Summary',
+  title: 'BGS Habitat Summary',
 };
 
 
@@ -65,8 +65,6 @@ export default async function HabitatSummaryPage() {
   return (
     <>
       <div className={styles.container}>
-        <h1 className="title" style={{ textAlign: 'center', marginBottom: '1rem' }}>Habitats Summary</h1>
-
         <div className={styles.detailsGrid}>
 
           <section className={styles.card}>

@@ -15,6 +15,10 @@ const CommaSeperatedSiteLink = ({site, index, count}) => {
   );
 };
 
+export const metadata = {
+  title: 'BGS Register Statistics',
+};
+
 export default async function StatisticsPage() {
 
   const lastUpdated = Date.now();
@@ -77,7 +81,6 @@ export default async function StatisticsPage() {
   return (
     <>
       <div className="container">
-        <h1 className="title">BGS Register Statistics</h1>
         {stats.length > 0 ? (
           <>
             <div style={{ display: 'flex', flexDirection: 'row', width: '100%', marginBottom: '40px' }}>

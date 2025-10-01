@@ -52,7 +52,6 @@ export default function NCAContent({ ncas, sites, error }) {
         }
         content={
         <>
-            <h1 className="title">National Character Areas</h1>
             <SearchableTableLayout
                 initialItems={ncas}
                 filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}

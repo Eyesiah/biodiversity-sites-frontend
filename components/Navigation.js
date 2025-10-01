@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
@@ -51,6 +52,15 @@ const AboutModalButton = () => {
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [pageTitle, setPageTitle] = useState('');
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Titles are often set after a small delay, so we'll wait a moment
+    setTimeout(() => {
+      setPageTitle(document.title);
+    }, 100);
+  }, [pathname]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -70,15 +80,19 @@ export default function Navigation() {
   
   return (
     <nav className={styles.nav}>
-      <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
-        <Image
-          src="/BTFLogodefault.jpg"
-          alt="BTF Logo"
-          width={45}
-          height={45}
-          className={styles.logo}
-        />
-      </ExternalLink>
+      <div className={styles.leftNav}>
+        <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+          <Image
+            src="/BTFLogodefault.jpg"
+            alt="BTF Logo"
+            width={45}
+            height={45}
+            className={styles.logo}
+          />
+        </ExternalLink>
+        <h1 className={styles.pageTitle}>{pageTitle}</h1>
+      </div>
+      
       <button
         className={styles.hamburger}
         onClick={toggleMenu}
@@ -88,35 +102,39 @@ export default function Navigation() {
       >
         &#9776;
       </button>
-      <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
-        <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-          BGS Sites List
-        </Link>
-        <Dropdown category="Site Insights">
-          <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
-          <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
-          <DropdownLink href='/all-allocations' label='BGS Allocations' />
-        </Dropdown>
-        <Dropdown category="BGS Bodies">
-          <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
-          <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
-          <DropdownLink href='/national-character-areas' label='National Character Areas' />
-          <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
-        </Dropdown>
-        <Dropdown category="Meta">
-          <DropdownLink href='/statistics' label='Register Statistics' />
-          <AboutModalButton/>
-        </Dropdown>
-      </div>
-      <div className={styles.rightLogoLink}>
-        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
-          <Image
-            src="/ToBlogo192.jpg"
-            alt="ToB Logo"
-            width={45}
-            height={45}
-          />
-        </ExternalLink>
+
+      <div className={styles.rightNav}>
+        <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
+          <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
+            BGS Sites List
+          </Link>
+          <Dropdown category="Site Insights">
+            <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
+            <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
+            <DropdownLink href='/all-allocations' label='BGS Allocations' />
+          </Dropdown>
+          <Dropdown category="BGS Bodies">
+            <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
+            <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
+            <DropdownLink href='/national-character-areas' label='National Character Areas' />
+            <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
+          </Dropdown>
+          <Dropdown category="Meta">
+            <DropdownLink href='/statistics' label='Register Statistics' />
+            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
+            <AboutModalButton/>
+          </Dropdown>
+        </div>
+        <div className={styles.rightLogoLink}>
+          <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
+            <Image
+              src="/ToBlogo192.jpg"
+              alt="ToB Logo"
+              width={45}
+              height={45}
+            />
+          </ExternalLink>
+        </div>
       </div>
     </nav>
   );

@@ -110,7 +110,6 @@ export default function LPAContent({ lpas, sites }) {
             }
             content={
                 <>
-                    <h1 className="title">Local Planning Authorities</h1>
                     <SearchableTableLayout
                         initialItems={lpas}
                         filterPredicate={(lpa, term) => 

@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 
 export const metadata = {
-  title: 'Habitat Analysis',
+  title: 'BGS Habitat Analysis',
 };
 
 // Revalidate this page at most once every hour (3600 seconds)
@@ -139,7 +139,6 @@ export default async function HabitatAnalysis() {
   return (
     <>
       <div className={styles.container}>
-        <h1 className="title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>BGS Habitat Analysis</h1>
         <HabitatAnalysisContent areaAnalysis={areaAnalysis} hedgerowAnalysis={hedgerowAnalysis} watercourseAnalysis={watercourseAnalysis}/>        
       </div>
       <Footer lastUpdated={lastUpdated} />
