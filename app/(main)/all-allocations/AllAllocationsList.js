@@ -224,40 +224,7 @@ export default function AllAllocationsList({ allocations }) {
 
 
   return (
-    <>
-      <div className="summary" style={{ textAlign: 'center' }}>        
-        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
-        <p>The IMD transfer column shows the decile score moving from the development site to the BGS site.</p>        
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-        <div className="search-container" style={{ margin: 0 }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by BGS or Planning Ref, Address, or LPA."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
-          {isSearching && <div className="loader" />}
-        </div>
-        <div className={styles.buttonGroup}>
-          <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
-          <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
-        </div>
-      </div>
-      <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
-        Totals are recalculated as your search string is entered.
-      </div>
+    <>      
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
@@ -327,6 +294,39 @@ export default function AllAllocationsList({ allocations }) {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
+      <div className="summary" style={{ textAlign: 'center' }}>        
+        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
+        <p>The IMD transfer column shows the decile score moving from the development site to the BGS site.</p>        
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
+        <div className="search-container" style={{ margin: 0 }}>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by BGS or Planning Ref, Address, or LPA."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            autoFocus
+          />
+          {inputValue && (
+            <button
+              onClick={() => setInputValue('')}
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              &times;
+            </button>
+          )}
+          {isSearching && <div className="loader" />}
+        </div>
+        <div className={styles.buttonGroup}>
+          <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
+          <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+        </div>
+      </div>
+      <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
+        Totals are recalculated as your search string is entered.
       </div>
       <div className="table-container">
         <table className="site-table">
