@@ -8,6 +8,7 @@ import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsible
 import { XMLBuilder } from 'fast-xml-parser';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
+import statsStyles from '@/styles/Statistics.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
 
 const AllocationHabitats = ({ habitats }) => {
@@ -225,11 +226,36 @@ export default function AllAllocationsList({ allocations }) {
 
   return (
     <>      
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <div style={{ width: '550px', maxWidth: '90vw', height: '300px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', margin: '1rem', flexWrap: 'wrap' }}>        
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
+          <ChartModalButton
+            url="/charts/allocated-habitats"
+            title="Area Habitats"
+            buttonText="Area Habitats"
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          />
+          <ChartModalButton
+            url="/charts/hedgerow-allocations"
+            title="Hedgerow Habitats"
+            buttonText="Hedgerow Habitats"
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          />
+          <ChartModalButton
+            url="/charts/watercourse-allocations"
+            title="Watercourse Habitats"
+            buttonText="Watercourse Habitats"
+            className="linkButton"
+            style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+          />
+        </div>
+        
+        <div className={statsStyles.chartRow}>
+          <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
-            <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height={200}>
               <LineChart data={distanceDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
@@ -240,9 +266,9 @@ export default function AllAllocationsList({ allocations }) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ width: '600px', maxWidth: '90vw', height: '320px' }}>
+          <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={200}>
               <BarChart data={habitatUnitDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" name="HUs" />
@@ -253,9 +279,9 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ width: '600px', maxWidth: '90vw', height: '320px' }}>
+          <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={200}>
               <BarChart data={imdDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="decile" name="IMD Decile" />
@@ -269,100 +295,71 @@ export default function AllAllocationsList({ allocations }) {
           </div>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Allocation Charts:</span>
-                <ChartModalButton
-                  url="/charts/allocated-habitats"
-                  title="Area Habitats"
-                  buttonText="Area Habitats"
-                  className="linkButton"
-                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-                />
-                <ChartModalButton
-                  url="/charts/hedgerow-allocations"
-                  title="Hedgerow Habitats"
-                  buttonText="Hedgerow Habitats"
-                  className="linkButton"
-                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-                />
-                <ChartModalButton
-                  url="/charts/watercourse-allocations"
-                  title="Watercourse Habitats"
-                  buttonText="Watercourse Habitats"
-                  className="linkButton"
-                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-                />
-              </div>
+        <div className="summary" style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
+          <p style={{ margin: 0 }}>The IMD transfer column shows the decile score moving from the development site to the BGS site.</p>
         </div>
-
-      </div>
-      <div className="summary" style={{ textAlign: 'center' }}>        
-        <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
-        <p>The IMD transfer column shows the decile score moving from the development site to the BGS site.</p>        
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-        <div className="search-container" style={{ margin: 0 }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by BGS or Planning Ref, Address, or LPA."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
-          {isSearching && <div className="loader" />}
+        
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }} className="sticky-search">
+          <div className="search-container" style={{ margin: 0 }}>
+            <input
+              type="text"
+              className="search-input"
+              placeholder="Search by BGS or Planning Ref, Address, or LPA."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              autoFocus
+            />
+            {inputValue && (
+              <button
+                onClick={() => setInputValue('')}
+                className="clear-search-button"
+                aria-label="Clear search"
+              >
+                &times;
+              </button>
+            )}
+            {isSearching && <div className="loader" />}
+          </div>
+          <div className={styles.buttonGroup}>
+            <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
+            <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+          </div>
         </div>
-        <div className={styles.buttonGroup}>
-          <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
-          <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+        <div className="table-container">
+          <table className="site-table">
+            <thead>
+              <tr>
+                <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
+                <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+                <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
+                <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+                <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
+                <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
+                <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
+                <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
+                <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+                <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+                <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+                  {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
+                </td>
+                <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+                  {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
+                </td>
+                <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
+                <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
+                <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
+              </tr>
+              {sortedAllocations.map((alloc) => (
+                <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-      <div style={{ fontStyle: 'italic', fontSize: '1.2rem', marginTop: '0rem' }}>
-        Totals are recalculated as your search string is entered.
-      </div>
-      <div className="table-container">
-        <table className="site-table">
-          <thead>
-            <tr>
-              <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
-              <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
-              <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
-              <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
-              <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
-              <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
-              <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
-              <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
-              <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-              <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
-              <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-                {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
-              </td>
-              <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-                {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
-              </td>
-              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
-              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
-              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
-            </tr>
-            {sortedAllocations.map((alloc) => (
-              <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
-            ))}
-          </tbody>
-        </table>
       </div>
     </>
   );

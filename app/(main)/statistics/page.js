@@ -2,7 +2,7 @@ import clientPromise from '@/lib/mongodb';
 import Link from 'next/link';
 import { StatsChart } from './StatisticsChart'
 import Footer from '@/components/Footer';
-import styles from './Statistics.module.css';
+import styles from '@/styles/Statistics.module.css';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
