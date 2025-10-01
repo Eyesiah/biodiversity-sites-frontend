@@ -60,4 +60,4 @@ jobs:
     steps:
       - name: Call stats endpoint to update history
         run: |
-          curl -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" https://biodiversity-sites-frontend.vercel.app/api/cron
+          curl -X POST -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" http://bgs.bristoltrees.space/api/cron
