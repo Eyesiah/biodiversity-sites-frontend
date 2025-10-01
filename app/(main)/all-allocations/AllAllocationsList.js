@@ -226,32 +226,6 @@ export default function AllAllocationsList({ allocations }) {
   return (
     <>      
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', margin: '1rem 0 6rem 0', flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <ChartModalButton
-              url="/charts/allocated-habitats"
-              title="Area Habitats"
-              buttonText="Area Habitats"
-              className="linkButton"
-              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-            <ChartModalButton
-              url="/charts/hedgerow-allocations"
-              title="Hedgerow Habitats"
-              buttonText="Hedgerow Habitats"
-              className="linkButton"
-              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-            <ChartModalButton
-              url="/charts/watercourse-allocations"
-              title="Watercourse Habitats"
-              buttonText="Watercourse Habitats"
-              className="linkButton"
-              style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-          </div>
-        </div>
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <div style={{ width: '550px', maxWidth: '90vw', height: '300px' }}>
             <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
@@ -294,6 +268,34 @@ export default function AllAllocationsList({ allocations }) {
             </ResponsiveContainer>
           </div>
         </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Allocation Charts:</span>
+                <ChartModalButton
+                  url="/charts/allocated-habitats"
+                  title="Area Habitats"
+                  buttonText="Area Habitats"
+                  className="linkButton"
+                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+                />
+                <ChartModalButton
+                  url="/charts/hedgerow-allocations"
+                  title="Hedgerow Habitats"
+                  buttonText="Hedgerow Habitats"
+                  className="linkButton"
+                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+                />
+                <ChartModalButton
+                  url="/charts/watercourse-allocations"
+                  title="Watercourse Habitats"
+                  buttonText="Watercourse Habitats"
+                  className="linkButton"
+                  style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+                />
+              </div>
+        </div>
+
       </div>
       <div className="summary" style={{ textAlign: 'center' }}>        
         <p style={{ fontSize: '1.2rem' }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
