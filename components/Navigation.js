@@ -95,9 +95,9 @@ export default function Navigation() {
         <Dropdown category="Site Insights">
           <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
           <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
-          <DropdownLink href='/all-allocations' label='All BGS Allocations' />
+          <DropdownLink href='/all-allocations' label='BGS Allocations' />
         </Dropdown>
-        <Dropdown category="Bodies">
+        <Dropdown category="BGS Bodies">
           <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
           <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
           <DropdownLink href='/national-character-areas' label='National Character Areas' />
