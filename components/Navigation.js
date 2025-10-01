@@ -114,10 +114,10 @@ export default function Navigation() {
             <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
           </Dropdown>
           <Dropdown category="BGS bodies">
-            <DropdownLink href='/responsible-bodies' label='Responsible bodies' />
-            <DropdownLink href='/local-planning-authorities' label='Local planning authorities' />
-            <DropdownLink href='/national-character-areas' label='National character areas' />
-            <DropdownLink href='/lnrs' label='Local nature recovery Sstrategies' />
+            <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
+            <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
+            <DropdownLink href='/national-character-areas' label='National Character Areas' />
+            <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
           <Dropdown category="Meta">
             <DropdownLink href='/statistics' label='Register statistics' />
