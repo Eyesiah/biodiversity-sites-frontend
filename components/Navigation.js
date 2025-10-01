@@ -26,8 +26,8 @@ const AboutModalButton = () => {
 
   return (
     <>
-      <button 
-        className={`${styles.link} ${styles.dropbtn}`}
+      <button
+        className={styles.dropdownItem}
         onClick={() => setShowModal(true)}
       >
         About
@@ -62,7 +62,7 @@ export default function Navigation() {
 
   const DropdownLink = ({href, label}) => {
     return (
-      <Link key={href} href={href} className={styles.link} onClick={closeMenu}>
+      <Link key={href} href={href} className={styles.dropdownItem} onClick={closeMenu}>
         {label}
       </Link>
     )
