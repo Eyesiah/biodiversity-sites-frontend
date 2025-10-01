@@ -37,7 +37,7 @@ const AboutModalButton = () => {
       <Modal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
-        title="About This Site"
+        title="About this site"
         style={modalStyles.modalContentLarge}
       >
         <iframe 
@@ -106,7 +106,7 @@ export default function Navigation() {
       <div className={styles.rightNav}>
         <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-            BGS Sites List
+            BGS sites list
           </Link>
           <Dropdown category="BGS insights">
             <DropdownLink href='/habitat-summary' label='BGS habitat summary' />

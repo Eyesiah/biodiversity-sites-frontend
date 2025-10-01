@@ -8,7 +8,7 @@ import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Designated Responsible Bodies',
+  title: 'Responsible Bodies',
 };
 
 async function getResponsibleBodiesData() {

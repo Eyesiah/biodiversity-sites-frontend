@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'BGS Allocations',
+  title: 'BGS allocations',
 };
 
 export default async function AllocationsPage() {
