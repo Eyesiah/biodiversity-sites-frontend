@@ -108,7 +108,7 @@ export default function Navigation() {
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
             BGS Sites List
           </Link>
-          <Dropdown category="Site Insights">
+          <Dropdown category="BGS Insights">
             <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Allocations' />
