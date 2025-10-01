@@ -72,7 +72,7 @@ const ColorKey = ({color}) => {
 }
 
 export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handlePopupClose=null, markerRefs, onSiteSelect=null}) => {
-  const imdDecile = site.imdDecile ?? site.lsoa.IMDDecile;
+  const imdDecile = site.imdDecile ?? site.lsoa?.IMDDecile;
   return (
     <Marker 
       key={site.referenceNumber} 
