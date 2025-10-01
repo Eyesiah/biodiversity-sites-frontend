@@ -81,10 +81,10 @@ export default function Navigation() {
   return (
     <nav className={styles.nav}>
       <div className={styles.leftNav}>
-        <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
           <Image
-            src="/BTFLogodefault.jpg"
-            alt="BTF Logo"
+            src="/TreesofBristolLogo.png"
+            alt="ToB Logo"
             width={45}
             height={45}
             className={styles.logo}
@@ -108,7 +108,7 @@ export default function Navigation() {
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
             BGS Sites List
           </Link>
-          <Dropdown category="BGS Insights">
+          <Dropdown category="BGS insights">
             <DropdownLink href='/habitat-summary' label='BGS habitat summary' />
             <DropdownLink href='/habitat-analysis' label='BGS habitat analysis' />
             <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
@@ -128,7 +128,7 @@ export default function Navigation() {
         <div className={styles.rightLogoLink}>
           <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
             <Image
-              src="/ToBlogo192.jpg"
+              src="/TreesofBristolLogo.png"
               alt="ToB Logo"
               width={45}
               height={45}
