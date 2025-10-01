@@ -5,21 +5,47 @@ import { useState } from 'react';
 import Image from 'next/image';
 import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
+import Modal from '@/components/Modal'
+import modalStyles from '@/styles/Modal.module.css';
 
-const Dropdown = ({ category, links, closeMenu }) => {
+const Dropdown = ({ category, children }) => {
   return (
     <div className={styles.dropdown}>
       <button className={styles.dropbtn}>
         {category} <span className={styles.arrow}>&#9662;</span>
       </button>
       <div className={styles.dropdownContent}>
-        {links.map((link) => (
-          <Link key={link.href} href={link.href} className={styles.link} onClick={closeMenu}>
-            {link.label}
-          </Link>
-        ))}
+        {children}
       </div>
     </div>
+  );
+};
+
+const AboutModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <button 
+        className={`${styles.link} ${styles.dropbtn}`}
+        onClick={() => setShowModal(true)}
+      >
+        About
+      </button>
+
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="About This Site"
+        style={modalStyles.modalContentLarge}
+      >
+        <iframe 
+          src="/about"
+          style={{ width: '100%', height: '80vh', border: 'none' }}
+          title="About page content"
+        />
+      </Modal>
+    </>
   );
 };
 
@@ -34,24 +60,14 @@ export default function Navigation() {
     setIsOpen(false);
   };
 
-  const siteInsightsLinks = [
-    { href: '/habitat-summary', label: 'BGS Habitat Summary' },
-    { href: '/habitat-analysis', label: 'BGS Habitat Analysis' },
-    { href: '/all-allocations', label: 'All BGS Allocations' },
-  ];
-
-  const bodiesLinks = [
-    { href: '/responsible-bodies', label: 'Responsible Bodies' },
-    { href: '/local-planning-authorities', label: 'Local Planning Authorities' },
-    { href: '/national-character-areas', label: 'National Character Areas' },
-    { href: '/lnrs', label: 'Local Nature Recovery Strategies' },
-  ];
-
-  const metaLinks = [
-    { href: '/statistics', label: 'Statistics' },
-    { href: '/about', label: 'About' },
-  ];
-
+  const DropdownLink = ({href, label}) => {
+    return (
+      <Link key={href} href={href} className={styles.link} onClick={closeMenu}>
+        {label}
+      </Link>
+    )
+  }
+  
   return (
     <nav className={styles.nav}>
       <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
@@ -76,9 +92,21 @@ export default function Navigation() {
         <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
           BGS Sites List
         </Link>
-        <Dropdown category="Site Insights" links={siteInsightsLinks} closeMenu={closeMenu} />
-        <Dropdown category="Bodies" links={bodiesLinks} closeMenu={closeMenu} />
-        <Dropdown category="Meta" links={metaLinks} closeMenu={closeMenu} />
+        <Dropdown category="Site Insights">
+          <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
+          <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
+          <DropdownLink href='/all-allocations' label='All BGS Allocations' />
+        </Dropdown>
+        <Dropdown category="Bodies">
+          <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
+          <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
+          <DropdownLink href='/national-character-areas' label='National Character Areas' />
+          <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
+        </Dropdown>
+        <Dropdown category="Meta">
+          <DropdownLink href='/statistics' label='Register Statistics' />
+          <AboutModalButton/>
+        </Dropdown>
       </div>
       <div className={styles.rightLogoLink}>
         <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
