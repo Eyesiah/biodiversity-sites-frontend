@@ -6,6 +6,23 @@ import Image from 'next/image';
 import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
 
+const Dropdown = ({ category, links, closeMenu }) => {
+  return (
+    <div className={styles.dropdown}>
+      <button className={styles.dropbtn}>
+        {category} <span className={styles.arrow}>&#9662;</span>
+      </button>
+      <div className={styles.dropdownContent}>
+        {links.map((link) => (
+          <Link key={link.href} href={link.href} className={styles.link} onClick={closeMenu}>
+            {link.label}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -17,9 +34,27 @@ export default function Navigation() {
     setIsOpen(false);
   };
 
+  const siteInsightsLinks = [
+    { href: '/habitat-summary', label: 'BGS Habitat Summary' },
+    { href: '/habitat-analysis', label: 'BGS Habitat Analysis' },
+    { href: '/all-allocations', label: 'All BGS Allocations' },
+  ];
+
+  const bodiesLinks = [
+    { href: '/responsible-bodies', label: 'Responsible Bodies' },
+    { href: '/local-planning-authorities', label: 'Local Planning Authorities' },
+    { href: '/national-character-areas', label: 'National Character Areas' },
+    { href: '/lnrs', label: 'Local Nature Recovery Strategies' },
+  ];
+
+  const metaLinks = [
+    { href: '/statistics', label: 'Statistics' },
+    { href: '/about', label: 'About' },
+  ];
+
   return (
     <nav className={styles.nav}>
-       <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+      <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
         <Image
           src="/BTFLogodefault.jpg"
           alt="BTF Logo"
@@ -38,25 +73,21 @@ export default function Navigation() {
         &#9776;
       </button>
       <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
-        <Link href="/about" className={styles.link} onClick={closeMenu}>About</Link>
-        <Link href="/sites" className={styles.link} onClick={closeMenu}>BGS Sites List</Link>
-        <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>BGS Habitat Summary</Link>
-        <Link href="/habitat-analysis" className={styles.link} onClick={closeMenu}>BGS Habitat Analysis</Link>
-        <Link href="/all-allocations" className={styles.link} onClick={closeMenu}>All BGS Allocations</Link>
-        <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Responsible Bodies</Link>
-        <Link href="/local-planning-authorities" className={styles.link} onClick={closeMenu}>Local Planning Authorities</Link>
-        <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
-        <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
-        <Link href="/statistics" className={styles.link} onClick={closeMenu}>Register Statistics</Link>
+        <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
+          BGS Sites List
+        </Link>
+        <Dropdown category="Site Insights" links={siteInsightsLinks} closeMenu={closeMenu} />
+        <Dropdown category="Bodies" links={bodiesLinks} closeMenu={closeMenu} />
+        <Dropdown category="Meta" links={metaLinks} closeMenu={closeMenu} />
       </div>
       <div className={styles.rightLogoLink}>
         <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
-            <Image
-                src="/ToBlogo192.jpg"
-                alt="ToB Logo"
-                width={45}
-                height={45}
-            />
+          <Image
+            src="/ToBlogo192.jpg"
+            alt="ToB Logo"
+            width={45}
+            height={45}
+          />
         </ExternalLink>
       </div>
     </nav>
