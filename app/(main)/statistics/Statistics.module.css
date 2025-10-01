@@ -1,0 +1,27 @@
+
+.chartRow {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.chartItem {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.chartItem:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 768px) {
+  .chartRow {
+    flex-direction: column;
+  }
+
+  .chartItem {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}

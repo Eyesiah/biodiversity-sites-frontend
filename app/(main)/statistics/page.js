@@ -2,6 +2,7 @@ import clientPromise from '@/lib/mongodb';
 import Link from 'next/link';
 import { StatsChart } from './StatisticsChart'
 import Footer from '@/components/Footer';
+import styles from './Statistics.module.css';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -83,8 +84,8 @@ export default async function StatisticsPage() {
       <div className="container">
         {stats.length > 0 ? (
           <>
-            <div style={{ display: 'flex', flexDirection: 'row', width: '100%', marginBottom: '40px' }}>
-              <div style={{ flex: 1, marginRight: '20px' }}>
+            <div className={styles.chartRow}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['totalSites', 'numAllocations']}
                   strokeColors={['#8884d8', '#82ca9d']}
@@ -92,7 +93,7 @@ export default async function StatisticsPage() {
                   title={'Sites and Allocations'}
                 />
               </div>
-              <div style={{ flex: 1 }}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['allocationsPerSite']}
                   strokeColors={['#d4a6f2']}
@@ -102,8 +103,8 @@ export default async function StatisticsPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              <div style={{ flex: 1, marginRight: '20px' }}>
+            <div className={styles.chartRow}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['totalArea', 'baselineAreaSize', 'improvementsAreaSize']}
                   strokeColors={['#ffc658', '#ff7300', '#ffb870']}
@@ -111,7 +112,7 @@ export default async function StatisticsPage() {
                   title={'Site Area (ha): Total, Baseline & Improvement'}
                 />
               </div>
-              <div style={{ flex: 1, marginRight: '20px' }}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineHedgerowSize', 'improvementsHedgerowSize']}
                   strokeColors={['#00C49F', '#70d9c4']}
@@ -119,7 +120,7 @@ export default async function StatisticsPage() {
                   title={'Hedgerow (km): Baseline vs. Improvement Sizes'}
                 />
               </div>
-              <div style={{ flex: 1 }}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineWatercourseSize', 'improvementsWatercourseSize']}
                   strokeColors={['#d4a6f2', '#e9d3f9']}
@@ -129,8 +130,8 @@ export default async function StatisticsPage() {
               </div>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-              <div style={{ flex: 1, marginRight: '20px' }}>
+            <div className={styles.chartRow}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
@@ -138,7 +139,7 @@ export default async function StatisticsPage() {
                   title={'Habitat Units'}
                 />
               </div>
-              <div style={{ flex: 1, marginRight: '20px' }}>
+              <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineParcels', 'improvementsParcels', 'allocatedParcels']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
@@ -148,9 +149,9 @@ export default async function StatisticsPage() {
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>              
+            <div className={styles.chartRow}>              
 
-              { siteAdditions && siteAdditions.length > 0 && <div style={{ flex: 1, marginRight: '20px' }}>
+              { siteAdditions && siteAdditions.length > 0 && <div className={styles.chartItem}>
                 <h2>Site Register Addition Date</h2>
                 <table className="site-table">
                   <thead>
