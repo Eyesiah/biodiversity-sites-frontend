@@ -55,12 +55,12 @@ a[href^="http"]::after, a[href^="https"]::after {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 1rem;
   color: #333; /* Dark grey for text */
   background-color: #F9F6EE; /* Bone white background */
   text-align: center;
-  padding: 2rem;
+  padding: 0 2rem;
 }
 
 .main {
@@ -106,9 +106,9 @@ a[href^="http"]::after, a[href^="https"]::after {
 .sticky-search {
   position: -webkit-sticky;
   position: sticky;
-  top: 80px; /* Adjust this value to sit below your main navigation */
+  top: 0px;
   background-color: #F9F6EE; /* Match the page background */
-  padding: 1rem 0;
+  padding: 0 0;
   z-index: 999; /* Ensure it stays on top of other content */
 }
 
@@ -162,7 +162,7 @@ a[href^="http"]::after, a[href^="https"]::after {
 
 .site-table {
   width: auto;
-  margin: 2rem auto;
+  margin: 1rem auto;
   border-collapse: collapse;
   background-color: #fff;
   color: #333;
@@ -236,21 +236,6 @@ a[href^="http"]::after, a[href^="https"]::after {
 .site-table .centered-data {
   text-align: center;
   font-family: monospace;
-}
-
-/* NProgress customization */
-#nprogress .bar {
-  background: #29d !important;
-  height: 3px !important;
-}
-
-#nprogress .peg {
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d !important;
-}
-
-#nprogress .spinner-icon {
-  border-top-color: #29d !important;
-  border-left-color: #29d !important;
 }
 
 /* Override Leaflet popup font */

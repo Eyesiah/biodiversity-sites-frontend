@@ -49,7 +49,7 @@ async function processHistory() {
       totalArea: period['total-area'],
       totalBaselineHUs: period.baseline['total-HU-area'] + period.baseline['total-HU-hedgerows'] + period.baseline['total-HU-watercourses'],
       totalCreatedHUs: period.improvement['total-HU-area'] + period.improvement['total-HU-hedgerows'] + period.improvement['total-HU-watercourses'],
-      totalAllocationHUs: period.allocations['total-HU-area'] + period.allocations['total-HU-hedgerows'] + period.allocations['total-HU-watercourses'],
+      totalAllocationHUs: period['total-allocation-HU-area'] + period['total-allocation-HU-hedgerow'] + period['total-allocation-HU-watercourse'],
       numAllocations: period['n-allocations'],
       baselineAreaSize: period.baseline['total-size-area'],
       baselineWatercourseSize: period.baseline['total-size-watercourse'],

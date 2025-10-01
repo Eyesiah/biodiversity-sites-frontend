@@ -2,7 +2,7 @@
 
 This is a [Next.js](https://nextjs.org/) project that displays Biodiversity Gain Sites (BGS) scraped from https://environment.data.gov.uk/biodiversity-net-gain .
 
-Currently available at https://biodiversity-sites-frontend.vercel.app/
+Currently available at https://bgs.bristoltrees.space/
 
 ## Getting Started
 

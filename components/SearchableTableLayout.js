@@ -58,8 +58,9 @@ export default function SearchableTableLayout({
 
       {summary && summary(sortedItems.length, initialItems.length)}
 
-      {/* Call the children function with the hook results */}
-      {children({ sortedItems, requestSort, getSortIndicator, inputValue })}
+      <div className="table-container">
+        {children({ sortedItems, requestSort, getSortIndicator, inputValue })}
+      </div>
     </>
   );
 }

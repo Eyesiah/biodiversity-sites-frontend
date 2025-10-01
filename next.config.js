@@ -26,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: process.env.LANDING_PAGE || '/about',
+        destination: process.env.LANDING_PAGE || '/sites',
         permanent: true,
       },
     ]

@@ -39,7 +39,6 @@ export default async function AllocationsPage() {
   return (
     <>
       <div className="container">
-        <h1 className="title">All BGS Allocations</h1>
         <AllAllocationsList allocations={allocations}/>
       </div>
       <Footer lastUpdated={lastUpdated} />

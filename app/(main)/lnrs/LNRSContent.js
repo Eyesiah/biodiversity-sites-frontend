@@ -53,7 +53,6 @@ export default function LNRSContent({ lnrs, sites, error }) {
       }
       content={
         <>
-          <h1 className="title">Local Nature Recovery Strategy Sites</h1>
           <SearchableTableLayout
             initialItems={lnrs}
             filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}

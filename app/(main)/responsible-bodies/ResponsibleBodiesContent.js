@@ -102,7 +102,6 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
           }
           content={
             <>
-              <h1 className="title">Designated Responsible Bodies</h1>
               <SearchableTableLayout
                 initialItems={responsibleBodies}
                 filterPredicate={(body, term) =>

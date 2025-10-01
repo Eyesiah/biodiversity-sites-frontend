@@ -1,13 +1,66 @@
 'use client'
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
+import Modal from '@/components/Modal'
+import modalStyles from '@/styles/Modal.module.css';
+
+const Dropdown = ({ category, children }) => {
+  return (
+    <div className={styles.dropdown}>
+      <button className={styles.dropbtn}>
+        {category} <span className={styles.arrow}>&#9662;</span>
+      </button>
+      <div className={styles.dropdownContent}>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const AboutModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <button
+        className={styles.dropdownItem}
+        onClick={() => setShowModal(true)}
+      >
+        About
+      </button>
+
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="About This Site"
+        style={modalStyles.modalContentLarge}
+      >
+        <iframe 
+          src="/about"
+          style={{ width: '100%', height: '80vh', border: 'none' }}
+          title="About page content"
+        />
+      </Modal>
+    </>
+  );
+};
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const [pageTitle, setPageTitle] = useState('');
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Titles are often set after a small delay, so we'll wait a moment
+    setTimeout(() => {
+      setPageTitle(document.title);
+    }, 100);
+  }, [pathname]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -17,17 +70,29 @@ export default function Navigation() {
     setIsOpen(false);
   };
 
+  const DropdownLink = ({href, label}) => {
+    return (
+      <Link key={href} href={href} className={styles.dropdownItem} onClick={closeMenu}>
+        {label}
+      </Link>
+    )
+  }
+  
   return (
     <nav className={styles.nav}>
-       <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
-        <Image
-          src="/BTFLogodefault.jpg"
-          alt="BTF Logo"
-          width={45}
-          height={45}
-          className={styles.logo}
-        />
-      </ExternalLink>
+      <div className={styles.leftNav}>
+        <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+          <Image
+            src="/BTFLogodefault.jpg"
+            alt="BTF Logo"
+            width={45}
+            height={45}
+            className={styles.logo}
+          />
+        </ExternalLink>
+        <h1 className={styles.pageTitle}>{pageTitle}</h1>
+      </div>
+      
       <button
         className={styles.hamburger}
         onClick={toggleMenu}
@@ -37,27 +102,39 @@ export default function Navigation() {
       >
         &#9776;
       </button>
-      <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
-        <Link href="/about" className={styles.link} onClick={closeMenu}>About</Link>
-        <Link href="/sites" className={styles.link} onClick={closeMenu}>BGS Sites List</Link>
-        <Link href="/habitat-summary" className={styles.link} onClick={closeMenu}>BGS Habitat Summary</Link>
-        <Link href="/habitat-analysis" className={styles.link} onClick={closeMenu}>BGS Habitat Analysis</Link>
-        <Link href="/all-allocations" className={styles.link} onClick={closeMenu}>All BGS Allocations</Link>
-        <Link href="/responsible-bodies" className={styles.link} onClick={closeMenu}>Responsible Bodies</Link>
-        <Link href="/local-planning-authorities" className={styles.link} onClick={closeMenu}>Local Planning Authorities</Link>
-        <Link href="/national-character-areas" className={styles.link} onClick={closeMenu}>National Character Areas</Link>        
-        <Link href="/lnrs" className={styles.link} onClick={closeMenu}>Local Nature Recovery Strategies</Link>
-        <Link href="/statistics" className={styles.link} onClick={closeMenu}>Register Statistics</Link>
-      </div>
-      <div className={styles.rightLogoLink}>
-        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
+
+      <div className={styles.rightNav}>
+        <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
+          <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
+            BGS Sites List
+          </Link>
+          <Dropdown category="Site Insights">
+            <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
+            <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
+            <DropdownLink href='/all-allocations' label='BGS Allocations' />
+          </Dropdown>
+          <Dropdown category="BGS Bodies">
+            <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
+            <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
+            <DropdownLink href='/national-character-areas' label='National Character Areas' />
+            <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
+          </Dropdown>
+          <Dropdown category="Meta">
+            <DropdownLink href='/statistics' label='Register Statistics' />
+            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
+            <AboutModalButton/>
+          </Dropdown>
+        </div>
+        <div className={styles.rightLogoLink}>
+          <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
             <Image
-                src="/ToBlogo192.jpg"
-                alt="ToB Logo"
-                width={45}
-                height={45}
+              src="/ToBlogo192.jpg"
+              alt="ToB Logo"
+              width={45}
+              height={45}
             />
-        </ExternalLink>
+          </ExternalLink>
+        </div>
       </div>
     </nav>
   );
