@@ -286,7 +286,7 @@ export default function AllAllocationsList({ allocations }) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <div style={{ width: '550px', height: '300px' }}>
+          <div style={{ width: '550px', maxWidth: '90vw', height: '300px' }}>
             <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={distanceDistributionData}>
@@ -299,7 +299,7 @@ export default function AllAllocationsList({ allocations }) {
               </LineChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ width: '600px', height: '320px' }}>
+          <div style={{ width: '600px', maxWidth: '90vw', height: '320px' }}>
             <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={habitatUnitDistributionData}>
@@ -312,7 +312,7 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ width: '600px', height: '320px' }}>
+          <div style={{ width: '600px', maxWidth: '90vw', height: '320px' }}>
             <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={imdDistributionData}>
@@ -328,38 +328,40 @@ export default function AllAllocationsList({ allocations }) {
           </div>
         </div>
       </div>
-      <table className="site-table">
-        <thead>
-          <tr>
-            <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
-            <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
-            <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
-            <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
-            <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
-            <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
-            <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
-            <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
-            <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-            <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
-            <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-              {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
-            </td>
-            <td className="centered-data" style={{ border: '3px solid #ddd' }}>
-              {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
-            </td>
-            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
-            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
-            <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
-          </tr>
-          {sortedAllocations.map((alloc) => (
-            <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
-          ))}
-        </tbody>
-      </table>
+      <div className="table-container">
+        <table className="site-table">
+          <thead>
+            <tr>
+              <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
+              <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+              <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
+              <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+              <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
+              <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
+              <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
+              <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
+              <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
+              <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+              <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+                {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
+              </td>
+              <td className="centered-data" style={{ border: '3px solid #ddd' }}>
+                {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
+              </td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</td>
+              <td className="numeric-data" style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</td>
+            </tr>
+            {sortedAllocations.map((alloc) => (
+              <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 }
