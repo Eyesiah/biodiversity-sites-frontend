@@ -339,10 +339,14 @@ export default function AllAllocationsList({ allocations }) {
                     <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>IMD Transfer</span>
                   </Tooltip>
                 </th>
-                <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
-                <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
-                <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
-                <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
+                <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>
+                  <Tooltip text="The distance from the development site to the BGS offset site.">
+                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>Distance (km)</span>
+                  </Tooltip>
+                </th>
+                <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area HUs</th>
+                <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow HUs</th>
+                <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse HUs</th>
               </tr>
             </thead>
             <tbody>

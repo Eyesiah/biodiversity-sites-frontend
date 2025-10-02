@@ -53,7 +53,7 @@ const TooltipPortal = ({ text, position }) => {
       left: position.left,
       transform: 'translate(-50%, -100%)', // Adjust to be perfectly centered and above
       backgroundColor: 'ivory',
-      color: 'grey',
+      color: 'black',
       padding: '8px 12px',
       borderRadius: '6px',
       zIndex: 9999, // High z-index to be on top of everything
