@@ -7,7 +7,7 @@ export const revalidate = 3600;
 
 const chartConfig = {
     'watercourse-allocations': {
-        title: "Watercourse Habitats Allocated Chart",
+        title: "Watercourse habitats allocated chart",
         chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Watercourse habitats allocated - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
@@ -23,9 +23,9 @@ const chartConfig = {
         })
     },
     'allocated-habitats': {
-        title: "Allocated Area Habitats Chart",
+        title: "Allocated area habitats chart",
         chartType: 'AllocationPieChart',
-        chartProps: { title: "Allocated Area Habitats Chart" },
+        chartProps: { title: "Allocated area habitats chart" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.allocations) {
                 site.allocations.forEach(alloc => {
@@ -39,9 +39,9 @@ const chartConfig = {
         })
     },
     'baseline-area-habitats': {
-        title: "Baseline Area Habitats Chart",
+        title: "Baseline area habitats chart",
         chartType: 'AllocationPieChart',
-        chartProps: { title: "Baseline Area Habitats - by size", otherLabel: "Area habitats <1%" },
+        chartProps: { title: "Baseline area habitats - by size", otherLabel: "Area habitats <1%" },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.areas) {
                 site.habitats.areas.forEach(habitat => {
@@ -53,9 +53,9 @@ const chartConfig = {
         })
     },
     'baseline-hedgerow-habitats': {
-        title: "Baseline Hedgerow Habitats Chart",
+        title: "Baseline hedgerow habitats chart",
         chartType: 'AllocationPieChart',
-        chartProps: { disableAggregation: true, title: "Baseline Hedgerow Habitats - by size", showBreakdown: false },
+        chartProps: { disableAggregation: true, title: "Baseline hedgerow habitats - by size", showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.hedgerows) {
                 site.habitats.hedgerows.forEach(habitat => {
@@ -67,9 +67,9 @@ const chartConfig = {
         })
     },
     'baseline-watercourse-habitats': {
-        title: "Baseline Watercourse Habitats Chart",
+        title: "Baseline watercourse habitats Chart",
         chartType: 'AllocationPieChart',
-        chartProps: { disableAggregation: true, title: "Baseline Watercourse Habitats - by size", showBreakdown: false },
+        chartProps: { disableAggregation: true, title: "Baseline watercourse habitats - by size", showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             if (site.habitats?.watercourses) {
                 site.habitats.watercourses.forEach(habitat => {
@@ -81,7 +81,7 @@ const chartConfig = {
         })
     },
     'hedgerow-allocations': {
-        title: "Hedgerow Habitats Allocated Chart",
+        title: "Hedgerow habitats allocated chart",
         chartType: 'AllocationPieChart',
         chartProps: { disableAggregation: true, title: "Hedgerow habitats allocated - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
@@ -97,9 +97,9 @@ const chartConfig = {
         })
     },
     'improvement-habitats': {
-        title: "Improvement Habitats Chart",
+        title: "Improvement habitats chart",
         chartType: 'ImprovementPieChart',
-        chartProps: { title: "Area Habitats Improved - by size" },
+        chartProps: { title: "Area habitats improved - by size" },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.areas?.forEach(habitat => {
                 if (habitat.type) {
@@ -109,9 +109,9 @@ const chartConfig = {
         })
     },
     'improvement-hedgerows': {
-        title: "Improvement Hedgerow Habitats Chart",
+        title: "Improvement hedgerow habitats chart",
         chartType: 'ImprovementPieChart',
-        chartProps: { title: "Hedgerow Habitats Improved - by size", showBreakdown: false, disableAggregation: true },
+        chartProps: { title: "Hedgerow habitats improved - by size", showBreakdown: false, disableAggregation: true },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.hedgerows?.forEach(habitat => {
                 if (habitat.type) {
@@ -121,9 +121,9 @@ const chartConfig = {
         })
     },
     'improvement-watercourses': {
-        title: "Improvement Watercourse Habitats Chart",
+        title: "Improvement watercourse habitats chart",
         chartType: 'ImprovementPieChart',
-        chartProps: { title: "Watercourse Habitats Improved - by size", disableAggregation: true, showBreakdown: false },
+        chartProps: { title: "Watercourse habitats improved - by size", disableAggregation: true, showBreakdown: false },
         dataFetcher: () => getChartData((site, habitatData) => {
             site.improvements?.watercourses?.forEach(habitat => {
                 if (habitat.type) {
@@ -133,7 +133,7 @@ const chartConfig = {
         })
     },
     'imd-decile-distribution': {
-        title: "IMD Decile Distribution",
+        title: "IMD decile distribution",
         chartType: 'BarChart',
         chartProps: {},
         dataFetcher: async () => {

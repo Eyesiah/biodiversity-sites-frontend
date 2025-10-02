@@ -31,11 +31,11 @@ const AnalysisTable = ({ title, data, unit }) => {
                 <th onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</th>
                 <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
                 <th onClick={() => requestSort('baselineParcels')} className={getSortClassName('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline Size ({unit})</th>
+                <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline size ({unit})</th>
                 <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
                 <th onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Improvement Size ({unit})</th>
+                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Improvement size ({unit})</th>
                 <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
                 <th onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                 <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
@@ -177,57 +177,57 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
         </button>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline Charts:</span>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline charts:</span>
         <ChartModalButton
           url="/charts/baseline-area-habitats"
-          title="Baseline Area Habitats"
-          buttonText="Area Habitats"
+          title="Baseline area habitats"
+          buttonText="Area habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
           url="/charts/baseline-hedgerow-habitats"
-          title="Baseline Hedgerow Habitats"
-          buttonText="Hedgerow Habitats"
+          title="Baseline hedgerow habitats"
+          buttonText="Hedgerow habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
           url="/charts/baseline-watercourse-habitats"
-          title="Baseline Watercourse Habitats"
-          buttonText="Watercourse Habitats"
+          title="Baseline watercourse habitats"
+          buttonText="Watercourse habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement Charts:</span>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement charts:</span>
         <ChartModalButton
           url="/charts/improvement-habitats"
-          title="Improvement Area Habitats"
-          buttonText="Area Habitats"
+          title="Improvement area habitats"
+          buttonText="Area habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
           url="/charts/improvement-hedgerows"
-          title="Improvement Hedgerow Habitats"
-          buttonText="Hedgerow Habitats"
+          title="Improvement hedgerow habitats"
+          buttonText="Hedgerow habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
         <ChartModalButton
           url="/charts/improvement-watercourses"
-          title="Improvement Watercourse Habitats"
-          buttonText="Watercourse Habitats"
+          title="Improvement watercourse habitats"
+          buttonText="Watercourse habitats"
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
       </div>
       <div className={styles.detailsGrid}>
-        <AnalysisTable title="Area Habitats" data={filteredAreaAnalysis} unit="ha" />
-        <AnalysisTable title="Hedgerow Habitats" data={filteredHedgerowAnalysis} unit="km" />
-        <AnalysisTable title="Watercourses Habitats" data={filteredWatercourseAnalysis} unit="km" />
+        <AnalysisTable title="Area habitats" data={filteredAreaAnalysis} unit="ha" />
+        <AnalysisTable title="Hedgerow habitats" data={filteredHedgerowAnalysis} unit="km" />
+        <AnalysisTable title="Watercourses habitats" data={filteredWatercourseAnalysis} unit="km" />
       </div>
     </>
   )

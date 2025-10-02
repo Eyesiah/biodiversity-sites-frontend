@@ -90,15 +90,15 @@ export default async function StatisticsPage() {
                   dataKeys={['totalSites', 'numAllocations']}
                   strokeColors={['#8884d8', '#82ca9d']}
                   names={['Total Sites', 'Total Allocations']}
-                  title={'Sites and Allocations'}
+                  title={'Sites & Allocations'}
                 />
               </div>
               <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['allocationsPerSite']}
                   strokeColors={['#d4a6f2']}
-                  names={['Allocations Per Site']}
-                  title={'Allocations Per Site'}
+                  names={['Allocations per site']}
+                  title={'Allocations per site'}
                 />
               </div>
             </div>
@@ -108,7 +108,7 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['totalArea', 'baselineAreaSize', 'improvementsAreaSize']}
                   strokeColors={['#ffc658', '#ff7300', '#ffb870']}
-                  names={['Total Site Area (ha)', 'Baseline Area (ha)', 'Improvement Area (ha)']}
+                  names={['Total site area (ha)', 'Baseline area (ha)', 'Improvement area (ha)']}
                   title={'Site Area (ha): Total, Baseline & Improvement'}
                 />
               </div>
@@ -116,16 +116,16 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['baselineHedgerowSize', 'improvementsHedgerowSize']}
                   strokeColors={['#00C49F', '#70d9c4']}
-                  names={['Baseline Hedgerow (km)', 'Improvement Hedgerow (km)']}
-                  title={'Hedgerow (km): Baseline vs. Improvement Sizes'}
+                  names={['Baseline hedgerow (km)', 'Improvement hedgerow (km)']}
+                  title={'Hedgerow (km): Baseline vs. Improvement sizes'}
                 />
               </div>
               <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineWatercourseSize', 'improvementsWatercourseSize']}
                   strokeColors={['#d4a6f2', '#e9d3f9']}
-                  names={['Baseline Watercourse (km)', 'Improvement Watercourse (km)']}
-                  title={'Watercourse (km): Baseline vs. Improvement Sizes'}
+                  names={['Baseline watercourse (km)', 'Improvement watercourse (km)']}
+                  title={'Watercourse (km): Baseline vs. Improvement sizes'}
                 />
               </div>
             </div>
@@ -135,16 +135,16 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
-                  names={['Total Baseline Habitat Units', 'Total Created Habitat Units', 'Total Allocated Habitat Units']}
-                  title={'Habitat Units'}
+                  names={['Total baseline habitat units', 'Total created habitat units', 'Total allocated habitat units']}
+                  title={'Habitat units'}
                 />
               </div>
               <div className={styles.chartItem}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineParcels', 'improvementsParcels', 'allocatedParcels']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
-                  names={['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels']}
-                  title={'Parcels Count'}
+                  names={['Baseline parcels', 'Improved parcels', 'Allocated parcels']}
+                  title={'Parcels count'}
                 />
               </div>
             </div>
