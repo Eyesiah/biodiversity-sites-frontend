@@ -11,7 +11,7 @@ import { collateAllHabitats } from '@/lib/habitat';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'BGS Habitat Summary',
+  title: 'BGS habitat summary',
 };
 
 

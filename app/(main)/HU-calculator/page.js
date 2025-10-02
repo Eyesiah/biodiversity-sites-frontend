@@ -3,7 +3,7 @@ import { getAllConditions, getAllHabitats } from '@/lib/habitat';
 import Footer from '@/components/Footer';
 
 export const metadata = {
-  title: 'Habitat Unit Calculator',
+  title: 'Habitat unit calculator',
 };
 
 export default function HUCalculatorPage({}) {

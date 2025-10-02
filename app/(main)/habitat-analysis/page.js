@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 
 export const metadata = {
-  title: 'BGS Habitat Analysis',
+  title: 'BGS habitat analysis',
 };
 
 // Revalidate this page at most once every hour (3600 seconds)

@@ -6,10 +6,11 @@ import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
+import Tooltip from '@/components/Tooltip';
 
 const AllocationHabitats = ({ habitats }) => {
 
@@ -260,7 +261,7 @@ export default function AllAllocationsList({ allocations }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
                 <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
-                <Tooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
+                <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
                 <Legend />
                 <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
               </LineChart>
@@ -273,7 +274,7 @@ export default function AllAllocationsList({ allocations }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" name="HUs" />
                 <YAxis name="Count" />
-                <Tooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
+                <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
                 <Legend />
                 <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
               </BarChart>
@@ -286,7 +287,7 @@ export default function AllAllocationsList({ allocations }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="decile" name="IMD Decile" />
                 <YAxis name="Number of Sites" allowDecimals={false} />
-                <Tooltip formatter={(value) => [value, 'Sites']} />
+                <RechartsTooltip formatter={(value) => [value, 'Sites']} />
                 <Legend />
                 <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites"/>
                 <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"/>
@@ -296,8 +297,7 @@ export default function AllAllocationsList({ allocations }) {
         </div>
 
         <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
-          <p style={{ margin: 0 }}>The IMD transfer column shows the decile score moving from the development site to the BGS site.</p>
+          <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>          
         </div>
         
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }} className="sticky-search">
@@ -334,11 +334,19 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
-                <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>IMD Transfer</th>
-                <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>Distance (km)</th>
-                <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area Units</th>
-                <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow Units</th>
-                <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse Units</th>
+                <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
+                  <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
+                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>IMD Transfer</span>
+                  </Tooltip>
+                </th>
+                <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>
+                  <Tooltip text="The distance from the development site to the BGS offset site.">
+                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>Distance (km)</span>
+                  </Tooltip>
+                </th>
+                <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area HUs</th>
+                <th onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow HUs</th>
+                <th onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse HUs</th>
               </tr>
             </thead>
             <tbody>

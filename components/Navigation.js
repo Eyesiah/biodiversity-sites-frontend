@@ -37,7 +37,7 @@ const AboutModalButton = () => {
       <Modal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
-        title="About This Site"
+        title="About this site"
         style={modalStyles.modalContentLarge}
       >
         <iframe 
@@ -81,10 +81,10 @@ export default function Navigation() {
   return (
     <nav className={styles.nav}>
       <div className={styles.leftNav}>
-        <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
+        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
           <Image
-            src="/BTFLogodefault.jpg"
-            alt="BTF Logo"
+            src="/TreesofBristolLogo.png"
+            alt="ToB Logo"
             width={45}
             height={45}
             className={styles.logo}
@@ -106,29 +106,29 @@ export default function Navigation() {
       <div className={styles.rightNav}>
         <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-            BGS Sites List
+            BGS sites list
           </Link>
-          <Dropdown category="Site Insights">
-            <DropdownLink href='/habitat-summary' label='BGS Habitat Summary' />
-            <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
-            <DropdownLink href='/all-allocations' label='BGS Allocations' />
+          <Dropdown category="BGS insights">
+            <DropdownLink href='/habitat-summary' label='BGS habitat summary' />
+            <DropdownLink href='/habitat-analysis' label='BGS habitat analysis' />
+            <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
           </Dropdown>
-          <Dropdown category="BGS Bodies">
+          <Dropdown category="BGS bodies">
             <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
             <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
             <DropdownLink href='/national-character-areas' label='National Character Areas' />
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
           <Dropdown category="Meta">
-            <DropdownLink href='/statistics' label='Register Statistics' />
-            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
+            <DropdownLink href='/statistics' label='Register statistics' />
+            <DropdownLink href='/HU-calculator' label='Habitat unit calculator' />
             <AboutModalButton/>
           </Dropdown>
         </div>
         <div className={styles.rightLogoLink}>
           <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
             <Image
-              src="/ToBlogo192.jpg"
+              src="/TreesofBristolLogo.png"
               alt="ToB Logo"
               width={45}
               height={45}
