@@ -102,13 +102,13 @@ export default function SearchableHabitatLists({ habitats, improvements }) {
         </div>
 
         <HabitatsCard
-          title="Baseline Habitats (click any habitat cell for condition detail)"
+          title="Baseline Habitats (click any row for more information)"
           habitats = {filteredBaselineHabitats}
           isImprovement={false}
         />
 
         <HabitatsCard
-          title="Improvement Habitats (click any habitat cell condition detail)"
+          title="Improvement Habitats (click any row for more information)"
           habitats = {filteredImprovementHabitats}
           isImprovement={true}
         />
