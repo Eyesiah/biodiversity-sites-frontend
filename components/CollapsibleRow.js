@@ -6,7 +6,7 @@ export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle,
   const [isHovered, setIsHovered] = useState(false);
 
   // If isOpen is controlled externally, use that value. Otherwise, use internal state.
-  const isOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+  const isOpen = externalIsOpen != null ? externalIsOpen : internalIsOpen;
 
   const handleToggle = (e) => {
     if (onMainRowClick) {

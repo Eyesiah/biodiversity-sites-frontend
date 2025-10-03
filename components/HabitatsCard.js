@@ -6,7 +6,7 @@ import { useState } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import {CollapsibleRow} from "components/CollapsibleRow"
 
-const HabitatRow = ({ habitat, isImprovement, title }) => {
+const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen }) => {
   const mainRow = (
     <>
       <td>{habitat.type}</td>
@@ -24,7 +24,7 @@ const HabitatRow = ({ habitat, isImprovement, title }) => {
           {isImprovement && <th>Intervention</th>}
           <th>Condition</th>
           <th># parcels</th>
-          <th>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
+          <th>Size ({units})</th>
           <th>HUs</th>
         </tr>
       </thead>
@@ -47,11 +47,13 @@ const HabitatRow = ({ habitat, isImprovement, title }) => {
       mainRow={mainRow}
       collapsibleContent={collapsibleContent}
       colSpan={5}
+      onToggle={onHabitatToggle}
+      isOpen={isHabitatOpen}
     />
   );
 };
 
-const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement }) => {
+const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   if (!habitats || habitats.length == 0)
@@ -76,7 +78,14 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
               </thead>
               <tbody>
               {habitats.map((habitat) => (
-                  <HabitatRow key={habitat.type} habitat={habitat} isImprovement={isImprovement} title={title} />
+                  <HabitatRow 
+                    key={habitat.type}
+                    habitat={habitat}
+                    isImprovement={isImprovement}
+                    units={title === 'Areas' ? 'ha' : 'km'}
+                    onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat.type, isImprovement, title) : null}
+                    isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat.type, isImprovement, title) : null}
+                  />
               ))}
               </tbody>
           </table>
@@ -86,7 +95,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement 
     </section>    
 };
 
-export function HabitatsCard ({title, habitats, isImprovement}) {
+export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, isHabitatOpen}) {
   const [isOpen, setIsOpen] = useState(true);
 
   const collatedAreas = habitats?.areas;
@@ -107,13 +116,15 @@ export function HabitatsCard ({title, habitats, isImprovement}) {
           {title} {isOpen ? '▼' : '▶'}
         </h3>
         {isOpen && (
-          <>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>  
             <HabitatTable
               title="Areas"
               habitats={sortedAreas}
               requestSort={requestSortAreas}
               sortConfig={sortConfigAreas}
               isImprovement={isImprovement}
+              onHabitatToggle={onHabitatToggle}
+              isHabitatOpen={isHabitatOpen}
             />
             <HabitatTable
               title="Hedgerows"
@@ -121,6 +132,8 @@ export function HabitatsCard ({title, habitats, isImprovement}) {
               requestSort={requestSortHedgerows}
               sortConfig={sortConfigHedgerows}
               isImprovement={isImprovement}
+              onHabitatToggle={onHabitatToggle}
+              isHabitatOpen={isHabitatOpen}
             />
             <HabitatTable
               title="Watercourses"
@@ -128,8 +141,10 @@ export function HabitatsCard ({title, habitats, isImprovement}) {
               requestSort={requestSortWatercourses}
               sortConfig={sortConfigWatercourses}
               isImprovement={isImprovement}
+              onHabitatToggle={onHabitatToggle}
+              isHabitatOpen={isHabitatOpen}
             />            
-          </>
+          </div>
         )}
       </section>
     );
