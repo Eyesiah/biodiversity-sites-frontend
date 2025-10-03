@@ -153,17 +153,7 @@ export default function Navigation() {
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
-        </div>
-        <div className={styles.rightLogoLink}>
-          <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
-            <Image
-              src="/TreesofBristolLogo.png"
-              alt="ToB Logo"
-              width={45}
-              height={45}
-            />
-          </ExternalLink>
-        </div>
+        </div>        
       </div>
     </nav>
   );
