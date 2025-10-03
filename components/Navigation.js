@@ -50,6 +50,34 @@ const AboutModalButton = () => {
   );
 };
 
+const GlossarytModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <button
+        className={styles.dropdownItem}
+        onClick={() => setShowModal(true)}
+      >
+        Glossary
+      </button>
+
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="Glossary of BGS terms"
+        style={modalStyles.modalContentLarge}
+      >
+        <iframe 
+          src="/glossary"
+          style={{ width: '100%', height: '80vh', border: 'none' }}
+          title="Glossary of BGS terms"
+        />
+      </Modal>
+    </>
+  );
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('');
@@ -123,6 +151,7 @@ export default function Navigation() {
             <DropdownLink href='/statistics' label='Register statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat unit calculator' />
             <AboutModalButton/>
+            <GlossarytModalButton/>
           </Dropdown>
         </div>
         <div className={styles.rightLogoLink}>

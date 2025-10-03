@@ -229,25 +229,25 @@ export default function AllAllocationsList({ allocations }) {
     <>      
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', margin: '1rem', flexWrap: 'wrap' }}>        
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation Charts:</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation charts:</span>
           <ChartModalButton
             url="/charts/allocated-habitats"
-            title="Area Habitats"
-            buttonText="Area Habitats"
+            title="Area habitats"
+            buttonText="Area habitats"
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           />
           <ChartModalButton
             url="/charts/hedgerow-allocations"
-            title="Hedgerow Habitats"
-            buttonText="Hedgerow Habitats"
+            title="Hedgerow habitats"
+            buttonText="Hedgerow habitats"
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           />
           <ChartModalButton
             url="/charts/watercourse-allocations"
-            title="Watercourse Habitats"
-            buttonText="Watercourse Habitats"
+            title="Watercourse habitats"
+            buttonText="Watercourse habitats"
             className="linkButton"
             style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
           />
@@ -330,13 +330,13 @@ export default function AllAllocationsList({ allocations }) {
           <table className="site-table">
             <thead>
               <tr>
-                <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS Ref.</th>
-                <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning Ref.</th>
+                <th onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS ref.</th>
+                <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning ref.</th>
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
                   <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
-                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>IMD Transfer</span>
+                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>IMD transfer</span>
                   </Tooltip>
                 </th>
                 <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>
