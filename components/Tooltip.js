@@ -57,8 +57,9 @@ const TooltipPortal = ({ text, position }) => {
       padding: '8px 12px',
       borderRadius: '6px',
       zIndex: 9999, // High z-index to be on top of everything
-      whiteSpace: 'nowrap',
+      whiteSpace: 'normal',
       pointerEvents: 'none', // Prevent the tooltip from capturing mouse events
+      maxWidth: '250px',
     }}>
       {text}
     </div>,
