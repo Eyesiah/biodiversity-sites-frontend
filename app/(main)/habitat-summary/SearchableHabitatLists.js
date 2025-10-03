@@ -4,12 +4,22 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import { HabitatsCard } from '@/components/HabitatsCard';
 import { XMLBuilder } from 'fast-xml-parser';
+import MapContentLayout from '@/components/MapContentLayout';
+import dynamic from 'next/dynamic';
+import { GetSitesWithHabitat } from './actions';
+
+const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function SearchableHabitatLists({ habitats, improvements }) {
+export default function SearchableHabitatLists({ summary, habitats, improvements }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [displayedSites, setDisplayedSites] = useState([]);
+  const [currentHabitat, setCurrentHabitat] = useState({});
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -73,45 +83,87 @@ export default function SearchableHabitatLists({ habitats, improvements }) {
     triggerDownload(blob, 'bgs-habitat-summary.json');
   };
 
+  const onHabitatToggle = (habitatType, isImprovement, category) => {
+    setCurrentHabitat({habitatType, isImprovement, category});
+  }
+
+  const isHabitatOpen = useCallback((habitatType, isImprovement, category) => {
+    return currentHabitat.habitatType === habitatType && currentHabitat.isImprovement === isImprovement && currentHabitat.category === category;
+  }, [currentHabitat])
+
+  useEffect(() => {
+    setDisplayedSites([]);
+
+    let isActive = true;
+
+    const updateSitesForHabitat = async () => {
+      const sitesWithHabitat = await GetSitesWithHabitat(currentHabitat.habitatType, currentHabitat.isImprovement, currentHabitat.category);        
+      if (isActive) {
+        setDisplayedSites(sitesWithHabitat);
+      }
+    }
+
+    updateSitesForHabitat();
+
+    // return a cleanup function to prevent race conditions
+    return () => {isActive=false};
+  }, [currentHabitat, isHabitatOpen]);
+
   return (
-      <>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-          <div className="search-container" style={{ margin: 0 }}>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search by habitat name..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              autoFocus
+    <MapContentLayout
+      map={
+        <SiteMap sites={displayedSites} />
+      }
+      content={
+        <>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>  
+
+            {summary}
+
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }} className="sticky-search">
+              <div className="search-container" style={{ margin: 0 }}>
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search by habitat name..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  autoFocus
+                />
+                {inputValue && (
+                  <button
+                    onClick={() => setInputValue('')}
+                    className="clear-search-button"
+                    aria-label="Clear search"
+                  >
+                    &times;
+                  </button>
+                )}
+              </div>
+              <div className={styles.buttonGroup}>
+                <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
+                <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
+              </div>
+            </div>
+
+            <HabitatsCard
+              title="Baseline Habitats (click any row to map sites with this habitat)"
+              habitats = {filteredBaselineHabitats}
+              isImprovement={false}
+              onHabitatToggle={onHabitatToggle}
+              isHabitatOpen={isHabitatOpen}
             />
-            {inputValue && (
-              <button
-                onClick={() => setInputValue('')}
-                className="clear-search-button"
-                aria-label="Clear search"
-              >
-                &times;
-              </button>
-            )}
-          </div>
-          <div className={styles.buttonGroup}>
-            <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
-            <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
-          </div>
-        </div>
 
-        <HabitatsCard
-          title="Baseline Habitats (click any habitat cell for condition detail)"
-          habitats = {filteredBaselineHabitats}
-          isImprovement={false}
-        />
-
-        <HabitatsCard
-          title="Improvement Habitats (click any habitat cell condition detail)"
-          habitats = {filteredImprovementHabitats}
-          isImprovement={true}
-        />
-    </>
+            <HabitatsCard
+              title="Improvement Habitats (click any row to map sites with this habitat)"
+              habitats = {filteredImprovementHabitats}
+              isImprovement={true}
+              onHabitatToggle={onHabitatToggle}
+              isHabitatOpen={isHabitatOpen}
+            />
+          </div>
+        </>
+      }
+    />
   );
 }
