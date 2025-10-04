@@ -51,24 +51,10 @@ export default function SitePageContent({site}) {
         <SiteMap sites={[site]} selectedSite={site} />
       }
       content={(<>
-        <div className={styles.header}>
-          <h1>Biodiversity Gain Site</h1>
-          <div className={styles.titleWithButtons}>
-            <h2>{site.referenceNumber}</h2>
-            <div className={styles.buttonGroup}>
-              <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
-              <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
-            </div>
-          </div>
-        </div>
-        <div className={styles.detailsGrid}>
-          <SiteDetailsCard site={site} />
 
-          <HabitatsCard
-            title="Baseline Habitats (click any habitat cell for more detail)"
-            habitats = {site.habitats}
-            isImprovement={false}
-          />
+        <div className={styles.detailsGrid}>
+                    
+          <SiteDetailsCard site={site} />
 
           <HabitatsCard
             title="Improvement Habitats (click any habitat cell for more detail)"
@@ -76,11 +62,22 @@ export default function SitePageContent({site}) {
             isImprovement={true}
           />
 
+          <HabitatsCard
+            title="Baseline Habitats (click any habitat cell for more detail)"
+            habitats = {site.habitats}
+            isImprovement={false}
+          />
+
           <AllocationsCard 
             title="Allocations (click any allocation for more detail)"
             allocations={site.allocations}
           />
 
+          <div className={styles.buttonGroup}>
+            <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
+            <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
+          </div>
+          
         </div>
         </>
       )}          

@@ -3,9 +3,11 @@ import { getHabitatDistinctiveness } from '@/lib/habitat';
 import styles from '@/styles/SiteDetails.module.css';
 import Footer from '@/components/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
+import { slugify } from '@/lib/format'
 
 export const metadata = {
-  title: 'BGS habitat analysis',
+  title: 'BGS Habitat Analysis',
+  description: 'View which habitats exist in the register, and what percentage of them have been allocated.'
 };
 
 // Revalidate this page at most once every hour (3600 seconds)
@@ -40,25 +42,25 @@ export default async function HabitatAnalysis() {
       // Baseline
       if (site.habitats && site.habitats[category]) {
         site.habitats[category].forEach(h => {
-          const habitatName = h.type;
-          if (!analysis[category][habitatName]) {
-            analysis[category][habitatName] = initHabitat(habitatName);
+          const habitatKey = slugify(h.type);
+          if (!analysis[category][habitatKey]) {
+            analysis[category][habitatKey] = initHabitat(h.type);
           }
-          analysis[category][habitatName].baseline += h.size;
-          analysis[category][habitatName].baselineParcels += 1;
+          analysis[category][habitatKey].baseline += h.size;
+          analysis[category][habitatKey].baselineParcels += 1;
         });
       }
 
       // Improvements
       if (site.improvements && site.improvements[category]) {
         site.improvements[category].forEach(h => {
-          const habitatName = h.type;
-          if (!analysis[category][habitatName]) {
-            analysis[category][habitatName] = initHabitat(habitatName);
+          const habitatKey = slugify(h.type);
+          if (!analysis[category][habitatKey]) {
+            analysis[category][habitatKey] = initHabitat(h.type);
           }
-          analysis[category][habitatName].improvement += h.size;
-          analysis[category][habitatName].improvementParcels += 1;
-          analysis[category][habitatName].improvementSites.add(site.referenceNumber);
+          analysis[category][habitatKey].improvement += h.size;
+          analysis[category][habitatKey].improvementParcels += 1;
+          analysis[category][habitatKey].improvementSites.add(site.referenceNumber);
         });
       }
 
@@ -67,12 +69,12 @@ export default async function HabitatAnalysis() {
         site.allocations.forEach(alloc => {
           if (alloc.habitats && alloc.habitats[category]) {
             alloc.habitats[category].forEach(h => {
-              const habitatName = h.type;
-              if (!analysis[category][habitatName]) {
-                analysis[category][habitatName] = initHabitat(habitatName);
+              const habitatKey = slugify(h.type);
+              if (!analysis[category][habitatKey]) {
+                analysis[category][habitatKey] = initHabitat(h.type);
               }
-              analysis[category][habitatName].allocation += h.size;
-              analysis[category][habitatName].allocationParcels += 1;
+              analysis[category][habitatKey].allocation += h.size;
+              analysis[category][habitatKey].allocationParcels += 1;
             });
           }
         });

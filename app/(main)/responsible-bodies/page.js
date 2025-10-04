@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Responsible Bodies',
+  description: 'View all the Responsible Bodies in the Register and which sites are managed by each. Note some sites have LPAs as Reponsible Bodies but are not in this list.'
 };
 
 async function getResponsibleBodiesData() {

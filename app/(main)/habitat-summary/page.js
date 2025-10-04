@@ -6,12 +6,14 @@ import { collateAllHabitats } from '@/lib/habitat';
 import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
 import { DetailRow } from '@/components/DetailRow';
 import { formatNumber } from '@/lib/format';
+import { processSitesForListView} from '@/lib/sites';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'BGS habitat summary',
+  title: 'BGS Habitat Finder',
+  description: 'Use this page to find available habitats. Click on a habitat to see all the sites that offer that habitat, including how much has already been allocated.'
 };
 
 
@@ -37,23 +39,29 @@ export default async function HabitatSummaryPage() {
 
     if (site.habitats) {
       if (site.habitats.areas) {
+        site.habitats.areas.forEach(h => h.site = site.referenceNumber);
         allHabitats.areas.push(...site.habitats.areas);
       }
       if (site.habitats.hedgerows) {
+        site.habitats.hedgerows.forEach(h => h.site = site.referenceNumber);
         allHabitats.hedgerows.push(...site.habitats.hedgerows);
       }
       if (site.habitats.watercourses) {
+        site.habitats.watercourses.forEach(h => h.site = site.referenceNumber);
         allHabitats.watercourses.push(...site.habitats.watercourses);
       }
     }
     if (site.improvements) {
       if (site.improvements.areas) {
+        site.improvements.areas.forEach(h => h.site = site.referenceNumber);
         allImprovements.areas.push(...site.improvements.areas);
       }
       if (site.improvements.hedgerows) {
+        site.improvements.hedgerows.forEach(h => h.site = site.referenceNumber);
         allImprovements.hedgerows.push(...site.improvements.hedgerows);
       }
       if (site.improvements.watercourses) {
+        site.improvements.watercourses.forEach(h => h.site = site.referenceNumber);
         allImprovements.watercourses.push(...site.improvements.watercourses);
       }
     }
@@ -86,10 +94,16 @@ export default async function HabitatSummaryPage() {
     )
   }
 
+  const processedSites = processSitesForListView(allSites);
+  const sitesMap = processedSites.reduce((acc, site) => {
+    acc[site.referenceNumber] = site;
+    return acc;
+  }, {});
+
   return (
     <>
       <div className={styles.container}>
-        <SearchableHabitatLists summary={HabitatSummarySection(allSites)} habitats={collatedHabitats} improvements={collatedImprovements} />
+        <SearchableHabitatLists summary={HabitatSummarySection(allSites)} habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
       </div>
       <Footer lastUpdated={lastUpdated} />
     </>

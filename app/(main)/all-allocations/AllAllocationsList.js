@@ -336,12 +336,12 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
                   <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
-                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>IMD transfer</span>
+                    IMD transfer
                   </Tooltip>
                 </th>
                 <th onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>
                   <Tooltip text="The distance from the development site to the BGS offset site.">
-                    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>Distance (km)</span>
+                    Distance (km)
                   </Tooltip>
                 </th>
                 <th onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area HUs</th>

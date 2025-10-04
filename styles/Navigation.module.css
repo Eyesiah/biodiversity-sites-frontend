@@ -31,6 +31,7 @@
 .logo {
   border-radius: 50%;
   display: block;
+  filter: invert(32%) sepia(20%) saturate(1278%) hue-rotate(45deg) brightness(94%) contrast(84%);
 }
 
 .rightLogoLink {
@@ -127,6 +128,7 @@
 .dropdownContent {
   display: none;
   position: absolute;
+  right: 0;
   background-color: #3a4049;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);

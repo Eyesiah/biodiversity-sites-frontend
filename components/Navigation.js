@@ -8,6 +8,7 @@ import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
 import Modal from '@/components/Modal'
 import modalStyles from '@/styles/Modal.module.css';
+import Tooltip from '@/components/Tooltip';
 
 const Dropdown = ({ category, children }) => {
   return (
@@ -65,7 +66,7 @@ const GlossarytModalButton = () => {
       <Modal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
-        title="Glossary of BGS terms"
+        title="Glossary of BGS Terms"
         style={modalStyles.modalContentLarge}
       >
         <iframe 
@@ -78,15 +79,47 @@ const GlossarytModalButton = () => {
   );
 };
 
+const FeedbackModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <button
+        className={styles.dropdownItem}
+        onClick={() => setShowModal(true)}
+      >
+        Feedback
+      </button>
+
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="Give Feedback"
+        style={modalStyles.modalContentLarge}
+      >
+        <iframe 
+          src="/feedback"
+          style={{ width: '100%', height: '80vh', border: 'none' }}
+          title="Give Feedback"
+        />
+      </Modal>
+    </>
+  );
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('');
+  const [pageDesc, setPageDesc] = useState('');
   const pathname = usePathname();
 
   useEffect(() => {
     // Titles are often set after a small delay, so we'll wait a moment
     setTimeout(() => {
       setPageTitle(document.title);
+      const description =
+        document.querySelector('meta[name="description"]')?.content ?? "";
+      setPageDesc(description);
     }, 100);
   }, [pathname]);
 
@@ -111,14 +144,16 @@ export default function Navigation() {
       <div className={styles.leftNav}>
         <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
           <Image
-            src="/TreesofBristolLogo.png"
+            src="/TreesofBristolLogo_white.png"
             alt="ToB Logo"
             width={45}
             height={45}
             className={styles.logo}
           />
         </ExternalLink>
-        <h1 className={styles.pageTitle}>{pageTitle}</h1>
+        <Tooltip text={pageDesc}>
+          <h1 className={styles.pageTitle}>{pageTitle}</h1>
+        </Tooltip>
       </div>
       
       <button
@@ -134,25 +169,26 @@ export default function Navigation() {
       <div className={styles.rightNav}>
         <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-            BGS sites list
+            BGS Sites List
           </Link>
-          <Dropdown category="BGS insights">
-            <DropdownLink href='/habitat-summary' label='BGS habitat summary' />
-            <DropdownLink href='/habitat-analysis' label='BGS habitat analysis' />
-            <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
+          <Dropdown category="BGS Insights">
+            <DropdownLink href='/habitat-summary' label='BGS Habitat Finder' />
+            <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
+            <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </Dropdown>
-          <Dropdown category="BGS bodies">
+          <Dropdown category="BGS Bodies">
             <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
             <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
             <DropdownLink href='/national-character-areas' label='National Character Areas' />
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
-          <Dropdown category="Meta">
-            <DropdownLink href='/statistics' label='Register statistics' />
-            <DropdownLink href='/HU-calculator' label='Habitat unit calculator' />
+          <Dropdown category="Stats & More">
+            <DropdownLink href='/statistics' label='BGS Statistics' />
+            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
+          <dropdown><FeedbackModalButton/></dropdown> 
         </div>        
       </div>
     </nav>
