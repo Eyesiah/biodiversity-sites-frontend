@@ -17,7 +17,7 @@ const CommaSeperatedSiteLink = ({site, index, count}) => {
 };
 
 export const metadata = {
-  title: 'BGS register statistics',
+  title: 'BGS Register Statistics',
 };
 
 export default async function StatisticsPage() {

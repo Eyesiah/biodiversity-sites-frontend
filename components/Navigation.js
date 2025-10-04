@@ -148,7 +148,7 @@ export default function Navigation() {
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
           <Dropdown category="Stats & More">
-            <DropdownLink href='/statistics' label='Register Statistics' />
+            <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <AboutModalButton/>
             <GlossarytModalButton/>
