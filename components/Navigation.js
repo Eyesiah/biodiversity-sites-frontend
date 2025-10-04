@@ -147,12 +147,15 @@ export default function Navigation() {
             <DropdownLink href='/national-character-areas' label='National Character Areas' />
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
-          <Dropdown category="Stats & more ...">
+          <Dropdown category="Stats & More">
             <DropdownLink href='/statistics' label='Register Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
+          <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend/issues" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
+            Give Feedback
+          </ExternalLink>
         </div>        
       </div>
     </nav>
