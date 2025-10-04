@@ -85,7 +85,11 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
   };
 
   const onHabitatToggle = (habitatType, isImprovement, category) => {
-    setCurrentHabitat({habitatType, isImprovement, category});
+    if (isHabitatOpen(habitatType, isImprovement, category)) {
+      setCurrentHabitat({});
+    } else {
+      setCurrentHabitat({habitatType, isImprovement, category});
+    }
   }
 
   const isHabitatOpen = useCallback((habitatType, isImprovement, category) => {

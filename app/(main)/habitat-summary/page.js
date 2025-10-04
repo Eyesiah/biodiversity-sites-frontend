@@ -37,23 +37,29 @@ export default async function HabitatSummaryPage() {
 
     if (site.habitats) {
       if (site.habitats.areas) {
+        site.habitats.areas.forEach(h => h.site = site.referenceNumber);
         allHabitats.areas.push(...site.habitats.areas);
       }
       if (site.habitats.hedgerows) {
+        site.habitats.hedgerows.forEach(h => h.site = site.referenceNumber);
         allHabitats.hedgerows.push(...site.habitats.hedgerows);
       }
       if (site.habitats.watercourses) {
+        site.habitats.watercourses.forEach(h => h.site = site.referenceNumber);
         allHabitats.watercourses.push(...site.habitats.watercourses);
       }
     }
     if (site.improvements) {
       if (site.improvements.areas) {
+        site.improvements.areas.forEach(h => h.site = site.referenceNumber);
         allImprovements.areas.push(...site.improvements.areas);
       }
       if (site.improvements.hedgerows) {
+        site.improvements.hedgerows.forEach(h => h.site = site.referenceNumber);
         allImprovements.hedgerows.push(...site.improvements.hedgerows);
       }
       if (site.improvements.watercourses) {
+        site.improvements.watercourses.forEach(h => h.site = site.referenceNumber);
         allImprovements.watercourses.push(...site.improvements.watercourses);
       }
     }

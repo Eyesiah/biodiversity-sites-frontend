@@ -7,10 +7,14 @@ import styles from '@/styles/SiteDetails.module.css';
 import {CollapsibleRow} from "components/CollapsibleRow"
 
 const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen }) => {
+
+  const hasSites = habitat.sites != null;
+
   const mainRow = (
     <>
       <td>{habitat.type}</td>
       <td style={{ textAlign: 'center' }}>{habitat.distinctiveness}</td>
+      {hasSites && <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.sites.length}</td>}
       <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.parcels}</td>
       <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
       <td className={styles.numericData}>{formatNumber(habitat.HUs || 0)}</td>
@@ -60,6 +64,9 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
   {
     return null;
   }
+
+  const hasSites = habitats[0].sites != null;
+
   return <section className={styles.card}>
     <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
         {title} {isOpen ? '▼' : '▶'}
@@ -71,7 +78,8 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
               <tr>
                   <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
                   <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
-                  <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># parcels</th>
+                  {hasSites && <th onClick={() => requestSort('sites.length')} className={getSortClassName('sites.length', sortConfig)} style={{ textAlign: 'center' }}># Sites</th>}
+                  <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                   <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
                   <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
               </tr>
@@ -85,6 +93,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
                     units={title === 'Areas' ? 'ha' : 'km'}
                     onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat.type, isImprovement, title) : null}
                     isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat.type, isImprovement, title) : null}
+                    sites={habitat.sites}
                   />
               ))}
               </tbody>
