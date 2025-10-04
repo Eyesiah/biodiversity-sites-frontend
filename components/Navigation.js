@@ -99,7 +99,7 @@ const FeedbackModalButton = () => {
       >
         <iframe 
           src="/feedback"
-          style={{ width: '100%', height: '80vh', border: 'none' }}
+          style={{ width: '100%', height: '18vh', border: 'none' }}
           title="Give Feedback"
         />
       </Modal>
