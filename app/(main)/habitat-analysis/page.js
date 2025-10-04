@@ -7,6 +7,7 @@ import { slugify } from '@/lib/format'
 
 export const metadata = {
   title: 'BGS Habitat Analysis',
+  description: 'View which habitats exist in the register, and what percentage of them have been allocated.'
 };
 
 // Revalidate this page at most once every hour (3600 seconds)

@@ -18,6 +18,7 @@ const CommaSeperatedSiteLink = ({site, index, count}) => {
 
 export const metadata = {
   title: 'BGS Register Statistics',
+  description: 'View various statistics about the register to see how it has changed over time.'
 };
 
 export default async function StatisticsPage() {

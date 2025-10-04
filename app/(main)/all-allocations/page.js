@@ -7,6 +7,7 @@ export const revalidate = 3600;
 
 export const metadata = {
   title: 'BGS allocations',
+  description: 'Every allocation in the register is listed here. Select a row to get details about which habitats were allocated.'
 };
 
 export default async function AllocationsPage() {

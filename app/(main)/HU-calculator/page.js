@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Habitat unit calculator',
+  description: 'Use this form to calculate how many Habitat Units a particular Parcel would have.'
 };
 
 export default function HUCalculatorPage({}) {
