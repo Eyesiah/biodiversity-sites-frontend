@@ -111,7 +111,7 @@ export default function Navigation() {
       <div className={styles.leftNav}>
         <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
           <Image
-            src="/TreesofBristolLogo.png"
+            src="/TreesofBristolLogo_white.png"
             alt="ToB Logo"
             width={45}
             height={45}
