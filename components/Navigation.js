@@ -79,6 +79,34 @@ const GlossarytModalButton = () => {
   );
 };
 
+const FeedbackModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <button
+        className={styles.dropdownItem}
+        onClick={() => setShowModal(true)}
+      >
+        Feedback
+      </button>
+
+      <Modal 
+        show={showModal} 
+        onClose={() => setShowModal(false)} 
+        title="Give Feedback"
+        style={modalStyles.modalContentLarge}
+      >
+        <iframe 
+          src="/feedback"
+          style={{ width: '100%', height: '80vh', border: 'none' }}
+          title="Give Feedback"
+        />
+      </Modal>
+    </>
+  );
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('');
@@ -160,9 +188,7 @@ export default function Navigation() {
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
-          <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend/issues" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-            Give Feedback
-          </ExternalLink>
+          <dropdown><FeedbackModalButton/></dropdown> 
         </div>        
       </div>
     </nav>
