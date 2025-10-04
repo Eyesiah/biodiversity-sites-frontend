@@ -24,29 +24,34 @@ const Tooltip = ({ children, text }) => {
       const tooltipRect = tooltipRef.current.getBoundingClientRect();
       const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
 
-      let newPos = { ...position };
+      setPosition(prevPosition => {
+        let newTop;
+        // Position vertically
+        if (targetRect.top - tooltipRect.height - 10 > 0) {
+          // Position above
+          newTop = targetRect.top - tooltipRect.height - 10;
+        } else {
+          // Position below
+          newTop = targetRect.bottom + 10;
+        }
 
-      // Position vertically
-      if (targetRect.top - tooltipRect.height - 10 > 0) {
-        // Position above
-        newPos.top = targetRect.top - tooltipRect.height - 10;
-      } else {
-        // Position below
-        newPos.top = targetRect.bottom + 10;
-      }
+        // Position horizontally
+        let newLeft = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+        if (newLeft < 10) {
+          newLeft = 10; // Clamp to left
+        } else if (newLeft + tooltipRect.width > viewportWidth - 10) {
+          newLeft = viewportWidth - tooltipRect.width - 10; // Clamp to right
+        }
 
-      // Position horizontally
-      let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
-      if (left < 10) {
-        left = 10; // Clamp to left
-      } else if (left + tooltipRect.width > viewportWidth - 10) {
-        left = viewportWidth - tooltipRect.width - 10; // Clamp to right
-      }
-      newPos.left = left;
+        // Only update state if the position has actually changed
+        if (newTop === prevPosition.top && newLeft === prevPosition.left) {
+          return prevPosition;
+        }
 
-      setPosition(newPos);
+        return { top: newTop, left: newLeft };
+      });
     }
-  }, [isVisible]);
+  }, [isVisible]); // No `position` dependency needed
 
   const tooltipContent = (
     <div
