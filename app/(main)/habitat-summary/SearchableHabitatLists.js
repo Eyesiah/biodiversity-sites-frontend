@@ -7,7 +7,6 @@ import Tooltip from '@/components/Tooltip';
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
-import { GetSitesWithHabitat } from './actions';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -16,12 +15,12 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function SearchableHabitatLists({ summary, habitats, improvements }) {
+export default function SearchableHabitatLists({ summary, habitats, improvements, sites }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [displayedSites, setDisplayedSites] = useState([]);
-  const [currentHabitat, setCurrentHabitat] = useState({});
-
+  const [currentHabitat, setCurrentHabitat] = useState(null);
+    
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedSearchTerm(inputValue);
@@ -84,35 +83,27 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
     triggerDownload(blob, 'bgs-habitat-summary.json');
   };
 
-  const onHabitatToggle = (habitatType, isImprovement, category) => {
-    if (isHabitatOpen(habitatType, isImprovement, category)) {
-      setCurrentHabitat({});
+  const onHabitatToggle = (habitat) => {
+    if (isHabitatOpen(habitat)) {
+      setCurrentHabitat(null);
     } else {
-      setCurrentHabitat({habitatType, isImprovement, category});
+      setCurrentHabitat(habitat);
     }
   }
 
-  const isHabitatOpen = useCallback((habitatType, isImprovement, category) => {
-    return currentHabitat.habitatType === habitatType && currentHabitat.isImprovement === isImprovement && currentHabitat.category === category;
+  const isHabitatOpen = useCallback((habitat) => {
+    return currentHabitat == habitat;
   }, [currentHabitat])
 
   useEffect(() => {
-    setDisplayedSites([]);
-
-    let isActive = true;
-
-    const updateSitesForHabitat = async () => {
-      const sitesWithHabitat = await GetSitesWithHabitat(currentHabitat.habitatType, currentHabitat.isImprovement, currentHabitat.category);        
-      if (isActive) {
-        setDisplayedSites(sitesWithHabitat);
-      }
+    if (currentHabitat) {
+      const sitesWithHabitat = currentHabitat.sites.map(s => sites[s]);
+      setDisplayedSites(sitesWithHabitat);
     }
-
-    updateSitesForHabitat();
-
-    // return a cleanup function to prevent race conditions
-    return () => {isActive=false};
-  }, [currentHabitat, isHabitatOpen]);
+    else {
+      setDisplayedSites([]);
+    }
+  }, [currentHabitat, sites]);
 
   const tooltipText = 'Click any habitat row for more information and to see the location of that habitat.';
 
@@ -163,6 +154,7 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
               isImprovement={true}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
+              sites={sites}
             />
 
             <HabitatsCard
@@ -175,6 +167,7 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
               isImprovement={false}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
+              sites={sites}
             />
           </div>
         </>

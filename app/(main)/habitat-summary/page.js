@@ -6,6 +6,7 @@ import { collateAllHabitats } from '@/lib/habitat';
 import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
 import { DetailRow } from '@/components/DetailRow';
 import { formatNumber } from '@/lib/format';
+import { processSitesForListView} from '@/lib/sites';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -92,10 +93,16 @@ export default async function HabitatSummaryPage() {
     )
   }
 
+  const processedSites = processSitesForListView(allSites);
+  const sitesMap = processedSites.reduce((acc, site) => {
+    acc[site.referenceNumber] = site;
+    return acc;
+  }, {});
+
   return (
     <>
       <div className={styles.container}>
-        <SearchableHabitatLists summary={HabitatSummarySection(allSites)} habitats={collatedHabitats} improvements={collatedImprovements} />
+        <SearchableHabitatLists summary={HabitatSummarySection(allSites)} habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
       </div>
       <Footer lastUpdated={lastUpdated} />
     </>

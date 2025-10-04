@@ -5,16 +5,17 @@ import { formatNumber } from '@/lib/format';
 import { useState } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import {CollapsibleRow} from "components/CollapsibleRow"
+import SiteList from '@/components/SiteList';
 
-const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen }) => {
+const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
-  const hasSites = habitat.sites != null;
+  const hasSites = sites != null;
 
   const mainRow = (
     <>
       <td>{habitat.type}</td>
       <td style={{ textAlign: 'center' }}>{habitat.distinctiveness}</td>
-      {hasSites && <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.sites.length}</td>}
+      {hasSites && <td className={styles.numericData} style={{ textAlign: 'center' }}>{sites.length}</td>}
       <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.parcels}</td>
       <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
       <td className={styles.numericData}>{formatNumber(habitat.HUs || 0)}</td>
@@ -22,28 +23,31 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
   );
 
   const collapsibleContent = (
-    <table className={styles.subTable}>
-      <thead>
-        <tr>
-          {isImprovement && <th>Intervention</th>}
-          <th>Condition</th>
-          <th># parcels</th>
-          <th>Size ({units})</th>
-          <th>HUs</th>
-        </tr>
-      </thead>
-      <tbody>
-        {habitat.subRows.map((subRow, index) => (
-          <tr key={index}>
-            {isImprovement && <td>{subRow.interventionType}</td>}
-            <td>{subRow.condition}</td>
-            <td className={styles.numericData}>{subRow.parcels}</td>
-            <td className={styles.numericData}>{formatNumber(subRow.area)}</td>
-            <td className={styles.numericData}>{formatNumber(subRow.HUs || 0)}</td>
+    <>
+      <table className={styles.subTable}>
+        <thead>
+          <tr>
+            {isImprovement && <th>Intervention</th>}
+            <th>Condition</th>
+            <th># parcels</th>
+            <th>Size ({units})</th>
+            <th>HUs</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {habitat.subRows.map((subRow, index) => (
+            <tr key={index}>
+              {isImprovement && <td>{subRow.interventionType}</td>}
+              <td>{subRow.condition}</td>
+              <td className={styles.numericData}>{subRow.parcels}</td>
+              <td className={styles.numericData}>{formatNumber(subRow.area)}</td>
+              <td className={styles.numericData}>{formatNumber(subRow.HUs || 0)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>    
+      {hasSites && <SiteList sites={sites} /> }
+    </>
   );
 
   return (
@@ -57,7 +61,7 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
   );
 };
 
-const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen }) => {
+const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   if (!habitats || habitats.length == 0)
@@ -91,9 +95,9 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
                     habitat={habitat}
                     isImprovement={isImprovement}
                     units={title === 'Areas' ? 'ha' : 'km'}
-                    onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat.type, isImprovement, title) : null}
-                    isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat.type, isImprovement, title) : null}
-                    sites={habitat.sites}
+                    onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
+                    isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
+                    sites={habitat.sites?.map(s => sites[s]) ?? null}
                   />
               ))}
               </tbody>
@@ -104,7 +108,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
     </section>    
 };
 
-export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, isHabitatOpen}) {
+export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, isHabitatOpen, sites}) {
   const [isOpen, setIsOpen] = useState(true);
 
   const collatedAreas = habitats?.areas;
@@ -134,6 +138,7 @@ export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, 
               isImprovement={isImprovement}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
+              sites={sites}
             />
             <HabitatTable
               title="Hedgerows"
@@ -143,6 +148,7 @@ export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, 
               isImprovement={isImprovement}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
+              sites={sites}
             />
             <HabitatTable
               title="Watercourses"
@@ -152,6 +158,7 @@ export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, 
               isImprovement={isImprovement}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
+              sites={sites}
             />            
           </div>
         )}

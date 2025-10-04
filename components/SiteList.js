@@ -78,7 +78,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
                 {site.referenceNumber}
               </Link>
             </td>
-            <td>{site.responsibleBodies.join(', ')}</td>
+            <td>{site.responsibleBodies?.join(', ')}</td>
             <td className="numeric-data">{formatNumber(site.siteSize)}</td>
             <td className="centered-data">{site.allocationsCount}</td>
             <td>{site.lpaName}</td>
