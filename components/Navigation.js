@@ -8,6 +8,7 @@ import ExternalLink from './ExternalLink';
 import styles from '@/styles/Navigation.module.css';
 import Modal from '@/components/Modal'
 import modalStyles from '@/styles/Modal.module.css';
+import Tooltip from '@/components/Tooltip';
 
 const Dropdown = ({ category, children }) => {
   return (
@@ -81,12 +82,16 @@ const GlossarytModalButton = () => {
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('');
+  const [pageDesc, setPageDesc] = useState('');
   const pathname = usePathname();
 
   useEffect(() => {
     // Titles are often set after a small delay, so we'll wait a moment
     setTimeout(() => {
       setPageTitle(document.title);
+      const description =
+        document.querySelector('meta[name="description"]')?.content ?? "";
+      setPageDesc(description);
     }, 100);
   }, [pathname]);
 
@@ -118,7 +123,9 @@ export default function Navigation() {
             className={styles.logo}
           />
         </ExternalLink>
-        <h1 className={styles.pageTitle}>{pageTitle}</h1>
+        <Tooltip text={pageDesc}>
+          <h1 className={styles.pageTitle}>{pageTitle}</h1>
+        </Tooltip>
       </div>
       
       <button
