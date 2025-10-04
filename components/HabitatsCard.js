@@ -46,7 +46,9 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
           ))}
         </tbody>
       </table>    
-      {hasSites && <SiteList sites={sites} /> }
+      {hasSites &&
+        <SiteList sites={sites} minimalHeight={true} />
+      }
     </>
   );
 

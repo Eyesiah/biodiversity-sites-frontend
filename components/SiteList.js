@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { formatNumber } from '@/lib/format';
 
-const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
+const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
 
   const sortedSites = useMemo(() => {
@@ -58,36 +58,44 @@ const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
     return <p>No site data available.</p>;
   }
 
-  return (
-    <table className="site-table">
-      <thead>
-        <tr>
-          <th onClick={() => requestSort('referenceNumber')}>BGS Reference{getSortIndicator('referenceNumber')}</th>
-          <th onClick={() => requestSort('responsibleBodies')}>Responsible Body{getSortIndicator('responsibleBodies')}</th>
-          <th onClick={() => requestSort('siteSize')}>Size (ha){getSortIndicator('siteSize')}</th>
-          <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
-          <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
-          <th onClick={() => requestSort('ncaName')}>National Charatcter Area (NCA){getSortIndicator('ncaName')}</th>
+  const table = <table className="site-table">
+    <thead>
+      <tr>
+        <th onClick={() => requestSort('referenceNumber')}>BGS Reference{getSortIndicator('referenceNumber')}</th>
+        <th onClick={() => requestSort('responsibleBodies')}>Responsible Body{getSortIndicator('responsibleBodies')}</th>
+        <th onClick={() => requestSort('siteSize')}>Size (ha){getSortIndicator('siteSize')}</th>
+        <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
+        <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
+        <th onClick={() => requestSort('ncaName')}>National Character Area (NCA){getSortIndicator('ncaName')}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {sortedSites.map((site) => (
+        <tr key={site.referenceNumber} onMouseEnter={() => {if (onSiteHover) onSiteHover(site)}} onMouseLeave={() => {if (onSiteHover) onSiteHover(null)}} onClick={() => { if (onSiteClick) onSiteClick(site)}} style={{ cursor: 'pointer' }}>
+          <td>
+            <Link href={`/sites/${site.referenceNumber}`}>
+              {site.referenceNumber}
+            </Link>
+          </td>
+          <td>{site.responsibleBodies?.join(', ')}</td>
+          <td className="numeric-data">{formatNumber(site.siteSize)}</td>
+          <td className="centered-data">{site.allocationsCount}</td>
+          <td>{site.lpaName}</td>
+          <td>{site.ncaName}</td>
         </tr>
-      </thead>
-      <tbody>
-        {sortedSites.map((site) => (
-          <tr key={site.referenceNumber} onMouseEnter={() => {if (onSiteHover) onSiteHover(site)}} onMouseLeave={() => {if (onSiteHover) onSiteHover(null)}} onClick={() => { if (onSiteClick) onSiteClick(site)}} style={{ cursor: 'pointer' }}>
-            <td>
-              <Link href={`/sites/${site.referenceNumber}`}>
-                {site.referenceNumber}
-              </Link>
-            </td>
-            <td>{site.responsibleBodies?.join(', ')}</td>
-            <td className="numeric-data">{formatNumber(site.siteSize)}</td>
-            <td className="centered-data">{site.allocationsCount}</td>
-            <td>{site.lpaName}</td>
-            <td>{site.ncaName}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+      ))}
+    </tbody>
+  </table>
+
+  if (minimalHeight) {
+    return (
+      <div style={{ maxHeight: '20rem', overflowY: 'auto' }}>
+        {table}
+      </div>
+    )
+  } else {
+    return table;
+  }
 };
 
 export default SiteList;
