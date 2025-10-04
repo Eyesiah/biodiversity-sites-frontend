@@ -22,7 +22,7 @@ const Tooltip = ({ children, text }) => {
   };
 
   return (
-    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>
+    <span style={{ borderBottom: '1px dotted', cursor: 'help' }}>
       <span
         ref={targetRef}
         onMouseEnter={handleMouseEnter}
