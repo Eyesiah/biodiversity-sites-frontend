@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
 import { HabitatsCard } from '@/components/HabitatsCard';
+import Tooltip from '@/components/Tooltip';
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
@@ -109,6 +110,8 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
     return () => {isActive=false};
   }, [currentHabitat, isHabitatOpen]);
 
+  const tooltipText = 'Click any habitat row for more information and to see the location of that habitat.';
+
   return (
     <MapContentLayout
       map={
@@ -147,17 +150,25 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
             </div>
 
             <HabitatsCard
-              title="Baseline Habitats (click any row to map sites with this habitat)"
-              habitats = {filteredBaselineHabitats}
-              isImprovement={false}
+              title={
+                <Tooltip text={tooltipText}>
+                  Improvement Habitats
+                </Tooltip>
+              }
+              habitats = {filteredImprovementHabitats}
+              isImprovement={true}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
             />
 
             <HabitatsCard
-              title="Improvement Habitats (click any row to map sites with this habitat)"
-              habitats = {filteredImprovementHabitats}
-              isImprovement={true}
+              title={
+                <Tooltip text={tooltipText}>
+                  Baseline Habitats
+                </Tooltip>
+              }
+              habitats = {filteredBaselineHabitats}
+              isImprovement={false}
               onHabitatToggle={onHabitatToggle}
               isHabitatOpen={isHabitatOpen}
             />

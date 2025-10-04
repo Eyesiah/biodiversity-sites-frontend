@@ -60,6 +60,7 @@ const TooltipPortal = ({ text, position }) => {
       whiteSpace: 'normal',
       pointerEvents: 'none', // Prevent the tooltip from capturing mouse events
       maxWidth: '250px',
+      border: '1px solid #2d618fff',
     }}>
       {text}
     </div>,
