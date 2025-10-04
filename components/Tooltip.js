@@ -22,7 +22,7 @@ const Tooltip = ({ children, text }) => {
   };
 
   return (
-    <>
+    <span style={{ borderBottom: '1px dotted #000', cursor: 'help' }}>
       <span
         ref={targetRef}
         onMouseEnter={handleMouseEnter}
@@ -31,7 +31,7 @@ const Tooltip = ({ children, text }) => {
         {children}
       </span>
       {isVisible && <TooltipPortal text={text} position={position} />}
-    </>
+    </span>
   );
 };
 
