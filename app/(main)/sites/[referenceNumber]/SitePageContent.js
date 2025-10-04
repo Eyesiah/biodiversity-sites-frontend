@@ -57,15 +57,15 @@ export default function SitePageContent({site}) {
           <SiteDetailsCard site={site} />
 
           <HabitatsCard
-            title="Baseline Habitats (click any habitat cell for more detail)"
-            habitats = {site.habitats}
-            isImprovement={false}
-          />
-
-          <HabitatsCard
             title="Improvement Habitats (click any habitat cell for more detail)"
             habitats = {site.improvements}
             isImprovement={true}
+          />
+
+          <HabitatsCard
+            title="Baseline Habitats (click any habitat cell for more detail)"
+            habitats = {site.habitats}
+            isImprovement={false}
           />
 
           <AllocationsCard 

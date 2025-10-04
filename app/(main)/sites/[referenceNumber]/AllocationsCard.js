@@ -56,9 +56,9 @@ const AllocationRow = ({ alloc }) => {
         {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
       </td>
       <td>{alloc.projectName}</td>
-      <td className={styles.numericData}>{formatNumber(alloc.areaUnits || 0)}</td>
-      <td className={styles.numericData}>{formatNumber(alloc.hedgerowUnits || 0)}</td>
-      <td className={styles.numericData}>{formatNumber(alloc.watercoursesUnits || 0)}</td>
+      <td className={styles.numericData}>{alloc.areaUnits && alloc.areaUnits > 0 ? formatNumber(alloc.areaUnits) : ''}</td>
+      <td className={styles.numericData}>{alloc.hedgerowUnits && alloc.hedgerowUnits > 0 ? formatNumber(alloc.hedgerowUnits) : ''}</td>
+      <td className={styles.numericData}>{alloc.watercoursesUnits && alloc.watercoursesUnits > 0 ? formatNumber(alloc.watercoursesUnits) : ''}</td>
     </>
   );
 

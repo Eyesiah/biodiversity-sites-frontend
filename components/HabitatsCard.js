@@ -18,7 +18,8 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
       {hasSites && <td className={styles.numericData} style={{ textAlign: 'center' }}>{sites.length}</td>}
       <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.parcels}</td>
       <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
-      <td className={styles.numericData}>{formatNumber(habitat.HUs || 0)}</td>
+      {isImprovement && <td className={styles.numericData}>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</td>}
+      <td className={styles.numericData}>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</td>
     </>
   );
 
@@ -41,7 +42,7 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
               <td>{subRow.condition}</td>
               <td className={styles.numericData}>{subRow.parcels}</td>
               <td className={styles.numericData}>{formatNumber(subRow.area)}</td>
-              <td className={styles.numericData}>{formatNumber(subRow.HUs || 0)}</td>
+              <td className={styles.numericData}>{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</td>
             </tr>
           ))}
         </tbody>
@@ -87,6 +88,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
                   {hasSites && <th onClick={() => requestSort('sites.length')} className={getSortClassName('sites.length', sortConfig)} style={{ textAlign: 'center' }}># BGS Sites</th>}
                   <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                   <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
+                  {isImprovement && <th onClick={() => requestSort('allocated')} className={getSortClassName('allocated', sortConfig)}>Allocated</th>}
                   <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
               </tr>
               </thead>
