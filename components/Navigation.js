@@ -137,7 +137,7 @@ export default function Navigation() {
             BGS sites list
           </Link>
           <Dropdown category="BGS insights">
-            <DropdownLink href='/habitat-summary' label='BGS habitat summary' />
+            <DropdownLink href='/habitat-summary' label='BGS habitat finder' />
             <DropdownLink href='/habitat-analysis' label='BGS habitat analysis' />
             <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
           </Dropdown>
@@ -147,7 +147,7 @@ export default function Navigation() {
             <DropdownLink href='/national-character-areas' label='National Character Areas' />
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
-          <Dropdown category="Meta">
+          <Dropdown category="Stats & more...">
             <DropdownLink href='/statistics' label='Register statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat unit calculator' />
             <AboutModalButton/>
