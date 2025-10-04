@@ -12,7 +12,7 @@ import { processSitesForListView} from '@/lib/sites';
 export const revalidate = 3600;
 
 export const metadata = {
-  title: 'BGS habitat summary',
+  title: 'BGS Habitat Finder',
 };
 
 

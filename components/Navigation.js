@@ -65,7 +65,7 @@ const GlossarytModalButton = () => {
       <Modal 
         show={showModal} 
         onClose={() => setShowModal(false)} 
-        title="Glossary of BGS terms"
+        title="Glossary of BGS Terms"
         style={modalStyles.modalContentLarge}
       >
         <iframe 
@@ -134,22 +134,22 @@ export default function Navigation() {
       <div className={styles.rightNav}>
         <div id="navigation-menu" className={`${styles.menu} ${isOpen ? styles.open : ''}`}>
           <Link href="/sites" className={`${styles.link} ${styles.dropbtn}`} onClick={closeMenu}>
-            BGS sites list
+            BGS Sites List
           </Link>
-          <Dropdown category="BGS insights">
-            <DropdownLink href='/habitat-summary' label='BGS habitat finder' />
-            <DropdownLink href='/habitat-analysis' label='BGS habitat analysis' />
-            <DropdownLink href='/all-allocations' label='BGS habitat allocations' />
+          <Dropdown category="BGS Insights">
+            <DropdownLink href='/habitat-summary' label='BGS Habitat Finder' />
+            <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
+            <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </Dropdown>
-          <Dropdown category="BGS bodies">
+          <Dropdown category="BGS Bodies">
             <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
             <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
             <DropdownLink href='/national-character-areas' label='National Character Areas' />
             <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
           </Dropdown>
-          <Dropdown category="Stats & more...">
-            <DropdownLink href='/statistics' label='Register statistics' />
-            <DropdownLink href='/HU-calculator' label='Habitat unit calculator' />
+          <Dropdown category="Stats & more ...">
+            <DropdownLink href='/statistics' label='Register Statistics' />
+            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
