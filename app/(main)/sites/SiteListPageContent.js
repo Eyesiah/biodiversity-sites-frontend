@@ -147,7 +147,7 @@ export default function SiteListPageContent({sites, summary}) {
             )}
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
             <div className="search-container" style={{ margin: 0 }}>
               <input
                 type="text"
