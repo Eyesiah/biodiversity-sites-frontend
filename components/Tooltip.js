@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useLayoutEffect, useRef } from 'react';
+import { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 const Tooltip = ({ children, text }) => {
@@ -8,6 +8,11 @@ const Tooltip = ({ children, text }) => {
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const targetRef = useRef(null);
   const tooltipRef = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleMouseEnter = () => {
     if (!text) return;
@@ -51,7 +56,7 @@ const Tooltip = ({ children, text }) => {
         return { top: newTop, left: newLeft };
       });
     }
-  }, [isVisible]); // No `position` dependency needed
+  }, [isVisible]);
 
   const tooltipContent = (
     <div
@@ -86,7 +91,7 @@ const Tooltip = ({ children, text }) => {
       <span ref={targetRef}>
         {children}
       </span>
-      {createPortal(tooltipContent, document.body)}
+      {isMounted && isVisible && createPortal(tooltipContent, document.body)}
     </span>
   );
 };
