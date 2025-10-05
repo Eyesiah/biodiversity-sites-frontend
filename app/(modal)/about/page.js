@@ -76,12 +76,12 @@ export default function About() {
           <p>
             The data controller responsible for this website is:
             <br />
-            Mark Ashdown, Chair Bristol Tree Forum
+            Mark Ashdown, Acting Chair, Bristol Tree Forum
             <br />
             Email: Enquiries@bristoltreeforum.org
           </p>
 
-          <h3>2. Data We Collect</h3>
+          <h3>2. Data we collect</h3>
           <p>
             We collect information in the following ways:
           </p>
@@ -108,7 +108,7 @@ export default function About() {
             is created. All data is aggregated and anonymized.
           </p>
 
-          <h3>3. How We Use Your Data</h3>
+          <h3>3. How we use your data</h3>
           <p>
             We use the information we collect for the following purposes:
             <br />
@@ -117,7 +117,7 @@ export default function About() {
             improve our website&apos;s functionality and user experience.
           </p>
 
-          <h3>4. Legal Basis for Processing (GDPR)</h3>
+          <h3>4. Legal basis for processing (GDPR)</h3>
           <p>
             Our legal basis for collecting and using the information described
             above depends on the specific context:
@@ -129,13 +129,13 @@ export default function About() {
             interest does not override your fundamental rights to privacy.
           </p>
 
-          <h3>5. Cookies and Tracking Technologies</h3>
+          <h3>5. Cookies and tracking technologies</h3>
           <p>
             This website does not use cookies for analytics tracking. Our
             analytics provider, Umami, is a cookie-less solution.
           </p>
 
-          <h3>6. Data Sharing and Third Parties</h3>
+          <h3>6. Data sharing and third parties</h3>
           <p>
             We do not sell, trade, or rent your personal information to others.
             <br />
@@ -144,7 +144,7 @@ export default function About() {
             analytics purposes.
           </p>
 
-          <h3>7. Your Data Protection Rights Under GDPR</h3>
+          <h3>7. Your data protection rights Uunder GDPR</h3>
           <p>
             Under the UK GDPR and the Data Protection Act 2018, you have rights
             over your personal data. These include:
@@ -191,20 +191,20 @@ export default function About() {
             (ICO). You can find their contact details at ico.org.uk.
           </p>
 
-          <h3>8. Data Security</h3>
+          <h3>8. Data security</h3>
           <p>
             We take reasonable technical and organizational precautions to prevent
             the loss, misuse, or alteration of your personal information.
           </p>
 
-          <h3>9. Changes to This Privacy Policy</h3>
+          <h3>9. Changes to this Privacy Policy</h3>
           <p>
             We may update this privacy policy from time to time. We will notify
             you of any changes by posting the new policy on this page and
             updating the &apos;Last Updated&apos; date at the top.
           </p>
 
-          <h3>10. Contact Us</h3>
+          <h3>10. Contact us</h3>
           <p>
             If you have any questions about this Privacy Policy, please contact us
             at:
