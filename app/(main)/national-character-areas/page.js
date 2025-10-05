@@ -7,7 +7,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'National Character Areas',
-  description: 'View all the NCA bodies and which sites are present in each one.'
+  description: 'View all the NCA bodies and which sites are present in each one. Click on any record for a dropdown of adjacent NCAs.'
 };
 
 async function getNCAData() {
