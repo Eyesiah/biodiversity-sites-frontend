@@ -67,7 +67,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
         <th onClick={() => requestSort('responsibleBodies')}>Responsible Body{getSortIndicator('responsibleBodies')}</th>
         <th onClick={() => requestSort('siteSize')}>{hasAllocPercentage ? 'Habitat Size' : 'Size (ha)'}{getSortIndicator('siteSize')}</th>
         {!hasAllocPercentage && <th onClick={() => requestSort('allocationsCount')}>{getSortIndicator('allocationsCount')}# Allocations</th>}
-        {hasAllocPercentage && <th onClick={() => requestSort('allocatedHabitatArea')}>{getSortIndicator('allocatedHabitatArea')}Allocated</th>}
+        {hasAllocPercentage && <th onClick={() => requestSort('allocatedHabitatArea')}>{getSortIndicator('allocatedHabitatArea')}% Allocated</th>}
         <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
         <th onClick={() => requestSort('ncaName')}>National Character Area (NCA){getSortIndicator('ncaName')}</th>
       </tr>

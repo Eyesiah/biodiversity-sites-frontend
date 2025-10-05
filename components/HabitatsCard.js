@@ -88,7 +88,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
                   {hasSites && <th onClick={() => requestSort('sites.length')} className={getSortClassName('sites.length', sortConfig)} style={{ textAlign: 'center' }}># BGS Sites</th>}
                   <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
                   <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
-                  {isImprovement && <th onClick={() => requestSort('allocated')} className={getSortClassName('allocated', sortConfig)}>Allocated</th>}
+                  {isImprovement && <th onClick={() => requestSort('allocated')} className={getSortClassName('allocated', sortConfig)}>% Allocated</th>}
                   <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
               </tr>
               </thead>
