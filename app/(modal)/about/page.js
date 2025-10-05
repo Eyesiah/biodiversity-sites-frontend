@@ -71,6 +71,147 @@ export default function About() {
           <p>This is a <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink> project that displays Biodiversity Gain Sites data scraped from <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">https://environment.data.gov.uk/biodiversity-net-gain</ExternalLink>.</p>
           <p>View the source code at <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend">GitHub</ExternalLink></p>
     
+          <h2 id="privacy-policy">Privacy Policy (last updated 5 Oct 2025)</h2>
+          <h3>1. Data Controller</h3>
+          <p>
+            The data controller responsible for this website is:
+            <br />
+            Mark Ashdown, Chair Bristol Tree Forum
+            <br />
+            Email: Enquiries@bristoltreeforum.org
+          </p>
+
+          <h3>2. Data We Collect</h3>
+          <p>
+            We collect information in the following ways:
+          </p>
+          <p>
+            <b>Anonymous Website Analytics</b>: We use Umami, a privacy-focused
+            web analytics software, to understand our website traffic. We use this
+            information to improve our content and user experience. Umami is
+            designed to be privacy-friendly and operates without the use of
+            cookies. It collects the following anonymous data:
+          </p>
+          <ul>
+            <li>Pages viewed on our website</li>
+            <li>The website that referred you to us (e.g., Google, Twitter)</li>
+            <li>The browser and operating system you are using</li>
+            <li>
+              The country you are visiting from (based on an anonymized IP
+              address)
+            </li>
+            <li>Time of visit and session duration</li>
+          </ul>
+          <p>
+            Crucially, Umami does not collect any personally identifiable
+            information (PII). Your IP address is not stored, and no user profile
+            is created. All data is aggregated and anonymized.
+          </p>
+
+          <h3>3. How We Use Your Data</h3>
+          <p>
+            We use the information we collect for the following purposes:
+            <br />
+            <b>To Improve Our Website:</b> To analyze aggregated, anonymous
+            traffic data to understand what content is popular and how we can
+            improve our website&apos;s functionality and user experience.
+          </p>
+
+          <h3>4. Legal Basis for Processing (GDPR)</h3>
+          <p>
+            Our legal basis for collecting and using the information described
+            above depends on the specific context:
+            <br />
+            <b>Legitimate Interest:</b> For processing anonymous analytics data
+            with Umami, we rely on our legitimate interest to monitor and improve
+            our website. Because we use a privacy-preserving tool that does not
+            collect personal data or use cookies, we have determined that our
+            interest does not override your fundamental rights to privacy.
+          </p>
+
+          <h3>5. Cookies and Tracking Technologies</h3>
+          <p>
+            This website does not use cookies for analytics tracking. Our
+            analytics provider, Umami, is a cookie-less solution.
+          </p>
+
+          <h3>6. Data Sharing and Third Parties</h3>
+          <p>
+            We do not sell, trade, or rent your personal information to others.
+            <br />
+            Our Umami analytics instance is hosted by AWS, and the data is stored
+            in the UK. The data remains anonymous and is processed solely for our
+            analytics purposes.
+          </p>
+
+          <h3>7. Your Data Protection Rights Under GDPR</h3>
+          <p>
+            Under the UK GDPR and the Data Protection Act 2018, you have rights
+            over your personal data. These include:
+          </p>
+          <ul>
+            <li>
+              <b>Your right of access:</b> You have the right to ask us for copies
+              of your personal information.
+            </li>
+            <li>
+              <b>Your right to rectification:</b> You have the right to ask us to
+              rectify information you think is inaccurate or complete information
+              you think is incomplete.
+            </li>
+            <li>
+              <b>Your right to erasure:</b> You have the right to ask us to erase
+              your personal information in certain circumstances.
+            </li>
+            <li>
+              <b>Your right to restriction of processing:</b> You have the right
+              to ask us to restrict the processing of your information in certain
+              circumstances.
+            </li>
+            <li>
+              <b>Your right to object to processing:</b> You have the right to
+              object to the processing of your personal data in certain
+              circumstances.
+            </li>
+            <li>
+              <b>Your right to data portability:</b> You have the right to ask
+              that we transfer the information you gave us to another
+              organisation, or to you, in certain circumstances.
+            </li>
+          </ul>
+          <p>
+            You are not required to pay any charge for exercising your rights. If
+            you make a request, we have one month to respond to you. To exercise
+            any of these rights, please contact us at
+            Enquiries@bristoltreeforum.org.
+          </p>
+          <p>
+            You also have the right to lodge a complaint with the UK&apos;s
+            supervisory authority, the Information Commissioner&apos;s Office
+            (ICO). You can find their contact details at ico.org.uk.
+          </p>
+
+          <h3>8. Data Security</h3>
+          <p>
+            We take reasonable technical and organizational precautions to prevent
+            the loss, misuse, or alteration of your personal information.
+          </p>
+
+          <h3>9. Changes to This Privacy Policy</h3>
+          <p>
+            We may update this privacy policy from time to time. We will notify
+            you of any changes by posting the new policy on this page and
+            updating the &apos;Last Updated&apos; date at the top.
+          </p>
+
+          <h3>10. Contact Us</h3>
+          <p>
+            If you have any questions about this Privacy Policy, please contact us
+            at:
+            <br />
+            Enquiries@bristoltreeforum.org
+          </p>
+
         </div>
         </div>
       <Footer />
