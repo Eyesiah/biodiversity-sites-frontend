@@ -9,6 +9,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
+import layoutStyles from '@/styles/MapContentLayout.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
 import Tooltip from '@/components/Tooltip';
 
@@ -227,8 +228,7 @@ export default function AllAllocationsList({ allocations }) {
 
   return (
     <>      
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', margin: '1rem', flexWrap: 'wrap' }}>        
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem' }}>
           <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Allocation charts:</span>
           <ChartModalButton
             url="/charts/allocated-habitats"
@@ -300,7 +300,7 @@ export default function AllAllocationsList({ allocations }) {
           <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>          
         </div>
         
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }} className="sticky-search">
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }} className="sticky-search">
           <div className="search-container" style={{ margin: 0 }}>
             <input
               type="text"
@@ -368,7 +368,6 @@ export default function AllAllocationsList({ allocations }) {
             </tbody>
           </table>
         </div>
-      </div>
     </>
   );
 }
