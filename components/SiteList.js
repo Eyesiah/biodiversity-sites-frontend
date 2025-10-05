@@ -58,13 +58,16 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
     return <p>No site data available.</p>;
   }
 
+  const hasAllocPercentage = sites[0].allocatedHabitatArea != null;
+
   const table = <table className="site-table">
     <thead>
       <tr>
         <th onClick={() => requestSort('referenceNumber')}>BGS Reference{getSortIndicator('referenceNumber')}</th>
         <th onClick={() => requestSort('responsibleBodies')}>Responsible Body{getSortIndicator('responsibleBodies')}</th>
         <th onClick={() => requestSort('siteSize')}>Size (ha){getSortIndicator('siteSize')}</th>
-        <th onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</th>
+        {!hasAllocPercentage && <th onClick={() => requestSort('allocationsCount')}>{getSortIndicator('allocationsCount')}# Allocations</th>}
+        {hasAllocPercentage && <th onClick={() => requestSort('allocatedHabitatArea')}>{getSortIndicator('allocatedHabitatArea')}Allocated</th>}
         <th onClick={() => requestSort('lpaName')}>Local Planning Authority (LPA){getSortIndicator('lpaName')}</th>
         <th onClick={() => requestSort('ncaName')}>National Character Area (NCA){getSortIndicator('ncaName')}</th>
       </tr>
@@ -79,7 +82,8 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
           </td>
           <td>{site.responsibleBodies?.join(', ')}</td>
           <td className="numeric-data">{formatNumber(site.siteSize)}</td>
-          <td className="centered-data">{site.allocationsCount}</td>
+          {!hasAllocPercentage && <td className="centered-data">{site.allocationsCount}</td>}
+          {hasAllocPercentage && <td className="centered-data">{site.allocatedHabitatArea && site.allocatedHabitatArea > 0 ? `${formatNumber((site.allocatedHabitatArea / site.siteSize) * 100)}%` : ''}</td>}
           <td>{site.lpaName}</td>
           <td>{site.ncaName}</td>
         </tr>

@@ -101,7 +101,13 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
                     units={title === 'Areas' ? 'ha' : 'km'}
                     onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
                     isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
-                    sites={habitat.sites?.map(s => sites[s]) ?? null}
+                    sites={habitat.sites?.map(s => {
+                      return {
+                        ...sites[s.r],
+                        siteSize: s.ta,
+                        allocatedHabitatArea: s.aa || 0
+                      }
+                    }) ?? null}
                   />
               ))}
               </tbody>

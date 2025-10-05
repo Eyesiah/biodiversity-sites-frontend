@@ -32,6 +32,25 @@ export default async function HabitatSummaryPage() {
     watercourses: []
   }
 
+  const processHabitats = (habitats, site, isImprovement, target) => {
+    
+    habitats.forEach(h => {
+      if (isImprovement) {
+        h.site = {
+          r: site.referenceNumber,
+          ta: h.size,
+          aa: h.allocatedSize
+        }
+      } else {
+        h.site = {
+          r: site.referenceNumber,
+          ta: h.size
+        }
+      }
+    });
+    target.push(...habitats);
+  }
+
   let totalSize = 0
   allSites.forEach(site => {
 
@@ -39,30 +58,24 @@ export default async function HabitatSummaryPage() {
 
     if (site.habitats) {
       if (site.habitats.areas) {
-        site.habitats.areas.forEach(h => h.site = site.referenceNumber);
-        allHabitats.areas.push(...site.habitats.areas);
+        processHabitats(site.habitats.areas, site, false, allHabitats.areas);
       }
       if (site.habitats.hedgerows) {
-        site.habitats.hedgerows.forEach(h => h.site = site.referenceNumber);
-        allHabitats.hedgerows.push(...site.habitats.hedgerows);
+        processHabitats(site.habitats.hedgerows, site, false, allHabitats.hedgerows);
       }
       if (site.habitats.watercourses) {
-        site.habitats.watercourses.forEach(h => h.site = site.referenceNumber);
-        allHabitats.watercourses.push(...site.habitats.watercourses);
+        processHabitats(site.habitats.watercourses, site, false, allHabitats.watercourses);
       }
     }
     if (site.improvements) {
       if (site.improvements.areas) {
-        site.improvements.areas.forEach(h => h.site = site.referenceNumber);
-        allImprovements.areas.push(...site.improvements.areas);
+        processHabitats(site.improvements.areas, site, true, allImprovements.areas);
       }
       if (site.improvements.hedgerows) {
-        site.improvements.hedgerows.forEach(h => h.site = site.referenceNumber);
-        allImprovements.hedgerows.push(...site.improvements.hedgerows);
+        processHabitats(site.improvements.hedgerows, site, true, allImprovements.hedgerows);
       }
       if (site.improvements.watercourses) {
-        site.improvements.watercourses.forEach(h => h.site = site.referenceNumber);
-        allImprovements.watercourses.push(...site.improvements.watercourses);
+        processHabitats(site.improvements.watercourses, site, true, allImprovements.watercourses);
       }
     }
   });
