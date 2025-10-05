@@ -1,6 +1,6 @@
 // pages/api/api/send.js
 export default async function handler(req, res) {
-  const umamiCollectUrl = 'http://umami-env-2.eba-kzd2jeqh.eu-central-1.elasticbeanstalk.com/api/send';
+  const umamiCollectUrl = 'http://bgs-umami.eu-west-2.elasticbeanstalk.com/api/send';
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
