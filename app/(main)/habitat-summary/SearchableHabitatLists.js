@@ -97,7 +97,7 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
 
   useEffect(() => {
     if (currentHabitat) {
-      const sitesWithHabitat = currentHabitat.sites.map(s => sites[s]);
+      const sitesWithHabitat = currentHabitat.sites.map(s => sites[s.r]);
       setDisplayedSites(sitesWithHabitat);
     }
     else {

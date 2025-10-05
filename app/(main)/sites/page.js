@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Biodiversity Gain Sites',
-  description: 'All sites on the BGS register are shown here. Select the reference number for the full site details.'
+  description: 'All sites on the BGS register are shown here. Hover over any entry to highlight the site on the map. Select the reference number for the full site details.'
 };
 
 // Revalidate this page at most once every hour (3600 seconds)

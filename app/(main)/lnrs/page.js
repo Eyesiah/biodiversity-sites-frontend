@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Local Nature Recovery Strategy Sites',
-  description: 'View all the LNRS bodies and which sites are present in each one.'
+  description: 'View all the LNRS bodies and which sites are present in each one. Click on any record for a dropdown of adjacent LNRS sites.'
 };
 
 async function getLnrsData() {

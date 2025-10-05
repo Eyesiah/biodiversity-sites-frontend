@@ -85,7 +85,7 @@ const FeedbackModalButton = () => {
   return (
     <>
       <button
-        className={styles.dropdownItem}
+        className={`${styles.link} ${styles.dropbtn}`}
         onClick={() => setShowModal(true)}
       >
         Feedback
@@ -95,7 +95,7 @@ const FeedbackModalButton = () => {
         show={showModal} 
         onClose={() => setShowModal(false)} 
         title="Give Feedback"
-        style={modalStyles.modalContentLarge}
+        style={modalStyles.modalContent}
       >
         <iframe 
           src="/feedback"
