@@ -17,7 +17,6 @@ export default function Feedback() {
               
         </div>
       </div>
-    <Footer />
    </>
   );
 }
