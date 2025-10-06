@@ -6,6 +6,7 @@ import { formatNumber } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
 import ChartModalButton from '@/components/ChartModalButton';
+import { triggerDownload } from '@/lib/utils';
 
 const AnalysisTable = ({ title, data, unit }) => {
   
@@ -140,14 +141,7 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
 
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-habitat-analysis.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    triggerDownload(blob, 'bgs-habitat-analysis.csv');
   };
 
   return (

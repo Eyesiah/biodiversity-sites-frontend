@@ -7,6 +7,7 @@ import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
 import ChartModalButton from '@/components/ChartModalButton';
+import { triggerDownload } from '@/lib/utils';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -105,17 +106,9 @@ export default function SiteListPageContent({sites, summary}) {
   }, [sites, debouncedSearchTerm]);
 
   const handleExport = async () => {
-    const csvReq = await fetch ('api/query/sites/csv');
-    const csv = await csvReq.text();
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-sites.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const response = await fetch ('api/query/sites/csv');
+    const blob = await response.blob();
+    triggerDownload(blob, 'bgs-sites.csv');
   };
 
   return (

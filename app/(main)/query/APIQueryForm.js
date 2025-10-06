@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { triggerDownload } from '@/lib/utils';
 
 function SubmitButton({ pending }) {
   return (
@@ -27,19 +28,12 @@ export default function APIQueryForm({ }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/query/${query}/${format}`);
+      const response = await fetch(fullUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = downloadUrl;
-      a.download = `${query}.${format}`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(downloadUrl);
-      a.remove();
+      triggerDownload(blob, `${query}.${format}`);
     } catch (error) {
       console.error("Could not fetch or download the file:", error);
       // Handle error state in UI, maybe show a message
@@ -74,7 +68,7 @@ export default function APIQueryForm({ }) {
             <td><SubmitButton pending={isLoading} /></td>
           </tr>
           <tr>
-            <td><p>API URL: <Link href={`/api/query/${query}/${format}`} target="_blank"><code>{fullUrl}</code></Link></p></td>
+            <td><p>API URL: <Link href={fullUrl} target="_blank"><code>{fullUrl}</code></Link></p></td>
           </tr>
         </tbody>
       </table>

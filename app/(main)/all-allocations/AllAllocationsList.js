@@ -9,9 +9,9 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
-import layoutStyles from '@/styles/MapContentLayout.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
 import Tooltip from '@/components/Tooltip';
+import { triggerDownload } from '@/lib/utils';
 
 const AllocationHabitats = ({ habitats }) => {
 
@@ -83,27 +83,13 @@ export default function AllAllocationsList({ allocations }) {
     const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
     const xmlDataStr = builder.build({ allocations: { allocation: sortedAllocations } });
     const blob = new Blob([xmlDataStr], { type: 'application/xml' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-allocations.xml');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    triggerDownload(blob, 'bgs-allocations.xml');
   };
 
   const handleExportJSON = () => {
     const jsonDataStr = JSON.stringify({ allocations: sortedAllocations }, null, 2);
     const blob = new Blob([jsonDataStr], { type: 'application/json' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'bgs-allocations.json');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    triggerDownload(blob, 'bgs-allocations.json');
   };
   useEffect(() => {
     setIsSearching(true);
