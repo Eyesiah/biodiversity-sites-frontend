@@ -3,13 +3,15 @@ import OsGridRef from 'geodesy/osgridref.js';
 import { create } from 'xmlbuilder2';
 import { formatNumber } from '@/lib/format'
 import { NextResponse } from 'next/server';
+import Papa from 'papaparse';
 
 export const revalidate = 3600; // Re-generate page at most once per hour
 
 export function generateStaticParams() {
   return [
     { mode: 'sites', format: 'xml' },
-    { mode: 'sites', format: 'json' }
+    { mode: 'sites', format: 'json' },
+    { mode: 'sites', format: 'csv' },
   ]
 }
 
@@ -97,6 +99,16 @@ export async function GET(_, { params }) {
     });
   } else if (format === 'json') {
     return NextResponse.json(data);
+  } else if (format === 'csv') {   
+    const csv = Papa.unparse(data);
+    
+    return new NextResponse(csv, {
+      status: 200,
+      headers: { "Content-Type": "text/csv" },
+    });
+
+  } else {    
+    return new NextResponse(`Unknown format: ${format}`, { status: 400 });
   }
 }
 

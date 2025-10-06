@@ -7,6 +7,7 @@ import Tooltip from '@/components/Tooltip';
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
+import { triggerDownload } from '@/lib/utils';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -47,16 +48,6 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
 
   const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, filterHabitats]);
   const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, filterHabitats]);
-
-  const triggerDownload = (blob, filename) => {
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleExportXML = () => {
     const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });

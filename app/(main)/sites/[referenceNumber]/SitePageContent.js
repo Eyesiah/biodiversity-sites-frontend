@@ -7,6 +7,7 @@ import { SiteDetailsCard} from './SiteDetailsCard'
 import { AllocationsCard } from './AllocationsCard'
 import styles from '@/styles/SiteDetails.module.css';
 import dynamic from 'next/dynamic';
+import { triggerDownload } from '@/lib/utils';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -21,27 +22,15 @@ const handleExportXML = (site) => {
   });
   const xmlDataStr = builder.build({ site });
 
-  const blob = new Blob([xmlDataStr], { type: 'application/xml' });
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', `bgs-site-${site.referenceNumber}.xml`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const blob = new Blob([xmlDataStr], { type: 'application/xml' });  
+  triggerDownload(blob, `bgs-site-${site.referenceNumber}.xml`);
 };
 
 const handleExportJSON = (site) => {
   const jsonDataStr = JSON.stringify({ site }, null, 2);
 
   const blob = new Blob([jsonDataStr], { type: 'application/json' });
-  const link = document.createElement('a');
-  const url = URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', `bgs-site-${site.referenceNumber}.json`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  triggerDownload(blob, `bgs-site-${site.referenceNumber}.json`);
 };
 
 export default function SitePageContent({site}) {

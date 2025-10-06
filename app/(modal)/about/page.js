@@ -65,7 +65,7 @@ export default function About() {
           <p>Contains GeoPlace data © Local Government Information House Limited copyright and database right 2023</p>
 
           <h2>Exports</h2>
-          <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq">https://bristoltrees.space/wfs/wfs-server.xq</ExternalLink>.</p>
+          <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities">https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities</ExternalLink>.</p>
 
           <h2>Development</h2>
           <p>This is a <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink> project that displays Biodiversity Gain Sites data scraped from <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">https://environment.data.gov.uk/biodiversity-net-gain</ExternalLink>.</p>
