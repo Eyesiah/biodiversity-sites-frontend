@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react';
-import Papa from 'papaparse';
 import Link from 'next/link';
 import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
@@ -105,21 +104,9 @@ export default function SiteListPageContent({sites, summary}) {
     );
   }, [sites, debouncedSearchTerm]);
 
-  const handleExport = () => {
-    const csvData = filteredSites.map(site => ({
-      'BGS Reference': site.referenceNumber,
-      'Responsible Body': site.responsibleBodies.join(', '),
-      'Latitude': formatNumber(site.position[0], 4),
-      "Longitude": formatNumber(site.position[1], 4),
-      'Area (ha)': formatNumber(site.siteSize),
-      '# Allocations': site.allocationsCount,
-      'Local Planning Authority (LPA)': site.lpaName,
-      'National Character Area (NCA)': site.ncaName,
-      'Local Nature Recovery Strategy (LNRS)': site.lnrsName,
-      'IMD Decile': site.imdDecile,
-    }));
-
-    const csv = Papa.unparse(csvData);
+  const handleExport = async () => {
+    const csvReq = await fetch ('api/query/sites/csv');
+    const csv = await csvReq.text();
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
