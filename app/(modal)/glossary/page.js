@@ -12,6 +12,7 @@ export default function Glossary() {
         <div className="main prose">
               
             <h3>Allocation</h3><p>The planned habitat set aside by a BGS site to meet the offsite BNG requirements of a specific development.</p>
+            <h3>API</h3><p>An Application Programming Interface is a set of rules and protocols that allows different software systems to communicate and exchange data with each other in a standardized way, without users needing to know the intricate details of how each system is built.</p>
             <h3>Baseline habitat</h3><p>The pre-existing habitat of a site before that site is developed.</p>
             <h3>Biodiversity Gain Site (BGS)</h3><p>An area of land or habitat designated to create or enhance habitats for wildlife, leading to a measurable increase in biodiversity. Only sites listed on the <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">BGS Register</ExternalLink> are eligible for this designation.</p>
             <p><ExternalLink href="https://www.legislation.gov.uk/uksi/2024/45/contents/made">The Biodiversity Gain Site Register Regulations 2024</ExternalLink></p>
