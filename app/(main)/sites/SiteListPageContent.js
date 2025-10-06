@@ -109,6 +109,8 @@ export default function SiteListPageContent({sites, summary}) {
     const csvData = filteredSites.map(site => ({
       'BGS Reference': site.referenceNumber,
       'Responsible Body': site.responsibleBodies.join(', '),
+      'Latitude': formatNumber(site.position[0], 4),
+      "Longitude": formatNumber(site.position[1], 4),
       'Area (ha)': formatNumber(site.siteSize),
       '# Allocations': site.allocationsCount,
       'Local Planning Authority (LPA)': site.lpaName,
