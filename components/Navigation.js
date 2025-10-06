@@ -185,6 +185,7 @@ export default function Navigation() {
           <Dropdown category="Stats & More">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
+            <DropdownLink href='/query' label='API Query & Export' />
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
