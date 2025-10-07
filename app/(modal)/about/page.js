@@ -68,8 +68,9 @@ export default function About() {
           <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities">https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities</ExternalLink>.</p>
 
           <h2>Development</h2>
-          <p>This is a <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink> project that displays Biodiversity Gain Sites data scraped from <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">https://environment.data.gov.uk/biodiversity-net-gain</ExternalLink>.</p>
-          <p>View the source code at <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend">GitHub</ExternalLink></p>
+          <p>This is an open-source project designed and built by <ExternalLink href="hhttps://bristoltreeforum.org/">Bristo Tree Forum</ExternalLink> using <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink>.</p>
+          <p>It is based on data sourced from Natural England&apos;s <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">Biodiversity gain sites register</ExternalLink>.</p>
+          <p>You can view the source code at <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend">GitHub</ExternalLink>.</p>
     
           <h2 id="privacy-policy">Privacy Policy (last updated 5 Oct 2025)</h2>
           <h3>1. Data Controller</h3>
@@ -78,7 +79,7 @@ export default function About() {
             <br />
             Mark Ashdown, Acting Chair, Bristol Tree Forum
             <br />
-            Email: Enquiries@bristoltreeforum.org
+            Email: BGS_Enquiries@bristoltreeforum.org
           </p>
 
           <h3>2. Data we collect</h3>
@@ -183,7 +184,7 @@ export default function About() {
             You are not required to pay any charge for exercising your rights. If
             you make a request, we have one month to respond to you. To exercise
             any of these rights, please contact us at
-            Enquiries@bristoltreeforum.org.
+            BGS_Enquiries@bristoltreeforum.org.
           </p>
           <p>
             You also have the right to lodge a complaint with the UK&apos;s
@@ -209,7 +210,7 @@ export default function About() {
             If you have any questions about this Privacy Policy, please contact us
             at:
             <br />
-            Enquiries@bristoltreeforum.org
+            BGS_Enquiries@bristoltreeforum.org
           </p>
 
         </div>
