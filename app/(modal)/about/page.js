@@ -68,7 +68,7 @@ export default function About() {
           <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities">https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities</ExternalLink>.</p>
 
           <h2>Development</h2>
-          <p>This is an open-source project designed and built by <ExternalLink href="https://www.linkedin.com/in/isaac-ashdown/">Isaac Ashdown</ExternalLink>, with <ExternalLink href="https://www.linkedin.com/in/markcdashdown/">Mark CD Ashdown</ExternalLink> and <ExternalLink href="https://kitwallace.co.uk/">Chris Wallace</ExternalLink> using <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink>.</p>
+          <p>This is an open-source project designed and built by <ExternalLink href="hhttps://bristoltreeforum.org/">Bristo Tree Forum</ExternalLink> using <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink>.</p>
           <p>It is based on data sourced from Natural England&apos;s <ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">Biodiversity gain sites register</ExternalLink>.</p>
           <p>You can view the source code at <ExternalLink href="https://github.com/Eyesiah/biodiversity-sites-frontend">GitHub</ExternalLink>.</p>
     
