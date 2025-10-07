@@ -144,8 +144,8 @@ export default function Navigation() {
       <div className={styles.leftNav}>
         <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
           <Image
-            src="/BTF Logodefault.png"
-            alt="BFT Logo"
+            src="/BTF_Logodefault_white.png"
+            alt="Bristol Tree Forum Logo"
             width={45}
             height={45}
             className={styles.logo}
