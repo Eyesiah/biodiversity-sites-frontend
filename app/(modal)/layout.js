@@ -5,7 +5,7 @@ export const metadata = {
   title: 'BGS Register',
   description: 'Biodiversity Gain Sites Register',
   icons: {
-    apple: '/ToBlogo192.png',
+    apple: '/BTF Logodefault.png',
     icon: '/favicon.ico',
   },
   manifest: '/manifest.json',
