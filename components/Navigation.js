@@ -142,10 +142,10 @@ export default function Navigation() {
   return (
     <nav className={styles.nav}>
       <div className={styles.leftNav}>
-        <ExternalLink href="https://bristoltrees.space/Tree/" className={styles.imageLink}>
+        <ExternalLink href="https://bristoltreeforum.org/" className={styles.imageLink}>
           <Image
-            src="/TreesofBristolLogo_white.png"
-            alt="ToB Logo"
+            src="/BTF Logodefault.png"
+            alt="BFT Logo"
             width={45}
             height={45}
             className={styles.logo}
