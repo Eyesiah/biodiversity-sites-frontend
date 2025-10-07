@@ -79,7 +79,7 @@ export default function About() {
             <br />
             Mark Ashdown, Acting Chair, Bristol Tree Forum
             <br />
-            Email: Enquiries@bristoltreeforum.org
+            Email: BGS_Enquiries@bristoltreeforum.org
           </p>
 
           <h3>2. Data we collect</h3>
@@ -184,7 +184,7 @@ export default function About() {
             You are not required to pay any charge for exercising your rights. If
             you make a request, we have one month to respond to you. To exercise
             any of these rights, please contact us at
-            Enquiries@bristoltreeforum.org.
+            BGS_Enquiries@bristoltreeforum.org.
           </p>
           <p>
             You also have the right to lodge a complaint with the UK&apos;s
@@ -210,7 +210,7 @@ export default function About() {
             If you have any questions about this Privacy Policy, please contact us
             at:
             <br />
-            Enquiries@bristoltreeforum.org
+            BGS_Enquiries@bristoltreeforum.org
           </p>
 
         </div>
