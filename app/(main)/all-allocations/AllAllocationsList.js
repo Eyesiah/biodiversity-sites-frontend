@@ -55,7 +55,7 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
       <td>{alloc.nca}</td>
-      <td>{alloc.sr.factor}</td>
+      <td>{`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`}</td>
       <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
@@ -218,7 +218,7 @@ export default function AllAllocationsList({ allocations }) {
     const opts = ['Within', 'Neighbouring', 'Outside']
     const bins = [];
     for (const opt of opts) { 
-      bins.push({sr: opt, lpa: 0, nca: 0, either: 0});
+      bins.push({sr: opt, LPA: 0, NCA: 0});
     }
     
     let addVal = (type, val) => {
@@ -226,20 +226,11 @@ export default function AllAllocationsList({ allocations }) {
       if (bin) {
         bin[type]++;
       }
-
     };
 
     filteredAllocations.forEach(alloc => {
       if (alloc.sr) {
-        addVal('lpa', alloc.sr.lpa);
-        addVal('nca', alloc.sr.nca);
-        if (alloc.sr.lpa == 'Within' || alloc.sr.nca == 'Within') {
-          addVal('either', 'Within');
-        } else if (alloc.sr.lpa == 'Neighbouring' || alloc.sr.nca == 'Neighbouring') {
-          addVal('either', 'Neighbouring');
-        } else {
-          addVal('either', 'Outside');
-        }
+        addVal(alloc.sr.from || 'LPA', alloc.sr.cat);
       }
     });
 
@@ -320,18 +311,18 @@ export default function AllAllocationsList({ allocations }) {
               <thead>
                 <tr>
                   <th>Category</th>
-                  <th>Sites</th>
                   <th>LPA</th>
                   <th>NCA</th>
+                  <th>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {srDistributionData.map((habitat, index) => (
                   <tr key={index}>
                     <td>{habitat.sr}</td>
-                    <td>{habitat.either}</td>
-                    <td>{habitat.lpa}</td>
-                    <td>{habitat.nca}</td>
+                    <td>{habitat.sr != 'Outside' ? habitat.LPA : ''}</td>
+                    <td>{habitat.sr != 'Outside' ? habitat.NCA : ''}</td>
+                    <td>{habitat.LPA + habitat.NCA}</td>
                   </tr>
                 ))}
               </tbody>
@@ -378,7 +369,7 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
-                <th onClick={() => requestSort('sr.factor')} className={getSortClassName('sr.factor', sortConfig)}>
+                <th onClick={() => requestSort('sr.cat')} className={getSortClassName('sr.cat', sortConfig)}>
                   <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
                     Spatial Risk
                   </Tooltip>

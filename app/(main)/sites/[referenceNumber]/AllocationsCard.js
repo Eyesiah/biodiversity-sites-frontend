@@ -55,7 +55,7 @@ const AllocationRow = ({ alloc }) => {
       <td className={styles.numericData} style={{ textAlign: 'center' }}>
         {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
       </td>
-      <td>{alloc.sr.factor}</td>
+      <td>{`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`}</td>
       <td>{alloc.projectName}</td>
       <td className={styles.numericData}>{alloc.areaUnits && alloc.areaUnits > 0 ? formatNumber(alloc.areaUnits) : ''}</td>
       <td className={styles.numericData}>{alloc.hedgerowUnits && alloc.hedgerowUnits > 0 ? formatNumber(alloc.hedgerowUnits) : ''}</td>
@@ -94,7 +94,7 @@ export const AllocationsCard = ({allocations, title}) => {
                     <th onClick={() => requestSortAllocations('localPlanningAuthority')} className={getSortClassName('localPlanningAuthority', sortConfigAllocations)}>LPA</th>
                     <th onClick={() => requestSortAllocations('lsoa.IMDDecile')} className={getSortClassName('lsoa.IMDDecile', sortConfigAllocations)}>IMD Decile</th>
                     <th onClick={() => requestSortAllocations('distance')} className={getSortClassName('distance', sortConfigAllocations)} style={{ textAlign: 'center' }}>Distance (km)</th>
-                    <th onClick={() => requestSortAllocations('sr.factor')} className={getSortClassName('sr.factor', sortConfigAllocations)} style={{ textAlign: 'center' }}>Spatial Risk</th>
+                    <th onClick={() => requestSortAllocations('sr.cat')} className={getSortClassName('sr.cat', sortConfigAllocations)} style={{ textAlign: 'center' }}>Spatial Risk</th>
                     <th onClick={() => requestSortAllocations('projectName')} className={getSortClassName('projectName', sortConfigAllocations)}>Address</th>
                     <th onClick={() => requestSortAllocations('areaUnits')} className={getSortClassName('areaUnits', sortConfigAllocations)}>Area units</th>
                     <th onClick={() => requestSortAllocations('hedgerowUnits')} className={getSortClassName('hedgerowUnits', sortConfigAllocations)}>Hedgerow units</th>

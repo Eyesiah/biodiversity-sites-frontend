@@ -169,7 +169,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
                   <div><strong>{alloc.projectName || 'N/A'}</strong></div>
                   <div>Planning Ref: {alloc.planningReference}</div>
                   <div>LPA: {alloc.localPlanningAuthority}</div>
-                  <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km (${alloc.sr.factor})` : 'N/A'}</div>
+                  <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km (${`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`})` : 'N/A'}</div>
                 </Tooltip>
               </Polyline>
             );
