@@ -45,6 +45,20 @@ const AllocationHabitats = ({ habitats }) => {
   );
 };
 
+const parseSpatialRisk = (sr) => {
+  if (sr.lpa == 'Within') {
+    return 'Within LPA';
+  } else if (sr.nca == 'Within') {
+    return 'Within NCA';
+  } else if (sr.lpa == 'Neighbouring') {
+    return 'Neighbouring LPA';
+  } else if (sr.nca == 'Neighbouring') {
+    return 'Neighbouring NCA';
+  } else {
+    return 'Outside';
+  }
+};
+
 const AllocationRow = ({ alloc }) => {
   const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
   return (<DataFetchingCollapsibleRow
@@ -55,7 +69,7 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
       <td>{alloc.nca}</td>
-      <td>{alloc.sr}</td>
+      <td>{parseSpatialRisk(alloc.sr)}</td>
       <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
@@ -215,21 +229,30 @@ export default function AllAllocationsList({ allocations }) {
   }, [filteredAllocations]);
 
   const srDistributionData = useMemo(() => {
-    const opts = ['Within LPA', 'Within NCA', 'Neighbouring LPA', 'Neighbouring NCA', 'Outside']
+    const opts = ['Within', 'Neighbouring', 'Outside']
     const bins = [];
     for (const opt of opts) { 
-      bins.push({sr: opt, sites: 0});
+      bins.push({sr: opt, lpa: 0, nca: 0, either: 0});
     }
     
+    let addVal = (type, val) => {
+      let bin = bins.find(b => b.sr == val);
+      if (bin) {
+        bin[type]++;
+      }
+
+    };
+
     filteredAllocations.forEach(alloc => {
       if (alloc.sr) {
-        let bin = bins.find(b => b.sr == alloc.sr);
-        if (bin == null) {
-          bin = {sr: alloc.sr, sites: 0};
-          bins.push(bin);
-        }
-        if (bin) {
-          bin.sites++;
+        addVal('lpa', alloc.sr.lpa);
+        addVal('nca', alloc.sr.nca);
+        if (alloc.sr.lpa == 'Within' || alloc.sr.nca == 'Within') {
+          addVal('either', 'Within');
+        } else if (alloc.sr.lpa == 'Neighbouring' || alloc.sr.nca == 'Neighbouring') {
+          addVal('either', 'Neighbouring');
+        } else {
+          addVal('either', 'Outside');
         }
       }
     });
@@ -305,18 +328,28 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className={statsStyles.chartItem}>
+          <div>
             <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Factor</h4>
-            <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={srDistributionData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="sr" name="Spatial Risk" />
-                <YAxis name="Number of Sites" allowDecimals={false} />
-                <RechartsTooltip formatter={(value) => [`${value} (${(value / sortedAllocations.length * 100).toFixed(2)}%)`, 'Allocations']} />
-                <Legend />
-                <Bar dataKey="sites" fill="#e2742fff" name="Development Sites"/>
-              </BarChart>
-            </ResponsiveContainer>
+            <table className={styles.subTable}>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>LPA</th>
+                  <th>NCA</th>
+                  <th>Either</th>
+                </tr>
+              </thead>
+              <tbody>
+                {srDistributionData.map((habitat, index) => (
+                  <tr key={index}>
+                    <td>{habitat.sr}</td>
+                    <td>{habitat.lpa}</td>
+                    <td>{habitat.nca}</td>
+                    <td>{habitat.either}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
 
