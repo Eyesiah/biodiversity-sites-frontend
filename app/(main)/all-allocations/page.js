@@ -1,6 +1,7 @@
 import { fetchAllSites } from '@/lib/api';
 import AllAllocationsList from './AllAllocationsList';
 import Footer from '@/components/Footer';
+import { calcSpatialRiskCategory } from '@/lib/habitat'
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -17,16 +18,18 @@ export default async function AllocationsPage() {
   const allocationPromises = allSites.flatMap(site => {
     if (!site.allocations) return [];
     return site.allocations.map(async (alloc) => {
-      
+
       return {
         pr: alloc.planningReference,
         lpa: alloc.localPlanningAuthority,
+        nca: alloc.nca,
         pn: alloc.projectName,
         au: alloc.areaUnits,
         hu: alloc.hedgerowUnits,
         wu: alloc.watercoursesUnits,
         srn: site.referenceNumber,
         d: alloc.distance,
+        sr: calcSpatialRiskCategory(alloc, site),
         imd: alloc.lsoa?.IMDDecile || 'N/A',
         simd: site.lsoa?.IMDDecile || 'N/A'
       };

@@ -54,13 +54,15 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.pr}</td>
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
+      <td>{alloc.nca}</td>
+      <td>{alloc.sr}</td>
       <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
       </td>
-      <td className="numeric-data">{formatNumber(alloc.au || 0)}</td>
-      <td className="numeric-data">{formatNumber(alloc.hu || 0)}</td>
-      <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
+      <td className="numeric-data">{alloc.au && alloc.au > 0 ? formatNumber(alloc.au) : ''}</td>
+      <td className="numeric-data">{alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu) : ''}</td>
+      <td className="numeric-data">{alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu) : ''}</td>
     </>
     )}
     dataUrl={`/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}`}
@@ -113,6 +115,7 @@ export default function AllAllocationsList({ allocations }) {
       (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
       (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
       (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
+      (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
       (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm)
     );
   }, [allocations, debouncedSearchTerm]);
@@ -211,6 +214,20 @@ export default function AllAllocationsList({ allocations }) {
     return bins;
   }, [filteredAllocations]);
 
+  const srDistributionData = useMemo(() => {
+    const bins = [{sr: 'Within', sites: 0}, {sr: 'Neighbouring', sites: 0}, {sr: 'Outside', sites: 0}];
+    
+    filteredAllocations.forEach(alloc => {
+      if (alloc.sr) {
+        let bin = bins.find(b => b.sr == alloc.sr);
+        if (bin) {
+          bin.sites++;
+        }
+      }
+    });
+
+    return bins;
+  }, [filteredAllocations]);
 
   return (
     <>      
@@ -280,6 +297,19 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          <div className={statsStyles.chartItem}>
+            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk</h4>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={srDistributionData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="sr" name="Spatial Risk" />
+                <YAxis name="Number of Sites" allowDecimals={false} />
+                <RechartsTooltip formatter={(value) => [value, 'Allocations']} />
+                <Legend />
+                <Bar dataKey="sites" fill="#e2742fff" name="Development Sites"/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         <div className="summary" style={{ textAlign: 'center' }}>
@@ -291,7 +321,7 @@ export default function AllAllocationsList({ allocations }) {
             <input
               type="text"
               className="search-input"
-              placeholder="Search by BGS or Planning Ref, Address, or LPA."
+              placeholder="Search by BGS or Planning Ref, Address, LPA or NCA."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               autoFocus
@@ -320,6 +350,12 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning ref.</th>
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+                <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
+                <th onClick={() => requestSort('sr')} className={getSortClassName('sr', sortConfig)}>
+                  <Tooltip text="The Spatial Risk Category, as defined in the Statutory Biodiversity Metric User Guide">
+                    Spatial Risk
+                  </Tooltip>
+                </th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
                   <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
                     IMD transfer
@@ -337,7 +373,7 @@ export default function AllAllocationsList({ allocations }) {
             </thead>
             <tbody>
               <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-                <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+                <td colSpan="6" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
                 <td className="centered-data" style={{ border: '3px solid #ddd' }}>
                   {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
                 </td>
