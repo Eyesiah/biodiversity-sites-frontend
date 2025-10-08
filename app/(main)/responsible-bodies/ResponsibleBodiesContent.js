@@ -93,8 +93,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       triggerDownload(blob, 'responsible-bodies.csv');
     };
-  
-  
+    
     return (
         <MapContentLayout
           map={
@@ -153,9 +152,6 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                     </table>
                 )}
               </SearchableTableLayout>
-              <p style={{ fontStyle: 'italic', fontSize: '1.2rem' }}>
-                Not all the Responsible Bodies listed here are included in the BGS Site List page or share the same name.
-              </p>
             </>
           }
         />

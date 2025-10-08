@@ -7,6 +7,8 @@ import { processSiteForListView } from '@/lib/sites';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import Footer from '@/components/Footer';
 
+export const revalidate = 3600;
+
 export const metadata = {
   title: 'Responsible Bodies',
   description: 'View all the Responsible Bodies in the Register and which sites are managed by each. Note some sites have LPAs as Reponsible Bodies but are not in this list.'
@@ -40,6 +42,19 @@ async function getResponsibleBodiesData() {
             site.responsibleBodies.forEach(body => {          
               const bodyName = slugify(normalizeBodyName(body))
               let bodyItem = bodyItems.find(body => slugify(normalizeBodyName(body.name)) == bodyName)
+              if (bodyItem == null) {
+                bodyItem = {      
+                  name: body,
+                  designationDate: '',
+                  expertise: '',
+                  organisationType: 'From Register (not a RB)',
+                  address: '',
+                  emails: [],
+                  telephone: '',
+                  sites: []
+                }
+                bodyItems.push(bodyItem);
+              }
               if (bodyItem)
               {
                 bodyItem.sites.push(processSiteForListView(site))
