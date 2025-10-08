@@ -215,11 +215,19 @@ export default function AllAllocationsList({ allocations }) {
   }, [filteredAllocations]);
 
   const srDistributionData = useMemo(() => {
-    const bins = [{sr: 'Within', sites: 0}, {sr: 'Neighbouring', sites: 0}, {sr: 'Outside', sites: 0}];
+    const opts = ['Within LPA', 'Within NCA', 'Neighbouring LPA', 'Neighbouring NCA', 'Outside']
+    const bins = [];
+    for (const opt of opts) { 
+      bins.push({sr: opt, sites: 0});
+    }
     
     filteredAllocations.forEach(alloc => {
       if (alloc.sr) {
         let bin = bins.find(b => b.sr == alloc.sr);
+        if (bin == null) {
+          bin = {sr: alloc.sr, sites: 0};
+          bins.push(bin);
+        }
         if (bin) {
           bin.sites++;
         }
@@ -304,7 +312,7 @@ export default function AllAllocationsList({ allocations }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="sr" name="Spatial Risk" />
                 <YAxis name="Number of Sites" allowDecimals={false} />
-                <RechartsTooltip formatter={(value) => [value, 'Allocations']} />
+                <RechartsTooltip formatter={(value) => [`${value} (${(value / sortedAllocations.length * 100).toFixed(2)}%)`, 'Allocations']} />
                 <Legend />
                 <Bar dataKey="sites" fill="#e2742fff" name="Development Sites"/>
               </BarChart>
