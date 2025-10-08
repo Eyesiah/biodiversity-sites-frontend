@@ -1,7 +1,6 @@
 import { fetchAllSites } from '@/lib/api';
 import AllAllocationsList from './AllAllocationsList';
 import Footer from '@/components/Footer';
-import { calcSpatialRiskCategory } from '@/lib/habitat'
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -29,7 +28,7 @@ export default async function AllocationsPage() {
         wu: alloc.watercoursesUnits,
         srn: site.referenceNumber,
         d: alloc.distance,
-        sr: calcSpatialRiskCategory(alloc, site),
+        sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
         simd: site.lsoa?.IMDDecile || 'N/A'
       };

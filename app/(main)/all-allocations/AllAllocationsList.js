@@ -45,20 +45,6 @@ const AllocationHabitats = ({ habitats }) => {
   );
 };
 
-const parseSpatialRisk = (sr) => {
-  if (sr.lpa == 'Within') {
-    return 'Within LPA';
-  } else if (sr.nca == 'Within') {
-    return 'Within NCA';
-  } else if (sr.lpa == 'Neighbouring') {
-    return 'Neighbouring LPA';
-  } else if (sr.nca == 'Neighbouring') {
-    return 'Neighbouring NCA';
-  } else {
-    return 'Outside';
-  }
-};
-
 const AllocationRow = ({ alloc }) => {
   const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
   return (<DataFetchingCollapsibleRow
@@ -69,7 +55,7 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
       <td>{alloc.nca}</td>
-      <td>{parseSpatialRisk(alloc.sr)}</td>
+      <td>{alloc.sr.factor}</td>
       <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
@@ -329,23 +315,23 @@ export default function AllAllocationsList({ allocations }) {
             </ResponsiveContainer>
           </div>
           <div>
-            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Factor</h4>
+            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Category</h4>
             <table className={styles.subTable}>
               <thead>
                 <tr>
                   <th>Category</th>
+                  <th>Sites</th>
                   <th>LPA</th>
                   <th>NCA</th>
-                  <th>Either</th>
                 </tr>
               </thead>
               <tbody>
                 {srDistributionData.map((habitat, index) => (
                   <tr key={index}>
                     <td>{habitat.sr}</td>
+                    <td>{habitat.either}</td>
                     <td>{habitat.lpa}</td>
                     <td>{habitat.nca}</td>
-                    <td>{habitat.either}</td>
                   </tr>
                 ))}
               </tbody>
@@ -392,9 +378,9 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
-                <th onClick={() => requestSort('sr')} className={getSortClassName('sr', sortConfig)}>
-                  <Tooltip text="The Spatial Risk Multiplier Factor - where the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
-                    SRM
+                <th onClick={() => requestSort('sr.factor')} className={getSortClassName('sr.factor', sortConfig)}>
+                  <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
+                    Spatial Risk
                   </Tooltip>
                 </th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
