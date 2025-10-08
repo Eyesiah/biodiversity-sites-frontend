@@ -306,7 +306,7 @@ export default function AllAllocationsList({ allocations }) {
             </ResponsiveContainer>
           </div>
           <div className={statsStyles.chartItem}>
-            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk</h4>
+            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Factor</h4>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={srDistributionData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -360,7 +360,7 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
                 <th onClick={() => requestSort('sr')} className={getSortClassName('sr', sortConfig)}>
-                  <Tooltip text="The Spatial Risk Multiplier Category - where the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
+                  <Tooltip text="The Spatial Risk Multiplier Factor - where the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
                     SRM
                   </Tooltip>
                 </th>
