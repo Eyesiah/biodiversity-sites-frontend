@@ -352,8 +352,8 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
                 <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
                 <th onClick={() => requestSort('sr')} className={getSortClassName('sr', sortConfig)}>
-                  <Tooltip text="The Spatial Risk Category, as defined in the Statutory Biodiversity Metric User Guide">
-                    Spatial Risk
+                  <Tooltip text="The Spatial Risk Multiplier Category - where the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
+                    SRM
                   </Tooltip>
                 </th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
