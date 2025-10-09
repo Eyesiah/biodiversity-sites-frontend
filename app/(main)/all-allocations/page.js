@@ -17,16 +17,18 @@ export default async function AllocationsPage() {
   const allocationPromises = allSites.flatMap(site => {
     if (!site.allocations) return [];
     return site.allocations.map(async (alloc) => {
-      
+
       return {
         pr: alloc.planningReference,
         lpa: alloc.localPlanningAuthority,
+        nca: alloc.nca,
         pn: alloc.projectName,
         au: alloc.areaUnits,
         hu: alloc.hedgerowUnits,
         wu: alloc.watercoursesUnits,
         srn: site.referenceNumber,
         d: alloc.distance,
+        sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
         simd: site.lsoa?.IMDDecile || 'N/A'
       };

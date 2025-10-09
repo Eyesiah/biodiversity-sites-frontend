@@ -28,6 +28,7 @@ export default function Glossary() {
             <h3>Parcel</h3><p>A discrete habitat within a larger site containing a single, consistent type of habitat in a particular condition.</p>
             <h3>Responsible Body</h3><p>An organisation designated by Defra to hold and administer conservation covenants for BNG projects, monitoring and enforcing habitat improvement plans to ensure long-term conservation. See <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenants-apply-to-become-a-responsible-body/conservation-covenants-criteria-for-being-a-responsible-body">Conservation covenants: criteria for being a responsible body guidance</ExternalLink>.</p>
             <h3>Size</h3><p>The size of area habitats is measured in hectares (ha). Linear habitats - hedgerows and watercourses - are measured in kilometres (km).</p>
+            <h3>SRM</h3><p>A spatial risk multiplier (SRM) is a factor used Biodiversity Net Gain (BNG) to reduce the measured ecological value of off-site habitat compensation based on its distance from the development site.</p>
          
         </div>
         </div>

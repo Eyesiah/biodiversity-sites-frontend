@@ -1,8 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import { fetchAllSites } from '@/lib/api';
 import Footer from '@/components/Footer';
 import LPAContent from './LPAContent'
+import { getLPAData } from '@/lib/habitat';
 
 export const metadata = {
   title: 'Local Planning Authorities',
@@ -13,9 +12,6 @@ export const metadata = {
 export const revalidate = 3600;
 
 export default async function LocalPlanningAuthoritiesPage() {
-  const jsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
-  const jsonData = fs.readFileSync(jsonPath, 'utf-8');
-  const rawLpas = JSON.parse(jsonData);
 
   const allSites = await fetchAllSites(true);
   const allocationCounts = {};
@@ -34,18 +30,11 @@ export default async function LocalPlanningAuthoritiesPage() {
       }
   });
 
-  const lpas = rawLpas
-      // Only include English LPAs
-      .filter((lpa) => lpa.id && lpa.id.startsWith('E'))
-      .map((lpa) => ({
-          id: lpa.id,
-          name: lpa.name,
-          adjacents: lpa.adjacents || [],
-          size: lpa.size / 10000,
-          adjacentsCount: lpa.adjacents ? lpa.adjacents.length : 0,
-          siteCount: siteCounts[lpa.name] || 0,
-          allocationsCount: allocationCounts[lpa.name] || 0,
-  })).sort((a, b) => a.name.localeCompare(b.name));
+  let lpas = Array.from(getLPAData().values());
+  lpas.forEach(lpa => {
+    lpa.siteCount = siteCounts[lpa.name] || 0;
+    lpa.allocationsCount = allocationCounts[lpa.name] || 0;
+  });
 
   const sites = allSites.map(s => ({
     referenceNumber: s.referenceNumber,

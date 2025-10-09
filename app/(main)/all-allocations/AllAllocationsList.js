@@ -6,7 +6,7 @@ import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList, Cell } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
@@ -54,13 +54,15 @@ const AllocationRow = ({ alloc }) => {
       <td>{alloc.pr}</td>
       <td>{alloc.pn}</td>
       <td>{alloc.lpa}</td>
+      <td>{alloc.nca}</td>
+      <td>{`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`}</td>
       <td className="centered-data">{imdTransfer}</td>
       <td className="centered-data">
         {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
       </td>
-      <td className="numeric-data">{formatNumber(alloc.au || 0)}</td>
-      <td className="numeric-data">{formatNumber(alloc.hu || 0)}</td>
-      <td className="numeric-data">{formatNumber(alloc.wu || 0)}</td>
+      <td className="numeric-data">{alloc.au && alloc.au > 0 ? formatNumber(alloc.au) : ''}</td>
+      <td className="numeric-data">{alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu) : ''}</td>
+      <td className="numeric-data">{alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu) : ''}</td>
     </>
     )}
     dataUrl={`/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}`}
@@ -109,12 +111,17 @@ export default function AllAllocationsList({ allocations }) {
       return allocations;
     }
     const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-    return allocations.filter(alloc =>
-      (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm)
-    );
+    return allocations.filter(alloc => {
+      const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
+      return (
+        (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm) ||
+        spatialRiskString.includes(lowercasedTerm)
+      );
+    });
   }, [allocations, debouncedSearchTerm]);
 
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
@@ -211,6 +218,37 @@ export default function AllAllocationsList({ allocations }) {
     return bins;
   }, [filteredAllocations]);
 
+  const srDistributionData = useMemo(() => {
+    const totalAllocations = filteredAllocations.length > 0 ? filteredAllocations.length : 1;
+
+    const bins = {
+      'Within': { category: 'Within', lpa: 0, nca: 0, outside: 0 },
+      'Neighbouring': { category: 'Neighbouring', lpa: 0, nca: 0, outside: 0 },
+      'Outside': { category: 'Outside', lpa: 0, nca: 0, outside: 0 },
+    };
+
+    filteredAllocations.forEach(alloc => {
+      if (alloc.sr?.cat) {
+        const category = alloc.sr.cat;
+        if (bins[category]) {
+          if (category === 'Outside') {
+            bins[category].outside++;
+          } else {
+            const from = alloc.sr.from || 'LPA';
+            if (from === 'LPA') bins[category].lpa++;
+            if (from === 'NCA') bins[category].nca++;
+          }
+        }
+      }
+    });
+
+    return Object.values(bins).map(bin => ({
+      ...bin,
+      lpaPercentage: (bin.lpa / totalAllocations) * 100,
+      ncaPercentage: (bin.nca / totalAllocations) * 100,
+      outsidePercentage: (bin.outside / totalAllocations) * 100,
+    }));
+  }, [filteredAllocations]);
 
   return (
     <>      
@@ -256,7 +294,7 @@ export default function AllAllocationsList({ allocations }) {
           <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={habitatUnitDistributionData}>
+              <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" name="HUs" />
                 <YAxis name="Count" />
@@ -269,7 +307,7 @@ export default function AllAllocationsList({ allocations }) {
           <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={imdDistributionData}>
+              <BarChart data={imdDistributionData} barCategoryGap="10%">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="decile" name="IMD Decile" />
                 <YAxis name="Number of Sites" allowDecimals={false} />
@@ -279,6 +317,62 @@ export default function AllAllocationsList({ allocations }) {
                 <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites"/>
               </BarChart>
             </ResponsiveContainer>
+          </div>
+          <div className={statsStyles.chartItem}>
+            <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Category</h4>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={srDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="category" tick={{ textAnchor: 'middle' }} />
+                <YAxis allowDecimals={false} />
+                <RechartsTooltip content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="recharts-default-tooltip" style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px' }}>
+                        <p className="recharts-tooltip-label" style={{ margin: 0, fontWeight: 'bold' }}>{label}</p>
+                        <ul className="recharts-tooltip-item-list" style={{ padding: 0, margin: 0, listStyle: 'none' }}>
+                          {payload.filter(p => p.value > 0).map((p, index) => {
+                            let percentage = 0;
+                            if (p.name === 'LPA') percentage = p.payload.lpaPercentage;
+                            if (p.name === 'NCA') percentage = p.payload.ncaPercentage;
+                            if (p.name === 'Outside') percentage = p.payload.outsidePercentage;
+                            return (
+                              <li key={index} className="recharts-tooltip-item" style={{ color: p.color }}>
+                                {`${p.name}: ${p.value} (${formatNumber(percentage, 1)}%)`}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
+                <Bar dataKey="lpa" fill="#e2742fff" name="LPA">
+                  <LabelList dataKey="lpa" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+                <Bar dataKey="nca" fill="#6ac98fff" name="NCA">
+                  <LabelList dataKey="nca" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+                <Bar dataKey="outside" fill="#8884d8" name="Outside">
+                  <LabelList dataKey="outside" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#e2742fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>LPA</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#6ac98fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>NCA</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#8884d8', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>Outside</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -291,7 +385,8 @@ export default function AllAllocationsList({ allocations }) {
             <input
               type="text"
               className="search-input"
-              placeholder="Search by BGS or Planning Ref, Address, or LPA."
+              placeholder="Search by BGS/Planning/Address/LPA/NCA/Spatial Risk."
+              style={{ width: '480px' }}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               autoFocus
@@ -320,6 +415,12 @@ export default function AllAllocationsList({ allocations }) {
                 <th onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning ref.</th>
                 <th onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</th>
                 <th onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</th>
+                <th onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</th>
+                <th onClick={() => requestSort('sr.cat')} className={getSortClassName('sr.cat', sortConfig)}>
+                  <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
+                    Spatial Risk
+                  </Tooltip>
+                </th>
                 <th onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
                   <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
                     IMD transfer
@@ -337,7 +438,7 @@ export default function AllAllocationsList({ allocations }) {
             </thead>
             <tbody>
               <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-                <td colSpan="4" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
+                <td colSpan="6" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</td>
                 <td className="centered-data" style={{ border: '3px solid #ddd' }}>
                   {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
                 </td>
