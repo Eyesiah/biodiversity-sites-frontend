@@ -93,6 +93,9 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       triggerDownload(blob, 'responsible-bodies.csv');
     };
+
+    const unknownRB = responsibleBodies.find(rb => rb.name == 'Unknown');
+    const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
     
     return (
         <MapContentLayout
@@ -111,13 +114,14 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                 initialSortConfig={{ key: 'sites.length', direction: 'descending' }}
                 placeholder="Search by name, expertise, type, or address."
                 exportConfig={{ onExportCsv: handleExport }}
-                summary={(filteredCount, totalCount, inputValue) => (
+                summary={(filteredCount, totalCount) => (
                     <div className="summary" style={{ textAlign: 'center' }}>           
-                        {inputValue ? (
+                        {filteredCount != totalCount ? (
                         <p>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</p>
                         ) : (
                         <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
-                            These <strong>{formatNumber(totalCount, 0)}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
+                          These <strong>{numDesignated}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
+                          {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
                         </p>
                     )}
                     </div>

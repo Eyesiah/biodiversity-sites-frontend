@@ -43,19 +43,23 @@ async function getResponsibleBodiesData() {
               const bodyName = slugify(normalizeBodyName(body))
               let bodyItem = bodyItems.find(body => slugify(normalizeBodyName(body.name)) == bodyName)
               if (bodyItem == null) {
-                bodyItem = {      
-                  name: body,
-                  designationDate: '',
-                  expertise: '',
-                  organisationType: 'From Register (not a RB)',
-                  address: '',
-                  emails: [],
-                  telephone: '',
-                  sites: []
+                // when RB is not found, add it to the entry for "unknown"
+                bodyItem = bodyItems.find(body => body.name == 'Unknown');
+                if (bodyItem == null) {
+                  bodyItem = {      
+                    name: 'Unknown',
+                    designationDate: '',
+                    expertise: '',
+                    organisationType: '',
+                    address: '',
+                    emails: [],
+                    telephone: '',
+                    sites: []
+                  }
+                  bodyItems.push(bodyItem);
                 }
-                bodyItems.push(bodyItem);
               }
-              if (bodyItem)
+              if (bodyItem && !bodyItem.sites.find(s => s.referenceNumber == site.referenceNumber))
               {
                 bodyItem.sites.push(processSiteForListView(site))
               }
