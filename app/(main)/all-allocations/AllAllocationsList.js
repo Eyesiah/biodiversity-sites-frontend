@@ -111,13 +111,17 @@ export default function AllAllocationsList({ allocations }) {
       return allocations;
     }
     const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-    return allocations.filter(alloc =>
-      (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm)
-    );
+    return allocations.filter(alloc => {
+      const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
+      return (
+        (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
+        (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm) ||
+        spatialRiskString.includes(lowercasedTerm)
+      );
+    });
   }, [allocations, debouncedSearchTerm]);
 
   const { items: sortedAllocations, requestSort, sortConfig } = useSortableData(filteredAllocations, { key: 'siteReferenceNumber', direction: 'ascending' });
@@ -381,7 +385,8 @@ export default function AllAllocationsList({ allocations }) {
             <input
               type="text"
               className="search-input"
-              placeholder="Search by BGS or Planning Ref, Address, LPA or NCA."
+              placeholder="Search by BGS/Planning/Address/LPA/NCA/Spatial Risk."
+              style={{ width: '480px' }}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               autoFocus
