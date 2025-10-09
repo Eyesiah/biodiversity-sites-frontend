@@ -44,13 +44,13 @@ async function getResponsibleBodiesData() {
               let bodyItem = bodyItems.find(body => slugify(normalizeBodyName(body.name)) == bodyName)
               if (bodyItem == null) {
                 // when RB is not found, add it to the entry for "unknown"
-                bodyItem = bodyItems.find(body => body.name == 'Unknown');
+                bodyItem = bodyItems.find(body => body.name == '<Unknown>');
                 if (bodyItem == null) {
                   bodyItem = {      
-                    name: 'Unknown',
+                    name: '<Unknown>',
                     designationDate: '',
                     expertise: '',
-                    organisationType: '',
+                    organisationType: '<Only LPAs listed for site>',
                     address: '',
                     emails: [],
                     telephone: '',

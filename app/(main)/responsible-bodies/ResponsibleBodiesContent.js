@@ -94,7 +94,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
       triggerDownload(blob, 'responsible-bodies.csv');
     };
 
-    const unknownRB = responsibleBodies.find(rb => rb.name == 'Unknown');
+    const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
     const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
     
     return (
