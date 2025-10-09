@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Text, LabelList } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
 import { formatNumber } from '@/lib/format';
+import { AutoResizeYAxisLabel } from './AutoResizeYAxisLabel';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c', '#8dd1e1'];
 
@@ -44,17 +45,6 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   );
 };
 
-const CustomizedYAxisTick = (props) => {
-  const { x, y, payload } = props;
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <Text x={0} y={0} dy={0} width={200} textAnchor="end" verticalAnchor="middle" fill="#594c4cff" fontSize="0.9rem">
-        {payload.value}
-      </Text>
-    </g>
-  );
-};
-
 const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
   if (!data || data.length === 0) return null;
   return (
@@ -62,8 +52,7 @@ const OtherImprovementsBarChart = ({ data, color = '#8884d8' }) => {
       <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}> Improvement habitats less than 1%</h4>
       <ResponsiveContainer>
         <BarChart layout="vertical" data={data} margin={{ top: 5, right: 60, left: 120, bottom: 20 }}>
-          <XAxis type="number" hide />
-          <YAxis type="category" dataKey="name" width={200} tick={<CustomizedYAxisTick />} interval={0} />
+          <XAxis type="number" hide />          <YAxis type="category" dataKey="name" width={200} tick={<AutoResizeYAxisLabel width={200} />} interval={0} />
           <Tooltip
             formatter={(value, name, props) => {
               const unit = props.payload.module === 'area' ? 'ha' : 'km';

@@ -1,16 +1,6 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, Text, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
 import { formatNumber } from '@/lib/format';
-
-const CustomizedYAxisTick = (props) => {
-  const { x, y, payload } = props;
-  return (
-    <g transform={`translate(${x},${y})`}>
-      <Text x={0} y={0} dy={0} width={200} textAnchor="end" verticalAnchor="middle" fill="#594c4cff" fontSize="0.9rem">
-        {payload.value}
-      </Text>
-    </g>
-  );
-};
+import { AutoResizeYAxisLabel } from './AutoResizeYAxisLabel';
 
 export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
   if (!data || data.length === 0) {
@@ -30,7 +20,7 @@ export const OtherAllocationsBarChart = ({ data, color = '#8884d8' }) => {
           margin={{ top: 5, right: 60, left: 100, bottom: 20 }}
         >
           <XAxis type="number" hide />
-          <YAxis type="category" dataKey="name" width={200} tick={<CustomizedYAxisTick />} interval={0} />
+          <YAxis type="category" dataKey="name" width={200} tick={<AutoResizeYAxisLabel width={200} />} interval={0} />
           <Tooltip 
             formatter={(value, name, props) => {
               const unit = props.payload.module === 'area' ? 'ha' : 'km';
