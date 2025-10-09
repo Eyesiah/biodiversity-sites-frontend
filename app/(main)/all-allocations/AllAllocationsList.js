@@ -6,7 +6,7 @@ import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import { XMLBuilder } from 'fast-xml-parser';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList, Cell } from 'recharts';
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
@@ -215,26 +215,35 @@ export default function AllAllocationsList({ allocations }) {
   }, [filteredAllocations]);
 
   const srDistributionData = useMemo(() => {
-    const opts = ['Within', 'Neighbouring', 'Outside']
-    const bins = [];
-    for (const opt of opts) { 
-      bins.push({sr: opt, LPA: 0, NCA: 0});
-    }
-    
-    let addVal = (type, val) => {
-      let bin = bins.find(b => b.sr == val);
-      if (bin) {
-        bin[type]++;
-      }
+    const totalAllocations = filteredAllocations.length > 0 ? filteredAllocations.length : 1;
+
+    const bins = {
+      'Within': { category: 'Within', lpa: 0, nca: 0, outside: 0 },
+      'Neighbouring': { category: 'Neighbouring', lpa: 0, nca: 0, outside: 0 },
+      'Outside': { category: 'Outside', lpa: 0, nca: 0, outside: 0 },
     };
 
     filteredAllocations.forEach(alloc => {
-      if (alloc.sr) {
-        addVal(alloc.sr.from || 'LPA', alloc.sr.cat);
+      if (alloc.sr?.cat) {
+        const category = alloc.sr.cat;
+        if (bins[category]) {
+          if (category === 'Outside') {
+            bins[category].outside++;
+          } else {
+            const from = alloc.sr.from || 'LPA';
+            if (from === 'LPA') bins[category].lpa++;
+            if (from === 'NCA') bins[category].nca++;
+          }
+        }
       }
     });
 
-    return bins;
+    return Object.values(bins).map(bin => ({
+      ...bin,
+      lpaPercentage: (bin.lpa / totalAllocations) * 100,
+      ncaPercentage: (bin.nca / totalAllocations) * 100,
+      outsidePercentage: (bin.outside / totalAllocations) * 100,
+    }));
   }, [filteredAllocations]);
 
   return (
@@ -281,7 +290,7 @@ export default function AllAllocationsList({ allocations }) {
           <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={habitatUnitDistributionData}>
+              <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" name="HUs" />
                 <YAxis name="Count" />
@@ -294,7 +303,7 @@ export default function AllAllocationsList({ allocations }) {
           <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
             <ResponsiveContainer width="100%" height={200}>
-              <BarChart data={imdDistributionData}>
+              <BarChart data={imdDistributionData} barCategoryGap="10%">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="decile" name="IMD Decile" />
                 <YAxis name="Number of Sites" allowDecimals={false} />
@@ -305,28 +314,61 @@ export default function AllAllocationsList({ allocations }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div>
+          <div className={statsStyles.chartItem}>
             <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Category</h4>
-            <table className={styles.subTable}>
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>LPA</th>
-                  <th>NCA</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {srDistributionData.map((habitat, index) => (
-                  <tr key={index}>
-                    <td>{habitat.sr}</td>
-                    <td>{habitat.sr != 'Outside' ? habitat.LPA : ''}</td>
-                    <td>{habitat.sr != 'Outside' ? habitat.NCA : ''}</td>
-                    <td>{habitat.LPA + habitat.NCA}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={srDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="category" tick={{ textAnchor: 'middle' }} />
+                <YAxis allowDecimals={false} />
+                <RechartsTooltip content={({ active, payload, label }) => {
+                  if (active && payload && payload.length) {
+                    return (
+                      <div className="recharts-default-tooltip" style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px' }}>
+                        <p className="recharts-tooltip-label" style={{ margin: 0, fontWeight: 'bold' }}>{label}</p>
+                        <ul className="recharts-tooltip-item-list" style={{ padding: 0, margin: 0, listStyle: 'none' }}>
+                          {payload.filter(p => p.value > 0).map((p, index) => {
+                            let percentage = 0;
+                            if (p.name === 'LPA') percentage = p.payload.lpaPercentage;
+                            if (p.name === 'NCA') percentage = p.payload.ncaPercentage;
+                            if (p.name === 'Outside') percentage = p.payload.outsidePercentage;
+                            return (
+                              <li key={index} className="recharts-tooltip-item" style={{ color: p.color }}>
+                                {`${p.name}: ${p.value} (${formatNumber(percentage, 1)}%)`}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  }
+                  return null;
+                }} />
+                <Bar dataKey="lpa" fill="#e2742fff" name="LPA">
+                  <LabelList dataKey="lpa" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+                <Bar dataKey="nca" fill="#6ac98fff" name="NCA">
+                  <LabelList dataKey="nca" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+                <Bar dataKey="outside" fill="#8884d8" name="Outside">
+                  <LabelList dataKey="outside" position="top" formatter={(v) => v > 0 ? v : ''} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#e2742fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>LPA</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#6ac98fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>NCA</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ height: '12px', width: '12px', backgroundColor: '#8884d8', marginRight: '5px', border: '1px solid #ccc' }}></span>
+                <span>Outside</span>
+              </div>
+            </div>
           </div>
         </div>
 
