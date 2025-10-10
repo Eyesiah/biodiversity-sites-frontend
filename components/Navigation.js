@@ -107,6 +107,34 @@ const FeedbackModalButton = () => {
   );
 };
 
+const CopyWfsLinkButton = () => {
+  const [buttonText, setButtonText] = useState('WFS Link');
+  const wfsUrl = 'https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities.';
+
+  const handleCopy = () => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(wfsUrl).then(() => {
+        setButtonText('Link copied!');
+        setTimeout(() => {
+          setButtonText('Copy WFS Link');
+        }, 2000); // Revert back after 2 seconds
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        // You could add user-facing error feedback here if desired
+      });
+    }
+  };
+
+  return (
+    <button
+      className={styles.dropdownItem}
+      onClick={handleCopy}
+    >
+      {buttonText}
+    </button>
+  );
+};
+
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [pageTitle, setPageTitle] = useState('');
@@ -186,6 +214,7 @@ export default function Navigation() {
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <DropdownLink href='/query' label='API Query & Export' />
+            <CopyWfsLinkButton />
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
