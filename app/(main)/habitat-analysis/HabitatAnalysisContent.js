@@ -86,8 +86,7 @@ const AnalysisTable = ({ title, data, unit }) => {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
-
+export default function HabitatAnalysisContent({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
   
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
@@ -100,15 +99,61 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
     return () => clearTimeout(timerId);
   }, [inputValue]);
 
+  // Convert sets to counts and calculate totals
+  const calculateTotals = (filteredRows) => {
+    let totalBaseline = 0;
+    let totalImprovement = 0;
+    let totalAllocation = 0;
+    let totalBaselineParcels = 0;
+    let totalImprovementParcels = 0;
+    let totalAllocationParcels = 0;
+    let totalImprovementSites = 0;
+
+    filteredRows.forEach(h => {
+      totalBaseline += h.baseline;
+      totalImprovement += h.improvement;
+      totalAllocation += h.allocation;
+      totalBaselineParcels += h.baselineParcels;
+      totalImprovementParcels += h.improvementParcels;
+      totalAllocationParcels += h.allocationParcels;
+      totalImprovementSites += h.improvementSites;
+    });
+
+    filteredRows.forEach(h => {
+      h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
+      h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
+      h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
+      h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
+    });
+
+    return {
+      baseline: totalBaseline,
+      improvement: totalImprovement,
+      allocation: totalAllocation,
+      improvementParcels: totalImprovementParcels,
+      baselineParcels: totalBaselineParcels,
+      allocationParcels: totalAllocationParcels,
+      improvementSites: totalImprovementSites,
+      improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
+    };
+  };
+
   const filterAnalysisData = useCallback((analysisData) => {
     if (!debouncedSearchTerm) {
+      // use the totals for the data set as passed from the server
       return analysisData;
     }
+
+    // filter and recalcualte the totals on the client
     const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-    const filteredRows = analysisData.rows.filter(row =>
+
+    // clone data so that the source isn't modified (calculateTotals modifies the rows)
+    const filteredRows = structuredClone(analysisData.rows.filter(row =>
       row.habitat.toLowerCase().includes(lowercasedTerm)
-    );
-    return { ...analysisData, rows: filteredRows };
+    ));
+
+    const totals = calculateTotals(filteredRows);
+    return { rows: filteredRows, totals: totals };
   }, [debouncedSearchTerm]);
 
   const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, filterAnalysisData]);
@@ -219,9 +264,9 @@ export default function SearchableHabitatLists({ areaAnalysis, hedgerowAnalysis,
         />
       </div>
       <div className={styles.detailsGrid}>
-        <AnalysisTable title="Area habitats" data={filteredAreaAnalysis} unit="ha" />
-        <AnalysisTable title="Hedgerow habitats" data={filteredHedgerowAnalysis} unit="km" />
-        <AnalysisTable title="Watercourses habitats" data={filteredWatercourseAnalysis} unit="km" />
+        {filteredAreaAnalysis.rows.length > 0 && <AnalysisTable title="Area habitats" data={filteredAreaAnalysis} unit="ha" />}
+        {filteredHedgerowAnalysis.rows.length > 0 && <AnalysisTable title="Hedgerow habitats" data={filteredHedgerowAnalysis} unit="km" />}
+        {filteredWatercourseAnalysis.rows.length > 0 && <AnalysisTable title="Watercourses habitats" data={filteredWatercourseAnalysis} unit="km" />}
       </div>
     </>
   )
