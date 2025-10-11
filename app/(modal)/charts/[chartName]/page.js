@@ -159,23 +159,23 @@ const chartConfig = {
         }
     },
     'imd-scattergram': {
-        title: "BGS LSOA Ranks Cf. Allocation LSOA Ranks",
+        title: "BGS IMD Scores vs. Allocation IMD Scores",
         chartType: 'ScatterChart',
         chartProps: {
-            xAxis: { dataKey: 'siteImdRank', name: 'BGS LSOA Rank', type: 'number', domain: [0, 33000] },
-            yAxis: { dataKey: 'allocationImdRank', name: 'Allocation LSOA Rank', type: 'number', domain: [0, 33000] },
-            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [1, 10] }
+            xAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number', domain: [0, 100] },
+            yAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number', domain: [0, 100] },
+            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [50, 800] }
         },
         dataFetcher: async () => {
             try {
                 const allSites = await fetchAllSites(true, true);
-                const rankPairs = allSites.reduce((acc, site) => {
-                    const siteRank = site.lsoa?.IMDRank;
-                    if (siteRank && site.allocations) {
+                const scorePairs = allSites.reduce((acc, site) => {
+                    const siteScore = site.lsoa?.IMDScore;
+                    if (siteScore && site.allocations) {
                         site.allocations.forEach(alloc => {
-                            const allocRank = alloc.lsoa?.IMDRank;
-                            if (allocRank) {
-                                const key = `${siteRank}-${allocRank}`;
+                            const allocScore = alloc.lsoa?.IMDScore;
+                            if (allocScore) {
+                                const key = `${siteScore}-${allocScore}`;
                                 acc[key] = (acc[key] || 0) + 1;
                             }
                         });
@@ -183,7 +183,7 @@ const chartConfig = {
                     return acc;
                 }, {});
 
-                const chartData = Object.entries(rankPairs).map(([key, count]) => ({ siteImdRank: Number(key.split('-')[0]), allocationImdRank: Number(key.split('-')[1]), count }));
+                const chartData = Object.entries(scorePairs).map(([key, count]) => ({ siteImdScore: Number(key.split('-')[0]), allocationImdScore: Number(key.split('-')[1]), count }));
 
                 return { data: chartData, error: null };
 

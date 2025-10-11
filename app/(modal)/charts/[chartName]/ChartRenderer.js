@@ -21,8 +21,8 @@ const CustomTooltip = ({ active, payload }) => {
         const data = payload[0].payload;
         return (
             <div className="custom-tooltip" style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px', zIndex: 1000, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Site LSOA Rank: ${data.siteImdRank}`}</p>
-                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Allocation LSOA Rank: ${data.allocationImdRank}`}</p>
+                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Site IMD Score: ${data.siteImdScore.toFixed(2)}`}</p>
+                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Allocation IMD Score: ${data.allocationImdScore.toFixed(2)}`}</p>
                 <p style={{ margin: 0, color: '#36454F' }}>{`Count: ${data.count}`}</p>
             </div>
         );
@@ -115,16 +115,16 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                                     name={chartProps.xAxis.name} 
                                     domain={chartProps.xAxis.domain}
                                     tickCount={12}
-                                    tickFormatter={(value) => value.toLocaleString()}
+                                    tickFormatter={(value) => value.toFixed(0)}
                                 >
                                     <Label value={chartProps.xAxis.name} offset={-15} position="insideBottom" fill="#36454F" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}/>
                                 </XAxis>
-                                <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={chartProps.yAxis.domain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toLocaleString()}>
-                                    <Label value={chartProps.yAxis.name} angle={-90} position="insideLeft" style={{ textAnchor: 'middle', fontWeight: 'bold', fontSize: '1.1rem' }} fill="#36454F" />
+                                <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={chartProps.yAxis.domain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toFixed(0)}>
+                                    <Label value={chartProps.yAxis.name} angle={-90} position="insideLeft" style={{ textAnchor: 'middle', fontWeight: 'bold', fontSize: '1.1rem' }} fill="#36454F" offset={-20} />
                                 </YAxis>
                                 <ZAxis {...chartProps.zAxis} />
                                 <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                                <Scatter name="IMD Rank Pairs" yAxisId={0} xAxisId={0}>
+                                <Scatter name="IMD Score Pairs" dataKey={chartProps.xAxis.dataKey} yAxisId={0} xAxisId={0}>
                                     {data.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={getColorForCount(entry.count, minCount, maxCount)} />
                                     ))}
