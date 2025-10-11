@@ -164,7 +164,7 @@ const chartConfig = {
         chartProps: {
             xAxis: { dataKey: 'siteImdRank', name: 'BGS LSOA Rank', type: 'number', domain: [0, 33000] },
             yAxis: { dataKey: 'allocationImdRank', name: 'Allocation LSOA Rank', type: 'number', domain: [0, 33000] },
-            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [300, 1600] }
+            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [1, 10] }
         },
         dataFetcher: async () => {
             try {
