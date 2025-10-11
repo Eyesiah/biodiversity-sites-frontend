@@ -164,7 +164,7 @@ const chartConfig = {
         chartProps: {
             xAxis: { dataKey: 'siteImdDecile', name: 'BGS Decile', type: 'number', domain: [0, 11] },
             yAxis: { dataKey: 'allocationImdDecile', name: 'Allocation Decile', type: 'number', domain: [0, 11] },
-            zAxis: { dataKey: 'count', name: 'Count', range: [300, 1500] }
+            zAxis: { dataKey: 'count', name: 'Deciles Count', range: [300, 1600] }
         },
         dataFetcher: async () => {
             try {
