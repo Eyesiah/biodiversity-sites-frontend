@@ -23,21 +23,36 @@ export const HabitatSummaryTable = ({ site }) => {
   const improvementHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + h.area, 0);
   const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.area, 0);
 
-  const allocationArea = allocations.reduce((acc, a) => {
-    return acc + (a.habitats?.areas?.reduce((acc, ha) => acc + ha.size, 0) || 0);
-  }, 0);
-  const allocationHedgerow = allocations.reduce((acc, a) => {
-    return acc + (a.habitats?.hedgerows?.reduce((acc, ha) => acc + ha.size, 0) || 0);
-  }, 0);
-  const allocationWatercourse = allocations.reduce((acc, a) => {
-    return acc + (a.habitats?.watercourses?.reduce((acc, ha) => acc + ha.size, 0) || 0);
-  }, 0);
+  let allocationArea = 0;
+  let allocationHedgerow = 0;
+  let allocationWatercourse = 0;
+  let allocationAreaHUs = 0;
+  let allocationHedgerowHUs = 0;
+  let allocationWatercourseHUs = 0;
+  if (site.allocations != null) {
+    // use the allocations themselves
+    allocationArea = allocations.reduce((acc, a) => {
+      return acc + (a.habitats?.areas?.reduce((acc, ha) => acc + ha.size, 0) || 0);
+    }, 0);
+    allocationHedgerow = allocations.reduce((acc, a) => {
+      return acc + (a.habitats?.hedgerows?.reduce((acc, ha) => acc + ha.size, 0) || 0);
+    }, 0);
+    allocationWatercourse = allocations.reduce((acc, a) => {
+      return acc + (a.habitats?.watercourses?.reduce((acc, ha) => acc + ha.size, 0) || 0);
+    }, 0);
 
-  const allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
-  const allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
-  const allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
+    allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
+    allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
+    allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
+  } else {
+    // fall back to the improvement habitats' allocated % data
+    allocationArea = improvementArea * (improvements.areas || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
+    allocationHedgerow = improvementHedgerow * (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
+    allocationWatercourse = improvementWatercourse * (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
+  }
 
-  const hasAllocations = site.allocations != null;
+  const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || site.allocations != null;
+  const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
 
   return (
     <div className={styles.tableContainer}>
@@ -49,9 +64,9 @@ export const HabitatSummaryTable = ({ site }) => {
             <th>Baseline Size</th>
             <th>Baseline HUs</th>
             <th>Improvements Size</th>
-            {hasAllocations && <th>Allocations Size</th>}
-            {hasAllocations && <th>% Allocated</th>}
-            {hasAllocations && <th>Allocations HUs</th>}
+            {hasAllocs && <th>Allocations Size</th>}
+            {hasAllocs && <th>% Allocated</th>}
+            {hasAllocHUs && <th>Allocations HUs</th>}
           </tr>
         </thead>
         <tbody>
@@ -61,9 +76,9 @@ export const HabitatSummaryTable = ({ site }) => {
             <td className={styles.numericData}>{formatNumber(baselineArea, 2)}</td>
             <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
             <td className={styles.numericData}>{formatNumber(improvementArea, 2)}</td>
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
-            {hasAllocations && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
           </tr>
           <tr>
             <td>Hedgerows (km)</td>
@@ -71,9 +86,9 @@ export const HabitatSummaryTable = ({ site }) => {
             <td className={styles.numericData}>{formatNumber(baselineHedgerow, 2)}</td>
             <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
             <td className={styles.numericData}>{formatNumber(improvementHedgerow, 2)}</td>
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
-            {hasAllocations && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
           </tr>
           <tr>
             <td>Watercourses (km)</td>
@@ -81,9 +96,9 @@ export const HabitatSummaryTable = ({ site }) => {
             <td className={styles.numericData}>{formatNumber(baselineWatercourse, 2)}</td>
             <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
             <td className={styles.numericData}>{formatNumber(improvementWatercourse, 2)}</td>
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
-            {hasAllocations && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocations && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
+            {hasAllocs && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
+            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
           </tr>
         </tbody>
       </table>

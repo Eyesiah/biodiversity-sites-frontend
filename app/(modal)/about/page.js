@@ -1,5 +1,6 @@
 import ExternalLink from '@/components/ExternalLink';
 import Footer from '@/components/Footer';
+import { WFS_URL } from '@/config'
 
 export const metadata = {
   title: 'About',
@@ -56,8 +57,9 @@ export default function About() {
           <h3>2. Improvements</h3>
           <p>Created parcels - HU = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (of parcel – low, 1) x Temporal Risk (of Habitat and Condition) x Difficulty factor (of the Habitat) x Spatial Risk (Low, 1)</p>
           <p>Enhanced parcels - HU is not computed because no connection can be made back to the baseline habitat parcel&apos;s value.</p>
-          <p>The LPA, NCA and LNRS of a site or allocation is computed by lookup of the location within the area boundary - a rather slow operation without the help of a GIS index.</p>
-          <p>The data is refreshed on an hourly basis.</p>
+
+          <h2>Refreshing the data</h2>         
+          <p>We refresh Defra&apos;s BGS data hourly.</p>
 
           <h2>Acknowledgements</h2>
           <p>Digital boundaries and reference maps:</p>     
@@ -65,7 +67,7 @@ export default function About() {
           <p>Contains GeoPlace data © Local Government Information House Limited copyright and database right 2023</p>
 
           <h2>Exports</h2>
-          <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href="https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities">https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities</ExternalLink>.</p>
+          <p>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href={WFS_URL}>{WFS_URL}</ExternalLink>.</p>
 
           <h2>Development</h2>
           <p>This is an open-source project designed and built by <ExternalLink href="hhttps://bristoltreeforum.org/">Bristo Tree Forum</ExternalLink> using <ExternalLink href="https://nextjs.org/">Next.js</ExternalLink>.</p>

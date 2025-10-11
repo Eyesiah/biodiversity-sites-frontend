@@ -8,6 +8,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
+import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -16,7 +17,7 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-export default function SearchableHabitatLists({ summary, habitats, improvements, sites }) {
+export default function SearchableHabitatLists({ habitats, improvements, sites }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [displayedSites, setDisplayedSites] = useState([]);
@@ -105,11 +106,16 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
       }
       content={
         <>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>  
+            <div className={styles.detailsGrid}>
 
-            {summary}
+              <section className={styles.card}>
+                <h3>Habitat Summary</h3>
+                <HabitatSummaryTable site={{ habitats: filteredBaselineHabitats, improvements: filteredImprovementHabitats }} />
 
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem' }} className="sticky-search">
+              </section>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem', marginTop: '1rem' }} className="sticky-search">
               <div className="search-container" style={{ margin: 0 }}>
                 <input
                   type="text"
@@ -135,18 +141,20 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
               </div>
             </div>
 
-            <HabitatsCard
-              title={
-                <Tooltip text={tooltipText}>
-                  Improvement Habitats
-                </Tooltip>
-              }
-              habitats = {filteredImprovementHabitats}
-              isImprovement={true}
-              onHabitatToggle={onHabitatToggle}
-              isHabitatOpen={isHabitatOpen}
-              sites={sites}
-            />
+            <div style={{ marginBottom: '1rem' }} >
+              <HabitatsCard
+                title={
+                  <Tooltip text={tooltipText}>
+                    Improvement Habitats
+                  </Tooltip>
+                }
+                habitats = {filteredImprovementHabitats}
+                isImprovement={true}
+                onHabitatToggle={onHabitatToggle}
+                isHabitatOpen={isHabitatOpen}
+                sites={sites}
+              />
+            </div>
 
             <HabitatsCard
               title={
@@ -160,7 +168,6 @@ export default function SearchableHabitatLists({ summary, habitats, improvements
               isHabitatOpen={isHabitatOpen}
               sites={sites}
             />
-          </div>
         </>
       }
     />

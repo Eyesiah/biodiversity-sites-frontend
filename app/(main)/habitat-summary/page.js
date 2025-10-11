@@ -3,9 +3,6 @@ import SearchableHabitatLists from './SearchableHabitatLists';
 import styles from '@/styles/SiteDetails.module.css';
 import Footer from '@/components/Footer';
 import { collateAllHabitats } from '@/lib/habitat';
-import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
-import { DetailRow } from '@/components/DetailRow';
-import { formatNumber } from '@/lib/format';
 import { processSitesForListView} from '@/lib/sites';
 
 // Revalidate this page at most once every hour (3600 seconds)
@@ -83,30 +80,6 @@ export default async function HabitatSummaryPage() {
   const collatedHabitats = collateAllHabitats(allHabitats, false);
   const collatedImprovements = collateAllHabitats(allImprovements, true);
 
-  const HabitatSummarySection = (allSites) => {
-    
-    return (    
-      <div className={styles.detailsGrid}>
-
-        <section className={styles.card}>
-          <h3>BGS Register Summary</h3>
-
-          <div>
-            <DetailRow label="Number of BGS sites" value={allSites.length} />
-            <DetailRow label="Total BGS site area (ha)" value={formatNumber(totalSize)} />
-            <div className={styles.detailRow}>
-              <dt className={styles.detailLabel}>Habitat Summary</dt>
-              <dd className={styles.detailValue}>
-                <HabitatSummaryTable site={{ habitats: collatedHabitats, improvements: collatedImprovements, allocations: allSites.flatMap(s => s.allocations || []) }} />
-              </dd>
-            </div>
-          </div>
-
-        </section>
-      </div>
-    )
-  }
-
   const processedSites = processSitesForListView(allSites);
   const sitesMap = processedSites.reduce((acc, site) => {
     acc[site.referenceNumber] = site;
@@ -116,7 +89,7 @@ export default async function HabitatSummaryPage() {
   return (
     <>
       <div className={styles.container}>
-        <SearchableHabitatLists summary={HabitatSummarySection(allSites)} habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
+        <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
       </div>
       <Footer lastUpdated={lastUpdated} />
     </>
