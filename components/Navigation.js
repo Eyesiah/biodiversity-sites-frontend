@@ -108,7 +108,7 @@ const FeedbackModalButton = () => {
 };
 
 const CopyWfsLinkButton = () => {
-  const [buttonText, setButtonText] = useState('WFS Link');
+  const [buttonText, setButtonText] = useState('Copy WFS Link');
   const wfsUrl = 'https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities.';
 
   const handleCopy = () => {
