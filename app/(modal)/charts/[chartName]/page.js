@@ -168,12 +168,12 @@ const chartConfig = {
         },
         dataFetcher: async () => {
             try {
-                const allSites = await fetchAllSites(true);
+                const allSites = await fetchAllSites(true, true);
                 const decilePairs = allSites.reduce((acc, site) => {
                     const siteDecile = site.lsoa?.IMDDecile;
                     if (siteDecile && site.allocations) {
                         site.allocations.forEach(alloc => {
-                            const allocDecile = alloc.imd?.IMDDecile;
+                            const allocDecile = alloc.lsoa?.IMDDecile;
                             if (allocDecile) {
                                 const key = `${siteDecile}-${allocDecile}`;
                                 acc[key] = (acc[key] || 0) + 1;
