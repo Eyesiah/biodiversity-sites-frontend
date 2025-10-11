@@ -159,23 +159,23 @@ const chartConfig = {
         }
     },
     'imd-scattergram': {
-        title: "BGS Deciles vs Allocation Deciles",
+        title: "BGS LSOA Ranks Cf. Allocation LSOA Ranks",
         chartType: 'ScatterChart',
         chartProps: {
-            xAxis: { dataKey: 'siteImdDecile', name: 'BGS Decile', type: 'number', domain: [0, 11] },
-            yAxis: { dataKey: 'allocationImdDecile', name: 'Allocation Decile', type: 'number', domain: [0, 11] },
-            zAxis: { dataKey: 'count', name: 'Deciles Count', range: [300, 1600] }
+            xAxis: { dataKey: 'siteImdRank', name: 'BGS LSOA Rank', type: 'number', domain: [0, 33000] },
+            yAxis: { dataKey: 'allocationImdRank', name: 'Allocation LSOA Rank', type: 'number', domain: [0, 33000] },
+            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [300, 1600] }
         },
         dataFetcher: async () => {
             try {
                 const allSites = await fetchAllSites(true, true);
-                const decilePairs = allSites.reduce((acc, site) => {
-                    const siteDecile = site.lsoa?.IMDDecile;
-                    if (siteDecile && site.allocations) {
+                const rankPairs = allSites.reduce((acc, site) => {
+                    const siteRank = site.lsoa?.IMDRank;
+                    if (siteRank && site.allocations) {
                         site.allocations.forEach(alloc => {
-                            const allocDecile = alloc.lsoa?.IMDDecile;
-                            if (allocDecile) {
-                                const key = `${siteDecile}-${allocDecile}`;
+                            const allocRank = alloc.lsoa?.IMDRank;
+                            if (allocRank) {
+                                const key = `${siteRank}-${allocRank}`;
                                 acc[key] = (acc[key] || 0) + 1;
                             }
                         });
@@ -183,7 +183,7 @@ const chartConfig = {
                     return acc;
                 }, {});
 
-                const chartData = Object.entries(decilePairs).map(([key, count]) => ({ siteImdDecile: Number(key.split('-')[0]), allocationImdDecile: Number(key.split('-')[1]), count }));
+                const chartData = Object.entries(rankPairs).map(([key, count]) => ({ siteImdRank: Number(key.split('-')[0]), allocationImdRank: Number(key.split('-')[1]), count }));
 
                 return { data: chartData, error: null };
 
