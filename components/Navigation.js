@@ -9,6 +9,7 @@ import styles from '@/styles/Navigation.module.css';
 import Modal from '@/components/Modal'
 import modalStyles from '@/styles/Modal.module.css';
 import Tooltip from '@/components/Tooltip';
+import { WFS_URL } from '@/config'
 
 const Dropdown = ({ category, children }) => {
   return (
@@ -109,11 +110,10 @@ const FeedbackModalButton = () => {
 
 const CopyWfsLinkButton = () => {
   const [buttonText, setButtonText] = useState('Copy WFS Link');
-  const wfsUrl = 'https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities.';
 
   const handleCopy = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(wfsUrl).then(() => {
+      navigator.clipboard.writeText(WFS_URL).then(() => {
         setButtonText('Link copied!');
         setTimeout(() => {
           setButtonText('Copy WFS Link');
