@@ -159,12 +159,12 @@ const chartConfig = {
         }
     },
     'imd-scattergram': {
-        title: "BGS Site vs Allocation IMD Decile",
+        title: "BGS Deciles vs Allocation Deciles",
         chartType: 'ScatterChart',
         chartProps: {
-            xAxis: { dataKey: 'siteImdDecile', name: 'BGS Site IMD Decile', type: 'number', domain: [0, 11] },
-            yAxis: { dataKey: 'allocationImdDecile', name: 'Allocation IMD Decile', type: 'number', domain: [0, 11] },
-            zAxis: { dataKey: 'count', name: 'Count', range: [20, 400] }
+            xAxis: { dataKey: 'siteImdDecile', name: 'BGS Decile', type: 'number', domain: [0, 11] },
+            yAxis: { dataKey: 'allocationImdDecile', name: 'Allocation Decile', type: 'number', domain: [0, 11] },
+            zAxis: { dataKey: 'count', name: 'Count', range: [300, 1500] }
         },
         dataFetcher: async () => {
             try {
@@ -228,8 +228,8 @@ export default async function Chart({ params }) {
 
     return (
       
-      <div style={{ backgroundColor: '#F9F6EE', padding: '1rem', height: '100vh' }}>
-        <div style={{ height: '100%' }}>
+      <div style={{ backgroundColor: '#98917eff', padding: '1rem', height: '100vh' }}>
+        <div style={{ height: 'calc(100% - 2rem)' }}>
           <ChartRenderer
             chartType={config.chartType}
             data={data}

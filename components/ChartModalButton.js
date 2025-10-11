@@ -18,7 +18,7 @@ const ChartModalButton = ({ url, title, buttonText, style, className }) => {
       <Modal show={isModalVisible} onClose={closeModal} title={title} style={styles.modalContentLarge}>
         <iframe
           src={url}
-          style={{ width: '100%', height: '80vh', border: 'none' }}
+          style={{ width: '100%', height: '60vh', border: 'none' }}
           title={title}
         />
       </Modal>

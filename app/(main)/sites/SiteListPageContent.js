@@ -161,7 +161,7 @@ export default function SiteListPageContent({sites, summary}) {
             />
             <ChartModalButton
               url="/charts/imd-scattergram"
-              title="IMD Scattergram"
+              title="IMD Decile Scattergram"
               buttonText="IMD Scattergram"
               className="linkButton"
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
