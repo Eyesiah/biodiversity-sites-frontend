@@ -157,6 +157,41 @@ const chartConfig = {
                 return { data: [], error: 'Failed to load chart data.' };
             }
         }
+    },
+    'imd-scattergram': {
+        title: "BGS Site vs Allocation IMD Decile",
+        chartType: 'ScatterChart',
+        chartProps: {
+            xAxis: { dataKey: 'siteImdDecile', name: 'BGS Site IMD Decile', type: 'number', domain: [0, 11] },
+            yAxis: { dataKey: 'allocationImdDecile', name: 'Allocation IMD Decile', type: 'number', domain: [0, 11] },
+            zAxis: { dataKey: 'count', name: 'Count', range: [20, 400] }
+        },
+        dataFetcher: async () => {
+            try {
+                const allSites = await fetchAllSites(true);
+                const decilePairs = allSites.reduce((acc, site) => {
+                    const siteDecile = site.lsoa?.IMDDecile;
+                    if (siteDecile && site.allocations) {
+                        site.allocations.forEach(alloc => {
+                            const allocDecile = alloc.imd?.IMDDecile;
+                            if (allocDecile) {
+                                const key = `${siteDecile}-${allocDecile}`;
+                                acc[key] = (acc[key] || 0) + 1;
+                            }
+                        });
+                    }
+                    return acc;
+                }, {});
+
+                const chartData = Object.entries(decilePairs).map(([key, count]) => ({ siteImdDecile: Number(key.split('-')[0]), allocationImdDecile: Number(key.split('-')[1]), count }));
+
+                return { data: chartData, error: null };
+
+            } catch (e) {
+                console.error(e);
+                return { data: [], error: 'Failed to load chart data.' };
+            }
+        }
     }
 };
 
