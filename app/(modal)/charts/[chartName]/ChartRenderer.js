@@ -2,7 +2,8 @@
 
 import { AllocationPieChart } from '@/components/AllocationPieChart';
 import { ImprovementPieChart } from '@/components/ImprovementPieChart';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell } from 'recharts';
+import { Rectangle, Layer, Sankey, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell } from 'recharts';
+import { formatNumber } from '@/lib/format'
 
 const CustomLabel = (props) => {
     const { x, y, width, value } = props;
@@ -29,6 +30,49 @@ const CustomTooltip = ({ active, payload }) => {
     }
     return null;
 };
+
+const CustomSankeyNode = ({
+  x,
+  y,
+  width,
+  height,
+  index,
+  payload,
+  containerWidth}) =>
+{
+  const isOut = x + width + 6 > containerWidth;
+  return (
+    <Layer key={`CustomNode${index}`}>
+      <Rectangle
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill="#5192ca"
+        fillOpacity="1"
+      />
+      <text
+        textAnchor={isOut ? "end" : "start"}
+        x={isOut ? x - 6 : x + width + 6}
+        y={y + height / 2}
+        fontSize="14"
+        stroke="#333"
+      >
+        {payload.name}
+      </text>
+      <text
+        textAnchor={isOut ? "end" : "start"}
+        x={isOut ? x - 6 : x + width + 6}
+        y={y + height / 2 + 13}
+        fontSize="12"
+        stroke="#333"
+        strokeOpacity="0.5"
+      >
+        {formatNumber(payload.value) + "HU"}
+      </text>
+    </Layer>
+  );
+}
 
 const renderColorBarLegend = ({ chartProps, data }) => {
     const zAxis = chartProps.zAxis;
@@ -151,10 +195,37 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         </div>
                     </div>
                 );
+            case 'Sankey':
+              return (
+                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box' }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <Sankey
+                        width={960}
+                        height={900}
+                        margin={{ top: 20, bottom: 20 }}
+                        data={data}
+                        sort={false}
+                        nodeWidth={10}
+                        nodePadding={40}
+                        linkCurvature={0.61}
+                        iterations={64}
+                        node={<CustomSankeyNode containerWidth={960} />}
+                      >
+                        <defs>
+                          <linearGradient id={"linkGradient"}>
+                            <stop offset="0%" stopColor="rgba(0, 136, 254, 0.5)" />
+                            <stop offset="100%" stopColor="rgba(0, 197, 159, 0.3)" />
+                          </linearGradient>
+                        </defs>
+                        <Tooltip isAnimationActive={false} />
+                      </Sankey>
+                    </ResponsiveContainer>
+                </div>
+              )
             default:
                 return <div>Unknown chart type</div>;
         }
     };
 
     return renderChart();
-}
+  }

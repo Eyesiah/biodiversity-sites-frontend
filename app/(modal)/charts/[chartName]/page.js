@@ -192,7 +192,75 @@ const chartConfig = {
                 return { data: [], error: 'Failed to load chart data.' };
             }
         }
-    }
+    },
+    'imd-sankey': {
+        title: "IMD Transfer",
+        chartType: 'Sankey',
+        chartProps: { title: "IMD Transfer" },
+        dataFetcher: async () =>  {         
+
+          const allSites = await fetchAllSites(true, true);
+          const IMDPairMap = new Map();
+    
+          allSites.forEach((site) => {
+            const siteScore = site.lsoa?.IMDDecile;
+            if (siteScore && site.allocations) {
+                site.allocations.forEach(alloc => {
+                    const allocScore = alloc.lsoa?.IMDDecile;
+                    if (allocScore) {
+                        let allocMap = IMDPairMap.get(allocScore);
+                        if (allocMap == null) {
+                          allocMap = new Map();
+                          IMDPairMap.set(allocScore, allocMap);
+                        }
+                        let allocSize = allocMap.get(siteScore) ;
+                        if (allocSize == null) {
+                          allocSize = 0;
+                        }
+                        allocSize += alloc.areaUnits + alloc.hedgerowUnits + alloc.watercoursesUnits;
+                        allocMap.set(siteScore, allocSize);
+                    }
+                });
+            }
+          });
+
+          const data = {
+            nodes: [],
+            links: []
+          };
+
+          // create the nodes pre-sorted
+          // source (alloc) nodes
+          for (let i = 1; i <= 10; i++) {
+            data.nodes.push({name: `Development Site IMD Decile ${i}`});
+          }
+          // dest (site) nodes
+          for (let i = 1; i <= 10; i++) {
+            data.nodes.push({name: `BNG Site IMD Decile ${i}`});
+          }
+
+          IMDPairMap.forEach((sites, allocScore) => {
+            sites.forEach((units, siteScore) => {
+              data.links.push({source: allocScore - 1, target: siteScore + 9, value: units});
+            });
+          });
+
+          const sourceNodesWithLinks = new Set();
+          data.links.forEach(link => {
+              sourceNodesWithLinks.add(link.source);
+          });
+
+          // Add dummy links for source nodes without any outgoing links
+          for (let i = 0; i < 10; i++) {
+              if (!sourceNodesWithLinks.has(i)) {
+                  // Add a dummy link to the first destination node to anchor it
+                  data.links.push({ source: i, target: 10, value: 0 });
+              }
+          }
+
+          return {data: data, error: null}
+        }
+    },
 };
 
 export async function generateStaticParams() {
