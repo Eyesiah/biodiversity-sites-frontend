@@ -3,8 +3,27 @@ import 'styles/globals.css';
 import Script from 'next/script';
 
 export const metadata = {
-  title: 'BGS Register',
-  description: 'Biodiversity Gain Sites Register',
+  title: 'Biodiversity Gain Sites Register',
+  description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+  keywords: ['biodiversity', 'gain', 'sites', 'register', 'england', 'habitat', 'conservation', 'environment'],
+  openGraph: {
+    title: 'Biodiversity Gain Sites Register',
+    description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+    url: 'https://bgs.bristoltrees.space/',
+    siteName: 'Biodiversity Gain Sites Register',
+    images: [
+      {
+        url: '/ToBlogo512.png',
+        width: 512,
+        height: 512,
+      },
+    ],
+    locale: 'en_GB',
+    type: 'website',
+  },
+  verification: {
+    google: '4bMY4a8_XmDsa8mtFCRGk2eh_AGJQ4n57kqTXwW1wac',
+  },
   icons: {
     apple: '/ToBlogo192.png',
     icon: '/favicon.ico',
