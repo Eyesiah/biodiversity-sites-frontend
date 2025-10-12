@@ -162,8 +162,8 @@ const chartConfig = {
         title: "BGS IMD Scores Cf. Allocation IMD Scores",
         chartType: 'ScatterChart',
         chartProps: {
-            xAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number', domain: [0, 100] },
-            yAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number', domain: [0, 100] },
+            xAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number' },
+            yAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number' },
             zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [50, 800] }
         },
         dataFetcher: async () => {
