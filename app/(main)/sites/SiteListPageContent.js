@@ -160,9 +160,9 @@ export default function SiteListPageContent({sites, summary}) {
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
             <ChartModalButton
-              url="/charts/imd-scattergram"
+              url="/charts/imd-sankey"
               title="IMD Score Scattergram"
-              buttonText="IMD Scattergram"
+              buttonText="IMD Sankey Map"
               className="linkButton"
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />

@@ -232,11 +232,11 @@ const chartConfig = {
           // create the nodes pre-sorted
           // source (alloc) nodes
           for (let i = 1; i <= 10; i++) {
-            data.nodes.push({name: `Development Site IMD Decile ${i}`});
+            data.nodes.push({name: `Allocation Decile ${i}`});
           }
           // dest (site) nodes
           for (let i = 1; i <= 10; i++) {
-            data.nodes.push({name: `BNG Site IMD Decile ${i}`});
+            data.nodes.push({name: `BNG Decile ${i}`});
           }
 
           IMDPairMap.forEach((sites, allocScore) => {

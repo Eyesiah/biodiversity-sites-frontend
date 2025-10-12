@@ -208,11 +208,12 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         linkCurvature={0.61}
                         iterations={64}
                         node={<CustomSankeyNode containerWidth={960} />}
+                        link={{ stroke: "url(#linkGradient)" }}
                       >
                         <defs>
                           <linearGradient id={"linkGradient"}>
-                            <stop offset="0%" stopColor="rgba(0, 136, 254, 0.5)" />
-                            <stop offset="100%" stopColor="rgba(0, 197, 159, 0.3)" />
+                            <stop offset="100%" stopColor="rgba(250, 193, 6, 0.94)" />
+                            <stop offset="0%" stopColor="rgba(245, 241, 8, 0.76)" />
                           </linearGradient>
                         </defs>
                         <Tooltip isAnimationActive={false} />
