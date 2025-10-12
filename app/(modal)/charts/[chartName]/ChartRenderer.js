@@ -86,8 +86,8 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                             <BarChart data={data} margin={{ top: 50, right: 30, left: 20, bottom: 15 }}>
                                 <text x="50%" y="25" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '1.2rem', fontWeight: 'bold', fill: '#36454F' }}>{title}</text>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" name="BGS IMD Decile Score" label={{ value: 'BGS IMD Decile Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} />
-                                <YAxis tick={{ fill: '#36454F' }} />
+                                <XAxis dataKey="name" name="BGS IMD Score" label={{ value: 'BGS IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                                <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                                 <Tooltip />
                                 <Bar dataKey="count" fill="#dcab1bff">
                                     <LabelList content={CustomLabel} />
@@ -106,7 +106,7 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         {renderColorBarLegend({ chartProps, data })}
                         <div style={{ flex: 1, width: '100%', border: '1px solid black', boxSizing: 'border-box' }}>
                           <ResponsiveContainer width="100%" height="100%">
-                            <ScatterChart margin={{ top: 40, right: 30, left: 20, bottom: 20 }} data={data}>
+                            <ScatterChart margin={{ top: 40, right: 30, left: 40, bottom: 20 }} data={data}>
                                 <text x="50%" y="15" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '1.2rem', fontWeight: 'bold', fill: '#36454F' }}>{title}</text>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis 
@@ -116,10 +116,11 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                                     domain={chartProps.xAxis.domain}
                                     tickCount={12}
                                     tickFormatter={(value) => value.toFixed(0)}
+                                    axisLine={{ stroke: 'black' }}
                                 >
                                     <Label value={chartProps.xAxis.name} offset={-15} position="insideBottom" fill="#36454F" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}/>
                                 </XAxis>
-                                <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={chartProps.yAxis.domain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toFixed(0)}>
+                                <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={chartProps.yAxis.domain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toFixed(0)} axisLine={{ stroke: 'black' }}>
                                     <Label value={chartProps.yAxis.name} angle={-90} position="insideLeft" style={{ textAnchor: 'middle', fontWeight: 'bold', fontSize: '1.1rem' }} fill="#36454F" offset={-20} />
                                 </YAxis>
                                 <ZAxis {...chartProps.zAxis} />

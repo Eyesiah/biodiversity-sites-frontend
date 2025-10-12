@@ -159,11 +159,11 @@ const chartConfig = {
         }
     },
     'imd-scattergram': {
-        title: "BGS IMD Scores vs. Allocation IMD Scores",
+        title: "BGS IMD Scores Cf. Allocation IMD Scores",
         chartType: 'ScatterChart',
         chartProps: {
-            xAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number', domain: [0, 100] },
-            yAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number', domain: [0, 100] },
+            xAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number', domain: [0, 100] },
+            yAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number', domain: [0, 100] },
             zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [50, 800] }
         },
         dataFetcher: async () => {
