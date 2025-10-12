@@ -1,5 +1,5 @@
 
-const URL = 'https://www.biodiversity-gain-sites.org.uk';
+const URL = 'https://bgs.bristoltrees.space';
 
 export default async function sitemap() {
   const routes = [
