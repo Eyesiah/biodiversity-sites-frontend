@@ -213,8 +213,8 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                       >
                         <defs>
                           <linearGradient id={"linkGradient"}>
-                            <stop offset="55%" stopColor="#f1c40f" />
-                            <stop offset="85%" stopColor="#2ecc71" />
+                            <stop offset="55%" stopColor="#f18b0fff" />
+                            <stop offset="85%" stopColor="#2e92ccff" />
                           </linearGradient>
                         </defs>
                         <Tooltip 
