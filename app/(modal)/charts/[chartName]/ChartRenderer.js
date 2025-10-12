@@ -21,8 +21,8 @@ const CustomTooltip = ({ active, payload }) => {
         const data = payload[0].payload;
         return (
             <div className="custom-tooltip" style={{ backgroundColor: 'white', border: '1px solid #ccc', padding: '10px', zIndex: 1000, boxShadow: '0 4px 8px rgba(0,0,0,0.1)' }}>
-                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Site IMD Score: ${data.siteImdScore.toFixed(2)}`}</p>
-                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Allocation IMD Score: ${data.allocationImdScore.toFixed(2)}`}</p>
+                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`BGS Score: ${data.siteImdScore.toFixed(2)}`}</p>
+                <p style={{ margin: '0 0 5px 0', color: '#36454F' }}>{`Allocation Score: ${data.allocationImdScore.toFixed(2)}`}</p>
                 <p style={{ margin: 0, color: '#36454F' }}>{`Count: ${data.count}`}</p>
             </div>
         );
@@ -118,36 +118,34 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                 return (
                     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                         {renderColorBarLegend({ chartProps, data })}
-                        <div style={{ flex: 1, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <div style={{ width: '100%', height: '100%', aspectRatio: '1 / 1', border: '1px solid black', boxSizing: 'border-box' }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <ScatterChart margin={{ top: 40, right: 30, left: 40, bottom: 20 }} data={data}>
-                                        <text x="50%" y="15" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '1.2rem', fontWeight: 'bold', fill: '#36454F' }}>{title}</text>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis 
-                                            type={chartProps.xAxis.type} 
-                                            dataKey={chartProps.xAxis.dataKey} 
-                                            name={chartProps.xAxis.name} 
-                                            domain={commonDomain}
-                                            tickCount={12}
-                                            tickFormatter={(value) => value.toFixed(0)}
-                                            axisLine={{ stroke: 'black' }}
-                                        >
-                                            <Label value={chartProps.xAxis.name} offset={-15} position="insideBottom" fill="#36454F" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}/>
-                                        </XAxis>
-                                        <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={commonDomain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toFixed(0)} axisLine={{ stroke: 'black' }}>
-                                            <Label value={chartProps.yAxis.name} angle={-90} position="insideLeft" style={{ textAnchor: 'middle', fontWeight: 'bold', fontSize: '1.1rem' }} fill="#36454F" offset={-20} />
-                                        </YAxis>
-                                        <ZAxis {...chartProps.zAxis} />
-                                        <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-                                        <Scatter name="IMD Score Pairs" dataKey={chartProps.xAxis.dataKey} yAxisId={0} xAxisId={0}>
-                                            {data.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={getColorForCount(entry.count, minCount, maxCount)} />
-                                            ))}
-                                        </Scatter>
-                                    </ScatterChart>
-                                </ResponsiveContainer>
-                            </div>
+                        <div style={{ flex: 1, width: '100%', border: '1px solid black', boxSizing: 'border-box' }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <ScatterChart margin={{ top: 40, right: 30, left: 40, bottom: 20 }} data={data}>
+                                    <text x="50%" y="15" textAnchor="middle" dominantBaseline="middle" style={{ fontSize: '1.2rem', fontWeight: 'bold', fill: '#36454F' }}>{title}</text>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis 
+                                        type={chartProps.xAxis.type} 
+                                        dataKey={chartProps.xAxis.dataKey} 
+                                        name={chartProps.xAxis.name} 
+                                        domain={commonDomain}
+                                        tickCount={12}
+                                        tickFormatter={(value) => value.toFixed(0)}
+                                        axisLine={{ stroke: 'black' }}
+                                    >
+                                        <Label value={chartProps.xAxis.name} offset={-15} position="insideBottom" fill="#36454F" style={{ fontWeight: 'bold', fontSize: '1.1rem' }}/>
+                                    </XAxis>
+                                    <YAxis type={chartProps.yAxis.type} dataKey={chartProps.yAxis.dataKey} name={chartProps.yAxis.name} domain={commonDomain} tickCount={12} tick={{ fill: '#36454F' }} tickFormatter={(value) => value.toFixed(0)} axisLine={{ stroke: 'black' }}>
+                                        <Label value={chartProps.yAxis.name} angle={-90} position="insideLeft" style={{ textAnchor: 'middle', fontWeight: 'bold', fontSize: '1.1rem' }} fill="#36454F" offset={-20} />
+                                    </YAxis>
+                                    <ZAxis {...chartProps.zAxis} />
+                                    <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
+                                    <Scatter name="IMD Score Pairs" dataKey={chartProps.xAxis.dataKey} yAxisId={0} xAxisId={0}>
+                                        {data.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={getColorForCount(entry.count, minCount, maxCount)} />
+                                        ))}
+                                    </Scatter>
+                                </ScatterChart>
+                            </ResponsiveContainer>
                         </div>
                     </div>
                 );

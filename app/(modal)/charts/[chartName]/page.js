@@ -228,7 +228,7 @@ export default async function Chart({ params }) {
 
     return (
       
-      <div style={{ backgroundColor: '#98917eff', padding: '1rem', height: '100vh' }}>
+        <div style={{ backgroundColor: '#98917eff', padding: '1rem', height: '100vh' }}>
         <div style={{ height: 'calc(100% - 2rem)' }}>
           <ChartRenderer
             chartType={config.chartType}
