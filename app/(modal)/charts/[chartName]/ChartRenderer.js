@@ -2,7 +2,7 @@
 
 import { AllocationPieChart } from '@/components/AllocationPieChart';
 import { ImprovementPieChart } from '@/components/ImprovementPieChart';
-import { Rectangle, Layer, Sankey, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell, SankeyLink } from 'recharts';
+import { Rectangle, Layer, Sankey, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell } from 'recharts';
 import { formatNumber } from '@/lib/format'
 
 const CustomLabel = (props) => {
@@ -196,7 +196,7 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
             case 'Sankey':
               const sankeyHeight = data.dynamicHeight || 900;
               return (
-                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', backgroundColor: 'charcoal' }}>
+                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', backgroundColor: '#36454F' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <Sankey
                         width={960}
@@ -213,8 +213,8 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                       >
                         <defs>
                           <linearGradient id={"linkGradient"}>
-                            <stop offset="55%" stopColor="rgba(250, 193, 6, 0.94)" />
-                            <stop offset="85%" stopColor="rgba(25, 115, 63, 0.82)" />
+                            <stop offset="55%" stopColor="#f1c40f" />
+                            <stop offset="85%" stopColor="#2ecc71" />
                           </linearGradient>
                         </defs>
                         <Tooltip 
@@ -222,8 +222,9 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                           formatter={(value) => `${formatNumber(value, 2)} HU`}
                         />
                       </Sankey>
+                    </ResponsiveContainer>
                 </div>
-              )
+              );
             default:
                 return <div>Unknown chart type</div>;
         }
