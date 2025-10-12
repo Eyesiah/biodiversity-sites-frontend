@@ -2,7 +2,7 @@
 
 import { AllocationPieChart } from '@/components/AllocationPieChart';
 import { ImprovementPieChart } from '@/components/ImprovementPieChart';
-import { Rectangle, Layer, Sankey, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell } from 'recharts';
+import { Rectangle, Layer, Sankey, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, ZAxis, Label, Legend, Cell, SankeyLink } from 'recharts';
 import { formatNumber } from '@/lib/format'
 
 const CustomLabel = (props) => {
@@ -68,7 +68,7 @@ const CustomSankeyNode = ({
         stroke="#333"
         strokeOpacity="0.5"
       >
-        {formatNumber(payload.value) + "HU"}
+        {formatNumber(payload.value, 2) + "HU"}
       </text>
     </Layer>
   );
@@ -195,7 +195,7 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                 );
             case 'Sankey':
               return (
-                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box' }}>
+                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', backgroundColor: 'charcoal' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <Sankey
                         width={960}
@@ -208,15 +208,18 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         linkCurvature={0.61}
                         iterations={64}
                         node={<CustomSankeyNode containerWidth={960} />}
-                        link={{ stroke: "url(#linkGradient)" }}
+                        link={{ stroke: "url(#linkGradient)", key: (link) => `${link.source.name}-${link.target.name}` }}
                       >
                         <defs>
                           <linearGradient id={"linkGradient"}>
-                            <stop offset="100%" stopColor="rgba(250, 193, 6, 0.94)" />
-                            <stop offset="0%" stopColor="rgba(245, 241, 8, 0.76)" />
+                            <stop offset="55%" stopColor="rgba(250, 193, 6, 0.94)" />
+                            <stop offset="85%" stopColor="rgba(25, 115, 63, 0.82)" />
                           </linearGradient>
                         </defs>
-                        <Tooltip isAnimationActive={false} />
+                        <Tooltip 
+                          isAnimationActive={false} 
+                          formatter={(value) => `${formatNumber(value, 2)} HU`}
+                        />
                       </Sankey>
                     </ResponsiveContainer>
                 </div>

@@ -161,8 +161,8 @@ export default function SiteListPageContent({sites, summary}) {
             />
             <ChartModalButton
               url="/charts/imd-sankey"
-              title="IMD Score Scattergram"
-              buttonText="IMD Sankey Map"
+              title="IMD Sankey Diagram"
+              buttonText="IMD Sankey Diagram"
               className="linkButton"
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />

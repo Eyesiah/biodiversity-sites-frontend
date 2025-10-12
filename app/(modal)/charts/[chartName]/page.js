@@ -274,6 +274,12 @@ export async function generateMetadata({ params }) {
   const { chartName } = await params;
   const config = chartConfig[chartName];
 
+  if (!config) {
+    return {
+      title: "Chart"
+    };
+  }
+
   return {
     title: config.title
   };
