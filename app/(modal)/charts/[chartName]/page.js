@@ -165,7 +165,7 @@ const chartConfig = {
         chartProps: {
             xAxis: { dataKey: 'allocationImdScore', name: 'Allocation IMD Score', type: 'number' },
             yAxis: { dataKey: 'siteImdScore', name: 'BGS IMD Score', type: 'number' },
-            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [50, 800] }
+            zAxis: { dataKey: 'count', name: 'Count of Pairs', range: [100, 900] }
         },
         dataFetcher: async () => {
             try {

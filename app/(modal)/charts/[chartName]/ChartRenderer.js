@@ -196,7 +196,7 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
             case 'Sankey':
               const sankeyHeight = data.dynamicHeight || 900;
               return (
-                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', backgroundColor: '#36454F' }}>
+                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', backgroundColor: 'lightgrey' }}>
                     <ResponsiveContainer width="100%" height="100%">
                       <Sankey
                         width={960}
@@ -208,13 +208,13 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         nodePadding={40}
                         linkCurvature={0.61}
                         iterations={64}
-                        node={<CustomSankeyNode containerWidth={960} />}
+                        node={<CustomSankeyNode containerWidth={800} />}
                         link={{ stroke: "url(#linkGradient)", key: (link) => `${link.source.name}-${link.target.name}` }}
                       >
                         <defs>
                           <linearGradient id={"linkGradient"}>
-                            <stop offset="55%" stopColor="#f18b0fff" />
-                            <stop offset="85%" stopColor="#2e92ccff" />
+                            <stop offset="45%" stopColor='red' />
+                            <stop offset="85%" stopColor='darkgreen' />
                           </linearGradient>
                         </defs>
                         <Tooltip 
