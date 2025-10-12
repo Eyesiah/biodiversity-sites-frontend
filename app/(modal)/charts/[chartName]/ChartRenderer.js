@@ -194,15 +194,15 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                     </div>
                 );
             case 'Sankey':
+              const sankeyHeight = data.dynamicHeight || 900;
               return (
-                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box' }}>
-                    <ResponsiveContainer width="100%" height="100%">
+                <div style={{ width: '100%', height: '100%', border: '1px solid black', boxSizing: 'border-box', overflow: 'auto' }}>
                       <Sankey
                         width={960}
-                        height={900}
+                        height={sankeyHeight}
                         margin={{ top: 20, bottom: 20 }}
                         data={data}
-                        sort={false}
+                        sort={data.sort}
                         nodeWidth={10}
                         nodePadding={40}
                         linkCurvature={0.61}
@@ -218,7 +218,6 @@ export default function ChartRenderer({ chartType, data, chartProps, title }) {
                         </defs>
                         <Tooltip isAnimationActive={false} />
                       </Sankey>
-                    </ResponsiveContainer>
                 </div>
               )
             default:

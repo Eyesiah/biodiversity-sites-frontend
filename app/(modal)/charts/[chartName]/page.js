@@ -1,6 +1,7 @@
 import ChartRenderer from './ChartRenderer';
 import { getChartData } from '@/lib/charts';
 import { fetchAllSites } from '@/lib/api';
+import { calculateBaselineHU, processSiteHabitatData } from '@/lib/habitat';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -258,9 +259,113 @@ const chartConfig = {
               }
           }
 
+          data.dynamicHeight = 10 * 90; // 10 nodes per column, 90px per node
+          data.sort = false;
+
           return {data: data, error: null}
         }
     },
+    'habitat-transfer-sankey': {
+        title: "Habitat Transfer",
+        chartType: 'Sankey',
+        chartProps: { title: "Habitat Transfer" },
+        dataFetcher: async () => {
+            const allSites = await fetchAllSites(true);
+            allSites.forEach(site => processSiteHabitatData(site));
+
+            const aggregatedLinks = new Map();
+            const sourceNodeTypes = new Set();
+            const improvementNodeTypes = new Set();
+            const habitatTypes = ['areas', 'hedgerows', 'watercourses'];
+
+            for (const site of allSites) {
+                const siteBaselineTotals = new Map();
+                const siteImprovementTotals = new Map();
+
+                // Aggregate baseline HUs for the current site
+                if (site.habitats) {
+                    for (const type of habitatTypes) {
+                        if (site.habitats[type]) {
+                            for (const habitat of site.habitats[type]) {
+                                if (habitat.HUs > 0) {
+                                  siteBaselineTotals.set(habitat.type, (siteBaselineTotals.get(habitat.type) || 0) + habitat.HUs);
+                                  sourceNodeTypes.add(habitat.type);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Aggregate improvement HUs for the current site
+                if (site.improvements) {
+                    for (const type of habitatTypes) {
+                        if (site.improvements[type]) {
+                            for (const habitat of site.improvements[type]) {
+                                let hu = habitat.HUs;
+                                if (habitat.interventionType && habitat.interventionType.toLowerCase() === 'enhanced') {
+                                    hu = calculateBaselineHU(habitat.size, habitat.type, habitat.condition);
+                                }
+                                if (hu > 0) {
+                                  siteImprovementTotals.set(habitat.type, (siteImprovementTotals.get(habitat.type) || 0) + hu);
+                                  improvementNodeTypes.add(habitat.type);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                const siteTotalImprovementHU = Array.from(siteImprovementTotals.values()).reduce((sum, hu) => sum + hu, 0);
+
+                if (siteTotalImprovementHU > 0) {
+                    for (const [baselineType, baselineHU] of siteBaselineTotals.entries()) {
+                        for (const [improvementType, improvementHU] of siteImprovementTotals.entries()) {
+                            const linkValue = baselineHU * (improvementHU / siteTotalImprovementHU);
+                            if (linkValue > 0) {
+                                const linkKey = `${baselineType}|${improvementType}`;
+                                aggregatedLinks.set(linkKey, (aggregatedLinks.get(linkKey) || 0) + linkValue);
+                            }
+                        }
+                    }
+                }
+            }
+
+            const data = { nodes: [], links: [] };
+            const baselineNodeMap = new Map();
+            const improvementNodeMap = new Map();
+
+            // Create baseline (source) nodes
+            for (const type of sourceNodeTypes) {
+                baselineNodeMap.set(type, data.nodes.length);
+                data.nodes.push({ name: type });
+            }
+
+            // Create improvement (destination) nodes
+            for (const type of improvementNodeTypes) {
+                improvementNodeMap.set(type, data.nodes.length);
+                data.nodes.push({ name: type });
+            }
+
+            for (const [linkKey, linkValue] of aggregatedLinks.entries()) {
+                const [sourceType, improvementType] = linkKey.split('|');
+                const sourceIndex = baselineNodeMap.get(sourceType);
+                const targetIndex = improvementNodeMap.get(improvementType);
+
+                if (sourceIndex !== undefined && targetIndex !== undefined) {
+                    data.links.push({
+                        source: sourceIndex,
+                        target: targetIndex,
+                        value: linkValue
+                    });
+                }
+            }
+            
+            const numNodes = Math.max(sourceNodeTypes.size, improvementNodeTypes.size);
+            data.dynamicHeight = Math.max(900, numNodes * 90);
+            data.sort = true;
+
+            return { data: data, error: null };
+        }
+    }
 };
 
 export async function generateStaticParams() {
