@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
 import styles from '@/styles/SiteDetails.module.css';
 import { Tabs } from "@chakra-ui/react"
@@ -29,17 +30,25 @@ export default function SearchableTableLayout({
   exportConfig,
   summary, // Optional summary component/text
   tabs, // New prop for tabbed content: [{ title: string, content: (props) => JSX }, ...]
-  children // Original render prop for non-tabbed content
+  children, // Original render prop for non-tabbed content
+  onSortedItemsChange
 }) {
   const {
     inputValue,
     setInputValue,
     sortedItems,
     requestSort,
-    getSortIndicator
+    getSortIndicator,
+    sortConfig
   } = useSearchAndSort(initialItems, filterPredicate, initialSortConfig);
 
-  const renderProps = { sortedItems, requestSort, getSortIndicator, inputValue };
+  useEffect(() => {
+    if (onSortedItemsChange) {
+      onSortedItemsChange(sortedItems);
+    }
+  }, [sortedItems, onSortedItemsChange]);
+
+  const renderProps = { sortedItems, requestSort, getSortIndicator, inputValue, sortConfig };
 
   return (
     <>
