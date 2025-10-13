@@ -78,7 +78,6 @@ export default function SearchableTableLayout({
             {tabs.map((tab, index) => (
               <Tabs.Trigger key={index} value={index}>{tab.title}</Tabs.Trigger>
             ))}
-            <Tabs.Indicator/>
           </Tabs.List>
           {tabs.map((tab, index) => (
             <Tabs.Content key={index} value={index}>

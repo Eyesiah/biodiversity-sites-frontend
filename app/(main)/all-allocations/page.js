@@ -1,5 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
-import AllAllocationsList from './AllAllocationsList';
+import AllAllocationsContent from './AllAllocationsContent';
 import Footer from '@/components/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
@@ -30,7 +30,8 @@ export default async function AllocationsPage() {
         d: alloc.distance,
         sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
-        simd: site.lsoa?.IMDDecile || 'N/A'
+        simd: site.lsoa?.IMDDecile || 'N/A',
+        habitats: alloc.habitats
       };
     });
   });
@@ -42,7 +43,7 @@ export default async function AllocationsPage() {
   return (
     <>
       <div className="container">
-        <AllAllocationsList allocations={allocations}/>
+        <AllAllocationsContent allocations={allocations}/>
       </div>
       <Footer lastUpdated={lastUpdated} />
     </>
