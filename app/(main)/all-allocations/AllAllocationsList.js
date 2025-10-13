@@ -10,6 +10,8 @@ import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tool
 import styles from '@/styles/SiteDetails.module.css';
 import statsStyles from '@/styles/Statistics.module.css';
 import ChartModalButton from '@/components/ChartModalButton';
+import SankeyChart from '@/components/SankeyChart';
+import Modal from '@/components/Modal';
 import Tooltip from '@/components/Tooltip';
 import { triggerDownload } from '@/lib/utils';
 
@@ -80,6 +82,7 @@ export default function AllAllocationsList({ allocations }) {
   const [inputValue, setInputValue] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isSankeyModalVisible, setIsSankeyModalVisible] = useState(false);
 
   const handleExportXML = () => {
     const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
@@ -407,19 +410,20 @@ export default function AllAllocationsList({ allocations }) {
             <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
             <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
             <ChartModalButton
-              url="/charts/imd-sankey"
-              title="IMD Transfer Map"
-              buttonText="IMD Transfer Map"
-              className="linkButton"
-              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-            <ChartModalButton
               url="/charts/imd-scattergram"
               title="IMD Scattergram"
               buttonText="IMD Scattergram"
               className="linkButton"
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
             />
+            <button onClick={() => setIsSankeyModalVisible(true)} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+              IMD Transfer Map
+            </button>
+            <Modal show={isSankeyModalVisible} onClose={() => setIsSankeyModalVisible(false)} title="IMD Transfer Map" style={statsStyles.modalContentLarge}>
+              {isSankeyModalVisible && (
+                <SankeyChart allocations={sortedAllocations} />
+              )}
+            </Modal>
           </div>
         </div>
         <div className="table-container">
