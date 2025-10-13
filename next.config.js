@@ -22,6 +22,9 @@ const nextConfig = {
     APP_VERSION: packageJson.version,
     GIT_COMMIT_HASH: gitCommitHash,
   },
+  experimental: {
+    optimizePackageImports: ["@chakra-ui/react"],
+  },
   async redirects() {
     return [
       {

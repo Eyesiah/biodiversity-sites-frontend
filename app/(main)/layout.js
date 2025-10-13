@@ -1,6 +1,7 @@
 import Navigation from '@/components/Navigation';
 import 'styles/globals.css';
 import Script from 'next/script';
+import { Provider } from "@/components/ui/provider"
 
 export const metadata = {
   title: 'Biodiversity Gain Sites Register',
@@ -43,21 +44,23 @@ export default function RootLayout({ children }) {
       : 'b718ac79-8ca2-494a-a398-47adf5e8188a';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Script
-          strategy="afterInteractive"
-          src="/api/umami/script"
-          data-website-id={umamiWebsiteId}
-        />
-        <div className="topContainer">
-          <div className="navRow">
-            <Navigation />
+        <Provider>
+          <Script
+            strategy="afterInteractive"
+            src="/api/umami/script"
+            data-website-id={umamiWebsiteId}
+          />
+          <div className="topContainer">
+            <div className="navRow">
+              <Navigation />
+            </div>
+            <div className="mainRow">
+              <main className="main">{children}</main>
+            </div>
           </div>
-          <div className="mainRow">
-            <main className="main">{children}</main>
-          </div>
-        </div>
+        </Provider>
       </body>
     </html>
   );

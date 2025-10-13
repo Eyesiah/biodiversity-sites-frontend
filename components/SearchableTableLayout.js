@@ -2,6 +2,7 @@
 
 import { useSearchAndSort } from '@/lib/hooks';
 import styles from '@/styles/SiteDetails.module.css';
+import { Tabs } from "@chakra-ui/react"
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
@@ -27,7 +28,8 @@ export default function SearchableTableLayout({
   placeholder,
   exportConfig,
   summary, // Optional summary component/text
-  children // This is the render prop
+  tabs, // New prop for tabbed content: [{ title: string, content: (props) => JSX }, ...]
+  children // Original render prop for non-tabbed content
 }) {
   const {
     inputValue,
@@ -36,6 +38,8 @@ export default function SearchableTableLayout({
     requestSort,
     getSortIndicator
   } = useSearchAndSort(initialItems, filterPredicate, initialSortConfig);
+
+  const renderProps = { sortedItems, requestSort, getSortIndicator, inputValue };
 
   return (
     <>
@@ -48,6 +52,7 @@ export default function SearchableTableLayout({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             autoFocus
+            style={{ width: '480px' }}
           />
           {inputValue && (
             <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
@@ -58,9 +63,25 @@ export default function SearchableTableLayout({
 
       {summary && summary(sortedItems.length, initialItems.length)}
 
-      <div className="table-container">
-        {children({ sortedItems, requestSort, getSortIndicator, inputValue })}
-      </div>
+      {tabs && tabs.length > 0 ? (
+        <Tabs.Root lazyMount defaultValue={0}>
+          <Tabs.List>
+            {tabs.map((tab, index) => (
+              <Tabs.Trigger key={index} value={index}>{tab.title}</Tabs.Trigger>
+            ))}
+            <Tabs.Indicator/>
+          </Tabs.List>
+          {tabs.map((tab, index) => (
+            <Tabs.Content key={index} value={index}>
+              {tab.content(renderProps)}
+            </Tabs.Content>
+          ))}
+        </Tabs.Root>
+      ) : (
+        <div className="table-container">
+          {children && children(renderProps)}
+        </div>
+      )}
     </>
   );
 }
