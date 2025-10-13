@@ -158,21 +158,7 @@ export default function SiteListPageContent({sites, summary}) {
               buttonText="IMD Decile Chart"
               className="linkButton"
               style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-            <ChartModalButton
-              url="/charts/imd-sankey"
-              title="IMD Sankey Diagram"
-              buttonText="IMD Sankey Diagram"
-              className="linkButton"
-              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-            <ChartModalButton
-              url="/charts/imd-scattergram"
-              title="IMD Scattergram"
-              buttonText="IMD Scattergram"
-              className="linkButton"
-              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
+            />           
           </div>
           <div className="table-container">
             <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />

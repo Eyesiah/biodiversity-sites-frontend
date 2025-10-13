@@ -378,7 +378,7 @@ export default function AllAllocationsList({ allocations }) {
 
         <div className="summary" style={{ textAlign: 'center' }}>
           <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(sortedAllocations.length, 0)}</strong> out of <strong>{formatNumber(allocations.length, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>          
-        </div>
+        </div>       
         
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }} className="sticky-search">
           <div className="search-container" style={{ margin: 0 }}>
@@ -402,9 +402,24 @@ export default function AllAllocationsList({ allocations }) {
             )}
             {isSearching && <div className="loader" />}
           </div>
+          
           <div className={styles.buttonGroup}>
             <button onClick={handleExportXML} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to XML</button>
             <button onClick={handleExportJSON} className={styles.exportButton} disabled={sortedAllocations.length === 0}>Export to JSON</button>
+            <ChartModalButton
+              url="/charts/imd-sankey"
+              title="IMD Transfer Map"
+              buttonText="IMD Transfer Map"
+              className="linkButton"
+              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            />
+            <ChartModalButton
+              url="/charts/imd-scattergram"
+              title="IMD Scattergram"
+              buttonText="IMD Scattergram"
+              className="linkButton"
+              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
+            />
           </div>
         </div>
         <div className="table-container">
