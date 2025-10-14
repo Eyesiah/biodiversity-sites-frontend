@@ -74,7 +74,14 @@ export default function SearchableTableLayout({
 
       {tabs && tabs.length > 0 ? (
         <Tabs.Root lazyMount defaultValue={0} width="100%">
-          <Tabs.List>
+          <Tabs.List
+            position="sticky"
+            // The search bar is ~60px high, and this provides a little extra space
+            top="3rem" 
+            zIndex="docked" // Chakra's theme value for sticky elements (often 10)
+            bg="#F9F6EE" // Match the background from globals.css
+            width="100%"
+          >
             {tabs.map((tab, index) => (
               <Tabs.Trigger
                 key={index}
