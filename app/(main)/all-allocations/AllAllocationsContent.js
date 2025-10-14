@@ -1,37 +1,66 @@
 'use client'
 
 import { useState, useCallback, useMemo } from 'react';
-import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
+import { formatNumber, calcMedian, calcMean } from '@/lib/format';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
-import { AllocationPieChart } from '@/components/AllocationPieChart';
 
-const FilteredAllocationPieChart = ({allocations, module}) => {
+const FilteredAllocationPieChart = ({allocations, module, name}) => {
   const habitatData = useMemo(() => {
     let acc = {};
     allocations.forEach(alloc => {
-      const moduleHabs = alloc.habitats ? alloc.habitats[module] : null;
-      moduleHabs?.forEach(habitat => {
+      const moduleHabitats = alloc.habitats ? alloc.habitats[module] : null;
+      moduleHabitats?.forEach(habitat => {
         if (habitat.type) {
-          acc[habitat.type] = { value: (acc[habitat.type]?.value || 0) + habitat.size, module: module };
+          acc[habitat.type] = (acc[habitat.type] || 0) + habitat.size;
         }
       });
     });
     
-    return Object.entries(acc).map(([name, data]) => ({ name, value: data.value, module: data.module }));
+    return Object.entries(acc).map(([name, value]) => ({ name, value }));
 
   }, [allocations, module]);
 
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A230FF', '#FF30A2'];
+
+  if (habitatData.length === 0) {
+    return <p>No habitat data to display for the current selection.</p>;
+  }
+
   return (
-    <AllocationPieChart
-      data={habitatData}
-      chartProps={{ disableAggregation: true, title: "Habitats allocated - by size" }}
-      title="Allocated habitats chart"
-    />
-  )
+    <div>
+      <h3>
+        {name} Habitats by {module == 'areas' ? 'Size' : 'Length'}
+      </h3>
+      <ResponsiveContainer width="100%" height={500}>
+        <PieChart margin={{ top: 0, right: 30, left: 30, bottom: 100 }}>
+          <Pie
+            data={habitatData}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            fill="#8884d8"
+            labelLine={false}
+          >
+            {habitatData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+          </Pie>
+          <Tooltip formatter={(value) => `${formatNumber(value, 2)} ${module == 'areas' ? 'ha' : 'km'}`} />
+          <Legend 
+            verticalAlign="bottom" 
+            align="center" 
+            wrapperStyle={{ bottom: 0, left: 0, right: 0, maxHeight: 100, overflowY: 'auto' }}
+            layout="horizontal"
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
 };
 
 const filterPredicate = (alloc, searchTerm) => {
@@ -104,15 +133,15 @@ export default function AllAllocationsContent({ allocations }) {
     },
     {
       title: 'Area Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='areas'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='areas' name='Area'/>
     },
     {
       title: 'Hedgerow Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='hedgerows'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='hedgerows' name='Hedgerow'/>
     },
     {
       title: 'Watercourse Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='watercourses'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='watercourses' name='Watercourse'/>
     }
   ]
 
