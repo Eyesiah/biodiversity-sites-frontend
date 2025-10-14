@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
+import { Tabs, Box } from "@chakra-ui/react"
 import styles from '@/styles/SiteDetails.module.css';
-import { Tabs } from "@chakra-ui/react"
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
@@ -51,7 +51,7 @@ export default function SearchableTableLayout({
   const renderProps = { sortedItems, requestSort, getSortIndicator, inputValue, sortConfig };
 
   return (
-    <>
+    <Box width="100%">
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
         <div className="search-container" style={{ margin: 0 }}>
           <input
@@ -73,7 +73,7 @@ export default function SearchableTableLayout({
       {summary && summary(sortedItems.length, initialItems.length)}
 
       {tabs && tabs.length > 0 ? (
-        <Tabs.Root lazyMount defaultValue={0}>
+        <Tabs.Root lazyMount defaultValue={0} width="100%">
           <Tabs.List>
             {tabs.map((tab, index) => (
               <Tabs.Trigger key={index} value={index}>{tab.title}</Tabs.Trigger>
@@ -90,6 +90,6 @@ export default function SearchableTableLayout({
           {children && children(renderProps)}
         </div>
       )}
-    </>
+    </Box>
   );
 }
