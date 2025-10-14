@@ -18,7 +18,7 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
     allocations.forEach(alloc => {
       const moduleHabitats = alloc.habitats ? alloc.habitats[module] : null;
       moduleHabitats?.forEach(habitat => {
-        if (habitat.type) {
+        if (habitat.type && habitat.size > 0) {
           acc[habitat.type] = (acc[habitat.type] || 0) + habitat.size;
         }
       });
@@ -37,7 +37,7 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
 
     allHabitatData.forEach(entry => {
       const percentage = entry.value / total;
-      if (percentage < 0.03) {
+      if (percentage < 0.01) {
         otherValue += entry.value;
         otherChartData.push(entry);
       } else {
@@ -78,6 +78,7 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
             nameKey="name"
             cx="50%"
             cy="50%"
+            outerRadius="100%"
             fill="#8884d8"
             labelLine={false}
           >
