@@ -76,7 +76,14 @@ export default function SearchableTableLayout({
         <Tabs.Root lazyMount defaultValue={0} width="100%">
           <Tabs.List>
             {tabs.map((tab, index) => (
-              <Tabs.Trigger key={index} value={index}>{tab.title}</Tabs.Trigger>
+              <Tabs.Trigger
+                key={index}
+                value={index}
+                _selected={{ color: '#333', borderColor: '#2980b9', borderBottomWidth: '2px' }}
+                color="#aaa"
+              >
+                {tab.title}
+              </Tabs.Trigger>
             ))}
           </Tabs.List>
           {tabs.map((tab, index) => (
