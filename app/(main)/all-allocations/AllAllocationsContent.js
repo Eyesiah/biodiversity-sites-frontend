@@ -5,9 +5,6 @@ import { formatNumber, calcMedian, calcMean } from '@/lib/format';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { OtherAllocationsBarChart } from '@/components/OtherAllocationsBarChart';
-import { Box, Heading } from '@chakra-ui/react';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
