@@ -2,9 +2,6 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  background-color: #282c34; /* Charcoal Grey */
-  color: #f0f0f0;
 }
 
 .topContainer {
@@ -25,11 +22,6 @@ body {
   overflow-y: auto;
 }
 
-a {
-  color: #87ceeb; /* A light blue for link visibility */
-  text-decoration: underline;
-}
-
 /* Add icon to external links */
 a[href^="http"]::after, a[href^="https"]::after {
   content: '';
@@ -48,18 +40,6 @@ a[href^="http"]::after, a[href^="https"]::after {
 
 * {
   box-sizing: border-box;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  font-size: 1rem;
-  color: #333; /* Dark grey for text */
-  background-color: #F9F6EE; /* Bone white background */
-  text-align: center;
-  padding: 0 2rem;
 }
 
 .main {
@@ -89,44 +69,6 @@ a[href^="http"]::after, a[href^="https"]::after {
   border-radius: 5px;
 }
 
-.summary {
-  width: 90%;
-  margin: 0 auto 1rem;
-  text-align: left;
-}
-
-.search-container {
-  position: relative;
-  width: 90%;
-  max-width: 500px;
-  margin: 1rem auto;
-}
-
-.sticky-search {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0px;
-  background-color: #F9F6EE; /* Match the page background */
-  padding: 0 0;
-  z-index: 999; /* Ensure it stays on top of other content */
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.75rem;
-  padding-right: 2.5rem; /* Make space for the button */
-  font-size: 1rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: ivory;
-  color: #333;
-}
-
-.search-input::placeholder {
-  color: #888;
-  font-weight: bold;
-}
-
 .loader {
   border: 8px solid #f3f3f3; /* Light grey */
   border-top: 8px solid #3498db; /* Blue */
@@ -139,75 +81,6 @@ a[href^="http"]::after, a[href^="https"]::after {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-.clear-search-button {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 0.25rem;
-  cursor: pointer;
-  color: #666;
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.clear-search-button:hover {
-  color: #000;
-}
-
-.site-table {
-  width: auto;
-  margin: 1rem auto;
-  border-collapse: collapse;
-  background-color: #fff;
-  color: #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.site-table th,
-.site-table td {
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
-  text-align: center;
-  vertical-align: top;
-}
-
-.site-table th {
-  background-color: #2c3e50; /* Midnight Blue */
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  position: sticky;
-  top: 0; /* Adjust this value if you have a sticky navigation bar */
-  z-index: 1;
-}
-
-.site-table tr:hover {
-  background-color: #ecf0f1; /* Clouds */
-}
-
-.site-table td {
-  font-size: 0.9rem;
-  text-align: left;
-}
-
-.site-table td a {
-  color: #2980b9; /* Belize Hole Blue */
-}
-
-.site-table td a:hover {
-  color: #3498db; /* Peter River Blue */
-}
-
-.numeric-data {
-  text-align: right;
-  font-family: monospace;
 }
 
 .prose {
@@ -227,24 +100,8 @@ a[href^="http"]::after, a[href^="https"]::after {
   margin-top: 1.5rem;
 }
 
-.site-table .numeric-data {
-  text-align: right;
-  font-family: monospace;
-}
-
-.site-table .centered-data {
-  text-align: center;
-  font-family: monospace;
-}
-
 /* Override Leaflet popup font */
 .leaflet-popup-content-wrapper .leaflet-popup-content {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   color: #333;
-}
-
-/* Utility class to make wide tables scrollable on small screens */
-.table-container {
-  width: 100%;
-  overflow-x: auto;
 }

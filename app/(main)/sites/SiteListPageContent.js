@@ -8,6 +8,8 @@ import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
 import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
+import { Box, Text, Flex, Input, InputGroup, Button, Stack } from '@chakra-ui/react';
+import { SiteTable } from '@/components/ui/SiteTable';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -21,48 +23,102 @@ const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
   const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(sites, { key: 'referenceNumber', direction: 'ascending' });
 
   if (!sites || sites.length === 0) {
-    return <p>No site data available.</p>;
+    return <Text>No site data available.</Text>;
   }
 
   return (
-    <table className="site-table">
-      <thead>
-        <tr>
-          <th onClick={() => requestSort('referenceNumber')}>{getSortIndicator('referenceNumber')}BGS Reference</th>
-          <th onClick={() => requestSort('responsibleBodies')}>{getSortIndicator('responsibleBodies')}Responsible Body</th>
-          <th onClick={() => requestSort('siteSize')}>{getSortIndicator('siteSize')}Size (ha)</th>
-          <th onClick={() => requestSort('allocationsCount')}>{getSortIndicator('allocationsCount')}# Allocations</th>
-          <th onClick={() => requestSort('lpaName')}>{getSortIndicator('lpaName')}Local Planning Authority (LPA)</th>
-          <th onClick={() => requestSort('ncaName')}>{getSortIndicator('ncaName')}National Character Area (NCA)</th>
-          <th onClick={() => requestSort('lnrsName')}>{getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)</th>
-          <th onClick={() => requestSort('imdDecile')}>{getSortIndicator('imdDecile')}IMD Decile</th>
-        </tr>
-      </thead>
-      <tbody>
+    <SiteTable.Root>
+      <SiteTable.Header>
+        <SiteTable.Row>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('referenceNumber')} 
+          >
+            {getSortIndicator('referenceNumber')}BGS Reference
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('responsibleBodies')} 
+          >
+            {getSortIndicator('responsibleBodies')}Responsible Body
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('siteSize')} 
+          >
+            {getSortIndicator('siteSize')}Size (ha)
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('allocationsCount')} 
+          >
+            {getSortIndicator('allocationsCount')}# Allocations
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('lpaName')} 
+          >
+            {getSortIndicator('lpaName')}Local Planning Authority (LPA)
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('ncaName')} 
+          >
+            {getSortIndicator('ncaName')}National Character Area (NCA)
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('lnrsName')} 
+          >
+            {getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)
+          </SiteTable.ColumnHeader>
+          <SiteTable.ColumnHeader 
+            onClick={() => requestSort('imdDecile')} 
+          >
+            {getSortIndicator('imdDecile')}IMD Decile
+          </SiteTable.ColumnHeader>
+        </SiteTable.Row>
+      </SiteTable.Header>
+      <SiteTable.Body>
         {sortedSites.map((site) => (
-          <tr
+          <SiteTable.Row
             key={site.referenceNumber}
             onMouseEnter={() => onSiteHover(site)}
             onMouseLeave={() => onSiteHover(null)}
             onClick={() => onSiteClick(site)}
-            style={{ cursor: 'pointer' }}
           >
-            <td>
+            <SiteTable.Cell textAlign="left">
               <Link href={`/sites/${site.referenceNumber}`}>
                 {site.referenceNumber}
               </Link>
-            </td>
-            <td>{Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}</td>
-            <td className="numeric-data">{formatNumber(site.siteSize)}</td>
-            <td className="centered-data">{site.allocationsCount}</td>
-            <td>{site.lpaName}</td>
-            <td>{site.ncaName}</td>
-            <td>{site.lnrsName}</td>
-            <td className="centered-data">{site.imdDecile}</td>
-          </tr>
+            </SiteTable.Cell>
+            <SiteTable.Cell textAlign="left">
+              {Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}
+            </SiteTable.Cell>
+            <SiteTable.Cell 
+              textAlign="right" 
+              fontFamily="mono"
+            >
+              {formatNumber(site.siteSize)}
+            </SiteTable.Cell>
+            <SiteTable.Cell 
+              textAlign="center" 
+              fontFamily="mono"
+            >
+              {site.allocationsCount}
+            </SiteTable.Cell>
+            <SiteTable.Cell textAlign="left">
+              {site.lpaName}
+            </SiteTable.Cell>
+            <SiteTable.Cell textAlign="left">
+              {site.ncaName}
+            </SiteTable.Cell>
+            <SiteTable.Cell textAlign="left">
+              {site.lnrsName}
+            </SiteTable.Cell>
+            <SiteTable.Cell 
+              textAlign="center" 
+              fontFamily="mono"
+            >
+              {site.imdDecile}
+            </SiteTable.Cell>
+          </SiteTable.Row>
         ))}
-      </tbody>
-    </table>
+      </SiteTable.Body>
+    </SiteTable.Root>
   );
 };
 
@@ -117,53 +173,131 @@ export default function SiteListPageContent({sites, summary}) {
         <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
-        <>
-          <div className="summary">
-            <div className="summary" style={{ textAlign: 'center' }}>
-            {inputValue ? (
-              <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites</p>
-            ) : (
-              <p style={{ fontSize: '1.2rem' }}>
-                This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
-                They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created improvement habitat units.            </p>
-            )}
-            </div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-            <div className="search-container" style={{ margin: 0 }}>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                autoFocus
-              />
-              {inputValue && (
-                <button
-                  onClick={() => setInputValue('')}
-                  className="clear-search-button"
-                  aria-label="Clear search"
-                >
-                  &times;
-                </button>
+        <Stack spacing="1rem">
+          <Box width="90%" margin="0 auto 1rem" textAlign="left">
+            <Box textAlign="center">
+              {inputValue ? (
+                <Text>
+                  Displaying <Text as="strong">{formatNumber(filteredSites.length, 0)}</Text> of <Text as="strong">{formatNumber(summary.totalSites, 0)}</Text> sites
+                </Text>
+              ) : (
+                <Text fontSize="1.2rem">
+                  This list of <Text as="strong">{formatNumber(summary.totalSites, 0)}</Text> sites covers <Text as="strong">{formatNumber(summary.totalArea, 0)}</Text> hectares.
+                  They comprise <Text as="strong">{formatNumber(summary.totalBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(summary.totalCreatedHUs, 0)}</Text> created improvement habitat units.
+                </Text>
               )}
-            </div>
-            <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+            </Box>
+          </Box>
+          <Flex 
+            justifyContent="center" 
+            alignItems="center" 
+            gap="1rem" 
+            marginBottom="1rem" 
+            position="sticky" 
+            top="0px" 
+            bg="bone" 
+            padding="0" 
+            zIndex="999"
+          >
+            <Box position="relative" width="90%" maxWidth="500px" margin="1rem auto">
+              <InputGroup
+                endElement={
+                  inputValue ? (
+                    <Button
+                      onClick={() => setInputValue('')}
+                      position="absolute"
+                      right="0.5rem"
+                      top="50%"
+                      transform="translateY(-50%)"
+                      bg="transparent"
+                      border="none"
+                      padding="0.25rem"
+                      color="#666"
+                      fontSize="1.5rem"
+                      lineHeight="1"
+                      _hover={{
+                        color: "black"
+                      }}
+                      aria-label="Clear search"
+                    >
+                      &times;
+                    </Button>
+                  ) : undefined
+                }
+              >
+                <Input
+                  type="text"
+                  placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  autoFocus
+                  width="100%"
+                  padding="0.75rem"
+                  paddingRight="2.5rem"
+                  fontSize="1rem"
+                  borderRadius="5px"
+                  border="1px solid #ccc"
+                  bg="ivory"
+                  color="#333"
+                  _placeholder={{
+                    color: "#888",
+                    fontWeight: "bold"
+                  }}
+                  _focus={{
+                    outline: "none",
+                    borderColor: "brand.default",
+                    boxShadow: "0 0 0 1px {colors.brand.default}"
+                  }}
+                />
+              </InputGroup>
+            </Box>
+            <Button 
+              onClick={handleExport} 
+              fontSize="1rem" 
+              padding="0.75rem 1rem"
+              border="1px solid"
+              borderColor="nephritis"
+              borderRadius="5px"
+              bg="white"
+              color="midnight"
+              textDecoration="none"
+              display="inline-block"
+              textAlign="center"
+              transition="all 0.2s"
+              _hover={{
+                bg: "nephritis",
+                color: "white"
+              }}
+            >
               Export to CSV
-            </button>
-            <ChartModalButton
-              url="/charts/imd-decile-distribution"
-              title="IMD Decile Distribution"
-              buttonText="IMD Decile Chart"
-              className="linkButton"
-              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />           
-          </div>
-          <div className="table-container">
+            </Button>
+            <Button
+              as="a"
+              href="/charts/imd-decile-distribution"
+              target="_blank"
+              fontSize="1rem" 
+              padding="0.75rem 1rem"
+              border="1px solid"
+              borderColor="nephritis"
+              borderRadius="5px"
+              bg="white"
+              color="midnight"
+              textDecoration="none"
+              display="inline-block"
+              textAlign="center"
+              transition="all 0.2s"
+              _hover={{
+                bg: "nephritis",
+                color: "white"
+              }}
+            >
+              IMD Decile Chart
+            </Button>           
+          </Flex>
+          <Box width="100%" overflowX="auto">
             <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
-          </div>
-        </>
+          </Box>
+        </Stack>
       }
     />      
   )

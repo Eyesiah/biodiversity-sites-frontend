@@ -3,6 +3,7 @@ import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
 import SiteListPageContent from './SiteListPageContent';
 import Footer from '@/components/Footer';
+import { Box } from '@chakra-ui/react';
 
 export const metadata = {
   title: 'Biodiversity Gain Sites',
@@ -19,9 +20,19 @@ export default async function SiteListPage() {
   
   return (
     <>
-      <div className="container">
+      <Box 
+        display="flex" 
+        flexDirection="column" 
+        alignItems="center" 
+        justifyContent="flex-start" 
+        fontSize="1rem" 
+        color="black" 
+        bg="bone" 
+        textAlign="center" 
+        px="2rem"
+      >
         <SiteListPageContent sites={processedSites} summary={summary}/>
-      </div>
+      </Box>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

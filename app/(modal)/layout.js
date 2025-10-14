@@ -1,5 +1,6 @@
 import 'styles/globals.css';
 import Script from 'next/script';
+import { Provider } from "@/components/ui/provider"
 
 export const metadata = {
   title: 'BGS Register',
@@ -25,13 +26,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Script
-          strategy="afterInteractive"
-          src="/api/umami/script"
-          data-website-id={umamiWebsiteId}
-        />
-        <main className="main">{children}</main>
-        
+        <Provider>
+          <Script
+            strategy="afterInteractive"
+            src="/api/umami/script"
+            data-website-id={umamiWebsiteId}
+          />
+          <main className="main">{children}</main>
+        </Provider>
       </body>
     </html>
   );
