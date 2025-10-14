@@ -107,7 +107,7 @@ export default function AllocationAnalysis({allocations}) {
     <div className={statsStyles.chartRow}>
       <div className={statsStyles.chartItem}>
         <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart data={distanceDistributionData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
@@ -120,7 +120,7 @@ export default function AllocationAnalysis({allocations}) {
       </div>
       <div className={statsStyles.chartItem}>
         <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" name="HUs" />
@@ -133,7 +133,7 @@ export default function AllocationAnalysis({allocations}) {
       </div>
       <div className={statsStyles.chartItem}>
         <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={imdDistributionData} barCategoryGap="10%">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="decile" name="IMD Decile" />
@@ -147,7 +147,7 @@ export default function AllocationAnalysis({allocations}) {
       </div>
       <div className={statsStyles.chartItem}>
         <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Category</h4>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={srDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="category" tick={{ textAnchor: 'middle' }} />

@@ -7,6 +7,7 @@ import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { OtherAllocationsBarChart } from '@/components/OtherAllocationsBarChart';
+import { Box, Heading } from '@chakra-ui/react';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
@@ -64,12 +65,12 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: 500 }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ textAlign: 'center' }}>
+    <Box display="flex" flexDirection="row" width="100%" height="500px">
+      <Box flex="1" display="flex" flexDirection="column">
+        <Heading as="h3" size="md" textAlign="center" mb={4}>
           {name} Habitats by {module === 'areas' ? 'Size' : 'Length'}
-        </h3>
-        <ResponsiveContainer width="100%" height="100%">
+        </Heading>
+        <ResponsiveContainer width="100%" height="99%">
           <PieChart margin={{ top: 0, right: 30, left: 30, bottom: 100 }}>
           <Pie
             data={chartData}
@@ -93,13 +94,13 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
           />
           </PieChart>
         </ResponsiveContainer>
-      </div>
+      </Box>
       {otherData.length > 0 && (
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
           <OtherAllocationsBarChart data={otherData} color={OTHER_COLOR} />
-        </div>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 
