@@ -3,7 +3,7 @@ import { formatNumber } from '@/lib/format';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import statsStyles from '@/styles/Statistics.module.css';
 
-export default function AllocationAnalysis({allocations}) {
+export default function AllocationAnalysis({ allocations }) {
 
   const distanceDistributionData = useMemo(() => {
     const distances = allocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
@@ -104,33 +104,36 @@ export default function AllocationAnalysis({allocations}) {
   }, [allocations]);
 
   return (
-    <div className={statsStyles.chartRow}>
-      <div className={statsStyles.chartItem}>
-        <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={distanceDistributionData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-            <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
-            <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
-            <Legend />
-            <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
+    <>
+      <div className={statsStyles.chartRow}>
+        <div className={statsStyles.chartItem}>
+          <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={distanceDistributionData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
+              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+              <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
+              <Legend />
+              <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div className={statsStyles.chartItem}>
+          <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" name="HUs" />
+              <YAxis name="Count" />
+              <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
+              <Legend />
+              <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-      <div className={statsStyles.chartItem}>
-        <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" name="HUs" />
-            <YAxis name="Count" />
-            <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
-            <Legend />
-            <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <div className={statsStyles.chartRow}>
       <div className={statsStyles.chartItem}>
         <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
         <ResponsiveContainer width="100%" height={300}>
@@ -201,6 +204,7 @@ export default function AllocationAnalysis({allocations}) {
           </div>
         </div>
       </div>
-    </div>
+    </div >
+    </>
   );
 }

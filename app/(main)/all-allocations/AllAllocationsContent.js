@@ -11,99 +11,7 @@ import { Box, Heading } from '@chakra-ui/react';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
-
-const FilteredAllocationPieChart = ({allocations, module, name}) => {
-  const { chartData, otherData } = useMemo(() => {
-    let acc = {};
-    allocations.forEach(alloc => {
-      const moduleHabitats = alloc.habitats ? alloc.habitats[module] : null;
-      moduleHabitats?.forEach(habitat => {
-        if (habitat.type && habitat.size > 0) {
-          acc[habitat.type] = (acc[habitat.type] || 0) + habitat.size;
-        }
-      });
-    });
-    
-    const allHabitatData = Object.entries(acc).map(([name, value]) => ({ name, value, module }));
-    const total = allHabitatData.reduce((sum, entry) => sum + entry.value, 0);
-
-    if (total === 0) {
-      return { chartData: [], otherData: [] };
-    }
-
-    const mainChartData = [];
-    const otherChartData = [];
-    let otherValue = 0;
-
-    allHabitatData.forEach(entry => {
-      const percentage = entry.value / total;
-      if (percentage < 0.01) {
-        otherValue += entry.value;
-        otherChartData.push(entry);
-      } else {
-        mainChartData.push(entry);
-      }
-    });
-
-    if (otherValue > 0) {
-      mainChartData.push({ name: 'Other', value: otherValue, module: 'mixed' });
-    }
-
-    const otherDataWithPercentages = otherChartData
-      .map(entry => ({ ...entry, percentage: (entry.value / total) * 100 }))
-      .sort((a, b) => b.value - a.value);
-
-    return { chartData: mainChartData.sort((a, b) => b.value - a.value), otherData: otherDataWithPercentages };
-
-  }, [allocations, module]);
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A230FF', '#FF30A2'];
-  const OTHER_COLOR = '#889095ff'; // A neutral grey for the 'Other' category
-
-  if (chartData.length === 0) {
-    return <p>No habitat data to display for the current selection.</p>;
-  }
-
-  return (
-    <Box display="flex" flexDirection="row" width="100%" height="500px">
-      <Box flex="1" display="flex" flexDirection="column">
-        <Heading as="h3" size="md" textAlign="center" mb={4}>
-          {name} Habitats by {module === 'areas' ? 'Size' : 'Length'}
-        </Heading>
-        <ResponsiveContainer width="100%" height="99%">
-          <PieChart margin={{ top: 0, right: 30, left: 30, bottom: 100 }}>
-          <Pie
-            data={chartData}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius="100%"
-            fill="#8884d8"
-            labelLine={false}
-          >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.name === 'Other' ? OTHER_COLOR : COLORS[index % COLORS.length]} />
-              ))}
-          </Pie>
-            <Tooltip formatter={(value, name, props) => `${formatNumber(value, 2)} ${props.payload.module === 'areas' ? 'ha' : 'km'}`} />
-          <Legend 
-            verticalAlign="bottom" 
-            align="center" 
-            wrapperStyle={{ bottom: 0, left: 0, right: 0, maxHeight: 100, overflowY: 'auto' }}
-            layout="horizontal"
-          />
-          </PieChart>
-        </ResponsiveContainer>
-      </Box>
-      {otherData.length > 0 && (
-        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
-          <OtherAllocationsBarChart data={otherData} color={OTHER_COLOR} />
-        </Box>
-      )}
-    </Box>
-  );
-};
+import FilteredAllocationPieChart from './FilteredAllocationPieChart'
 
 const filterPredicate = (alloc, searchTerm) => {
   const lowercasedTerm = searchTerm.toLowerCase();
@@ -170,20 +78,20 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems, requestSort, sortConfig }) => <AllAllocationsList sortedItems={sortedItems} requestSort={requestSort} sortConfig={sortConfig} summaryData={summaryData} />
     },
     {
-      title: 'Analysis',
+      title: 'Analysis Charts',
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
     },
     {
       title: 'Area Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='areas' name='Area'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='areas' name='Area' />
     },
     {
       title: 'Hedgerow Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='hedgerows' name='Hedgerow'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='hedgerows' name='Hedgerow' />
     },
     {
       title: 'Watercourse Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='watercourses' name='Watercourse'/>
+      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='watercourses' name='Watercourse' />
     }
   ]
 
