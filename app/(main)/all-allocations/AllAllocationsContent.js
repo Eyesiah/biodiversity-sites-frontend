@@ -6,12 +6,13 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { OtherAllocationsBarChart } from '@/components/OtherAllocationsBarChart';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
 
 const FilteredAllocationPieChart = ({allocations, module, name}) => {
-  const habitatData = useMemo(() => {
+  const { chartData, otherData } = useMemo(() => {
     let acc = {};
     allocations.forEach(alloc => {
       const moduleHabitats = alloc.habitats ? alloc.habitats[module] : null;
@@ -22,25 +23,56 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
       });
     });
     
-    return Object.entries(acc).map(([name, value]) => ({ name, value }));
+    const allHabitatData = Object.entries(acc).map(([name, value]) => ({ name, value, module }));
+    const total = allHabitatData.reduce((sum, entry) => sum + entry.value, 0);
+
+    if (total === 0) {
+      return { chartData: [], otherData: [] };
+    }
+
+    const mainChartData = [];
+    const otherChartData = [];
+    let otherValue = 0;
+
+    allHabitatData.forEach(entry => {
+      const percentage = entry.value / total;
+      if (percentage < 0.03) {
+        otherValue += entry.value;
+        otherChartData.push(entry);
+      } else {
+        mainChartData.push(entry);
+      }
+    });
+
+    if (otherValue > 0) {
+      mainChartData.push({ name: 'Other', value: otherValue, module: 'mixed' });
+    }
+
+    const otherDataWithPercentages = otherChartData
+      .map(entry => ({ ...entry, percentage: (entry.value / total) * 100 }))
+      .sort((a, b) => b.value - a.value);
+
+    return { chartData: mainChartData.sort((a, b) => b.value - a.value), otherData: otherDataWithPercentages };
 
   }, [allocations, module]);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A230FF', '#FF30A2'];
+  const OTHER_COLOR = '#889095ff'; // A neutral grey for the 'Other' category
 
-  if (habitatData.length === 0) {
+  if (chartData.length === 0) {
     return <p>No habitat data to display for the current selection.</p>;
   }
 
   return (
-    <div>
-      <h3>
-        {name} Habitats by {module == 'areas' ? 'Size' : 'Length'}
-      </h3>
-      <ResponsiveContainer width="100%" height={500}>
-        <PieChart margin={{ top: 0, right: 30, left: 30, bottom: 100 }}>
+    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: 500 }}>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <h3 style={{ textAlign: 'center' }}>
+          {name} Habitats by {module === 'areas' ? 'Size' : 'Length'}
+        </h3>
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart margin={{ top: 0, right: 30, left: 30, bottom: 100 }}>
           <Pie
-            data={habitatData}
+            data={chartData}
             dataKey="value"
             nameKey="name"
             cx="50%"
@@ -48,17 +80,25 @@ const FilteredAllocationPieChart = ({allocations, module, name}) => {
             fill="#8884d8"
             labelLine={false}
           >
-            {habitatData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.name === 'Other' ? OTHER_COLOR : COLORS[index % COLORS.length]} />
+              ))}
           </Pie>
-          <Tooltip formatter={(value) => `${formatNumber(value, 2)} ${module == 'areas' ? 'ha' : 'km'}`} />
+            <Tooltip formatter={(value, name, props) => `${formatNumber(value, 2)} ${props.payload.module === 'areas' ? 'ha' : 'km'}`} />
           <Legend 
             verticalAlign="bottom" 
             align="center" 
             wrapperStyle={{ bottom: 0, left: 0, right: 0, maxHeight: 100, overflowY: 'auto' }}
             layout="horizontal"
           />
-        </PieChart>
-      </ResponsiveContainer>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      {otherData.length > 0 && (
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <OtherAllocationsBarChart data={otherData} color={OTHER_COLOR} />
+        </div>
+      )}
     </div>
   );
 };
