@@ -219,7 +219,7 @@ export default function Navigation() {
             <AboutModalButton/>
             <GlossarytModalButton/>
           </Dropdown>
-          <dropdown><FeedbackModalButton/></dropdown> 
+          <FeedbackModalButton/>
         </div>   
         <ColorModeButton />     
       </div>
