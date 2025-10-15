@@ -10,6 +10,7 @@ import Modal from '@/components/Modal'
 import modalStyles from '@/styles/Modal.module.css';
 import Tooltip from '@/components/Tooltip';
 import { WFS_URL } from '@/config'
+import { ColorModeButton } from './ui/color-mode'
 
 const Dropdown = ({ category, children }) => {
   return (
@@ -219,7 +220,8 @@ export default function Navigation() {
             <GlossarytModalButton/>
           </Dropdown>
           <dropdown><FeedbackModalButton/></dropdown> 
-        </div>        
+        </div>   
+        <ColorModeButton />     
       </div>
     </nav>
   );
