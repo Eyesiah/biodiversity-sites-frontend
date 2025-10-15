@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
-import { Tabs, Box, InputGroup, Input, Flex, Button } from "@chakra-ui/react"
+import { Tabs, Box, InputGroup, Input, Flex } from "@chakra-ui/react"
+import { Button } from '@/components/ui/Button';
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
