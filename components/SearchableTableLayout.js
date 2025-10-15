@@ -2,23 +2,22 @@
 
 import { useEffect } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
-import { Tabs, Box } from "@chakra-ui/react"
-import styles from '@/styles/SiteDetails.module.css';
+import { Tabs, Box, InputGroup, Input, Flex, Button } from "@chakra-ui/react"
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
   if (!exportConfig) return null;
 
   return (
-    <div className={styles.buttonGroup}>
-      {exportConfig.onExportXml && <button onClick={() => exportConfig.onExportXml(items)} className={styles.exportButton}>Export to XML</button>}
-      {exportConfig.onExportJson && <button onClick={() => exportConfig.onExportJson(items)} className={styles.exportButton}>Export to JSON</button>}
-      {exportConfig.onExportCsv && 
-        <button onClick={() => exportConfig.onExportCsv(items)} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
+    <Flex gap="0.5rem">
+      {exportConfig.onExportXml && <Button onClick={() => exportConfig.onExportXml(items)}>Export to XML</Button>}
+      {exportConfig.onExportJson && <Button onClick={() => exportConfig.onExportJson(items)}>Export to JSON</Button>}
+      {exportConfig.onExportCsv &&
+        <Button onClick={() => exportConfig.onExportCsv(items)}>
           Export to CSV
-        </button>
+        </Button>
       }
-    </div>
+    </Flex>
   );
 };
 
@@ -52,23 +51,77 @@ export default function SearchableTableLayout({
 
   return (
     <Box width="100%">
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-        <div className="search-container" style={{ margin: 0 }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder={placeholder}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-            style={{ width: '480px' }}
-          />
-          {inputValue && (
-            <button onClick={() => setInputValue('')} className="clear-search-button" aria-label="Clear search">&times;</button>
-          )}
-        </div>
-        <ExportButtons exportConfig={exportConfig} items={sortedItems} />
-      </div>
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        marginBottom="1rem"
+        position="sticky"
+        top="0px"
+        padding="0"
+        zIndex="999"
+      >
+        <Flex
+          gap="1rem"
+          alignItems="center"
+          width="90%"
+          margin="1rem auto"
+        >
+          <Box position="relative" flex="1">
+            <InputGroup
+              endElement={
+                inputValue ? (
+                  <Button
+                    onClick={() => setInputValue('')}
+                    position="absolute"
+                    right="0.5rem"
+                    top="50%"
+                    transform="translateY(-50%)"
+                    bg="transparent"
+                    border="none"
+                    padding="0.25rem"
+                    color="#666"
+                    fontSize="1.5rem"
+                    lineHeight="1"
+                    _hover={{
+                      color: "black"
+                    }}
+                    aria-label="Clear search"
+                  >
+                    &times;
+                  </Button>
+                ) : undefined
+              }
+            >
+              <Input
+                type="text"
+                placeholder={placeholder}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                autoFocus
+                width="100%"
+                padding="0.75rem"
+                paddingRight="2.5rem"
+                fontSize="1rem"
+                borderRadius="5px"
+                border="1px solid #ccc"
+                bg="ivory"
+                color="#333"
+                _placeholder={{
+                  color: "#888",
+                  fontWeight: "bold"
+                }}
+                _focus={{
+                  outline: "none",
+                  borderColor: "brand.default",
+                  boxShadow: "0 0 0 1px {colors.brand.default}"
+                }}
+              />
+            </InputGroup>
+          </Box>
+          <ExportButtons exportConfig={exportConfig} items={sortedItems} />
+        </Flex>
+      </Flex>
+
 
       {summary && summary(sortedItems.length, initialItems.length)}
 
@@ -77,7 +130,7 @@ export default function SearchableTableLayout({
           <Tabs.List
             position="sticky"
             // The search bar is ~60px high, and this provides a little extra space
-            top="3rem" 
+            top="3rem"
             zIndex="docked" // Chakra's theme value for sticky elements (often 10)
             bg="#F9F6EE" // Match the background from globals.css
             width="100%"
@@ -100,9 +153,9 @@ export default function SearchableTableLayout({
           ))}
         </Tabs.Root>
       ) : (
-        <div className="table-container">
+        <Box>
           {children && children(renderProps)}
-        </div>
+        </Box>
       )}
     </Box>
   );
