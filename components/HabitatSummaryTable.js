@@ -56,7 +56,7 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
 
   return (
-    <Box overflowX="auto" width="100%">
+    <Box overflowX="auto">
       <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>

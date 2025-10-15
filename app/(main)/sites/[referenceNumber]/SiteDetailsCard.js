@@ -45,6 +45,10 @@ export const SiteDetailsCard = ({ site }) => {
                     fontSize="inherit"
                     fontFamily="inherit"
                     cursor="pointer"
+                    minHeight="0"
+                    height="auto"
+                    lineHeight="inherit"
+                    verticalAlign="baseline"
                     _hover={{ color: "brand.emphasis" }}
                   >
                     {bodyName}
@@ -73,6 +77,10 @@ export const SiteDetailsCard = ({ site }) => {
                 fontSize="inherit"
                 fontFamily="inherit"
                 cursor="pointer"
+                minHeight="0"
+                height="auto"
+                lineHeight="inherit"
+                verticalAlign="baseline"
                 _hover={{ color: "brand.emphasis" }}
               >
                 {site.lpaName}
@@ -94,6 +102,10 @@ export const SiteDetailsCard = ({ site }) => {
                 fontSize="inherit"
                 fontFamily="inherit"
                 cursor="pointer"
+                minHeight="0"
+                height="auto"
+                lineHeight="inherit"
+                verticalAlign="baseline"
                 _hover={{ color: "brand.emphasis" }}
               >
                 {site.lsoa.name}
@@ -105,10 +117,34 @@ export const SiteDetailsCard = ({ site }) => {
         <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
         {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
         <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
-        <DetailRow 
-          label="Habitat Summary"
-          value={<HabitatSummaryTable site={site} />}
-        />
+        <Box 
+          display="flex" 
+          justifyContent="space-between"
+          alignItems="flex-start"
+          padding="0.1rem 0"
+          borderBottom="1px solid"
+          borderColor="clouds"
+        >
+          <Box 
+            as="dt"
+            fontWeight="bold" 
+            color="fg"
+            margin="0"
+            paddingRight="1rem"
+          >
+            Habitat Summary
+          </Box>
+          <Box 
+            as="dd"
+            margin="0"
+            flex="1"
+            minWidth="0"
+            display="flex"
+            justifyContent="flex-end"
+          >
+            <HabitatSummaryTable site={site} />
+          </Box>
+        </Box>
       </Box>
       <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
     </PrimaryCard>

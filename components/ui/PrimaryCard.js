@@ -10,8 +10,9 @@ export const PrimaryCard = (props) => (
     border="1px solid"
     borderColor="border"
     borderRadius="md"
-    padding="1rem"
-    bg="white"
+    padding="0.75rem"
+    bg="cardBg"
+    color="fg"
     boxShadow="0 2px 4px rgba(0,0,0,0.05)"
     display="flex"
     flexDirection="column"
@@ -30,7 +31,8 @@ export const CardTitle = (props) => (
     borderBottom="1px solid"
     borderColor="border"
     paddingBottom="0.5rem"
-    marginBottom="1rem"
+    marginBottom="0.75rem"
+    fontSize="1.17rem"
     cursor={props.onClick ? "pointer" : "default"}
     userSelect={props.onClick ? "none" : "auto"}
     {...props}
