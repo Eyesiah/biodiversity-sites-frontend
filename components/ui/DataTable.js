@@ -30,7 +30,7 @@ export const DataTable = {
       cursor="pointer"
       bg="brand.500"
       color="white"
-      fontSize="0.875rem"
+      fontSize="0.95rem"
       fontWeight="600"
       position="sticky"
       top="0"
@@ -46,12 +46,12 @@ export const DataTable = {
   ),
   Cell: (props) => (
     <Table.Cell 
-      padding="0.5rem"
+      padding="0.25rem"
       border="1px solid"
       borderLeft="1px solid white"
       borderColor="border"
       verticalAlign="top"
-      fontSize="0.875rem"
+      fontSize="0.9rem"
       color="tableText"
       textAlign="left"
       css={{
