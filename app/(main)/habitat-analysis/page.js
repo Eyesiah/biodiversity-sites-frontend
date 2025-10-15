@@ -137,12 +137,10 @@ export default async function HabitatAnalysis() {
   const hedgerowAnalysis = finalizeData('hedgerows');
   const watercourseAnalysis = finalizeData('watercourses');
   const lastUpdated = Date.now();
-  
+
   return (
     <>
-      <div className={styles.container}>
-        <HabitatAnalysisContent areaAnalysis={areaAnalysis} hedgerowAnalysis={hedgerowAnalysis} watercourseAnalysis={watercourseAnalysis}/>        
-      </div>
+      <HabitatAnalysisContent areaAnalysis={areaAnalysis} hedgerowAnalysis={hedgerowAnalysis} watercourseAnalysis={watercourseAnalysis} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

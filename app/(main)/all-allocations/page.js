@@ -42,9 +42,7 @@ export default async function AllocationsPage() {
 
   return (
     <>
-      <div className="container">
-        <AllAllocationsContent allocations={allocations}/>
-      </div>
+      <AllAllocationsContent allocations={allocations}/>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

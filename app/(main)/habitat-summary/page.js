@@ -88,9 +88,7 @@ export default async function HabitatSummaryPage() {
 
   return (
     <>
-      <div className={styles.container}>
-        <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
-      </div>
+      <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
       <Footer lastUpdated={lastUpdated} />
     </>
   )
