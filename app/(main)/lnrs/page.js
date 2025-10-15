@@ -72,9 +72,7 @@ export default async function LNRSAreasPage() {
 
   return (
     <>
-      <div className="container">
-        <LNRSContent lnrs={lnrs} sites={sites} error={error} />
-      </div>
+      <LNRSContent lnrs={lnrs} sites={sites} error={error} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

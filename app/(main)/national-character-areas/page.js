@@ -47,9 +47,7 @@ export default async function NationalCharacterAreasPage() {
 
   return (
     <>
-      <div className="container">
-        <NCAContent ncas={ncas} sites={sites} error={error} />
-      </div>
+      <NCAContent ncas={ncas} sites={sites} error={error} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

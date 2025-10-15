@@ -8,7 +8,9 @@ import { exportToXml, exportToJson } from '@/lib/utils';
 import { CollapsibleRow } from '@/components/CollapsibleRow';
 import MapContentLayout from '@/components/MapContentLayout';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
-import styles from '@/styles/SiteDetails.module.css';
+import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import { DataTable } from '@/components/ui/DataTable';
+import { Box, Text } from '@chakra-ui/react';
 
 const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
   ssr: false,
@@ -62,81 +64,110 @@ export default function NCAContent({ ncas, sites, error }) {
                     onExportJson: (items) => exportToJson(items, 'ncas', 'national-character-areas.json')
                 }}
                 summary={(filteredCount, totalCount) => (
-                    <p style={{ fontSize: '1.2rem' }}>
-                        Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> NCAs, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
-                    </p>
+                    <Text fontSize="1.2rem">
+                        Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> NCAs, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+                    </Text>
                 )}
             >
                 {({ sortedItems, requestSort, getSortIndicator }) => (
-                    <table className="site-table">
-                        <thead>
-                            <tr>
-                            <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
-                            <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                            <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                            <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
-                            <th onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</th>
-                            <th>Map</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <PrimaryTable.Root>
+                        <PrimaryTable.Header>
+                            <PrimaryTable.Row>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('adjacents.length')}># Adjacent NCAs{getSortIndicator('adjacents.length')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader>Map</PrimaryTable.ColumnHeader>
+                            </PrimaryTable.Row>
+                        </PrimaryTable.Header>
+                        <PrimaryTable.Body>
                             {sortedItems.map((nca) => (
                             <CollapsibleRow
                                 key={nca.id}
                                 isOpen={openRowId === nca.id}
                                 setIsOpen={(isOpen) => setOpenRowId(isOpen ? nca.id : null)}
+                                tableType="primary"
                                 mainRow={(
                                 <>
-                                    <td>
+                                    <PrimaryTable.Cell>
                                     <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(nca.name)}/`}>{nca.id}</ExternalLink>
-                                    </td>
-                                    <td>{nca.name}</td>
-                                    <td className="numeric-data">{formatNumber(nca.size, 0)}</td>
-                                    <td className="centered-data">{nca.siteCount}</td>
-                                    <td className="centered-data">{nca.adjacents?.length || 0}</td>
-                                    <td>
-                                    <button onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }} className="linkButton">
+                                    </PrimaryTable.Cell>
+                                    <PrimaryTable.Cell>{nca.name}</PrimaryTable.Cell>
+                                    <PrimaryTable.Cell textAlign="right" fontFamily="mono">{formatNumber(nca.size, 0)}</PrimaryTable.Cell>
+                                    <PrimaryTable.Cell textAlign="center" fontFamily="mono">{nca.siteCount}</PrimaryTable.Cell>
+                                    <PrimaryTable.Cell textAlign="center" fontFamily="mono">{nca.adjacents?.length || 0}</PrimaryTable.Cell>
+                                    <PrimaryTable.Cell>
+                                    <Text
+                                      as="button"
+                                      onClick={(e) => { e.stopPropagation(); handleMapSelection(nca); }}
+                                      bg="transparent"
+                                      border="none"
+                                      color="link"
+                                      textDecoration="underline"
+                                      cursor="pointer"
+                                      padding="0"
+                                      _hover={{ color: "linkHover" }}
+                                    >
                                         Display Map
-                                    </button>
-                                    </td>
+                                    </Text>
+                                    </PrimaryTable.Cell>
                                 </>
                                 )}
                                 collapsibleContent={(
-                                <div style={{ padding: '0.5rem' }}>
-                                    <h4>Adjacent NCAs</h4>
+                                <Box padding="0.5rem">
+                                    <Text as="h4" fontSize="1rem" fontWeight="bold" marginTop="0" marginBottom="0.75rem">Adjacent NCAs</Text>
                                     {nca.adjacents && nca.adjacents.length > 0 ? (
-                                    <table className={styles.subTable}>
-                                        <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Area (ha)</th>
-                                            <th># BGS Sites</th>
-                                            <th>Map</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
+                                    <DataTable.Root>
+                                        <DataTable.Header>
+                                        <DataTable.Row>
+                                            <DataTable.ColumnHeader>ID</DataTable.ColumnHeader>
+                                            <DataTable.ColumnHeader>Name</DataTable.ColumnHeader>
+                                            <DataTable.ColumnHeader>Area (ha)</DataTable.ColumnHeader>
+                                            <DataTable.ColumnHeader># BGS Sites</DataTable.ColumnHeader>
+                                            <DataTable.ColumnHeader>Map</DataTable.ColumnHeader>
+                                        </DataTable.Row>
+                                        </DataTable.Header>
+                                        <DataTable.Body>
                                         {nca.adjacents.map(adj => {
                                             const adjacentNcaObject = ncas.find(n => n.id === adj.id);
                                             return (
-                                            <tr key={adj.id}><td>{adj.id}</td><td>{adj.name}</td><td className="numeric-data">{formatNumber(adj.size, 0)}</td><td className="centered-data">{adjacentNcaObject?.siteCount || 0}</td>
-                                            <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }} className="linkButton">Display Map</button></td>
-                                            </tr>
+                                            <DataTable.Row key={adj.id}>
+                                              <DataTable.Cell>{adj.id}</DataTable.Cell>
+                                              <DataTable.Cell>{adj.name}</DataTable.Cell>
+                                              <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(adj.size, 0)}</DataTable.Cell>
+                                              <DataTable.Cell textAlign="center" fontFamily="mono">{adjacentNcaObject?.siteCount || 0}</DataTable.Cell>
+                                              <DataTable.Cell>
+                                                <Text
+                                                  as="button"
+                                                  onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentNcaObject); }}
+                                                  bg="transparent"
+                                                  border="none"
+                                                  color="link"
+                                                  textDecoration="underline"
+                                                  cursor="pointer"
+                                                  padding="0"
+                                                  _hover={{ color: "linkHover" }}
+                                                >
+                                                  Display Map
+                                                </Text>
+                                              </DataTable.Cell>
+                                            </DataTable.Row>
                                             );
                                         })}
-                                        </tbody>
-                                    </table>
-                                    ) : (<p>No adjacency data available.</p>)}
-                                </div>
+                                        </DataTable.Body>
+                                    </DataTable.Root>
+                                    ) : (<Text>No adjacency data available.</Text>)}
+                                </Box>
                                 )}
                                 colSpan={6}
                             />
                             ))}
-                        </tbody>
-                    </table>
+                        </PrimaryTable.Body>
+                    </PrimaryTable.Root>
                 )}
             </SearchableTableLayout>
-            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent NCAs are shown coloured pink.</p>
+            <Text fontStyle="italic">When a site map is selected, adjacent NCAs are shown coloured pink.</Text>
         </>
         }
     />
