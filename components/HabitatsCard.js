@@ -48,7 +48,7 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
         </tbody>
       </table>    
       {hasSites &&
-        <SiteList sites={sites} minimalHeight={true} />
+        <SiteList sites={sites} minimalHeight={true} columns={['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'allocatedHabitatArea', 'lpaName', 'ncaName']} />
       }
     </>
   );

@@ -3,7 +3,6 @@ import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
 import SiteListPageContent from './SiteListPageContent';
 import Footer from '@/components/Footer';
-import { Box } from '@chakra-ui/react';
 
 export const metadata = {
   title: 'Biodiversity Gain Sites',

@@ -1,15 +1,12 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react';
-import Link from 'next/link';
-import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/MapContentLayout';
+import SiteList from '@/components/SiteList';
 import dynamic from 'next/dynamic';
-import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text, Flex, Input, InputGroup, Button, Stack } from '@chakra-ui/react';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -18,109 +15,8 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 
 const DEBOUNCE_DELAY_MS = 300;
 
-const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
-  
-  const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(sites, { key: 'referenceNumber', direction: 'ascending' });
-
-  if (!sites || sites.length === 0) {
-    return <Text>No site data available.</Text>;
-  }
-
-  return (
-    <PrimaryTable.Root>
-      <PrimaryTable.Header>
-        <PrimaryTable.Row>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('referenceNumber')} 
-          >
-            {getSortIndicator('referenceNumber')}BGS Reference
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('responsibleBodies')} 
-          >
-            {getSortIndicator('responsibleBodies')}Responsible Body
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('siteSize')} 
-          >
-            {getSortIndicator('siteSize')}Size (ha)
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('allocationsCount')} 
-          >
-            {getSortIndicator('allocationsCount')}# Allocations
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('lpaName')} 
-          >
-            {getSortIndicator('lpaName')}Local Planning Authority (LPA)
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('ncaName')} 
-          >
-            {getSortIndicator('ncaName')}National Character Area (NCA)
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('lnrsName')} 
-          >
-            {getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('imdDecile')} 
-          >
-            {getSortIndicator('imdDecile')}IMD Decile
-          </PrimaryTable.ColumnHeader>
-        </PrimaryTable.Row>
-      </PrimaryTable.Header>
-      <PrimaryTable.Body>
-        {sortedSites.map((site) => (
-          <PrimaryTable.Row
-            key={site.referenceNumber}
-            onMouseEnter={() => onSiteHover(site)}
-            onMouseLeave={() => onSiteHover(null)}
-            onClick={() => onSiteClick(site)}
-          >
-            <PrimaryTable.Cell textAlign="left">
-              <Link href={`/sites/${site.referenceNumber}`}>
-                {site.referenceNumber}
-              </Link>
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell 
-              textAlign="right" 
-              fontFamily="mono"
-            >
-              {formatNumber(site.siteSize)}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell 
-              textAlign="center" 
-              fontFamily="mono"
-            >
-              {site.allocationsCount}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {site.lpaName}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {site.ncaName}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {site.lnrsName}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell 
-              textAlign="center" 
-              fontFamily="mono"
-            >
-              {site.imdDecile}
-            </PrimaryTable.Cell>
-          </PrimaryTable.Row>
-        ))}
-      </PrimaryTable.Body>
-    </PrimaryTable.Root>
-  );
-};
+// Column configuration for the main sites list page (includes LNRS and IMD Decile)
+const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
 export default function SiteListPageContent({sites, summary}) {
   const [inputValue, setInputValue] = useState('');
@@ -295,7 +191,12 @@ export default function SiteListPageContent({sites, summary}) {
             </Button>           
           </Flex>
           <Box width="100%" overflowX="auto">
-            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
+            <SiteList 
+              sites={filteredSites} 
+              onSiteHover={setHoveredSite} 
+              onSiteClick={handleSiteSelect}
+              columns={FULL_SITE_COLUMNS}
+            />
           </Box>
         </Stack>
       }

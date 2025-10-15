@@ -4,7 +4,22 @@ import { formatNumber } from '@/lib/format';
 import { Text, Box } from '@chakra-ui/react';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
-const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
+// Default column configuration for basic site list
+const DEFAULT_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName'];
+
+const ALL_SITE_COLUMNS = {
+  'referenceNumber': {label: 'BGS Reference', textAlign: 'left' },
+  'responsibleBodies': {label: 'Responsible Body', textAlign: 'left' },
+  'siteSize': {label: 'Size (ha)', textAlign: 'right', fontFamily: 'mono', format: (val) => formatNumber(val) },
+  'allocationsCount': {label: '# Allocations', textAlign: 'center', fontFamily: 'mono' },
+  'allocatedHabitatArea': {label: '% Allocated', textAlign: 'center', fontFamily: 'mono', format: (val, site) => val && val > 0 ? `${formatNumber((val / site.siteSize) * 100)}%` : '' },
+  'lpaName': {label: 'Local Planning Authority (LPA)', textAlign: 'left' },
+  'ncaName': {label: 'National Character Area (NCA)', textAlign: 'left' },
+  'lnrsName': {label: 'Local Nature Recovery Strategy (LNRS)', textAlign: 'left' },
+  'imdDecile': {label: 'IMD Decile', textAlign: 'center', fontFamily: 'mono' },
+}
+
+const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, columns = DEFAULT_COLUMNS }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
 
   const sortedSites = useMemo(() => {
@@ -60,51 +75,44 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
     return <Text>No site data available.</Text>;
   }
 
-  const hasAllocPercentage = sites[0].allocatedHabitatArea != null;
+  // Helper to render cell content
+  const renderCellContent = (site, column) => {
+    const value = site[column];
+    
+    // Special handling for referenceNumber - render as link
+    if (column === 'referenceNumber') {
+      return (
+        <Link href={`/sites/${site.referenceNumber}`}>
+          {value}
+        </Link>
+      );
+    }
+    
+    // Special handling for array values
+    if (Array.isArray(value)) {
+      return value.join(', ');
+    }
+    
+    // Use custom format function if provided
+    if (ALL_SITE_COLUMNS[column].format) {
+      return ALL_SITE_COLUMNS[column].format(value, site);
+    }
+    
+    return value;
+  };
 
   const table = (
     <PrimaryTable.Root>
       <PrimaryTable.Header>
         <PrimaryTable.Row>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('referenceNumber')} 
-          >
-            BGS Reference{getSortIndicator('referenceNumber')}
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('responsibleBodies')} 
-          >
-            Responsible Body{getSortIndicator('responsibleBodies')}
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('siteSize')} 
-          >
-            {hasAllocPercentage ? 'Habitat Size' : 'Size (ha)'}{getSortIndicator('siteSize')}
-          </PrimaryTable.ColumnHeader>
-          {!hasAllocPercentage && (
+          {columns.map((column) => (
             <PrimaryTable.ColumnHeader 
-              onClick={() => requestSort('allocationsCount')} 
+              key={column}
+              onClick={() => requestSort(column)} 
             >
-              {getSortIndicator('allocationsCount')}# Allocations
+              {ALL_SITE_COLUMNS[column].label}{getSortIndicator(column)}
             </PrimaryTable.ColumnHeader>
-          )}
-          {hasAllocPercentage && (
-            <PrimaryTable.ColumnHeader 
-              onClick={() => requestSort('allocatedHabitatArea')} 
-            >
-              {getSortIndicator('allocatedHabitatArea')}% Allocated
-            </PrimaryTable.ColumnHeader>
-          )}
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('lpaName')} 
-          >
-            Local Planning Authority (LPA){getSortIndicator('lpaName')}
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader 
-            onClick={() => requestSort('ncaName')} 
-          >
-            National Character Area (NCA){getSortIndicator('ncaName')}
-          </PrimaryTable.ColumnHeader>
+          ))}
         </PrimaryTable.Row>
       </PrimaryTable.Header>
       <PrimaryTable.Body>
@@ -115,42 +123,15 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false }) => {
             onMouseLeave={() => {if (onSiteHover) onSiteHover(null)}} 
             onClick={() => { if (onSiteClick) onSiteClick(site)}} 
           >
-            <PrimaryTable.Cell textAlign="left">
-              <Link href={`/sites/${site.referenceNumber}`}>
-                {site.referenceNumber}
-              </Link>
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {site.responsibleBodies?.join(', ')}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell 
-              textAlign="right" 
-              fontFamily="mono"
-            >
-              {formatNumber(site.siteSize)}
-            </PrimaryTable.Cell>
-            {!hasAllocPercentage && (
+            {columns.map((column) => (
               <PrimaryTable.Cell 
-                textAlign="center" 
-                fontFamily="mono"
+                key={column}
+                textAlign={ALL_SITE_COLUMNS[column].textAlign}
+                fontFamily={ALL_SITE_COLUMNS[column].fontFamily}
               >
-                {site.allocationsCount}
+                {renderCellContent(site, column)}
               </PrimaryTable.Cell>
-            )}
-            {hasAllocPercentage && (
-              <PrimaryTable.Cell 
-                textAlign="center" 
-                fontFamily="mono"
-              >
-                {site.allocatedHabitatArea && site.allocatedHabitatArea > 0 ? `${formatNumber((site.allocatedHabitatArea / site.siteSize) * 100)}%` : ''}
-              </PrimaryTable.Cell>
-            )}
-            <PrimaryTable.Cell textAlign="left">
-              {site.lpaName}
-            </PrimaryTable.Cell>
-            <PrimaryTable.Cell textAlign="left">
-              {site.ncaName}
-            </PrimaryTable.Cell>
+            ))}
           </PrimaryTable.Row>
         ))}
       </PrimaryTable.Body>
