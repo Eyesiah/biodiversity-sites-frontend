@@ -46,6 +46,8 @@ export const ColorModeButton = React.forwardRef(
           aria-label='Toggle color mode'
           size='sm'
           ref={ref}
+          color="white"
+          _hover={{ bg: "rgba(255, 255, 255, 0.1)" }}
           {...props}
           css={{
             _icon: {
