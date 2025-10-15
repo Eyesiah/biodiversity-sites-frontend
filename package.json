@@ -6,9 +6,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.27.1",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
     "fast-xml-parser": "5.2.5",
-    "framer-motion": "^12.23.24",
     "geodesy": "^2.4.0",
     "leaflet": "1.9.4",
     "mongodb": "6.19.0",
