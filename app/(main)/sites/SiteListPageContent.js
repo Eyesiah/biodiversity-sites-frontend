@@ -6,7 +6,8 @@ import MapContentLayout from '@/components/MapContentLayout';
 import SiteList from '@/components/SiteList';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { Box, Text, Flex, Input, InputGroup, Button, Stack } from '@chakra-ui/react';
+import { Box, Text, Flex, Input, InputGroup, Button } from '@chakra-ui/react';
+import { ContentStack } from '@/components/ui/ContentStack'
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -69,7 +70,7 @@ export default function SiteListPageContent({sites, summary}) {
         <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
-        <Stack spacing="1rem">
+        <ContentStack>
           <Box width="90%" margin="0 auto 1rem" textAlign="left">
             <Box textAlign="center">
               {inputValue ? (
@@ -198,7 +199,7 @@ export default function SiteListPageContent({sites, summary}) {
               columns={FULL_SITE_COLUMNS}
             />
           </Box>
-        </Stack>
+        </ContentStack>
       }
     />      
   )

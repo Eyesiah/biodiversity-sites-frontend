@@ -51,9 +51,7 @@ export default async function SitePage({params}) {
 
   return (
     <>
-      <div className={styles.container}>
-        <SitePageContent site={site}/>
-      </div>
+      <SitePageContent site={site}/>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

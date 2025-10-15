@@ -8,6 +8,7 @@ import { AllocationsCard } from './AllocationsCard'
 import styles from '@/styles/SiteDetails.module.css';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
+import { ContentStack } from '@/components/ui/ContentStack'
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -39,9 +40,9 @@ export default function SitePageContent({site}) {
       map={
         <SiteMap sites={[site]} selectedSite={site} />
       }
-      content={(<>
+      content={(
 
-        <div className={styles.detailsGrid}>
+        <ContentStack>
                     
           <SiteDetailsCard site={site} />
 
@@ -67,8 +68,8 @@ export default function SitePageContent({site}) {
             <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
           </div>
           
-        </div>
-        </>
+        </ContentStack>
+        
       )}          
     />
   )

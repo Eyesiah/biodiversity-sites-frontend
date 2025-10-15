@@ -1,5 +1,6 @@
 import { formatNumber } from '@/lib/format';
-import styles from '@/styles/SiteDetails.module.css';
+import { DataTable } from '@/components/ui/DataTable';
+import { Box } from '@chakra-ui/react';
 
 export const HabitatSummaryTable = ({ site }) => {
 
@@ -55,53 +56,53 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
 
   return (
-    <div className={styles.tableContainer}>
-      <table className={`${styles.subTable} ${styles.inlineTable}`}>
-        <thead>
-          <tr>
-            <th>Habitat</th>
-            <th># Parcels</th>
-            <th>Baseline Size</th>
-            <th>Baseline HUs</th>
-            <th>Improvements Size</th>
-            {hasAllocs && <th>Allocations Size</th>}
-            {hasAllocs && <th>% Allocated</th>}
-            {hasAllocHUs && <th>Allocations HUs</th>}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Areas (ha)</td>
-            <td className={styles.numericData}>{formatNumber(baselineAreaParcels, 0)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineArea, 2)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineAreaHUs)}</td>
-            <td className={styles.numericData}>{formatNumber(improvementArea, 2)}</td>
-            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationArea, 2)}</td>}
-            {hasAllocs && <td className={styles.numericData}>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationAreaHUs)}</td>}
-          </tr>
-          <tr>
-            <td>Hedgerows (km)</td>
-            <td className={styles.numericData}>{formatNumber(baselineHedgerowParcels, 0)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineHedgerow, 2)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineHedgerowHUs)}</td>
-            <td className={styles.numericData}>{formatNumber(improvementHedgerow, 2)}</td>
-            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationHedgerow, 2)}</td>}
-            {hasAllocs && <td className={styles.numericData}>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationHedgerowHUs)}</td>}
-          </tr>
-          <tr>
-            <td>Watercourses (km)</td>
-            <td className={styles.numericData}>{formatNumber(baselineWatercourseParcels, 0)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineWatercourse, 2)}</td>
-            <td className={styles.numericData}>{formatNumber(baselineWatercourseHUs)}</td>
-            <td className={styles.numericData}>{formatNumber(improvementWatercourse, 2)}</td>
-            {hasAllocs && <td className={styles.numericData}>{formatNumber(allocationWatercourse, 2)}</td>}
-            {hasAllocs && <td className={styles.numericData}>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</td>}
-            {hasAllocHUs && <td className={styles.numericData}>{formatNumber(allocationWatercourseHUs)}</td>}
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Box overflowX="auto" width="100%">
+      <DataTable.Root width="auto" margin="0">
+        <DataTable.Header>
+          <DataTable.Row>
+            <DataTable.ColumnHeader>Habitat</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader># Parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>Baseline Size</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>Baseline HUs</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>Improvements Size</DataTable.ColumnHeader>
+            {hasAllocs && <DataTable.ColumnHeader>Allocations Size</DataTable.ColumnHeader>}
+            {hasAllocs && <DataTable.ColumnHeader>% Allocated</DataTable.ColumnHeader>}
+            {hasAllocHUs && <DataTable.ColumnHeader>Allocations HUs</DataTable.ColumnHeader>}
+          </DataTable.Row>
+        </DataTable.Header>
+        <DataTable.Body>
+          <DataTable.Row>
+            <DataTable.Cell>Areas (ha)</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineAreaParcels, 0)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineArea, 2)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineAreaHUs)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(improvementArea, 2)}</DataTable.Cell>
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationArea, 2)}</DataTable.Cell>}
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.Cell>}
+            {hasAllocHUs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationAreaHUs)}</DataTable.Cell>}
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>Hedgerows (km)</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineHedgerowParcels, 0)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineHedgerow, 2)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineHedgerowHUs)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(improvementHedgerow, 2)}</DataTable.Cell>
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationHedgerow, 2)}</DataTable.Cell>}
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.Cell>}
+            {hasAllocHUs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationHedgerowHUs)}</DataTable.Cell>}
+          </DataTable.Row>
+          <DataTable.Row>
+            <DataTable.Cell>Watercourses (km)</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineWatercourseParcels, 0)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineWatercourse, 2)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(baselineWatercourseHUs)}</DataTable.Cell>
+            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(improvementWatercourse, 2)}</DataTable.Cell>
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationWatercourse, 2)}</DataTable.Cell>}
+            {hasAllocs && <DataTable.Cell textAlign="right" fontFamily="mono">{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.Cell>}
+            {hasAllocHUs && <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(allocationWatercourseHUs)}</DataTable.Cell>}
+          </DataTable.Row>
+        </DataTable.Body>
+      </DataTable.Root>
+    </Box>
   );
 };
