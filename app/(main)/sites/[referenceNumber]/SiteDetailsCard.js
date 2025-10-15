@@ -123,7 +123,7 @@ export const SiteDetailsCard = ({ site }) => {
           alignItems="flex-start"
           padding="0.1rem 0"
           borderBottom="1px solid"
-          borderColor="clouds"
+          borderColor="subtleBorder"
         >
           <Box 
             as="dt"

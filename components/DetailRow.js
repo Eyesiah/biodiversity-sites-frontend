@@ -7,7 +7,7 @@ export const DetailRow = ({ label, value, labelColor, valueColor }) => (
     justifyContent="space-between" 
     padding="0.1rem 0"
     borderBottom="1px solid"
-    borderColor="clouds"
+    borderColor="subtleBorder"
     _last={{ borderBottom: "none" }}
   >
     <Text 

@@ -75,6 +75,7 @@ export const system = createSystem(defaultConfig, {
         tableHoverBg: { value: { _light: "{colors.clouds}", _dark: "#2a2a2a" } },
         tableTotalsBg: { value: { _light: "{colors.silver}", _dark: "{colors.charcoal}" } },
         cardBg: { value: { _light: "{colors.white}", _dark: "#2a2a2a" } },
+        subtleBorder: { value: { _light: "{colors.clouds}", _dark: "#404040" } },
         error: { value: { _light: "{colors.alizarin}", _dark: "{colors.alizarin}" } },
       },
     },
