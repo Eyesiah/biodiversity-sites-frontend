@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import styles from '@/styles/MapContentLayout.module.css';
 import { useIsMobile } from '@/lib/hooks.js';
+import { Box, Flex } from '@chakra-ui/react';
 
 const MapContentLayout = ({ map, content }) => {
   const isMobile = useIsMobile();
@@ -11,16 +11,28 @@ const MapContentLayout = ({ map, content }) => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <Flex 
+      flexDirection={{ base: "column", md: "row" }}
+      width="100%"
+    >
       {!isMobile &&
-        <div className={styles.mapColumn}>
+        <Box 
+          flex="1 1 33%"
+          marginRight="1rem"
+          position="sticky"
+          top="2rem"
+          alignSelf="flex-start"
+        >
           {hasMounted ? map : null}
-        </div>
+        </Box>
       }
-      <div className={styles.contentColumn}>
+      <Box 
+        flex={{ base: "1 1 100%", md: "1 1 67%" }}
+        py="1rem"
+      >
         {content}
-      </div>
-    </div>
+      </Box>
+    </Flex>
   );
 };
 
