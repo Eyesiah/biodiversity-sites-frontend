@@ -10,6 +10,7 @@ import MapContentLayout from '@/components/MapContentLayout';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
 import { DataTable } from '@/components/ui/DataTable';
+import { Box, Text } from '@chakra-ui/react';
 
 const PolygonMap = dynamic(() => import('@/components/Maps/PolygonMap'), {
   ssr: false,
@@ -21,8 +22,8 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
     return null;
   }
   return (
-    <div style={{ padding: '0.5rem' }}>
-      <h4>Adjacent LPAs</h4>
+    <Box padding="0.5rem">
+      <Text as="h4" fontSize="1rem" fontWeight="bold" marginTop="0" marginBottom="0.75rem">Adjacent LPAs</Text>
       {lpa.adjacents && lpa.adjacents.length > 0 ? (
         <DataTable.Root>
           <DataTable.Header>
@@ -50,9 +51,9 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
           </DataTable.Body>
         </DataTable.Root>
       ) : (
-        <p>No adjacency data available.</p>
+        <Text>No adjacency data available.</Text>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -122,9 +123,9 @@ export default function LPAContent({ lpas, sites }) {
                 onExportJson: (items) => exportToJson(items, 'lpas', 'local-planning-auPrimaryTable.ColumnHeaderorities.json')
               }}
               summary={(filteredCount, totalCount) => (
-                <p style={{ fontSize: '1.2rem' }}>
-                  Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> LPAs.
-                </p>
+                <Text fontSize="1.2rem">
+                  Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> LPAs.
+                </Text>
               )}
             >
               {({ sortedItems, requestSort, getSortIndicator }) => {
@@ -147,8 +148,8 @@ export default function LPAContent({ lpas, sites }) {
                       </PrimaryTable.Row>
                     </PrimaryTable.Header>
                     <PrimaryTable.Body>
-                      <PrimaryTable.Row style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-                        <PrimaryTable.Cell colSpan="2" style={{ textAlign: 'center' }}>Totals</PrimaryTable.Cell>
+                      <PrimaryTable.Row fontWeight="bold" bg="tableTotalsBg">
+                        <PrimaryTable.Cell colSpan="2" textAlign="center">Totals</PrimaryTable.Cell>
                         <PrimaryTable.Cell></PrimaryTable.Cell>
                         <PrimaryTable.Cell className="centered-data">{formatNumber(summaryData.totalSites, 0)}</PrimaryTable.Cell>
                         <PrimaryTable.Cell className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</PrimaryTable.Cell>
@@ -171,7 +172,7 @@ export default function LPAContent({ lpas, sites }) {
                 )
               }}
             </SearchableTableLayout>
-            <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LPAs are shown coloured pink.</p>
+            <Text fontStyle="italic">When a site map is selected, adjacent LPAs are shown coloured pink.</Text>
           </>
         }
       />
