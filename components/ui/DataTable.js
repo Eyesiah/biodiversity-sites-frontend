@@ -37,8 +37,9 @@ export const DataTable = {
       zIndex="1"
       padding="0.5rem"
       border="1px solid"
-      borderLeft="1px solid white"
-      borderColor="border"
+      borderLeft="1px solid"
+      borderLeftColor="subtleBorder"
+      borderColor="subtleBorder"
       textAlign="center"
       verticalAlign="top"
       {...props} 
@@ -48,8 +49,9 @@ export const DataTable = {
     <Table.Cell 
       padding="0.25rem"
       border="1px solid"
-      borderLeft="1px solid white"
-      borderColor="border"
+      borderLeft="1px solid"
+      borderLeftColor="subtleBorder"
+      borderColor="subtleBorder"
       verticalAlign="top"
       fontSize="0.9rem"
       color="tableText"

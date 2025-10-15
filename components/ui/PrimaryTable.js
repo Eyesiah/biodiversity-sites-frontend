@@ -35,7 +35,7 @@ export const PrimaryTable = {
       zIndex="1"
       padding="1rem"
       borderBottom="1px solid"
-      borderColor="border"
+      borderColor="subtleBorder"
       textAlign="center"
       verticalAlign="top"
       {...props} 
@@ -45,7 +45,7 @@ export const PrimaryTable = {
     <Table.Cell 
       padding="1rem"
       borderBottom="1px solid"
-      borderColor="border"
+      borderColor="subtleBorder"
       verticalAlign="top"
       fontSize="0.9rem"
       color="tableText"
