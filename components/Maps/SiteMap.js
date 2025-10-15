@@ -131,7 +131,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
 
   const handlePopupClose = () => {
     setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-    if (onSiteSelect) {onSiteSelect(null)};
+    if (onSiteSelect) { onSiteSelect(null) };
   };
 
   const displayKey = onSiteSelect == null;
@@ -148,9 +148,11 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
         {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
         {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
 
-        {sites.filter(site => site.position != null).map(site => (
+        {sites.map(site =>
+          site.position != null && (
             <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
-        ))}
+          )
+        )}
 
         {selectedSite && selectedSite.allocations &&
           selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
