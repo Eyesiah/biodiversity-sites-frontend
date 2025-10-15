@@ -85,9 +85,7 @@ export default async function ResponsibleBodiesPage() {
 
   return (
     <>
-      <div className="container">
-        <ResponsibleBodiesContent responsibleBodies={responsibleBodies} error={error} />
-      </div>
+      <ResponsibleBodiesContent responsibleBodies={responsibleBodies} error={error} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

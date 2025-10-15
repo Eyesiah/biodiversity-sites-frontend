@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 import MapContentLayout from '@/components/MapContentLayout';
 import ExternalLink from '@/components/ExternalLink';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
+import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -19,18 +20,18 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const mainRow = (
       <>
-        <td>{body.name}</td>
-        <td>{body.sites.length}</td>
-        <td>{body.designationDate}</td>
-        <td>{body.expertise}</td>
-        <td>{body.organisationType}</td>
-        <td>{body.address}</td>
-        <td>
+        <PrimaryTable.Cell>{body.name}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.sites.length}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.designationDate}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.expertise}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.organisationType}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.address}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>
           {body.emails.map(email => (
             <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
           ))}
-        </td>
-        <td>{body.telephone}</td>
+        </PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.telephone}</PrimaryTable.Cell>
       </>
     )
   
@@ -128,20 +129,20 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                 )}
               >
                 {({ sortedItems, requestSort, getSortIndicator }) => (
-                    <table className="site-table">
-                        <thead>
-                        <tr>
-                            <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                            <th onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</th>
-                            {<th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
-                            {<th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
-                            {<th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
-                            {<th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
-                            {<th>Email</th>}
-                            {<th>Telephone</th>}
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <PrimaryTable.Root>
+                        <PrimaryTable.Header>
+                        <PrimaryTable.Row>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
+                        </PrimaryTable.Row>
+                        </PrimaryTable.Header>
+                        <PrimaryTable.Body>
                         {sortedItems.map((body) => (
                             <BodyRow
                             body={body}
@@ -152,8 +153,8 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                             onSiteClick={setSelectedSite}
                             />              
                         ))}
-                        </tbody>
-                    </table>
+                        </PrimaryTable.Body>
+                    </PrimaryTable.Root>
                 )}
               </SearchableTableLayout>
             </>
