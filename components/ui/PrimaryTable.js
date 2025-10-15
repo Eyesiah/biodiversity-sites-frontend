@@ -8,8 +8,7 @@ export const PrimaryTable = {
       width="auto"
       margin="1rem auto"
       borderCollapse="collapse"
-      bg="white"
-      color="black"
+      bg="tableBg"
       borderRadius="md"
       boxShadow="0 4px 8px rgba(0, 0, 0, 0.1)"
       {...props} 
@@ -20,7 +19,7 @@ export const PrimaryTable = {
   Row: (props) => (
     <Table.Row 
       cursor="pointer"
-      _hover={{ bg: "clouds" }}
+      _hover={{ bg: "tableHoverBg" }}
       {...props} 
     />
   ),
@@ -49,6 +48,16 @@ export const PrimaryTable = {
       borderColor="border"
       verticalAlign="top"
       fontSize="0.9rem"
+      color="tableText"
+      css={{
+        "& a": {
+          color: "link",
+          textDecoration: "underline",
+          _hover: {
+            color: "linkHover"
+          }
+        }
+      }}
       {...props} 
     />
   ),
