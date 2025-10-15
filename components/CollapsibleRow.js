@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '@/styles/SiteDetails.module.css';
+import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
 export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle, onMainRowClick, isOpen: externalIsOpen, setIsOpen: setExternalIsOpen }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
@@ -26,24 +27,24 @@ export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle,
 
   return (
     <>
-      <tr
+      <PrimaryTable.Row
         onClick={handleToggle}
         className={`${styles.clickableRow} ${isHovered ? styles.subTableHovered : ''}`}
-        onMouseEnter={() => setIsHovered(true)}
+        onMouseEnter={() => setIsHovered(PrimaryTable.Row)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {mainRow}
-      </tr>
+      </PrimaryTable.Row>
       {isOpen && (
-        <tr
+        <PrimaryTable.Row
           className={`${isHovered ? styles.subTableHovered : ''}`}
-          onMouseEnter={() => setIsHovered(true)}
+          onMouseEnter={() => setIsHovered(PrimaryTable.Row)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <td colSpan={colSpan}>
+          <PrimaryTable.Cell colSpan={colSpan}>
             {collapsibleContent}
-          </td>
-        </tr>
+          </PrimaryTable.Cell>
+        </PrimaryTable.Row>
       )}
     </>
   );
