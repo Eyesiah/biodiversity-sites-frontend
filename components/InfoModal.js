@@ -78,8 +78,10 @@ export const InfoModal = ({ modalState, onClose }) => {
     if (type === 'lsoa' && data) {
       return (
         <dl>
-          <DetailRow label="Index of Multiple Deprivation (IMD) Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Index of Multiple Deprivation (IMD) Decile" value={data.IMDDecile ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Index of Multiple Deprivation values"labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Decile" value={data.IMDDecile ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Score" value={data.IMDScore ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />          
         </dl>
       );
     }
