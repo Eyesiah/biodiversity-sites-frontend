@@ -92,86 +92,24 @@ export const system = createSystem(defaultConfig, {
           color: "linkHover",
         },
       },
-    },
-    recipes: {
-      button: {
-        base: {
-          cursor: "pointer",
-          border: "none",
-          borderRadius: "md",
-          transition: "all 0.2s",
-          _disabled: {
-            opacity: "0.6",
-            cursor: "not-allowed",
-          },
+      "button, .chakra-button": {
+        fontSize: "0.9rem",
+        padding: "0.5rem 1rem",
+        border: "1px solid",
+        borderColor: "border",
+        borderRadius: "5px",
+        bg: "cardBg",
+        color: "fg",
+        cursor: "pointer",
+        transition: "all 0.2s",
+        _hover: {
+          bg: "brand.500",
+          color: "white",
+          borderColor: "brand.500",
         },
-        variants: {
-          export: {
-            fontSize: "0.9rem",
-            padding: "0.5rem 1rem",
-            border: "1px solid",
-            borderColor: "nephritis",
-            borderRadius: "5px",
-            bg: "white",
-            color: "midnight",
-            textDecoration: "none",
-            display: "inline-block",
-            textAlign: "center",
-            _hover: {
-              bg: "nephritis",
-              color: "white",
-            },
-          },
-          clear: {
-            position: "absolute",
-            right: "0.5rem",
-            top: "50%",
-            transform: "translateY(-50%)",
-            bg: "transparent",
-            border: "none",
-            padding: "0.25rem",
-            color: "#666",
-            fontSize: "1.5rem",
-            lineHeight: "1",
-            _hover: {
-              color: "black",
-            },
-          },
-          link: {
-            bg: "none",
-            border: "none",
-            color: "nephritis",
-            textDecoration: "underline",
-            padding: "0",
-            fontSize: "inherit",
-            fontFamily: "inherit",
-          },
-        },
-      },
-      input: {
-        base: {
-          width: "100%",
-          padding: "0.75rem",
-          fontSize: "1rem",
-          borderRadius: "5px",
-          border: "1px solid",
-          borderColor: "#ccc",
-          bg: "ivory",
-          color: "black",
-          _placeholder: {
-            color: "#888",
-            fontWeight: "bold",
-          },
-          _focus: {
-            outline: "none",
-            borderColor: "brand.default",
-            boxShadow: "0 0 0 1px {colors.brand.default}",
-          },
-        },
-        variants: {
-          search: {
-            paddingRight: "2.5rem", // Make space for the clear button
-          },
+        _disabled: {
+          opacity: 0.6,
+          cursor: "not-allowed",
         },
       },
     },

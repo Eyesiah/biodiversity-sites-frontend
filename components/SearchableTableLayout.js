@@ -12,11 +12,7 @@ const ExportButtons = ({ exportConfig, items }) => {
     <Flex gap="0.5rem">
       {exportConfig.onExportXml && <Button onClick={() => exportConfig.onExportXml(items)}>Export to XML</Button>}
       {exportConfig.onExportJson && <Button onClick={() => exportConfig.onExportJson(items)}>Export to JSON</Button>}
-      {exportConfig.onExportCsv &&
-        <Button onClick={() => exportConfig.onExportCsv(items)}>
-          Export to CSV
-        </Button>
-      }
+      {exportConfig.onExportCsv && <Button onClick={() => exportConfig.onExportCsv(items)}>Export to CSV</Button>}
     </Flex>
   );
 };
@@ -54,7 +50,6 @@ export default function SearchableTableLayout({
       <Flex
         justifyContent="center"
         alignItems="center"
-        marginBottom="1rem"
         position="sticky"
         top="0px"
         padding="0"
@@ -64,7 +59,7 @@ export default function SearchableTableLayout({
           gap="1rem"
           alignItems="center"
           width="90%"
-          margin="1rem auto"
+          margin="1rem auto 0.5rem"
         >
           <Box position="relative" flex="1">
             <InputGroup
@@ -122,8 +117,11 @@ export default function SearchableTableLayout({
         </Flex>
       </Flex>
 
-
-      {summary && summary(sortedItems.length, initialItems.length)}
+      {summary && (
+        <Box textAlign="center" marginBottom="1rem">
+          {summary(sortedItems.length, initialItems.length)}
+        </Box>
+      )}
 
       {tabs && tabs.length > 0 ? (
         <Tabs.Root lazyMount defaultValue={0} width="100%">
