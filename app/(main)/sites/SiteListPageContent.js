@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text, Flex, Input, InputGroup, Button, Stack } from '@chakra-ui/react';
-import { SiteTable } from '@/components/ui/SiteTable';
+import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -27,98 +27,98 @@ const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
   }
 
   return (
-    <SiteTable.Root>
-      <SiteTable.Header>
-        <SiteTable.Row>
-          <SiteTable.ColumnHeader 
+    <PrimaryTable.Root>
+      <PrimaryTable.Header>
+        <PrimaryTable.Row>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('referenceNumber')} 
           >
             {getSortIndicator('referenceNumber')}BGS Reference
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('responsibleBodies')} 
           >
             {getSortIndicator('responsibleBodies')}Responsible Body
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('siteSize')} 
           >
             {getSortIndicator('siteSize')}Size (ha)
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('allocationsCount')} 
           >
             {getSortIndicator('allocationsCount')}# Allocations
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('lpaName')} 
           >
             {getSortIndicator('lpaName')}Local Planning Authority (LPA)
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('ncaName')} 
           >
             {getSortIndicator('ncaName')}National Character Area (NCA)
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('lnrsName')} 
           >
             {getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)
-          </SiteTable.ColumnHeader>
-          <SiteTable.ColumnHeader 
+          </PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader 
             onClick={() => requestSort('imdDecile')} 
           >
             {getSortIndicator('imdDecile')}IMD Decile
-          </SiteTable.ColumnHeader>
-        </SiteTable.Row>
-      </SiteTable.Header>
-      <SiteTable.Body>
+          </PrimaryTable.ColumnHeader>
+        </PrimaryTable.Row>
+      </PrimaryTable.Header>
+      <PrimaryTable.Body>
         {sortedSites.map((site) => (
-          <SiteTable.Row
+          <PrimaryTable.Row
             key={site.referenceNumber}
             onMouseEnter={() => onSiteHover(site)}
             onMouseLeave={() => onSiteHover(null)}
             onClick={() => onSiteClick(site)}
           >
-            <SiteTable.Cell textAlign="left">
+            <PrimaryTable.Cell textAlign="left">
               <Link href={`/sites/${site.referenceNumber}`}>
                 {site.referenceNumber}
               </Link>
-            </SiteTable.Cell>
-            <SiteTable.Cell textAlign="left">
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell textAlign="left">
               {Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}
-            </SiteTable.Cell>
-            <SiteTable.Cell 
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell 
               textAlign="right" 
               fontFamily="mono"
             >
               {formatNumber(site.siteSize)}
-            </SiteTable.Cell>
-            <SiteTable.Cell 
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell 
               textAlign="center" 
               fontFamily="mono"
             >
               {site.allocationsCount}
-            </SiteTable.Cell>
-            <SiteTable.Cell textAlign="left">
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell textAlign="left">
               {site.lpaName}
-            </SiteTable.Cell>
-            <SiteTable.Cell textAlign="left">
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell textAlign="left">
               {site.ncaName}
-            </SiteTable.Cell>
-            <SiteTable.Cell textAlign="left">
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell textAlign="left">
               {site.lnrsName}
-            </SiteTable.Cell>
-            <SiteTable.Cell 
+            </PrimaryTable.Cell>
+            <PrimaryTable.Cell 
               textAlign="center" 
               fontFamily="mono"
             >
               {site.imdDecile}
-            </SiteTable.Cell>
-          </SiteTable.Row>
+            </PrimaryTable.Cell>
+          </PrimaryTable.Row>
         ))}
-      </SiteTable.Body>
-    </SiteTable.Root>
+      </PrimaryTable.Body>
+    </PrimaryTable.Root>
   );
 };
 

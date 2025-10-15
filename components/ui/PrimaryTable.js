@@ -1,6 +1,6 @@
 import { Table } from '@chakra-ui/react';
 
-export const SiteTable = {
+export const PrimaryTable = {
   Root: (props) => (
     <Table.Root 
       size="sm" 
@@ -54,4 +54,4 @@ export const SiteTable = {
   ),
 };
 
-export default SiteTable;
+export default PrimaryTable;
