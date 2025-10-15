@@ -20,19 +20,7 @@ export default async function SiteListPage() {
   
   return (
     <>
-      <Box 
-        display="flex" 
-        flexDirection="column" 
-        alignItems="center" 
-        justifyContent="flex-start" 
-        fontSize="1rem" 
-        color="black" 
-        bg="bone" 
-        textAlign="center" 
-        px="2rem"
-      >
-        <SiteListPageContent sites={processedSites} summary={summary}/>
-      </Box>
+      <SiteListPageContent sites={processedSites} summary={summary}/>
       <Footer lastUpdated={lastUpdated} />
     </>
   );
