@@ -97,7 +97,7 @@ export default function AllAllocationsContent({ allocations }) {
       initialItems={allocations}
       filterPredicate={filterPredicate}
       initialSortConfig={{ key: 'srn', direction: 'ascending' }}
-      placeholder="Filter by BGS/Planning/Address/LPA/NCA/Spatial Risk."
+      placeholder="Filter by BGS Ref, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
       exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
       summary={(filteredCount, totalCount) => (
         <div className="summary" style={{ textAlign: 'center' }}>
