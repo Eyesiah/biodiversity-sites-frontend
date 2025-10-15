@@ -1,11 +1,14 @@
 'use client'
 
-import { useSortableData, getSortClassName } from '@/lib/hooks';
+import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
 import { useState } from 'react';
-import styles from '@/styles/SiteDetails.module.css';
-import {CollapsibleRow} from "components/CollapsibleRow"
+import { CollapsibleRow } from "components/CollapsibleRow"
 import SiteList from '@/components/SiteList';
+import { DataTable } from '@/components/ui/DataTable';
+import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
+import { DataSection, SectionTitle } from '@/components/ui/DataSection';
+import { Box } from '@chakra-ui/react';
 
 const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
@@ -13,44 +16,44 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
 
   const mainRow = (
     <>
-      <td>{habitat.type}</td>
-      <td style={{ textAlign: 'center' }}>{habitat.distinctiveness}</td>
-      {hasSites && <td className={styles.numericData} style={{ textAlign: 'center' }}>{sites.length}</td>}
-      <td className={styles.numericData} style={{ textAlign: 'center' }}>{habitat.parcels}</td>
-      <td className={styles.numericData}>{formatNumber(habitat.area)}</td>
-      {isImprovement && <td className={styles.numericData}>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</td>}
-      <td className={styles.numericData}>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</td>
+      <DataTable.Cell>{habitat.type}</DataTable.Cell>
+      <DataTable.Cell textAlign="center">{habitat.distinctiveness}</DataTable.Cell>
+      {hasSites && <DataTable.Cell textAlign="center" fontFamily="mono">{sites.length}</DataTable.Cell>}
+      <DataTable.Cell textAlign="center" fontFamily="mono">{habitat.parcels}</DataTable.Cell>
+      <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(habitat.area)}</DataTable.Cell>
+      {isImprovement && <DataTable.Cell textAlign="right" fontFamily="mono">{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.Cell>}
+      <DataTable.Cell textAlign="right" fontFamily="mono">{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.Cell>
     </>
   );
 
   const collapsibleContent = (
-    <>
-      <table className={styles.subTable}>
-        <thead>
-          <tr>
-            {isImprovement && <th>Intervention</th>}
-            <th>Condition</th>
-            <th># parcels</th>
-            <th>Size ({units})</th>
-            <th>HUs</th>
-          </tr>
-        </thead>
-        <tbody>
+    <Box display="flex" flexDirection="column" gap="1rem" alignItems="center">
+      <DataTable.Root width="auto" margin="0">
+        <DataTable.Header>
+          <DataTable.Row>
+            {isImprovement && <DataTable.ColumnHeader>Intervention</DataTable.ColumnHeader>}
+            <DataTable.ColumnHeader>Condition</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader># parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
+          </DataTable.Row>
+        </DataTable.Header>
+        <DataTable.Body>
           {habitat.subRows.map((subRow, index) => (
-            <tr key={index}>
-              {isImprovement && <td>{subRow.interventionType}</td>}
-              <td>{subRow.condition}</td>
-              <td className={styles.numericData}>{subRow.parcels}</td>
-              <td className={styles.numericData}>{formatNumber(subRow.area)}</td>
-              <td className={styles.numericData}>{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</td>
-            </tr>
+            <DataTable.Row key={index}>
+              {isImprovement && <DataTable.Cell>{subRow.interventionType}</DataTable.Cell>}
+              <DataTable.Cell>{subRow.condition}</DataTable.Cell>
+              <DataTable.Cell textAlign="right" fontFamily="mono">{subRow.parcels}</DataTable.Cell>
+              <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(subRow.area)}</DataTable.Cell>
+              <DataTable.Cell textAlign="right" fontFamily="mono">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.Cell>
+            </DataTable.Row>
           ))}
-        </tbody>
-      </table>    
+        </DataTable.Body>
+      </DataTable.Root>
       {hasSites &&
         <SiteList sites={sites} minimalHeight={true} columns={['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'allocatedHabitatArea', 'lpaName', 'ncaName']} />
       }
-    </>
+    </Box>
   );
 
   return (
@@ -60,6 +63,7 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
       colSpan={5}
       onToggle={onHabitatToggle}
       isOpen={isHabitatOpen}
+      tableType="data"
     />
   );
 };
@@ -74,48 +78,74 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
 
   const hasSites = habitats[0].sites != null;
 
-  return <section className={styles.card}>
-    <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
-        {title} {isOpen ? '▼' : '▶'}
-    </h3>
-    {isOpen && 
-        <div className={styles.tableContainer}>
-          <table className={styles.table}>
-              <thead>
-              <tr>
-                  <th onClick={() => requestSort('type')} className={getSortClassName('type', sortConfig)}>Habitat</th>
-                  <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
-                  {hasSites && <th onClick={() => requestSort('sites.length')} className={getSortClassName('sites.length', sortConfig)} style={{ textAlign: 'center' }}># BGS Sites</th>}
-                  <th onClick={() => requestSort('parcels')} className={getSortClassName('parcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                  <th onClick={() => requestSort('area')} className={getSortClassName('area', sortConfig)}>Size ({title === 'Areas' ? 'ha' : 'km'})</th>
-                  {isImprovement && <th onClick={() => requestSort('allocated')} className={getSortClassName('allocated', sortConfig)}>% Allocated</th>}
-                  <th onClick={() => requestSort('HUs')} className={getSortClassName('HUs', sortConfig)}>HUs</th>
-              </tr>
-              </thead>
-              <tbody>
-              {habitats.map((habitat) => (
-                  <HabitatRow 
-                    key={habitat.type}
-                    habitat={habitat}
-                    isImprovement={isImprovement}
-                    units={title === 'Areas' ? 'ha' : 'km'}
-                    onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
-                    isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
-                    sites={habitat.sites?.map(s => {
-                      return {
-                        ...sites[s.r],
-                        siteSize: s.ta,
-                        allocatedHabitatArea: s.aa || 0
-                      }
-                    }) ?? null}
-                  />
-              ))}
-              </tbody>
-          </table>
-        </div>
+  const getSortIndicator = (name) => {
+    if (!sortConfig || sortConfig.key !== name) {
+      return '';
     }
-      
-    </section>    
+    return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
+  };
+
+  return (
+    <DataSection>
+      <SectionTitle onClick={() => setIsOpen(!isOpen)}>
+        {title} {isOpen ? '▼' : '▶'}
+      </SectionTitle>
+      {isOpen && 
+        <Box overflowX="auto" width="100%">
+          <DataTable.Root>
+            <DataTable.Header>
+              <DataTable.Row>
+                <DataTable.ColumnHeader onClick={() => requestSort('type')}>
+                  Habitat{getSortIndicator('type')}
+                </DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')}>
+                  Distinctiveness{getSortIndicator('distinctiveness')}
+                </DataTable.ColumnHeader>
+                {hasSites && (
+                  <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
+                    # BGS Sites{getSortIndicator('sites.length')}
+                  </DataTable.ColumnHeader>
+                )}
+                <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
+                  # Parcels{getSortIndicator('parcels')}
+                </DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('area')}>
+                  Size ({title === 'Areas' ? 'ha' : 'km'}){getSortIndicator('area')}
+                </DataTable.ColumnHeader>
+                {isImprovement && (
+                  <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
+                    % Allocated{getSortIndicator('allocated')}
+                  </DataTable.ColumnHeader>
+                )}
+                <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
+                  HUs{getSortIndicator('HUs')}
+                </DataTable.ColumnHeader>
+              </DataTable.Row>
+            </DataTable.Header>
+            <DataTable.Body>
+              {habitats.map((habitat) => (
+                <HabitatRow 
+                  key={habitat.type}
+                  habitat={habitat}
+                  isImprovement={isImprovement}
+                  units={title === 'Areas' ? 'ha' : 'km'}
+                  onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
+                  isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
+                  sites={habitat.sites?.map(s => {
+                    return {
+                      ...sites[s.r],
+                      siteSize: s.ta,
+                      allocatedHabitatArea: s.aa || 0
+                    }
+                  }) ?? null}
+                />
+              ))}
+            </DataTable.Body>
+          </DataTable.Root>
+        </Box>
+      }
+    </DataSection>
+  );
 };
 
 export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, isHabitatOpen, sites}) {
@@ -134,12 +164,18 @@ export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, 
   if (hasHabitats)
   {
     return (
-      <section className={styles.card}>
-        <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
+      <PrimaryCard>
+        <CardTitle onClick={() => setIsOpen(!isOpen)}>
           {title} {isOpen ? '▼' : '▶'}
-        </h3>
+        </CardTitle>
         {isOpen && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: '0.5rem', flexWrap: 'wrap' }}>  
+          <Box 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="flex-start" 
+            gap="0.5rem" 
+            flexWrap="wrap"
+          >  
             <HabitatTable
               title="Areas"
               habitats={sortedAreas}
@@ -170,9 +206,9 @@ export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, 
               isHabitatOpen={isHabitatOpen}
               sites={sites}
             />            
-          </div>
+          </Box>
         )}
-      </section>
+      </PrimaryCard>
     );
   }
   else

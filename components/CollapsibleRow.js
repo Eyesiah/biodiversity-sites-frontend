@@ -1,10 +1,22 @@
 import { useState } from 'react';
-import styles from '@/styles/SiteDetails.module.css';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import { DataTable } from '@/components/ui/DataTable';
 
-export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle, onMainRowClick, isOpen: externalIsOpen, setIsOpen: setExternalIsOpen }) => {
+export const CollapsibleRow = ({ 
+  mainRow, 
+  collapsibleContent, 
+  colSpan, 
+  onToggle, 
+  onMainRowClick, 
+  isOpen: externalIsOpen, 
+  setIsOpen: setExternalIsOpen,
+  tableType = 'primary' // 'primary' or 'data'
+}) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Select the appropriate table components based on tableType
+  const Table = tableType === 'data' ? DataTable : PrimaryTable;
 
   // If isOpen is controlled externally, use that value. Otherwise, use internal state.
   const isOpen = externalIsOpen != null ? externalIsOpen : internalIsOpen;
@@ -27,24 +39,24 @@ export const CollapsibleRow = ({ mainRow, collapsibleContent, colSpan, onToggle,
 
   return (
     <>
-      <PrimaryTable.Row
+      <Table.Row
         onClick={handleToggle}
-        className={`${styles.clickableRow} ${isHovered ? styles.subTableHovered : ''}`}
-        onMouseEnter={() => setIsHovered(PrimaryTable.Row)}
+        onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        bg={isHovered ? "tableHoverBg" : undefined}
       >
         {mainRow}
-      </PrimaryTable.Row>
+      </Table.Row>
       {isOpen && (
-        <PrimaryTable.Row
-          className={`${isHovered ? styles.subTableHovered : ''}`}
-          onMouseEnter={() => setIsHovered(PrimaryTable.Row)}
+        <Table.Row
+          onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          bg={isHovered ? "tableHoverBg" : undefined}
         >
-          <PrimaryTable.Cell colSpan={colSpan}>
+          <Table.Cell colSpan={colSpan}>
             {collapsibleContent}
-          </PrimaryTable.Cell>
-        </PrimaryTable.Row>
+          </Table.Cell>
+        </Table.Row>
       )}
     </>
   );
