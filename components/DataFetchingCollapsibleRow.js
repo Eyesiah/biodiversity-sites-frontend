@@ -72,6 +72,7 @@ export const DataFetchingCollapsibleRow = ({
       onMainRowClick={onRowClick}
       isOpen={isOpen}
       setIsOpen={setIsOpen}
+      tableType='data'
     />
   );
 };
