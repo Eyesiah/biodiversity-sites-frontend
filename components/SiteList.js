@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { formatNumber } from '@/lib/format';
 import { Text, Box } from '@chakra-ui/react';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import { useSortableData } from '@/lib/hooks';
 
 // Default column configuration for basic site list
 const DEFAULT_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName'];
@@ -20,58 +21,12 @@ const ALL_SITE_COLUMNS = {
 }
 
 const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, columns = DEFAULT_COLUMNS }) => {
-  const [sortConfig, setSortConfig] = useState({ key: 'referenceNumber', direction: 'descending' });
+  const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(
+    sites, 
+    { key: 'referenceNumber', direction: 'descending' }
+  );
 
-  const sortedSites = useMemo(() => {
-    if (!sites) return [];
-    let sortableSites = [...sites];
-    if (sortConfig.key !== null) {
-      sortableSites.sort((a, b) => {
-        let aValue = a[sortConfig.key];
-        let bValue = b[sortConfig.key];
-
-        // Special handling for BGS Reference to sort numerically
-        if (sortConfig.key === 'referenceNumber') {
-          aValue = parseInt(a.referenceNumber.split('-')[1] || '0', 10);
-          bValue = parseInt(b.referenceNumber.split('-')[1] || '0', 10);
-        }
-
-        // Handle array values by joining them
-        if (Array.isArray(aValue)) {
-          aValue = aValue.join(', ');
-        }
-        if (Array.isArray(bValue)) {
-          bValue = bValue.join(', ');
-        }
-
-        if (aValue < bValue) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
-        }
-        return 0;
-      });
-    }
-    return sortableSites;
-  }, [sites, sortConfig]);
-
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
-  const getSortIndicator = (name) => {
-    if (sortConfig.key !== name) {
-      return '';
-    }
-    return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
-  };
-
-  if (!sites || sites.length === 0) {
+  if (!sortedSites || sortedSites.length === 0) {
     return <Text>No site data available.</Text>;
   }
 
