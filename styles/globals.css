@@ -22,21 +22,6 @@ body {
   overflow-y: auto;
 }
 
-/* Add icon to external links */
-a[href^="http"]::after, a[href^="https"]::after {
-  content: '';
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  margin-left: 4px;
-  vertical-align: middle;
-  background-color: #0070f3;
-  mask-image: url('/icons/external-link.svg');
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  -webkit-mask-image: url('/icons/external-link.svg');
-  -webkit-mask-size: contain;
-}
 
 * {
   box-sizing: border-box;
