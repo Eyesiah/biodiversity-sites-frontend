@@ -106,7 +106,7 @@ const NavLink = ({ children, href, onClick, ...props }) => (
 
 const DropdownMenu = ({ category, children, ...props }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const isMobile = useBreakpointValue({ base: true, lg: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
   
   return (
     <Box
@@ -122,6 +122,8 @@ const DropdownMenu = ({ category, children, ...props }) => {
         fontSize="1.3rem"
         fontWeight="500"
         padding="1rem"
+        width={isMobile ? "100%" : "auto"}
+        textAlign={isMobile ? "center" : "left"}
         _hover={{
           color: "brand.emphasis",
           bg: "charcoal"
@@ -137,7 +139,7 @@ const DropdownMenu = ({ category, children, ...props }) => {
           position={isMobile ? "static" : "absolute"}
           top={isMobile ? "auto" : "100%"}
           right={isMobile ? "auto" : "0"}
-          bg={isMobile ? "charcoal" : "charcoal"}
+          bg={isMobile ? "rgba(58, 64, 73, 0.8)" : "charcoal"}
           borderColor="charcoal"
           boxShadow={isMobile ? "none" : "0px 8px 16px 0px rgba(0,0,0,0.2)"}
           minW={isMobile ? "100%" : "160px"}
@@ -147,6 +149,7 @@ const DropdownMenu = ({ category, children, ...props }) => {
           borderRadius={isMobile ? "none" : "md"}
           border={isMobile ? "none" : "1px solid"}
           overflow="hidden"
+          padding={isMobile ? "0.5rem 0" : "0"}
         >
           {children}
         </Box>
@@ -186,8 +189,8 @@ const DropdownMenuItem = ({ children, href, onClick, ...props }) => (
 );
 
 const MobileMenuButton = ({ isOpen, onToggle, ...props }) => (
-  <IconButton
-    display={{ base: "block", lg: "none" }}
+  <Button
+    display={{ base: "block", md: "none" }}
     variant="ghost"
     color="clouds"
     fontSize="1.8rem"
@@ -195,16 +198,24 @@ const MobileMenuButton = ({ isOpen, onToggle, ...props }) => (
     aria-label="Toggle menu"
     aria-expanded={isOpen}
     aria-controls="navigation-menu"
-    icon={<HiMenu />}
+    background="none"
+    border="none"
+    cursor="pointer"
+    padding="0.5rem"
     _hover={{
-      bg: "transparent"
+      bg: "rgba(255, 255, 255, 0.1)"
+    }}
+    _active={{
+      bg: "rgba(255, 255, 255, 0.2)"
     }}
     {...props}
-  />
+  >
+    ☰
+  </Button>
 );
 
 const MobileMenu = ({ isOpen, children, ...props }) => {
-  const isMobile = useBreakpointValue({ base: true, lg: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
   
   if (!isMobile) {
     return (
@@ -221,13 +232,15 @@ const MobileMenu = ({ isOpen, children, ...props }) => {
       position="absolute"
       top="100%"
       left="0"
-      width="100%"
+      width="100vw"
       bg="charcoal"
       flexDirection="column"
-      alignItems="center"
+      alignItems="stretch"
       padding="1rem 0"
       boxShadow="0 2px 5px rgba(0, 0, 0, 0.2)"
       zIndex="1000"
+      minHeight="50vh"
+      gap="0.5rem"
       {...props}
     >
       {children}
@@ -341,7 +354,7 @@ export default function Navigation() {
       
       <MobileMenuButton isOpen={isOpen} onToggle={toggleMenu} />
 
-      <NavSection position="relative">
+      <NavSection>
         <MobileMenu isOpen={isOpen}>
           <NavLink href="/sites" onClick={closeMenu}>
             BGS Sites List
