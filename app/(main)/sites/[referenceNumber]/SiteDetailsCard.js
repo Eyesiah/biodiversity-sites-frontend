@@ -126,6 +126,7 @@ export const SiteDetailsCard = ({ site }) => {
                   lineHeight="inherit"
                   verticalAlign="baseline"
                   borderRadius="md"
+                  isDisabled={!site.allocations || site.allocations.length === 0}
                   _hover={{ bg: "nephritis", color: "white" }}
                 >
                   IMD Scores Graph
