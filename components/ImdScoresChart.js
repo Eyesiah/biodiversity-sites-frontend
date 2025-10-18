@@ -32,7 +32,8 @@ export const ImdScoresChart = ({ site }) => {
           'Allocation IMD Score': alloc.lsoa?.IMDScore,
           'Site IMD Score': currentSite.lsoa.IMDScore,
         }))
-        .filter(item => typeof item['Allocation IMD Score'] === 'number');
+        .filter(item => typeof item['Allocation IMD Score'] === 'number')
+        .sort((b, a) => b['Allocation IMD Score'] - a['Allocation IMD Score']);
     };
 
     const loadChartData = async () => {
@@ -85,6 +86,7 @@ export const ImdScoresChart = ({ site }) => {
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis 
+            type="category"
             dataKey="name" 
             angle={-45} 
             textAnchor="end" 

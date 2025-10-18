@@ -112,7 +112,7 @@ export const SiteDetailsCard = ({ site }) => {
                   {site.lsoa.name}
                 </Button>
                 <Button
-                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Scores Graph', site)}
+                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site)}
                   bg="none"
                   border="1px solid"
                   borderColor="nephritis"
