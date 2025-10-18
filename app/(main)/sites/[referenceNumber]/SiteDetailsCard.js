@@ -92,24 +92,45 @@ export const SiteDetailsCard = ({ site }) => {
           label="LSOA" 
           value={
             site.lsoa?.name ? (
-              <Button
-                onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}
-                bg="none"
-                border="none"
-                color="nephritis"
-                textDecoration="underline"
-                padding="0"
-                fontSize="inherit"
-                fontFamily="inherit"
-                cursor="pointer"
-                minHeight="0"
-                height="auto"
-                lineHeight="inherit"
-                verticalAlign="baseline"
-                _hover={{ color: "brand.emphasis" }}
-              >
-                {site.lsoa.name}
-              </Button>
+              <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
+                <Button
+                  onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}
+                  bg="none"
+                  border="none"
+                  color="nephritis"
+                  textDecoration="underline"
+                  padding="0"
+                  fontSize="inherit"
+                  fontFamily="inherit"
+                  cursor="pointer"
+                  minHeight="0"
+                  height="auto"
+                  lineHeight="inherit"
+                  verticalAlign="baseline"
+                  _hover={{ color: "brand.emphasis" }}
+                >
+                  {site.lsoa.name}
+                </Button>
+                <Button
+                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Scores Graph', site)}
+                  bg="none"
+                  border="1px solid"
+                  borderColor="nephritis"
+                  color="nephritis"
+                  padding="0.1rem 0.4rem"
+                  fontSize="xs"
+                  fontFamily="inherit"
+                  cursor="pointer"
+                  minHeight="0"
+                  height="auto"
+                  lineHeight="inherit"
+                  verticalAlign="baseline"
+                  borderRadius="md"
+                  _hover={{ bg: "nephritis", color: "white" }}
+                >
+                  IMD Scores Graph
+                </Button>
+              </Box>
             ) : 'N/A'
           } 
         />
