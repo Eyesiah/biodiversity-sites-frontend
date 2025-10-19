@@ -108,7 +108,7 @@ function groupDifferences(allocations, width) {
     .filter(alloc => typeof alloc.simd === 'number' && typeof alloc.imd === 'number')
     .map(alloc => {
       const diff = alloc.simd - alloc.imd;
-      return Math.floor(diff / width);
+      return Math.round(diff / width);
     });
 
   if (gdiffs.length === 0) {
