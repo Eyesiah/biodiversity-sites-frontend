@@ -89,3 +89,38 @@ function fisher_CI(r,n,k) {
    sig =  (lower < 0 && upper > 0 ) ? "Non-SIg" : "Sig" ;
    return {lower: lower , upper: upper, sig :sig };   
 }
+
+/**
+ * Groups allocation data into bins based on the difference between 'simd' and 'imd' scores.
+ * This is a JavaScript implementation of the provided XQuery snippet.
+ *
+ * @param {Array<Object>} allocations - An array of allocation objects. Each object must have 'simd' and 'imd' numeric properties.
+ * @param {number} width - The size of each bin for grouping the differences.
+ * @returns {Object} An object representing the histogram, where keys are the start of each bin and values are the counts.
+ */
+function groupDifferences(allocations, width) {
+  if (!allocations || allocations.length === 0 || !width) {
+    return {};
+  }
+
+  // Corresponds to: let $gdiffs := $allocations/allocation/(floor((simd - imd) div $width))
+  const gdiffs = allocations
+    .filter(alloc => typeof alloc.simd === 'number' && typeof alloc.imd === 'number')
+    .map(alloc => {
+      const diff = alloc.simd - alloc.imd;
+      return Math.floor(diff / width);
+    });
+
+  if (gdiffs.length === 0) {
+    return {};
+  }
+
+  // Corresponds to: for $g in $min to $max let $n := count($gdiffs[.=$g]) return ...
+  const grouped = gdiffs.reduce((acc, g) => {
+    const binStart = g * width;
+    acc[binStart] = (acc[binStart] || 0) + 1;
+    return acc;
+  }, {});
+
+  return grouped;
+}
