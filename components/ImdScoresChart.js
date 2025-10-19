@@ -12,9 +12,6 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { formatNumber } from '@/lib/format';
-import { AutoResizeYAxisLabel } from './AutoResizeYAxisLabel';
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c', '#8dd1e1'];
 
 export const ImdScoresChart = ({ site }) => {
   const [chartData, setChartData] = useState(null);
@@ -77,7 +74,7 @@ export const ImdScoresChart = ({ site }) => {
 
   return (
     <div style={{ backgroundColor: 'ivory', padding: '1rem' }}>
-      <ResponsiveContainer width="100%" height={800}>
+      <ResponsiveContainer width="100%" height={650}>
         <ComposedChart
           data={chartData}
           margin={{
@@ -94,7 +91,7 @@ export const ImdScoresChart = ({ site }) => {
             interval={'preserveStartEnd'}
             tick={{ fontSize: 12 }}
           />
-          <YAxis label={{ value: 'IMD Score (A higher score = more deprived)', angle: -90, position: 'insideCenter', dx: -30 }} domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis} />
+          <YAxis label={{ value: 'IMD Score (A higher score = more deprived)', angle: -90, position: 'insideCenter', dx: -20 }} domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis} />
           <Tooltip />
           <Legend />
           <Bar dataKey="Allocation IMD Score" fill="#82ca9d" />
