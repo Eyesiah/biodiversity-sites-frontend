@@ -91,7 +91,7 @@ export const ImdScoresChart = ({ site }) => {
             interval={'preserveStartEnd'}
             tick={{ fontSize: 12 }}
           />
-          <YAxis label={{ value: 'IMD Score (A higher score = more deprived)', angle: -90, position: 'insideCenter', dx: -20 }} domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis} />
+          <YAxis label={{ value: 'IMD Score (A higher score = a more deprived LSOA)', angle: -90, position: 'insideCenter', dx: -20 }} domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis} />
           <Tooltip />
           <Legend />
           <Bar dataKey="Allocation IMD Score" fill="#82ca9d" />
