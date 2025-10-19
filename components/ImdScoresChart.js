@@ -30,7 +30,7 @@ export const ImdScoresChart = ({ site }) => {
           'Site IMD Score': currentSite.lsoa.IMDScore,
         }))
         .filter(item => typeof item['Allocation IMD Score'] === 'number')
-        .sort((b, a) => b['Allocation IMD Score'] - a['Allocation IMD Score']);
+        .sort((a, b) => b['Allocation IMD Score'] - a['Allocation IMD Score']);
     };
 
     const loadChartData = async () => {
