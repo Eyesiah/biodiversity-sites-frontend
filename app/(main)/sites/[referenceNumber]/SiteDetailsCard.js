@@ -8,9 +8,10 @@ import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/InfoModal';
 import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
 import { Box, Button } from '@chakra-ui/react';
+import modalStyles from '@/styles/Modal.module.css';
 
 export const SiteDetailsCard = ({ site }) => {
-  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null });
+  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, style: null });
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -20,8 +21,8 @@ export const SiteDetailsCard = ({ site }) => {
     return distances.length % 2 === 0 ? (distances[mid - 1] + distances[mid]) / 2 : distances[mid];
   }, [site.allocations]);
 
-  const showModal = (type, name, title, data) => {
-    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data });
+  const showModal = (type, name, title, data, style) => {
+    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, style: style });
   };
 
   return (
@@ -112,22 +113,20 @@ export const SiteDetailsCard = ({ site }) => {
                   {site.lsoa.name}
                 </Button>
                 <Button
-                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site)}
+                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site, modalStyles.modalContentLarge)}
                   bg="none"
-                  border="1px solid"
-                  borderColor="nephritis"
+                  border="none"
                   color="nephritis"
-                  padding="0.1rem 0.4rem"
-                  fontSize="xs"
+                  textDecoration="underline"
+                  padding="0"
+                  fontSize="inherit"
                   fontFamily="inherit"
                   cursor="pointer"
                   minHeight="0"
                   height="auto"
                   lineHeight="inherit"
                   verticalAlign="baseline"
-                  borderRadius="md"
-                  isDisabled={!site.allocations || site.allocations.length === 0}
-                  _hover={{ bg: "nephritis", color: "white" }}
+                  _hover={{ color: "brand.emphasis" }}
                 >
                   IMD Scores Graph
                 </Button>

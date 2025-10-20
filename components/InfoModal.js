@@ -8,7 +8,7 @@ import { ImdScoresChart } from './ImdScoresChart';
 import { formatNumber } from '@/lib/format'
 
 export const InfoModal = ({ modalState, onClose }) => {
-  const { show, type, name, title } = modalState;
+  const { show, type, name, title, style } = modalState;
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -95,7 +95,7 @@ export const InfoModal = ({ modalState, onClose }) => {
   };
 
   return (
-    <Modal show={show} onClose={onClose} title={title}>
+    <Modal show={show} onClose={onClose} title={title} style={style}>
       {renderContent()}
     </Modal>
   );
