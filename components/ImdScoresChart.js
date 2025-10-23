@@ -10,7 +10,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ResponsiveContainer
+  ResponsiveContainer,
+  Label
 } from 'recharts';
 
 export const ImdScoresChart = ({ site }) => {
@@ -78,7 +79,7 @@ export const ImdScoresChart = ({ site }) => {
         <ComposedChart
           data={chartData}
           margin={{
-            top: 20, right: 20, bottom: 20, left: 60,
+            top: 20, right: 20, bottom: 40, left: 60,
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -89,9 +90,12 @@ export const ImdScoresChart = ({ site }) => {
             textAnchor="end" 
             height={100} 
             interval={'preserveStartEnd'}
-            tick={{ fontSize: 12 }}
-          />
-          <YAxis label={{ value: 'IMD Score (A higher score = a more deprived LSOA)', angle: -90, position: 'insideCenter', dx: -20 }} domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis} />
+            tick={{ fontSize: 12 }}>
+            <Label value="Development Allocations" offset={-60} position="insideBottom" style={{ fontWeight: 'bold', textAnchor: 'middle' }} />
+          </XAxis>
+          <YAxis domain={[0, 'dataMax + 30']} tickFormatter={formatYAxis}>
+            <Label value="IMD Score (A higher score = a more deprived LSOA)" angle={-90} position="insideCenter" dx={-40} style={{ fontWeight: 'bold', textAnchor: 'middle' }} />
+          </YAxis>
           <Tooltip />
           <Legend />
           <Bar dataKey="Allocation IMD Score" fill="#82ca9d" />

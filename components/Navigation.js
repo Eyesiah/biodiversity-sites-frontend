@@ -255,7 +255,7 @@ const ModalButton = ({
   src, 
   iframeTitle, 
   buttonComponent = 'DropdownMenuItem',
-  modalStyle = modalStyles.modalContentLarge 
+  modalStyle = modalStyles.modalContentMedium 
 }) => {
   const [showModal, setShowModal] = useState(false);
 
