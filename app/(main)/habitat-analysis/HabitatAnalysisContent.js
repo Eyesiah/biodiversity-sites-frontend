@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
@@ -10,37 +10,61 @@ import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryC
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/FilteredHabitatPieChart'
 
-const AnalysisTable = ({ title, data, unit, requestSort, sortConfig }) => {
+const AnalysisTable = ({ title, data, module, requestSort, sortConfig }) => {
   
   const [isOpen, setIsOpen] = useState(true);
   
-  // Convert sets to counts and calculate totals
-  let totalBaseline = 0;
-  let totalImprovement = 0;
-  let totalAllocation = 0;
-  let totalBaselineParcels = 0;
-  let totalImprovementParcels = 0;
-  let totalAllocationParcels = 0;
-  let totalImprovementSites = 0;
+  // Determine unit based on module type
+  const unit = module === 'areas' ? 'ha' : 'km';
+  
+  // Memoize all calculations to prevent unnecessary re-computation
+  const { processedData, totals } = useMemo(() => {
+    // Calculate totals
+    let totalBaseline = 0;
+    let totalImprovement = 0;
+    let totalAllocation = 0;
+    let totalBaselineParcels = 0;
+    let totalImprovementParcels = 0;
+    let totalAllocationParcels = 0;
+    let totalImprovementSites = 0;
 
-  data.forEach(h => {
-    totalBaseline += h.baseline;
-    totalImprovement += h.improvement;
-    totalAllocation += h.allocation;
-    totalBaselineParcels += h.baselineParcels;
-    totalImprovementParcels += h.improvementParcels;
-    totalAllocationParcels += h.allocationParcels;
-    totalImprovementSites += h.improvementSites;
-  });
+    const moduleData = data.filter(h => h.module == module);
 
-  data.forEach(h => {
-    h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
-    h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
-    h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
-    h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
-  });
+    moduleData.forEach(h => {
+      totalBaseline += h.baseline;
+      totalImprovement += h.improvement;
+      totalAllocation += h.allocation;
+      totalBaselineParcels += h.baselineParcels;
+      totalImprovementParcels += h.improvementParcels;
+      totalAllocationParcels += h.allocationParcels;
+      totalImprovementSites += h.improvementSites;
+    });
 
-  let totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
+    // Process data with calculated percentages (create new objects to avoid mutation)
+    const processedData = moduleData.map(h => ({
+      ...h,
+      baselineShare: totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0,
+      improvementShare: totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0,
+      allocationShare: totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0,
+      improvementAllocation: h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0,
+    }));
+
+    const totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
+
+    return {
+      processedData,
+      totals: {
+        totalBaseline,
+        totalImprovement,
+        totalAllocation,
+        totalBaselineParcels,
+        totalImprovementParcels,
+        totalAllocationParcels,
+        totalImprovementSites,
+        totalImprovementAllocation
+      }
+    };
+  }, [data, module]);
 
   return (
     <PrimaryCard>
@@ -76,19 +100,19 @@ const AnalysisTable = ({ title, data, unit, requestSort, sortConfig }) => {
             <DataTable.Body>
               <DataTable.Row fontWeight='bold' backgroundColor='tableTotalsBg'>
                 <DataTable.Cell colSpan="2" textAlign="right">Totals:</DataTable.Cell>
-                <DataTable.CenteredNumericCell>{formatNumber(totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
-                <DataTable.NumericCell>{formatNumber(totalBaseline)}</DataTable.NumericCell>
+                <DataTable.CenteredNumericCell>{formatNumber(totals.totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totals.totalBaseline)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.CenteredNumericCell>{formatNumber(totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
-                <DataTable.CenteredNumericCell>{formatNumber(totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
-                <DataTable.NumericCell>{formatNumber(totalImprovement)}</DataTable.NumericCell>
+                <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totals.totalImprovement)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.CenteredNumericCell>{formatNumber(totalAllocationParcels, 0)}</DataTable.CenteredNumericCell>
-                <DataTable.NumericCell>{formatNumber(totalAllocation)}</DataTable.NumericCell>
+                <DataTable.CenteredNumericCell>{formatNumber(totals.totalAllocationParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totals.totalAllocation)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.NumericCell>{formatNumber(totalImprovementAllocation, 2)}%</DataTable.NumericCell>
+                <DataTable.NumericCell>{formatNumber(totals.totalImprovementAllocation, 2)}%</DataTable.NumericCell>
               </DataTable.Row>
-              {data.map(row => (
+              {processedData.map(row => (
                 <DataTable.Row key={row.habitat}>
                   <DataTable.Cell>{row.habitat}</DataTable.Cell>
                   <DataTable.Cell textAlign='center'>{row.distinctiveness}</DataTable.Cell>
@@ -144,19 +168,19 @@ export default function HabitatAnalysisContent({ habitats }) {
     {
       title: 'Area Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'areas')} unit="ha" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable title="Area habitats" data={sortedItems} module="areas" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },    
     {
       title: 'Hedgerow Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'hedgerows')} unit="km" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable title="Area habitats" data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
       title: 'Watercourse Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'watercourses')} unit="km" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable title="Area habitats" data={sortedItems} module="watercourses" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
