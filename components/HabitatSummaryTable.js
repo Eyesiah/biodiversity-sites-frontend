@@ -46,10 +46,10 @@ export const HabitatSummaryTable = ({ site }) => {
     allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
     allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
   } else {
-    // fall back to the improvement habitats' allocated % data
-    allocationArea = improvementArea * (improvements.areas || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
-    allocationHedgerow = improvementHedgerow * (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
-    allocationWatercourse = improvementWatercourse * (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocated || 0), 0);
+    // fall back to the improvement habitats' allocated data
+    allocationArea = (improvements.areas || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
+    allocationHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
+    allocationWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
   }
 
   const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || site.allocations != null;
