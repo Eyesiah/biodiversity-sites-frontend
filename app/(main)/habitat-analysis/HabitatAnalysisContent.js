@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import styles from '@/styles/SiteDetails.module.css';
 import { formatNumber } from '@/lib/format';
 import { useSortableData, getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
 import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
+import { DataTable } from '@/components/ui/DataTable';
+import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
+import { ContentStack } from '@/components/ui/ContentStack'
 
 const AnalysisTable = ({ title, data, unit }) => {
   
@@ -14,73 +16,73 @@ const AnalysisTable = ({ title, data, unit }) => {
   const { items: sortedRows, requestSort, sortConfig } = useSortableData(data.rows);
 
   return (
-    <section className={styles.card}>
-      <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
+    <PrimaryCard>
+      <CardTitle onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
         {title} {isOpen ? '▼' : '▶'}
-      </h3>
+      </CardTitle>
       {isOpen && (
-        <div className={styles.tableContainer}>
-          <table className={`${styles.table} ${styles.subTable}`}>
-            <thead>
-              <tr>
-                <th colSpan="2" style={{ border: 0 }}>Intervention Groups</th>
-                <th colSpan="3" style={{ textAlign: 'center', backgroundColor: '#e0e8f0' }}>Baseline</th>
-                <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#dcf0e7' }}>Improvements</th>
-                <th colSpan="4" style={{ textAlign: 'center', backgroundColor: '#f0e0e0' }}>Allocations</th>
-              </tr>
-              <tr>
-                <th onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</th>
-                <th onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</th>
-                <th onClick={() => requestSort('baselineParcels')} className={getSortClassName('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline size ({unit})</th>
-                <th onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</th>
-                <th onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</th>
-                <th onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Improvement size ({unit})</th>
-                <th onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</th>
-                <th onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</th>
-                <th onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</th>
-                <th onClick={() => requestSort('allocationShare')} className={getSortClassName('allocationShare', sortConfig)}>% Share</th>                
-                <th onClick={() => requestSort('improvementAllocation')} className={getSortClassName('improvementAllocation', sortConfig)}>% of Improvements</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-                <td colSpan="2" style={{ textAlign: 'center' }}>Totals</td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.baselineParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(data.totals.baseline)}</td>
-                <td></td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementSites, 0)}</td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.improvementParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(data.totals.improvement)}</td>
-                <td></td>
-                <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(data.totals.allocationParcels, 0)}</td>
-                <td className={styles.numericData}>{formatNumber(data.totals.allocation)}</td>
-                <td></td>
-                <td className={styles.numericData}>{formatNumber(data.totals.improvementAllocation, 2)}%</td>
-              </tr>
+        <TableContainer>
+          <DataTable.Root>
+            <DataTable.Header>
+              <DataTable.Row>
+                <DataTable.ColumnHeader colSpan="2" color="fg" backgroundColor='bg'>Intervention Groups</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader colSpan="3" color="black" backgroundColor='#e0e8f0'>Baseline</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#dcf0e7'>Improvements</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#f0e0e0'>Allocations</DataTable.ColumnHeader>
+              </DataTable.Row>
+              <DataTable.Row>
+                <DataTable.ColumnHeader onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} className={getSortClassName('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline size ({unit})</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Improvement size ({unit})</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} className={getSortClassName('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>                
+                <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} className={getSortClassName('improvementAllocation', sortConfig)}>% of Improvements</DataTable.ColumnHeader>
+              </DataTable.Row>
+            </DataTable.Header>
+            <DataTable.Body>
+              <DataTable.Row fontWeight='bold' backgroundColor='tableTotalsBg'>
+                <DataTable.Cell colSpan="2" textAlign="right">Totals:</DataTable.Cell>
+                <DataTable.CenterNumericData>{formatNumber(data.totals.baselineParcels, 0)}</DataTable.CenterNumericData>
+                <DataTable.NumericData>{formatNumber(data.totals.baseline)}</DataTable.NumericData>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.CenterNumericData>{formatNumber(data.totals.improvementSites, 0)}</DataTable.CenterNumericData>
+                <DataTable.CenterNumericData>{formatNumber(data.totals.improvementParcels, 0)}</DataTable.CenterNumericData>
+                <DataTable.NumericData>{formatNumber(data.totals.improvement)}</DataTable.NumericData>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.CenterNumericData>{formatNumber(data.totals.allocationParcels, 0)}</DataTable.CenterNumericData>
+                <DataTable.NumericData>{formatNumber(data.totals.allocation)}</DataTable.NumericData>
+                <DataTable.Cell></DataTable.Cell>
+                <DataTable.NumericData>{formatNumber(data.totals.improvementAllocation, 2)}%</DataTable.NumericData>
+              </DataTable.Row>
               {sortedRows.map(row => (
-                <tr key={row.habitat}>
-                  <td>{row.habitat}</td>
-                  <td style={{ textAlign: 'center' }}>{row.distinctiveness}</td>
-                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.baselineParcels, 0)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.baseline)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.baselineShare, 2)}%</td>
-                  <td style={{ textAlign: 'center' }}>{row.improvementSites || 0}</td>
-                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.improvementParcels, 0)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvement)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementShare, 2)}%</td>
-                  <td className={styles.numericData} style={{ textAlign: 'center' }}>{formatNumber(row.allocationParcels, 0)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.allocation)}</td>
-                  <td className={styles.numericData}>{formatNumber(row.allocationShare, 2)}%</td>
-                  <td className={styles.numericData}>{formatNumber(row.improvementAllocation, 2)}%</td>
-                </tr>
+                <DataTable.Row key={row.habitat}>
+                  <DataTable.Cell>{row.habitat}</DataTable.Cell>
+                  <DataTable.Cell textAlign='center'>{row.distinctiveness}</DataTable.Cell>
+                  <DataTable.CenterNumericData>{formatNumber(row.baselineParcels, 0)}</DataTable.CenterNumericData>
+                  <DataTable.NumericData>{formatNumber(row.baseline)}</DataTable.NumericData>
+                  <DataTable.NumericData>{formatNumber(row.baselineShare, 2)}%</DataTable.NumericData>
+                  <DataTable.Cell textAlign='center'>{row.improvementSites || 0}</DataTable.Cell>
+                  <DataTable.CenterNumericData>{formatNumber(row.improvementParcels, 0)}</DataTable.CenterNumericData>
+                  <DataTable.NumericData>{formatNumber(row.improvement)}</DataTable.NumericData>
+                  <DataTable.NumericData>{formatNumber(row.improvementShare, 2)}%</DataTable.NumericData>
+                  <DataTable.CenterNumericData>{formatNumber(row.allocationParcels, 0)}</DataTable.CenterNumericData>
+                  <DataTable.NumericData>{formatNumber(row.allocation)}</DataTable.NumericData>
+                  <DataTable.NumericData>{formatNumber(row.allocationShare, 2)}%</DataTable.NumericData>
+                  <DataTable.NumericData>{formatNumber(row.improvementAllocation, 2)}%</DataTable.NumericData>
+                </DataTable.Row>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </DataTable.Body>
+          </DataTable.Root>
+        </TableContainer>
       )}
-    </section>
+    </PrimaryCard>
   );
 }
 
@@ -262,12 +264,12 @@ export default function HabitatAnalysisContent({ areaAnalysis, hedgerowAnalysis,
           className="linkButton"
           style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
         />
-      </div>
-      <div className={styles.detailsGrid}>
+      </div>      
+      <ContentStack>
         {filteredAreaAnalysis.rows.length > 0 && <AnalysisTable title="Area habitats" data={filteredAreaAnalysis} unit="ha" />}
         {filteredHedgerowAnalysis.rows.length > 0 && <AnalysisTable title="Hedgerow habitats" data={filteredHedgerowAnalysis} unit="km" />}
         {filteredWatercourseAnalysis.rows.length > 0 && <AnalysisTable title="Watercourses habitats" data={filteredWatercourseAnalysis} unit="km" />}
-      </div>
+      </ContentStack>
     </>
   )
 
