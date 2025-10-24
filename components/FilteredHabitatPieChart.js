@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
 import { formatNumber } from '@/lib/format';
-import { OtherAllocationsBarChart } from '@/components/OtherAllocationsBarChart';
 import { Box, Heading } from '@chakra-ui/react';
+import { AutoResizeYAxisLabel } from './AutoResizeYAxisLabel';
 
 const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
@@ -10,7 +10,7 @@ const CustomTooltip = ({ active, payload }) => {
     let unit = 'ha'; // Default to ha
     if (data.module === 'mixed') {
       unit = 'ha';
-    } else if (data.module !== 'area') {
+    } else if (data.module !== 'area' && data.module !== 'areas') {
       unit = 'km';
     }
     return (
@@ -22,16 +22,13 @@ const CustomTooltip = ({ active, payload }) => {
   return null;
 };
 
-export default function FilteredAllocationPieChart ({ allocations, module, name }) {
+export default function FilteredHabitatPieChart ({ habitats, module, name }) {
   const { chartData, otherData } = useMemo(() => {
     let acc = {};
-    allocations.forEach(alloc => {
-      const moduleHabitats = alloc.habitats ? alloc.habitats[module] : null;
-      moduleHabitats?.forEach(habitat => {
-        if (habitat.type && habitat.size > 0) {
-          acc[habitat.type] = (acc[habitat.type] || 0) + habitat.size;
-        }
-      });
+    habitats.forEach(habitat => {
+      if (habitat.type && habitat.size > 0) {
+        acc[habitat.type] = (acc[habitat.type] || 0) + habitat.size;
+      }
     });
 
     const allHabitatData = Object.entries(acc).map(([name, value]) => ({ name, value, module }));
@@ -56,7 +53,7 @@ export default function FilteredAllocationPieChart ({ allocations, module, name 
     });
 
     if (otherValue > 0) {
-      mainChartData.push({ name: 'Other', value: otherValue, module: 'mixed' });
+      mainChartData.push({ name: 'Other', value: otherValue, module: module });
     }
 
     const otherDataWithPercentages = otherChartData
@@ -65,7 +62,7 @@ export default function FilteredAllocationPieChart ({ allocations, module, name 
 
     return { chartData: mainChartData.sort((a, b) => b.value - a.value), otherData: otherDataWithPercentages };
 
-  }, [allocations, module]);
+  }, [habitats, module]);
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#d0ed57', '#a4de6c', '#8dd1e1'];
   const OTHER_COLOR = '#889095ff'; // A neutral grey for the 'Other' category
@@ -135,9 +132,52 @@ export default function FilteredAllocationPieChart ({ allocations, module, name 
       </Box>
       {otherData.length > 0 && (
         <Box flex="1" display="flex" alignItems="center" justifyContent="center">
-          <OtherAllocationsBarChart data={otherData} color={OTHER_COLOR} />
+                
+          <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+            <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Habitats less than 1%</h4>
+            <ResponsiveContainer>
+              <BarChart
+                layout="vertical"
+                data={otherData}
+                margin={{ top: 5, right: 60, left: 100, bottom: 20 }}
+              >
+                <XAxis type="number" hide />
+                <YAxis type="category" dataKey="name" width={200} tick={<AutoResizeYAxisLabel width={200} />} interval={0} />
+                <Tooltip 
+                  formatter={(value, name, props) => {
+                    const unit = module === 'area' || module === 'areas' ? 'ha' : 'km';
+                    return `${formatNumber(props.payload.value, 2)} ${unit}`;
+                  }} 
+                  labelStyle={{ color: '#262626ff' }} itemStyle={{ color: '#000' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}/>
+                <Legend />
+                <Bar dataKey="percentage" fill={OTHER_COLOR} name="Size %">
+                  <LabelList dataKey="percentage" position="right" formatter={(value) => `${formatNumber(value, 2)}%`} style={{ fill: '#36454F', fontSize: '0.8rem', fontWeight: 'bold' }} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </Box>
       )}
     </Box>
   );
 };
+
+
+export function FilteredAllocationsPieChart ({ allocs, module, name }) {
+  const flattenedAllocHabitats = useMemo(() => {
+    return allocs.reduce((acc, item) => {
+      acc.push(...item.habitats[module]);
+      return acc;
+    }, []);
+  }, [allocs, module]);
+
+  return <FilteredHabitatPieChart habitats={flattenedAllocHabitats} module={module} name={name}/>
+}
+
+export function FilteredBaselinePieChart ({ allHabitats, module, name, sizeParam }) {
+  const mappedHabitats = useMemo(() => {
+    return allHabitats.filter(h => h.module == module).map(h =>  {return {type: h.habitat, size: h[sizeParam]}});
+  }, [allHabitats, module, sizeParam]);
+
+  return <FilteredHabitatPieChart habitats={mappedHabitats} module={module} name={name}/>
+}

@@ -1,19 +1,46 @@
 'use client'
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { formatNumber } from '@/lib/format';
-import { useSortableData, getSortClassName } from '@/lib/hooks';
+import { getSortClassName } from '@/lib/hooks';
 import Papa from 'papaparse';
-import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
 import { DataTable } from '@/components/ui/DataTable';
 import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
-import { ContentStack } from '@/components/ui/ContentStack'
+import SearchableTableLayout from '@/components/SearchableTableLayout';
+import { FilteredBaselinePieChart } from '@/components/FilteredHabitatPieChart'
 
-const AnalysisTable = ({ title, data, unit }) => {
+const AnalysisTable = ({ title, data, unit, requestSort, sortConfig }) => {
   
   const [isOpen, setIsOpen] = useState(true);
-  const { items: sortedRows, requestSort, sortConfig } = useSortableData(data.rows);
+  
+  // Convert sets to counts and calculate totals
+  let totalBaseline = 0;
+  let totalImprovement = 0;
+  let totalAllocation = 0;
+  let totalBaselineParcels = 0;
+  let totalImprovementParcels = 0;
+  let totalAllocationParcels = 0;
+  let totalImprovementSites = 0;
+
+  data.forEach(h => {
+    totalBaseline += h.baseline;
+    totalImprovement += h.improvement;
+    totalAllocation += h.allocation;
+    totalBaselineParcels += h.baselineParcels;
+    totalImprovementParcels += h.improvementParcels;
+    totalAllocationParcels += h.allocationParcels;
+    totalImprovementSites += h.improvementSites;
+  });
+
+  data.forEach(h => {
+    h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
+    h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
+    h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
+    h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
+  });
+
+  let totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
 
   return (
     <PrimaryCard>
@@ -49,33 +76,33 @@ const AnalysisTable = ({ title, data, unit }) => {
             <DataTable.Body>
               <DataTable.Row fontWeight='bold' backgroundColor='tableTotalsBg'>
                 <DataTable.Cell colSpan="2" textAlign="right">Totals:</DataTable.Cell>
-                <DataTable.CenterNumericData>{formatNumber(data.totals.baselineParcels, 0)}</DataTable.CenterNumericData>
-                <DataTable.NumericData>{formatNumber(data.totals.baseline)}</DataTable.NumericData>
+                <DataTable.CenteredNumericCell>{formatNumber(totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totalBaseline)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.CenterNumericData>{formatNumber(data.totals.improvementSites, 0)}</DataTable.CenterNumericData>
-                <DataTable.CenterNumericData>{formatNumber(data.totals.improvementParcels, 0)}</DataTable.CenterNumericData>
-                <DataTable.NumericData>{formatNumber(data.totals.improvement)}</DataTable.NumericData>
+                <DataTable.CenteredNumericCell>{formatNumber(totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.CenteredNumericCell>{formatNumber(totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totalImprovement)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.CenterNumericData>{formatNumber(data.totals.allocationParcels, 0)}</DataTable.CenterNumericData>
-                <DataTable.NumericData>{formatNumber(data.totals.allocation)}</DataTable.NumericData>
+                <DataTable.CenteredNumericCell>{formatNumber(totalAllocationParcels, 0)}</DataTable.CenteredNumericCell>
+                <DataTable.NumericCell>{formatNumber(totalAllocation)}</DataTable.NumericCell>
                 <DataTable.Cell></DataTable.Cell>
-                <DataTable.NumericData>{formatNumber(data.totals.improvementAllocation, 2)}%</DataTable.NumericData>
+                <DataTable.NumericCell>{formatNumber(totalImprovementAllocation, 2)}%</DataTable.NumericCell>
               </DataTable.Row>
-              {sortedRows.map(row => (
+              {data.map(row => (
                 <DataTable.Row key={row.habitat}>
                   <DataTable.Cell>{row.habitat}</DataTable.Cell>
                   <DataTable.Cell textAlign='center'>{row.distinctiveness}</DataTable.Cell>
-                  <DataTable.CenterNumericData>{formatNumber(row.baselineParcels, 0)}</DataTable.CenterNumericData>
-                  <DataTable.NumericData>{formatNumber(row.baseline)}</DataTable.NumericData>
-                  <DataTable.NumericData>{formatNumber(row.baselineShare, 2)}%</DataTable.NumericData>
+                  <DataTable.CenteredNumericCell>{formatNumber(row.baselineParcels, 0)}</DataTable.CenteredNumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.baseline)}</DataTable.NumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.baselineShare, 2)}%</DataTable.NumericCell>
                   <DataTable.Cell textAlign='center'>{row.improvementSites || 0}</DataTable.Cell>
-                  <DataTable.CenterNumericData>{formatNumber(row.improvementParcels, 0)}</DataTable.CenterNumericData>
-                  <DataTable.NumericData>{formatNumber(row.improvement)}</DataTable.NumericData>
-                  <DataTable.NumericData>{formatNumber(row.improvementShare, 2)}%</DataTable.NumericData>
-                  <DataTable.CenterNumericData>{formatNumber(row.allocationParcels, 0)}</DataTable.CenterNumericData>
-                  <DataTable.NumericData>{formatNumber(row.allocation)}</DataTable.NumericData>
-                  <DataTable.NumericData>{formatNumber(row.allocationShare, 2)}%</DataTable.NumericData>
-                  <DataTable.NumericData>{formatNumber(row.improvementAllocation, 2)}%</DataTable.NumericData>
+                  <DataTable.CenteredNumericCell>{formatNumber(row.improvementParcels, 0)}</DataTable.CenteredNumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.improvement)}</DataTable.NumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.improvementShare, 2)}%</DataTable.NumericCell>
+                  <DataTable.CenteredNumericCell>{formatNumber(row.allocationParcels, 0)}</DataTable.CenteredNumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.allocation)}</DataTable.NumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.allocationShare, 2)}%</DataTable.NumericCell>
+                  <DataTable.NumericCell>{formatNumber(row.improvementAllocation, 2)}%</DataTable.NumericCell>
                 </DataTable.Row>
               ))}
             </DataTable.Body>
@@ -86,91 +113,12 @@ const AnalysisTable = ({ title, data, unit }) => {
   );
 }
 
-const DEBOUNCE_DELAY_MS = 300;
+export default function HabitatAnalysisContent({ habitats }) {
 
-export default function HabitatAnalysisContent({ areaAnalysis, hedgerowAnalysis, watercourseAnalysis }) {
-  
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(inputValue);
-    }, DEBOUNCE_DELAY_MS);
-
-    return () => clearTimeout(timerId);
-  }, [inputValue]);
-
-  // Convert sets to counts and calculate totals
-  const calculateTotals = (filteredRows) => {
-    let totalBaseline = 0;
-    let totalImprovement = 0;
-    let totalAllocation = 0;
-    let totalBaselineParcels = 0;
-    let totalImprovementParcels = 0;
-    let totalAllocationParcels = 0;
-    let totalImprovementSites = 0;
-
-    filteredRows.forEach(h => {
-      totalBaseline += h.baseline;
-      totalImprovement += h.improvement;
-      totalAllocation += h.allocation;
-      totalBaselineParcels += h.baselineParcels;
-      totalImprovementParcels += h.improvementParcels;
-      totalAllocationParcels += h.allocationParcels;
-      totalImprovementSites += h.improvementSites;
-    });
-
-    filteredRows.forEach(h => {
-      h.baselineShare = totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0;
-      h.improvementShare = totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0;
-      h.allocationShare = totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0;
-      h.improvementAllocation = h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0;
-    });
-
-    return {
-      baseline: totalBaseline,
-      improvement: totalImprovement,
-      allocation: totalAllocation,
-      improvementParcels: totalImprovementParcels,
-      baselineParcels: totalBaselineParcels,
-      allocationParcels: totalAllocationParcels,
-      improvementSites: totalImprovementSites,
-      improvementAllocation: totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0,
-    };
-  };
-
-  const filterAnalysisData = useCallback((analysisData) => {
-    if (!debouncedSearchTerm) {
-      // use the totals for the data set as passed from the server
-      return analysisData;
-    }
-
-    // filter and recalcualte the totals on the client
-    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-
-    // clone data so that the source isn't modified (calculateTotals modifies the rows)
-    const filteredRows = structuredClone(analysisData.rows.filter(row =>
-      row.habitat.toLowerCase().includes(lowercasedTerm)
-    ));
-
-    const totals = calculateTotals(filteredRows);
-    return { rows: filteredRows, totals: totals };
-  }, [debouncedSearchTerm]);
-
-  const filteredAreaAnalysis = useMemo(() => filterAnalysisData(areaAnalysis), [areaAnalysis, filterAnalysisData]);
-  const filteredHedgerowAnalysis = useMemo(() => filterAnalysisData(hedgerowAnalysis), [hedgerowAnalysis, filterAnalysisData]);
-  const filteredWatercourseAnalysis = useMemo(() => filterAnalysisData(watercourseAnalysis), [watercourseAnalysis, filterAnalysisData]);
-
-  const handleExport = () => {
-    const allData = [
-      ...filteredAreaAnalysis.rows.map(row => ({ Module: 'Area', ...row })),
-      ...filteredHedgerowAnalysis.rows.map(row => ({ Module: 'Hedgerow', ...row })),
-      ...filteredWatercourseAnalysis.rows.map(row => ({ Module: 'Watercourse', ...row })),
-    ];
+  const handleExport = (allData) => {
 
     const csvData = allData.map(row => ({
-      'Module': row.Module,
+      'Module': row.module,
       'Habitat': row.habitat,
       'Distinctiveness': row.distinctiveness,
       'Baseline Parcels': row.baselineParcels,
@@ -191,86 +139,61 @@ export default function HabitatAnalysisContent({ areaAnalysis, hedgerowAnalysis,
     triggerDownload(blob, 'bgs-habitat-analysis.csv');
   };
 
+    
+  const tabs = [
+    {
+      title: 'Area Habitats List',
+      content: ({ sortedItems, requestSort, sortConfig }) => (          
+        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'areas')} unit="ha" requestSort={requestSort} sortConfig={sortConfig} />
+      )
+    },    
+    {
+      title: 'Hedgerow Habitats List',
+      content: ({ sortedItems, requestSort, sortConfig }) => (          
+        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'hedgerows')} unit="km" requestSort={requestSort} sortConfig={sortConfig} />
+      )
+    },
+    {
+      title: 'Watercourse Habitats List',
+      content: ({ sortedItems, requestSort, sortConfig }) => (          
+        <AnalysisTable title="Area habitats" data={sortedItems.filter((item) => item.module == 'watercourses')} unit="km" requestSort={requestSort} sortConfig={sortConfig} />
+      )
+    },
+    {
+      title: 'Baseline Area Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Baseline Area' sizeParam='baseline' />
+    },
+    {
+      title: 'Baseline Hedgerow Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Baseline Hedgerow' sizeParam='baseline' />
+    },
+    {
+      title: 'Baseline Watercourse Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Baseline Watercourse' sizeParam='baseline' />
+    },
+    {
+      title: 'Improvement Area Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Area Improvement' sizeParam='improvement' />
+    },
+    {
+      title: 'Improvement Hedgerow Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Hedgerow Improvement' sizeParam='improvement' />
+    },
+    {
+      title: 'Improvement Watercourse Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Watercourse Improvement' sizeParam='improvement' />
+    }
+  ];
+
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-        <div className="search-container" style={{ margin: 0 }}>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search by habitat name..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            autoFocus
-          />
-          {inputValue && (
-            <button
-              onClick={() => setInputValue('')}
-              className="clear-search-button"
-              aria-label="Clear search"
-            >
-              &times;
-            </button>
-          )}
-        </div>
-        <button onClick={handleExport} className="linkButton" style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-          Export to CSV
-        </button>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '3.7rem' }}>Baseline charts:</span>
-        <ChartModalButton
-          url="/charts/baseline-area-habitats"
-          title="Baseline area habitats"
-          buttonText="Area habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-        <ChartModalButton
-          url="/charts/baseline-hedgerow-habitats"
-          title="Baseline hedgerow habitats"
-          buttonText="Hedgerow habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-        <ChartModalButton
-          url="/charts/baseline-watercourse-habitats"
-          title="Baseline watercourse habitats"
-          buttonText="Watercourse habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
-        <span style={{ fontSize: '1.2rem', fontWeight: 'bold', marginRight: '1rem' }}>Improvement charts:</span>
-        <ChartModalButton
-          url="/charts/improvement-habitats"
-          title="Improvement area habitats"
-          buttonText="Area habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-        <ChartModalButton
-          url="/charts/improvement-hedgerows"
-          title="Improvement hedgerow habitats"
-          buttonText="Hedgerow habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-        <ChartModalButton
-          url="/charts/improvement-watercourses"
-          title="Improvement watercourse habitats"
-          buttonText="Watercourse habitats"
-          className="linkButton"
-          style={{ fontSize: '1.2rem', padding: '0.5rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-        />
-      </div>      
-      <ContentStack>
-        {filteredAreaAnalysis.rows.length > 0 && <AnalysisTable title="Area habitats" data={filteredAreaAnalysis} unit="ha" />}
-        {filteredHedgerowAnalysis.rows.length > 0 && <AnalysisTable title="Hedgerow habitats" data={filteredHedgerowAnalysis} unit="km" />}
-        {filteredWatercourseAnalysis.rows.length > 0 && <AnalysisTable title="Watercourses habitats" data={filteredWatercourseAnalysis} unit="km" />}
-      </ContentStack>
-    </>
+    <SearchableTableLayout
+      initialItems={habitats}
+      initialSortConfig={{ key: 'habitat', direction: 'ascending' }}
+      placeholder="Search by habitat name..."
+      exportConfig={{ onExportCsv: handleExport }}
+      tabs ={tabs}
+      filterPredicate={(item, term) => item.habitat.toLowerCase().includes(term.toLowerCase())}
+    />
   )
 
 }

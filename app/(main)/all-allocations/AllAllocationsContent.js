@@ -5,10 +5,10 @@ import { formatNumber, calcMedian, calcMean } from '@/lib/format';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
+import { FilteredAllocationsPieChart } from '@/components/FilteredHabitatPieChart'
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
-import FilteredAllocationPieChart from './FilteredAllocationPieChart'
 
 const filterPredicate = (alloc, searchTerm) => {
   const lowercasedTerm = searchTerm.toLowerCase();
@@ -80,15 +80,15 @@ export default function AllAllocationsContent({ allocations }) {
     },
     {
       title: 'Area Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='areas' name='Area' />
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='areas' name='Area' />
     },
     {
       title: 'Hedgerow Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='hedgerows' name='Hedgerow' />
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='hedgerows' name='Hedgerow' />
     },
     {
       title: 'Watercourse Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationPieChart allocations={sortedItems} module='watercourses' name='Watercourse' />
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='watercourses' name='Watercourse' />
     }
   ]
 
