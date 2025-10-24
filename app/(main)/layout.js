@@ -5,11 +5,11 @@ import { Provider } from "@/components/ui/provider"
 
 export const metadata = {
   title: 'Biodiversity Gain Sites Register',
-  description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+  description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
   keywords: ['biodiversity', 'gain', 'sites', 'register', 'england', 'habitat', 'conservation', 'environment'],
   openGraph: {
     title: 'Biodiversity Gain Sites Register',
-    description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+    description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
     url: 'https://bgs.bristoltrees.space/',
     siteName: 'Biodiversity Gain Sites Register',
     images: [
