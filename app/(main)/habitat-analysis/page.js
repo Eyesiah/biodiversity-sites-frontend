@@ -40,7 +40,7 @@ export default async function HabitatAnalysis() {
       // Baseline
       if (site.habitats && site.habitats[module]) {
         site.habitats[module].forEach(h => {
-          const habitatKey = slugify(h.type);
+          const habitatKey = `${module}_${slugify(h.type)}`;
           if (!analysis[habitatKey]) {
             analysis[habitatKey] = initHabitat(h.type, module);
           }
@@ -52,9 +52,9 @@ export default async function HabitatAnalysis() {
       // Improvements
       if (site.improvements && site.improvements[module]) {
         site.improvements[module].forEach(h => {
-          const habitatKey = slugify(h.type);
+          const habitatKey = `${module}_${slugify(h.type)}`;
           if (!analysis[habitatKey]) {
-            analysis[habitatKey] = initHabitat(h.type);
+            analysis[habitatKey] = initHabitat(h.type, module);
           }
           analysis[habitatKey].improvement += h.size;
           analysis[habitatKey].improvementParcels += 1;
@@ -67,9 +67,9 @@ export default async function HabitatAnalysis() {
         site.allocations.forEach(alloc => {
           if (alloc.habitats && alloc.habitats[module]) {
             alloc.habitats[module].forEach(h => {
-              const habitatKey = slugify(h.type);
+              const habitatKey = `${module}_${slugify(h.type)}`;
               if (!analysis[habitatKey]) {
-                analysis[habitatKey] = initHabitat(h.type);
+                analysis[habitatKey] = initHabitat(h.type, module);
               }
               analysis[habitatKey].allocation += h.size;
               analysis[habitatKey].allocationParcels += 1;
