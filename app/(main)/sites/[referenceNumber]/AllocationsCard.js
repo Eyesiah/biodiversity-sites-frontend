@@ -5,8 +5,8 @@ import { useSortableData } from '@/lib/hooks';
 import { CollapsibleRow } from "@/components/CollapsibleRow"
 import { formatNumber } from '@/lib/format';
 import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
-import { Box, Text } from '@chakra-ui/react';
+import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
+import { Text } from '@chakra-ui/react';
 
 // component to display the habitats within an allocation
 const AllocationHabitats = ({ habitats }) => {
@@ -39,7 +39,7 @@ const AllocationHabitats = ({ habitats }) => {
             <DataTable.Cell>{habitat.type}</DataTable.Cell>
             <DataTable.Cell>{habitat.distinctiveness}</DataTable.Cell>
             <DataTable.Cell>{habitat.condition}</DataTable.Cell>
-            <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(habitat.size)}</DataTable.Cell>
+            <DataTable.NumericCell>{formatNumber(habitat.size)}</DataTable.NumericCell>
           </DataTable.Row>
         ))}
       </DataTable.Body>
@@ -53,15 +53,15 @@ const AllocationRow = ({ alloc }) => {
     <>
       <DataTable.Cell>{alloc.planningReference}</DataTable.Cell>
       <DataTable.Cell>{alloc.localPlanningAuthority}</DataTable.Cell>
-      <DataTable.Cell textAlign="center" fontFamily="mono">{alloc.lsoa.IMDDecile || 'N/A'}</DataTable.Cell>
-      <DataTable.Cell textAlign="center" fontFamily="mono">
+      <DataTable.CenteredNumericCell>{alloc.lsoa.IMDDecile || 'N/A'}</DataTable.CenteredNumericCell>
+      <DataTable.CenteredNumericCell>
         {typeof alloc.distance === 'number' ? formatNumber(alloc.distance, 0) : alloc.distance}
-      </DataTable.Cell>
+      </DataTable.CenteredNumericCell>
       <DataTable.Cell>{`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`}</DataTable.Cell>
       <DataTable.Cell>{alloc.projectName}</DataTable.Cell>
-      <DataTable.Cell textAlign="right" fontFamily="mono">{alloc.areaUnits && alloc.areaUnits > 0 ? formatNumber(alloc.areaUnits) : ''}</DataTable.Cell>
-      <DataTable.Cell textAlign="right" fontFamily="mono">{alloc.hedgerowUnits && alloc.hedgerowUnits > 0 ? formatNumber(alloc.hedgerowUnits) : ''}</DataTable.Cell>
-      <DataTable.Cell textAlign="right" fontFamily="mono">{alloc.watercoursesUnits && alloc.watercoursesUnits > 0 ? formatNumber(alloc.watercoursesUnits) : ''}</DataTable.Cell>
+      <DataTable.NumericCell>{alloc.areaUnits && alloc.areaUnits > 0 ? formatNumber(alloc.areaUnits) : ''}</DataTable.NumericCell>
+      <DataTable.NumericCell>{alloc.hedgerowUnits && alloc.hedgerowUnits > 0 ? formatNumber(alloc.hedgerowUnits) : ''}</DataTable.NumericCell>
+      <DataTable.NumericCell>{alloc.watercoursesUnits && alloc.watercoursesUnits > 0 ? formatNumber(alloc.watercoursesUnits) : ''}</DataTable.NumericCell>
     </>
   );
 
@@ -96,7 +96,7 @@ export const AllocationsCard = ({allocations, title}) => {
       {isOpen && (
         <>
           {sortedAllocations.length > 0 ? (
-            <Box overflowX="auto" width="100%">
+            <TableContainer>
               <DataTable.Root>
                 <DataTable.Header>
                   <DataTable.Row>
@@ -135,7 +135,7 @@ export const AllocationsCard = ({allocations, title}) => {
                   ))}
                 </DataTable.Body>
               </DataTable.Root>
-            </Box>
+            </TableContainer>
           ) : <Text>No allocation information available.</Text>}
         </>
       )}

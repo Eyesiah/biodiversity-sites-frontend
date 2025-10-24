@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { CollapsibleRow } from "components/CollapsibleRow"
 import SiteList from '@/components/SiteList';
 import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
+import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
 import { DataSection, SectionTitle } from '@/components/ui/DataSection';
 import { Box } from '@chakra-ui/react';
 
@@ -18,11 +18,11 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
     <>
       <DataTable.Cell>{habitat.type}</DataTable.Cell>
       <DataTable.Cell textAlign="center">{habitat.distinctiveness}</DataTable.Cell>
-      {hasSites && <DataTable.Cell textAlign="center" fontFamily="mono">{sites.length}</DataTable.Cell>}
-      <DataTable.Cell textAlign="center" fontFamily="mono">{habitat.parcels}</DataTable.Cell>
-      <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(habitat.area)}</DataTable.Cell>
-      {isImprovement && <DataTable.Cell textAlign="right" fontFamily="mono">{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.Cell>}
-      <DataTable.Cell textAlign="right" fontFamily="mono">{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.Cell>
+      {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
+      <DataTable.CenteredNumericCell>{habitat.parcels}</DataTable.CenteredNumericCell>
+      <DataTable.NumericCell>{formatNumber(habitat.area)}</DataTable.NumericCell>
+      {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
+      <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
     </>
   );
 
@@ -43,9 +43,9 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
             <DataTable.Row key={index}>
               {isImprovement && <DataTable.Cell>{subRow.interventionType}</DataTable.Cell>}
               <DataTable.Cell>{subRow.condition}</DataTable.Cell>
-              <DataTable.Cell textAlign="right" fontFamily="mono">{subRow.parcels}</DataTable.Cell>
-              <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(subRow.area)}</DataTable.Cell>
-              <DataTable.Cell textAlign="right" fontFamily="mono">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.Cell>
+              <DataTable.NumericCell>{subRow.parcels}</DataTable.NumericCell>
+              <DataTable.NumericCell>{formatNumber(subRow.area)}</DataTable.NumericCell>
+              <DataTable.NumericCell>{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
             </DataTable.Row>
           ))}
         </DataTable.Body>
@@ -91,7 +91,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
         {title} {isOpen ? '▼' : '▶'}
       </SectionTitle>
       {isOpen && 
-        <Box overflowX="auto" width="100%">
+        <TableContainer>
           <DataTable.Root>
             <DataTable.Header>
               <DataTable.Row>
@@ -142,7 +142,7 @@ const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement,
               ))}
             </DataTable.Body>
           </DataTable.Root>
-        </Box>
+        </TableContainer>
       }
     </DataSection>
   );

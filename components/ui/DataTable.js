@@ -68,6 +68,19 @@ export const DataTable = {
       {...props} 
     />
   ),
+  NumericCell: (props) => (
+    <DataTable.Cell
+      textAlign="right"
+      fontFamily="mono"
+      {...props}
+    />
+  ),
+  CenteredNumericCell: (props) => (
+    <DataTable.NumericCell
+      textAlign="center"
+      {...props}
+    />
+  ),
 };
 
 export default DataTable;

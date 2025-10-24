@@ -97,9 +97,9 @@ export default function LNRSContent({ lnrs, sites, error }) {
                           <PrimaryTable.Cell>{item.name}</PrimaryTable.Cell>
                           <PrimaryTable.Cell>{item.responsibleAuthority}</PrimaryTable.Cell>
                           <PrimaryTable.Cell>{item.link ? <ExternalLink href={item.link}>{item.publicationStatus}</ExternalLink> : item.publicationStatus}</PrimaryTable.Cell>
-                          <PrimaryTable.Cell textAlign="right" fontFamily="mono">{formatNumber(item.size, 0)}</PrimaryTable.Cell>
-                          <PrimaryTable.Cell textAlign="center" fontFamily="mono">{item.siteCount}</PrimaryTable.Cell>
-                          <PrimaryTable.Cell textAlign="center" fontFamily="mono">{item.adjacents?.length || 0}</PrimaryTable.Cell>
+                          <PrimaryTable.NumericCell>{formatNumber(item.size, 0)}</PrimaryTable.NumericCell>
+                          <PrimaryTable.CenteredNumericCell>{item.siteCount}</PrimaryTable.CenteredNumericCell>
+                          <PrimaryTable.CenteredNumericCell>{item.adjacents?.length || 0}</PrimaryTable.CenteredNumericCell>
                           <PrimaryTable.Cell>
                             <Text
                               as="button"
@@ -138,8 +138,8 @@ export default function LNRSContent({ lnrs, sites, error }) {
                                     <DataTable.Row key={adj.id}>
                                       <DataTable.Cell>{adj.id}</DataTable.Cell>
                                       <DataTable.Cell>{adj.name}</DataTable.Cell>
-                                      <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(adj.size, 0)}</DataTable.Cell>
-                                      <DataTable.Cell textAlign="center" fontFamily="mono">{adjacentLnrsObject?.siteCount || 0}</DataTable.Cell>
+                                      <DataTable.CenteredNumericCell>{formatNumber(adj.size, 0)}</DataTable.CenteredNumericCell>
+                                      <DataTable.CenteredNumericCell>{adjacentLnrsObject?.siteCount || 0}</DataTable.CenteredNumericCell>
                                       <DataTable.Cell>
                                         <Text
                                           as="button"

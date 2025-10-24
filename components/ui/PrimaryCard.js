@@ -39,5 +39,11 @@ export const CardTitle = (props) => (
   />
 );
 
-export default PrimaryCard;
-
+/**
+ * TableContainer - wrapper for tables so they are scrollable on mobile displays
+ */
+export const TableContainer = (props) => (
+  <Box overflowX="auto" width="100%"
+    {...props}
+  />
+)

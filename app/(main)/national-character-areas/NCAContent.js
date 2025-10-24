@@ -94,9 +94,9 @@ export default function NCAContent({ ncas, sites, error }) {
                                     <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(nca.name)}/`}>{nca.id}</ExternalLink>
                                     </PrimaryTable.Cell>
                                     <PrimaryTable.Cell>{nca.name}</PrimaryTable.Cell>
-                                    <PrimaryTable.Cell textAlign="right" fontFamily="mono">{formatNumber(nca.size, 0)}</PrimaryTable.Cell>
-                                    <PrimaryTable.Cell textAlign="center" fontFamily="mono">{nca.siteCount}</PrimaryTable.Cell>
-                                    <PrimaryTable.Cell textAlign="center" fontFamily="mono">{nca.adjacents?.length || 0}</PrimaryTable.Cell>
+                                    <PrimaryTable.NumericCell>{formatNumber(nca.size, 0)}</PrimaryTable.NumericCell>
+                                    <PrimaryTable.CenteredNumericCell>{nca.siteCount}</PrimaryTable.CenteredNumericCell>
+                                    <PrimaryTable.CenteredNumericCell>{nca.adjacents?.length || 0}</PrimaryTable.CenteredNumericCell>
                                     <PrimaryTable.Cell>
                                     <Text
                                       as="button"
@@ -135,8 +135,8 @@ export default function NCAContent({ ncas, sites, error }) {
                                             <DataTable.Row key={adj.id}>
                                               <DataTable.Cell>{adj.id}</DataTable.Cell>
                                               <DataTable.Cell>{adj.name}</DataTable.Cell>
-                                              <DataTable.Cell textAlign="right" fontFamily="mono">{formatNumber(adj.size, 0)}</DataTable.Cell>
-                                              <DataTable.Cell textAlign="center" fontFamily="mono">{adjacentNcaObject?.siteCount || 0}</DataTable.Cell>
+                                              <DataTable.NumericCell>{formatNumber(adj.size, 0)}</DataTable.NumericCell>
+                                              <DataTable.CenteredNumericCell>{adjacentNcaObject?.siteCount || 0}</DataTable.CenteredNumericCell>
                                               <DataTable.Cell>
                                                 <Text
                                                   as="button"

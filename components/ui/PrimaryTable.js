@@ -61,6 +61,19 @@ export const PrimaryTable = {
       {...props} 
     />
   ),
+  NumericCell: (props) => (
+    <PrimaryTable.Cell
+      textAlign="right"
+      fontFamily="mono"
+      {...props}
+    />
+  ),
+  CenteredNumericCell: (props) => (
+    <PrimaryTable.NumericCell
+      textAlign="center"
+      {...props}
+    />
+  ),
 };
 
 export default PrimaryTable;
