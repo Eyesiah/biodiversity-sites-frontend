@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { formatNumber, slugify } from '@/lib/format';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
 import Tooltip from '@/components/Tooltip';
-import { getSortClassName } from '@/lib/hooks';
+import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
 
 const AllocationHabitats = ({ habitats }) => {
@@ -71,29 +71,29 @@ export default function AllAllocationsList ({sortedItems, requestSort, sortConfi
     <PrimaryTable.Root>
       <PrimaryTable.Header>
         <PrimaryTable.Row>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} className={getSortClassName('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} className={getSortClassName('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} className={getSortClassName('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} className={getSortClassName('lpa', sortConfig)}>LPA</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} className={getSortClassName('nca', sortConfig)}>NCA</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} className={getSortClassName('sr.cat', sortConfig)}>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}>LPA</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}>NCA</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
             <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
               Spatial Risk
             </Tooltip>
           </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} className={getSortClassName('imd', sortConfig)}>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
             <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
               IMD transfer
             </Tooltip>
           </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} className={getSortClassName('d', sortConfig)}>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} {...getSortProps('d', sortConfig)}>
             <Tooltip text="The distance from the development site to the BGS offset site.">
               Distance (km)
             </Tooltip>
           </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} className={getSortClassName('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} className={getSortClassName('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('wu')} className={getSortClassName('wu', sortConfig)}>Watercourse HUs</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} {...getSortProps('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} {...getSortProps('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('wu')} {...getSortProps('wu', sortConfig)}>Watercourse HUs</PrimaryTable.ColumnHeader>
         </PrimaryTable.Row>
       </PrimaryTable.Header>
       <PrimaryTable.Body>

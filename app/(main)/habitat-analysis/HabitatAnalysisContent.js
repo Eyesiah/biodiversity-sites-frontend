@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
-import { getSortClassName } from '@/lib/hooks';
+import { getSortProps } from '@/lib/hooks';
 import Papa from 'papaparse';
 import { triggerDownload } from '@/lib/utils';
 import { DataTable } from '@/components/ui/DataTable';
@@ -75,19 +75,19 @@ const AnalysisTable = ({ title, data, module, requestSort, sortConfig }) => {
             <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#f0e0e0'>Allocations</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
-            <DataTable.ColumnHeader onClick={() => requestSort('habitat')} className={getSortClassName('habitat', sortConfig)}>Habitat</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} className={getSortClassName('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} className={getSortClassName('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} className={getSortClassName('baseline', sortConfig)}>Baseline size ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} className={getSortClassName('baselineShare', sortConfig)}>% Share</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} className={getSortClassName('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} className={getSortClassName('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} className={getSortClassName('improvement', sortConfig)}>Improvement size ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} className={getSortClassName('improvementShare', sortConfig)}>% Share</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} className={getSortClassName('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} className={getSortClassName('allocation', sortConfig)}>Allocation ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} className={getSortClassName('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>                
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} className={getSortClassName('improvementAllocation', sortConfig)}>% of Improvements</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}>Habitat</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} style={{ textAlign: 'center' }}>Distinctiveness</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} {...getSortProps('baselineParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}>Baseline size ({unit})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)}>% Share</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} {...getSortProps('improvementSites', sortConfig)} style={{ textAlign: 'center' }}>Improvement # Sites</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} {...getSortProps('improvementParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}>Improvement size ({unit})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)}>% Share</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}>Allocation ({unit})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>                
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}>% of Improvements</DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
