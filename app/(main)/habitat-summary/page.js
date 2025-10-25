@@ -79,6 +79,10 @@ export default async function HabitatSummaryPage() {
   const collatedHabitats = collateAllHabitats(allHabitats, false);
   const collatedImprovements = collateAllHabitats(allImprovements, true);
 
+  const baselineHabitats = Object.values(collatedHabitats).flat().map(h => ({ ...h, isImprovement: false }));
+  const improvementHabitats = Object.values(collatedImprovements).flat().map(h => ({ ...h, isImprovement: true }));
+  const habitats = [...baselineHabitats, ...improvementHabitats];
+
   const processedSites = processSitesForListView(allSites);
   const sitesMap = processedSites.reduce((acc, site) => {
     acc[site.referenceNumber] = site;
@@ -87,7 +91,7 @@ export default async function HabitatSummaryPage() {
 
   return (
     <>
-      <SearchableHabitatLists habitats={collatedHabitats} improvements={collatedImprovements} sites={sitesMap} />
+      <SearchableHabitatLists allHabitats={habitats} sites={sitesMap} />
       <Footer lastUpdated={lastUpdated} />
     </>
   )

@@ -1,79 +1,31 @@
 'use client'
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import styles from '@/styles/SiteDetails.module.css';
-import { HabitatsCard } from '@/components/HabitatsCard';
-import Tooltip from '@/components/Tooltip';
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
+import SearchableTableLayout from '@/components/SearchableTableLayout';
+import { HabitatTable } from '@/components/HabitatsCard';
+import { DataSection, SectionTitle } from '@/components/ui/DataSection';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
 
-const DEBOUNCE_DELAY_MS = 300;
+// Component for displaying habitat summary
+const HabitatSummaryCard = ({data}) => (
+  <DataSection>
+    <SectionTitle>Habitat Summary</SectionTitle>
+    <HabitatSummaryTable site={ data } />
+  </DataSection>
+);
 
-export default function SearchableHabitatLists({ habitats, improvements, sites }) {
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+export default function SearchableHabitatLists({ allHabitats, sites }) {
   const [displayedSites, setDisplayedSites] = useState([]);
   const [currentHabitat, setCurrentHabitat] = useState(null);
-    
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(inputValue);
-    }, DEBOUNCE_DELAY_MS);
-
-    return () => clearTimeout(timerId);
-  }, [inputValue]);
-
-  const filterHabitats = useCallback((habitatData) => {
-    if (!debouncedSearchTerm) {
-      return habitatData;
-    }
-    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-    const filteredData = {};
-    for (const category in habitatData) {
-      if (Array.isArray(habitatData[category])) {
-        filteredData[category] = habitatData[category].filter(h =>
-          h.type.toLowerCase().includes(lowercasedTerm)
-        );
-      }
-    }
-    return filteredData;
-  }, [debouncedSearchTerm]);
-
-  const filteredBaselineHabitats = useMemo(() => filterHabitats(habitats), [habitats, filterHabitats]);
-  const filteredImprovementHabitats = useMemo(() => filterHabitats(improvements), [improvements, filterHabitats]);
-
-  const handleExportXML = () => {
-    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
-    const dataToExport = {
-      habitatSummary: {
-        baseline: { habitat: Object.values(filteredBaselineHabitats).flat() },
-        improvement: { habitat: Object.values(filteredImprovementHabitats).flat() }
-      }
-    };
-    const xmlDataStr = builder.build(dataToExport);
-    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
-    triggerDownload(blob, 'bgs-habitat-summary.xml');
-  };
-
-  const handleExportJSON = () => {
-    const dataToExport = {
-      habitatSummary: {
-        baseline: Object.values(filteredBaselineHabitats).flat(),
-        improvement: Object.values(filteredImprovementHabitats).flat()
-      }
-    };
-    const jsonDataStr = JSON.stringify(dataToExport, null, 2);
-    const blob = new Blob([jsonDataStr], { type: 'application/json' });
-    triggerDownload(blob, 'bgs-habitat-summary.json');
-  };
 
   const onHabitatToggle = (habitat) => {
     if (isHabitatOpen(habitat)) {
@@ -97,78 +49,135 @@ export default function SearchableHabitatLists({ habitats, improvements, sites }
     }
   }, [currentHabitat, sites]);
 
-  const tooltipText = 'Click any habitat row for more information and to see the location of that habitat.';
+  const filterPredicate = useCallback((habitat, searchTerm) => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    return habitat.type.toLowerCase().includes(lowercasedTerm);
+  }, []);
+
+  const handleExportXML = (items) => {
+    const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
+    const dataToExport = {
+      habitatSummary: {
+        baseline: { habitat: items.filter(h => !h.isImprovement) },
+        improvement: { habitat: items.filter(h => h.isImprovement) }
+      }
+    };
+    const xmlDataStr = builder.build(dataToExport);
+    const blob = new Blob([xmlDataStr], { type: 'application/xml' });
+    triggerDownload(blob, 'bgs-habitat-summary.xml');
+  };
+
+  const handleExportJSON = (items) => {
+    const dataToExport = {
+      habitatSummary: {
+        baseline: items.filter(h => !h.isImprovement),
+        improvement: items.filter(h => h.isImprovement)
+      }
+    };
+    const jsonDataStr = JSON.stringify(dataToExport, null, 2);
+    const blob = new Blob([jsonDataStr], { type: 'application/json' });
+    triggerDownload(blob, 'bgs-habitat-summary.json');
+  };
+
+  const SummaryComponent = (filteredCount, totalCount, sortedItems) => {
+    const data = useMemo(()=> {
+      const habitats = sortedItems.filter(h => !h.isImprovement);
+      const improvements = sortedItems.filter(h => h.isImprovement);
+      return {
+        habitats: {
+          areas: habitats.filter(h => h.module == "Area"),
+          hedgerows: habitats.filter(h => h.module == "Hedgerow"),
+          watercourses: habitats.filter(h => h.module == "Watercourses"),
+        },
+        improvements: {
+          areas: improvements.filter(h => h.module == "Area"),
+          hedgerows: improvements.filter(h => h.module == "Hedgerow"),
+          watercourses: improvements.filter(h => h.module == "Watercourses"),
+        }
+      }
+    }, [sortedItems]);
+
+    return <HabitatSummaryCard data={data} />;
+  };
+
+  const HabitatTabContent = ({ 
+    isImprovement, 
+    module, 
+    sortedItems, 
+    requestSort,
+    sortConfig, 
+    sites
+  }) => {
+    // Memoize the filtered data to prevent unnecessary recalculations
+    const filteredHabitats = useMemo(() => {        
+      return sortedItems.filter(h => h.isImprovement == isImprovement && h.module == module);
+    }, [isImprovement, module, sortedItems]);
+    
+    return (
+      <HabitatTable
+        title={module.charAt(0).toUpperCase() + module.slice(1)}
+        habitats={filteredHabitats}
+        sortConfig={sortConfig}
+        isImprovement={isImprovement}
+        onHabitatToggle={onHabitatToggle}
+        isHabitatOpen={isHabitatOpen}
+        sites={sites}
+        requestSort={requestSort}
+      />
+    );
+  };
+  const tabs = [
+    {
+      title: 'Improvement Areas',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Area" sites={sites} />
+      )
+    },
+    {
+      title: 'Improvement Hedgerows',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Hedgerow" sites={sites} />
+      )
+    },
+    {
+      title: 'Improvement Watercourses',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Watercourses" sites={sites} />
+      )
+    },
+    {
+      title: 'Baseline Areas',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={false} module="Area" sites={sites} />
+      )
+    },
+    {
+      title: 'Baseline Hedgerows',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={false} module="Hedgerow" sites={sites} />
+      )
+    },
+    {
+      title: 'Baseline Watercourses',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={false} module="Watercourses" sites={sites} />
+      )
+    }
+  ];
 
   return (
     <MapContentLayout
-      map={
-        <SiteMap sites={displayedSites} />
-      }
+      map={<SiteMap sites={displayedSites} />}
       content={
-        <>
-            <div className={styles.detailsGrid}>
-
-              <section className={styles.card}>
-                <h3>Habitat Summary</h3>
-                <HabitatSummaryTable site={{ habitats: filteredBaselineHabitats, improvements: filteredImprovementHabitats }} />
-
-              </section>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem', marginTop: '1rem' }} className="sticky-search">
-              <div className="search-container" style={{ margin: 0 }}>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="Search by habitat name..."
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  autoFocus
-                />
-                {inputValue && (
-                  <button
-                    onClick={() => setInputValue('')}
-                    className="clear-search-button"
-                    aria-label="Clear search"
-                  >
-                    &times;
-                  </button>
-                )}
-              </div>
-              <div className={styles.buttonGroup}>
-                <button onClick={handleExportXML} className={styles.exportButton}>Export to XML</button>
-                <button onClick={handleExportJSON} className={styles.exportButton}>Export to JSON</button>
-              </div>
-            </div>
-
-            <div style={{ marginBottom: '1rem' }} >
-              <HabitatsCard
-                title={
-                  <Tooltip text={tooltipText}>
-                    Improvement Habitats
-                  </Tooltip>
-                }
-                habitats = {filteredImprovementHabitats}
-                isImprovement={true}
-                onHabitatToggle={onHabitatToggle}
-                isHabitatOpen={isHabitatOpen}
-                sites={sites}
-              />
-            </div>
-
-            <HabitatsCard
-              title={
-                <Tooltip text={tooltipText}>
-                  Baseline Habitats
-                </Tooltip>
-              }
-              habitats = {filteredBaselineHabitats}
-              isImprovement={false}
-              onHabitatToggle={onHabitatToggle}
-              isHabitatOpen={isHabitatOpen}
-              sites={sites}
-            />
-        </>
+        <SearchableTableLayout
+          initialItems={allHabitats}
+          filterPredicate={filterPredicate}
+          initialSortConfig={{ key: 'type', direction: 'ascending' }}
+          placeholder="Search by habitat name..."
+          exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
+          summary={SummaryComponent}
+          tabs={tabs}
+        />
       }
     />
   );

@@ -10,7 +10,7 @@ import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryC
 import { DataSection, SectionTitle } from '@/components/ui/DataSection';
 import { Box } from '@chakra-ui/react';
 
-const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
+export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
   const hasSites = sites != null;
 
@@ -68,7 +68,7 @@ const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatO
   );
 };
 
-const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites }) => {
+export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   if (!habitats || habitats.length == 0)

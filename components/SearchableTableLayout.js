@@ -120,7 +120,7 @@ export default function SearchableTableLayout({
 
       {summary && (
         <Box textAlign="center" marginBottom="1rem">
-          {summary(sortedItems.length, initialItems.length)}
+          {summary(sortedItems.length, initialItems.length, sortedItems)}
         </Box>
       )}
 
