@@ -2,10 +2,10 @@
 
 import Modal from '@/components/Modal';
 import { useState, useEffect } from 'react';
-import styles from '@/styles/SiteDetails.module.css';
 import { DetailRow } from '@/components/DetailRow'
 import { ImdScoresChart } from './ImdScoresChart';
 import { formatNumber } from '@/lib/format'
+import { VStack, Box, Separator } from "@chakra-ui/react";
 
 export const InfoModal = ({ modalState, onClose }) => {
   const { show, type, name, title, style } = modalState;
@@ -65,12 +65,19 @@ export const InfoModal = ({ modalState, onClose }) => {
           <DetailRow label="Area (ha)" value={formatNumber(lpa.size, 0)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           <DetailRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} labelColor="#f0f0f0" valueColor="#bdc3c7" />
           {lpa.adjacents?.length > 0 && (
-            <div style={{ marginTop: '1rem' }}>
+            <Box mt={4}>
               <h4>Adjacent LPAs</h4>
-              <ul className={styles.adjacencyList}>
-                {lpa.adjacents.map(adj => <li key={adj.id}>{adj.name} ({adj.id}) - {formatNumber(adj.size, 0)} ha</li>)}
-              </ul>
-            </div>
+              <VStack spacing={0} align="stretch" pl={4}>
+                {lpa.adjacents.map((adj, index) => (
+                  <Box key={adj.id}>
+                    <Box py={0.5}>
+                      {adj.name} ({adj.id}) - {formatNumber(adj.size, 0)} ha
+                    </Box>
+                    {index < lpa.adjacents.length - 1 && <Separator borderColor="gray.200" />}
+                  </Box>
+                ))}
+              </VStack>
+            </Box>
           )}
         </dl>
       );

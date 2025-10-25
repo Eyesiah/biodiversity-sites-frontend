@@ -5,7 +5,6 @@ export const system = createSystem(defaultConfig, {
   theme: {
     tokens: {
       colors: {
-        // Core palette derived from globals.css and SiteDetails.module.css
         charcoal: { value: "#282c34" }, // page background (dark)
         bone: { value: "#F9F6EE" }, // light page/card background
         midnight: { value: "#2c3e50" },

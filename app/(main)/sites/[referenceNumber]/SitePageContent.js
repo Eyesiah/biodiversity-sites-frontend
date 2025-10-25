@@ -5,10 +5,11 @@ import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import { SiteDetailsCard} from './SiteDetailsCard'
 import { AllocationsCard } from './AllocationsCard'
-import styles from '@/styles/SiteDetails.module.css';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/ui/ContentStack'
+import { Flex } from "@chakra-ui/react"
+import { Button } from '@/components/ui/Button';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -63,10 +64,10 @@ export default function SitePageContent({site}) {
             allocations={site.allocations}
           />
 
-          <div className={styles.buttonGroup}>
-            <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
-            <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
-          </div>
+          <Flex gap="0.5rem" justifyContent="center">
+            <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
+            <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
+          </Flex>
           
         </ContentStack>
         

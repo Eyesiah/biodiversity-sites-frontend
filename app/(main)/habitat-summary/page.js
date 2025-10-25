@@ -1,6 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
 import SearchableHabitatLists from './SearchableHabitatLists';
-import styles from '@/styles/SiteDetails.module.css';
 import Footer from '@/components/Footer';
 import { collateAllHabitats } from '@/lib/habitat';
 import { processSitesForListView} from '@/lib/sites';

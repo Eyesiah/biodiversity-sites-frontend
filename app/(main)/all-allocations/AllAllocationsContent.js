@@ -6,6 +6,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { FilteredAllocationsPieChart } from '@/components/FilteredHabitatPieChart'
+import { Box, Text } from '@chakra-ui/react';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
@@ -100,9 +101,9 @@ export default function AllAllocationsContent({ allocations }) {
       placeholder="Filter by BGS Ref, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
       exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
       summary={(filteredCount, totalCount) => (
-        <div className="summary" style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '1.2rem', margin: 0 }}>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</p>
-        </div>
+        <Box textAlign='center'>
+          <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</Text>
+        </Box>
       )}
       onSortedItemsChange={handleSortedItemsChange}
       tabs={tabs}

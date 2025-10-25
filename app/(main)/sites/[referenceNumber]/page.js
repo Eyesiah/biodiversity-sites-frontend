@@ -1,4 +1,3 @@
-import styles from '@/styles/SiteDetails.module.css';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { collateAllHabitats } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
@@ -36,10 +35,7 @@ export default async function SitePage({params}) {
   const site = await fetchSite(referenceNumber, true, true)
   if (!site)
   {
-    return (
-        <div className={styles.container}>
-          <p>Site not found</p>
-        </div>);
+    return <p>Site not found</p>
   }
 
   if (site.latitude && site.longitude) {

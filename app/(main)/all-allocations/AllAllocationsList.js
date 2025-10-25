@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { formatNumber, slugify, calcMedian, calcMean } from '@/lib/format';
+import { formatNumber, slugify } from '@/lib/format';
 import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
-import styles from '@/styles/SiteDetails.module.css';
 import Tooltip from '@/components/Tooltip';
 import { getSortClassName } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
@@ -30,7 +29,7 @@ const AllocationHabitats = ({ habitats }) => {
             <PrimaryTable.Cell>{habitat.type}</PrimaryTable.Cell>
             <PrimaryTable.Cell>{habitat.distinctiveness}</PrimaryTable.Cell>
             <PrimaryTable.Cell>{habitat.condition}</PrimaryTable.Cell>
-            <PrimaryTable.Cell className={styles.numericData}>{formatNumber(habitat.size)}</PrimaryTable.Cell>
+            <PrimaryTable.NumericCell>{formatNumber(habitat.size)}</PrimaryTable.NumericCell>
           </PrimaryTable.Row>
         ))}
       </PrimaryTable.Body>
