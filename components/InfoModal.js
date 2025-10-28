@@ -8,7 +8,7 @@ import { formatNumber } from '@/lib/format'
 import { VStack, Box, Separator } from "@chakra-ui/react";
 
 export const InfoModal = ({ modalState, onClose }) => {
-  const { show, type, name, title, style } = modalState;
+  const { show, type, name, title, size } = modalState;
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -102,7 +102,7 @@ export const InfoModal = ({ modalState, onClose }) => {
   };
 
   return (
-    <Modal show={show} onClose={onClose} title={title} style={style}>
+    <Modal show={show} onClose={onClose} title={title} size={size}>
       {renderContent()}
     </Modal>
   );

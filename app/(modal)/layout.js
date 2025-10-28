@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
       : 'b718ac79-8ca2-494a-a398-47adf5e8188a';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <Provider>
           <Script

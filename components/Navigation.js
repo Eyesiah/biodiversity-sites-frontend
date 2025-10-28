@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import ExternalLink from './ExternalLink';
 import Modal from '@/components/Modal'
-import modalStyles from '@/styles/Modal.module.css';
 import Tooltip from '@/components/Tooltip';
 import { WFS_URL } from '@/config'
 import { ColorModeButton } from './ui/color-mode'
@@ -15,11 +14,8 @@ import {
   Flex, 
   Text, 
   Button, 
-  Menu,
-  IconButton,
   useBreakpointValue
 } from '@chakra-ui/react';
-import { HiChevronDown, HiMenu } from 'react-icons/hi';
 
 // Style-templating components
 const NavContainer = ({ children, ...props }) => (
@@ -255,7 +251,7 @@ const ModalButton = ({
   src, 
   iframeTitle, 
   buttonComponent = 'DropdownMenuItem',
-  modalStyle = modalStyles.modalContentMedium 
+  modalSize
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -271,7 +267,7 @@ const ModalButton = ({
         show={showModal} 
         onClose={() => setShowModal(false)} 
         title={title}
-        style={modalStyle}
+        size={modalSize}
       >
         <iframe 
           src={src}
@@ -394,7 +390,7 @@ export default function Navigation() {
             src="/feedback"
             iframeTitle="Give Feedback"
             buttonComponent="NavLink"
-            modalStyle={modalStyles.modalContent}
+            modalSize='sm'
           />
         </MobileMenu>   
         <ColorModeButton />     

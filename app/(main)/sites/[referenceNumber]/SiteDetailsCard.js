@@ -8,10 +8,9 @@ import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/InfoModal';
 import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
 import { Box, Button } from '@chakra-ui/react';
-import modalStyles from '@/styles/Modal.module.css';
 
 export const SiteDetailsCard = ({ site }) => {
-  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, style: null });
+  const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -21,8 +20,8 @@ export const SiteDetailsCard = ({ site }) => {
     return distances.length % 2 === 0 ? (distances[mid - 1] + distances[mid]) / 2 : distances[mid];
   }, [site.allocations]);
 
-  const showModal = (type, name, title, data, style) => {
-    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, style: style });
+  const showModal = (type, name, title, data, size='md') => {
+    setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, size: size });
   };
 
   return (
@@ -112,7 +111,7 @@ export const SiteDetailsCard = ({ site }) => {
                   {site.lsoa.name}
                 </Button>
                 <Button
-                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site, modalStyles.modalContentMedium)}
+                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site, "lg")}
                   bg="none"
                   border="none"
                   color="nephritis"
