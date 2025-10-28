@@ -1,6 +1,7 @@
 'use client'
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { Heading } from "@chakra-ui/react"
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -38,7 +39,7 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
   if (chartData.length === 0) {
     return (
       <div>
-        <h2 style={{ textAlign: 'center' }}>{title}</h2>
+        <Heading as="h2" size="lg" textAlign="center">{title}</Heading>
         <p style={{ textAlign: 'center', height: '400px' }}>No data available for this chart.</p>
       </div>
     );
@@ -46,7 +47,7 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
 
   return (
     <div>
-      <h2 style={{ textAlign: 'center' }}>{title}</h2>
+      <Heading as="h2" size="lg" textAlign="center">{title}</Heading>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={chartData}

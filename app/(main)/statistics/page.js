@@ -2,7 +2,10 @@ import clientPromise from '@/lib/mongodb';
 import Link from 'next/link';
 import { StatsChart } from './StatisticsChart'
 import Footer from '@/components/Footer';
-import styles from '@/styles/Statistics.module.css';
+import ChartRow from '@/components/ui/ChartRow';
+import ChartItem from '@/components/ui/ChartItem';
+import PrimaryTable from '@/components/ui/PrimaryTable';
+import { Heading } from "@chakra-ui/react"
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -85,97 +88,97 @@ export default async function StatisticsPage() {
       <div className="container">
         {stats.length > 0 ? (
           <>
-            <div className={styles.chartRow}>
-              <div className={styles.chartItem}>
+            <ChartRow>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['totalSites', 'numAllocations']}
                   strokeColors={['#8884d8', '#82ca9d']}
                   names={['Total Sites', 'Total Allocations']}
                   title={'Sites & Allocations'}
                 />
-              </div>
-              <div className={styles.chartItem}>
+              </ChartItem>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['allocationsPerSite']}
                   strokeColors={['#d4a6f2']}
                   names={['Allocations per site']}
                   title={'Allocations per site'}
                 />
-              </div>
-            </div>
+              </ChartItem>
+            </ChartRow>
 
-            <div className={styles.chartRow}>
-              <div className={styles.chartItem}>
+            <ChartRow>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['totalArea', 'baselineAreaSize', 'improvementsAreaSize']}
                   strokeColors={['#ffc658', '#ff7300', '#ffb870']}
                   names={['Total site area (ha)', 'Baseline area (ha)', 'Improvement area (ha)']}
                   title={'Site Area (ha): Total, Baseline & Improvement'}
                 />
-              </div>
-              <div className={styles.chartItem}>
+              </ChartItem>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['baselineHedgerowSize', 'improvementsHedgerowSize']}
                   strokeColors={['#00C49F', '#70d9c4']}
                   names={['Baseline hedgerow (km)', 'Improvement hedgerow (km)']}
                   title={'Hedgerow (km): Baseline vs. Improvement sizes'}
                 />
-              </div>
-              <div className={styles.chartItem}>
+              </ChartItem>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['baselineWatercourseSize', 'improvementsWatercourseSize']}
                   strokeColors={['#d4a6f2', '#e9d3f9']}
                   names={['Baseline watercourse (km)', 'Improvement watercourse (km)']}
                   title={'Watercourse (km): Baseline vs. Improvement sizes'}
                 />
-              </div>
-            </div>
+              </ChartItem>
+            </ChartRow>
             
-            <div className={styles.chartRow}>
-              <div className={styles.chartItem}>
+            <ChartRow>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
                   names={['Total baseline habitat units', 'Total created habitat units', 'Total allocated habitat units']}
                   title={'Habitat units'}
                 />
-              </div>
-              <div className={styles.chartItem}>
+              </ChartItem>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['baselineParcels', 'improvementsParcels', 'allocatedParcels']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
                   names={['Baseline parcels', 'Improved parcels', 'Allocated parcels']}
                   title={'Parcels count'}
                 />
-              </div>
-            </div>
+              </ChartItem>
+            </ChartRow>
 
-            <div className={styles.chartRow}>              
+            <ChartRow>              
 
-              { siteAdditions && siteAdditions.length > 0 && <div className={styles.chartItem}>
-                <h2>Site Register Addition Date</h2>
-                <table className="site-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Sites</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+              { siteAdditions && siteAdditions.length > 0 && <ChartItem>
+                <Heading as="h2" size="lg" textAlign="center">Site Register Addition Date</Heading>
+                <PrimaryTable.Root>
+                  <PrimaryTable.Header>
+                    <PrimaryTable.Row>
+                      <PrimaryTable.ColumnHeader>Date</PrimaryTable.ColumnHeader>
+                      <PrimaryTable.ColumnHeader>Sites</PrimaryTable.ColumnHeader>
+                    </PrimaryTable.Row>
+                  </PrimaryTable.Header>
+                  <PrimaryTable.Body>
                     {siteAdditions.map((addition) => (
-                      <tr key={addition.date}>
-                        <td>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</td>
-                        <td>
+                      <PrimaryTable.Row key={addition.date}>
+                        <PrimaryTable.Cell>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell>
                           {addition.sites.map((site, index) => (
                             <CommaSeperatedSiteLink key={index} site={site} index={index} count={addition.sites.length} />
                           ))}
-                        </td>
-                      </tr>
+                        </PrimaryTable.Cell>
+                      </PrimaryTable.Row>
                     ))}
-                  </tbody>
-                </table>
-              </div> }
-            </div>
+                  </PrimaryTable.Body>
+                </PrimaryTable.Root>
+              </ChartItem> }
+            </ChartRow>
           </>
         ) : (
           <p>No statistics data available yet. The first data point will be generated by the next scheduled run.</p>

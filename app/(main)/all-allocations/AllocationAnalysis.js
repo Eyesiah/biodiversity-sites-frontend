@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
-import statsStyles from '@/styles/Statistics.module.css';
+import ChartRow from '@/components/ui/ChartRow';
+import ChartItem from '@/components/ui/ChartItem';
+import { Heading } from '@chakra-ui/react';
 
 export default function AllocationAnalysis({ allocations }) {
 
@@ -105,9 +107,9 @@ export default function AllocationAnalysis({ allocations }) {
 
   return (
     <>
-      <div className={statsStyles.chartRow}>
-        <div className={statsStyles.chartItem}>
-          <h4 style={{ textAlign: 'center' }}>Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</h4>
+      <ChartRow>
+        <ChartItem>
+          <Heading as="h4" size="md" textAlign="center">Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</Heading>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={distanceDistributionData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -118,9 +120,9 @@ export default function AllocationAnalysis({ allocations }) {
               <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
-        </div>
-        <div className={statsStyles.chartItem}>
-          <h4 style={{ textAlign: 'center' }}>Habitat Unit (HU) Distribution</h4>
+        </ChartItem>
+        <ChartItem>
+          <Heading as="h4" size="md" textAlign="center">Habitat Unit (HU) Distribution</Heading>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
               <CartesianGrid strokeDasharray="3 3" />
@@ -131,11 +133,11 @@ export default function AllocationAnalysis({ allocations }) {
               <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
             </BarChart>
           </ResponsiveContainer>
-        </div>
-      </div>
-      <div className={statsStyles.chartRow}>
-      <div className={statsStyles.chartItem}>
-        <h4 style={{ textAlign: 'center' }}>Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</h4>
+        </ChartItem>
+      </ChartRow>
+      <ChartRow>
+      <ChartItem>
+        <Heading as="h4" size="md" textAlign="center">Allocations by IMD Decile (1 = most deprived. 10 = least deprived)</Heading>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={imdDistributionData} barCategoryGap="10%">
             <CartesianGrid strokeDasharray="3 3" />
@@ -147,9 +149,9 @@ export default function AllocationAnalysis({ allocations }) {
             <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites" />
           </BarChart>
         </ResponsiveContainer>
-      </div>
-      <div className={statsStyles.chartItem}>
-        <h4 style={{ textAlign: 'center' }}>Allocations by Spatial Risk Category</h4>
+      </ChartItem>
+      <ChartItem>
+        <Heading as="h4" size="md" textAlign="center">Allocations by Spatial Risk Category</Heading>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={srDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
             <CartesianGrid strokeDasharray="3 3" />
@@ -203,8 +205,8 @@ export default function AllocationAnalysis({ allocations }) {
             <span>Outside</span>
           </div>
         </div>
-      </div>
-    </div >
+      </ChartItem>
+    </ChartRow >
     </>
   );
 }
