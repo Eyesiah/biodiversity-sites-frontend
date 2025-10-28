@@ -1,10 +1,10 @@
 'use client'
 
-import { HabitatsCard, HabitatTable } from "@/components/HabitatsCard"
+import { HabitatTable } from "@/components/HabitatsTable"
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/MapContentLayout';
 import { SiteDetailsCard} from './SiteDetailsCard'
-import { AllocationsCard } from './AllocationsCard'
+import { AllocationsTable } from './AllocationsTable'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/ui/ContentStack'
@@ -47,81 +47,81 @@ export default function SitePageContent({site}) {
 
   const tabs = [
     {
-      title: 'Improvement Areas',
+      title: `Area Improvements (${site.improvements.areas.length})`,
       content: () => {
         return (<HabitatTable
-          title="Improvement Areas"
           habitats={sortedImprovementAreas}
           sortConfig={sortConfigImprovementAreas}
           isImprovement={true}
           requestSort={requestSortImprovementAreas}
+          units='ha'
         />)
       }
     },
     {
-      title: 'Improvement Hedgerows',
+      title: `Hedgerow Improvements (${site.improvements.hedgerows.length})`,
       content: () => {
         return (<HabitatTable
-          title="Improvement Hedgerows"
           habitats={sortedImprovementHedgerows}
           sortConfig={sortConfigImprovementHedgerows}
           isImprovement={true}
           requestSort={requestSortImprovementHedgerows}
+          units='km'
         />)
       }
     },
     {
-      title: 'Improvement Watercourses',
+      title: `Watercourse Improvements (${site.improvements.watercourses.length})`,
       content: () => {
         return (<HabitatTable
-          title="Improvement Watercourses"
           habitats={sortedImprovementWatercourses}
           sortConfig={sortConfigImprovementWatercourses}
           isImprovement={true}
           requestSort={requestSortImprovementWatercourses}
+          units='km'
         />)
       }
     },
     {
-      title: 'Baseline Areas',
+      title: `Baseline Areas (${site.habitats.areas.length})`,
       content: () => {
         return (<HabitatTable
-          title="Baseline Areas"
           habitats={sortedBaselineAreas}
           sortConfig={sortConfigBaselineAreas}
           isBaseline={true}
           requestSort={requestSortBaselineAreas}
+          units='ha'
         />)
       }
     },
     {
-      title: 'Baseline Hedgerows',
+      title: `Baseline Hedgerows (${site.habitats.hedgerows.length})`,
       content: () => {
         return (<HabitatTable
-          title="Baseline Hedgerows"
           habitats={sortedBaselineHedgerows}
           sortConfig={sortConfigBaselineHedgerows}
           isBaseline={true}
           requestSort={requestSortBaselineHedgerows}
+          units='km'
         />)
       }
     },
     {
-      title: 'Baseline Watercourses',
+      title: `Baseline Watercourses (${site.habitats.watercourses.length})`,
       content: () => {
         return (<HabitatTable
-          title="Baseline Watercourses"
           habitats={sortedBaselineWatercourses}
           sortConfig={sortConfigBaselineWatercourses}
           isBaseline={true}
           requestSort={requestSortBaselineWatercourses}
+          units='km'
         />)
       }
     },
     {
-      title: 'Allocations',
+      title: `Allocations (${site.allocations.length})`,
       content: () => (
-        <AllocationsCard 
+        <AllocationsTable 
           title="Allocations"
           allocations={site.allocations}
         />

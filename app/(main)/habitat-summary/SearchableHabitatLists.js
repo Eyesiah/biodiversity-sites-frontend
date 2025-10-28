@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { HabitatTable } from '@/components/HabitatsCard';
+import { HabitatTable } from '@/components/HabitatsTable';
 import { DataSection, SectionTitle } from '@/components/ui/DataSection';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
@@ -123,6 +123,7 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
         isHabitatOpen={isHabitatOpen}
         sites={sites}
         requestSort={requestSort}
+        units={module == 'areas' ? 'ha' : 'km'}
       />
     );
   };

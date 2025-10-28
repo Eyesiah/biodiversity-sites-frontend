@@ -1,14 +1,11 @@
 'use client'
 
-import { useSortableData } from '@/lib/hooks';
 import { formatNumber } from '@/lib/format';
-import { useState } from 'react';
 import { CollapsibleRow } from "components/CollapsibleRow"
 import SiteList from '@/components/SiteList';
 import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
-import { DataSection, SectionTitle } from '@/components/ui/DataSection';
-import { Box } from '@chakra-ui/react';
+import { PrimaryCard, TableContainer } from '@/components/ui/PrimaryCard';
+import { Box, Text } from '@chakra-ui/react';
 
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
@@ -68,11 +65,15 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
   );
 };
 
-export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites }) => {
+export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites, units }) => {
   
   if (!habitats || habitats.length == 0)
   {
-    return null;
+    return (
+      <PrimaryCard>
+        <Text>No habitats.</Text>
+      </PrimaryCard>
+    );
   }
 
   const hasSites = habitats[0].sites != null;
@@ -85,7 +86,7 @@ export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImpro
   };
 
   return (
-    <DataSection>
+    <PrimaryCard>
       <TableContainer>
         <DataTable.Root>
           <DataTable.Header>
@@ -105,7 +106,7 @@ export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImpro
                 # Parcels{getSortIndicator('parcels')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('area')}>
-                Size ({title === 'Areas' ? 'ha' : 'km'}){getSortIndicator('area')}
+                Size ({units}){getSortIndicator('area')}
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
@@ -123,7 +124,7 @@ export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImpro
                 key={habitat.type}
                 habitat={habitat}
                 isImprovement={isImprovement}
-                units={title === 'Areas' ? 'ha' : 'km'}
+                units={units}
                 onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
                 isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
                 sites={habitat.sites?.map(s => {
@@ -138,75 +139,6 @@ export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImpro
           </DataTable.Body>
         </DataTable.Root>
       </TableContainer>
-    </DataSection>
+    </PrimaryCard>
   );
 };
-
-export function HabitatsCard ({title, habitats, isImprovement, onHabitatToggle, isHabitatOpen, sites}) {
-  const [isOpen, setIsOpen] = useState(true);
-
-  const collatedAreas = habitats?.areas;
-  const collatedHedgerows = habitats?.hedgerows;
-  const collatedWatercourses = habitats?.watercourses;
-  
-  const { items: sortedAreas, requestSort: requestSortAreas, sortConfig: sortConfigAreas } = useSortableData(collatedAreas, { key: 'type', direction: 'ascending' });
-  const { items: sortedHedgerows, requestSort: requestSortHedgerows, sortConfig: sortConfigHedgerows } = useSortableData(collatedHedgerows, { key: 'type', direction: 'ascending' });
-  const { items: sortedWatercourses, requestSort: requestSortWatercourses, sortConfig: sortConfigWatercourses } = useSortableData(collatedWatercourses, { key: 'type', direction: 'ascending' });
-  
-  const hasHabitats = sortedAreas.length > 0 || sortedWatercourses.length > 0 || sortedHedgerows.length > 0;
-
-  if (hasHabitats)
-  {
-    return (
-      <PrimaryCard>
-        <CardTitle onClick={() => setIsOpen(!isOpen)}>
-          {title} {isOpen ? '▼' : '▶'}
-        </CardTitle>
-        {isOpen && (
-          <Box 
-            display="flex" 
-            justifyContent="center" 
-            alignItems="flex-start" 
-            gap="0.5rem" 
-            flexWrap="wrap"
-          >  
-            <HabitatTable
-              title="Areas"
-              habitats={sortedAreas}
-              requestSort={requestSortAreas}
-              sortConfig={sortConfigAreas}
-              isImprovement={isImprovement}
-              onHabitatToggle={onHabitatToggle}
-              isHabitatOpen={isHabitatOpen}
-              sites={sites}
-            />
-            <HabitatTable
-              title="Hedgerows"
-              habitats={sortedHedgerows}
-              requestSort={requestSortHedgerows}
-              sortConfig={sortConfigHedgerows}
-              isImprovement={isImprovement}
-              onHabitatToggle={onHabitatToggle}
-              isHabitatOpen={isHabitatOpen}
-              sites={sites}
-            />
-            <HabitatTable
-              title="Watercourses"
-              habitats={sortedWatercourses}
-              requestSort={requestSortWatercourses}
-              sortConfig={sortConfigWatercourses}
-              isImprovement={isImprovement}
-              onHabitatToggle={onHabitatToggle}
-              isHabitatOpen={isHabitatOpen}
-              sites={sites}
-            />            
-          </Box>
-        )}
-      </PrimaryCard>
-    );
-  }
-  else
-  {
-    return null;
-  }
-}

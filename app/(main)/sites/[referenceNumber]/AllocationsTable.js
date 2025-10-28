@@ -1,11 +1,10 @@
 'use client'
 
-import { useState } from 'react';
 import { useSortableData } from '@/lib/hooks';
 import { CollapsibleRow } from "@/components/CollapsibleRow"
 import { formatNumber } from '@/lib/format';
 import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
+import { PrimaryCard, TableContainer } from '@/components/ui/PrimaryCard';
 import { Text } from '@chakra-ui/react';
 
 // component to display the habitats within an allocation
@@ -77,7 +76,7 @@ const AllocationRow = ({ alloc }) => {
   );
 };
 
-export const AllocationsCard = ({allocations, title}) => {
+export const AllocationsTable = ({allocations}) => {
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
   
   const getSortIndicator = (name) => {
@@ -130,7 +129,7 @@ export const AllocationsCard = ({allocations, title}) => {
               </DataTable.Body>
             </DataTable.Root>
           </TableContainer>
-        ) : <Text>No allocation information available.</Text>}
+        ) : <Text>No allocations.</Text>}
     </PrimaryCard>
   );
 }
