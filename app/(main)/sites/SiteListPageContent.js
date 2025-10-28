@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text } from '@chakra-ui/react';
 import { ContentStack } from '@/components/ui/ContentStack'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -18,7 +19,7 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
 const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-export default function SiteListPageContent({ sites, summary }) {
+export default function SiteListPageContent({ sites, summary, imdChart }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
@@ -90,10 +91,20 @@ export default function SiteListPageContent({ sites, summary }) {
                 )
               },
               {
-                title: "IMG Decile charts",
+                title: "IMD Decile chart",
                 content: ({ sortedItems }) => (
-                  <Box width="100%" overflowX="auto">
-                    <Text>TODO</Text>
+                  <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={imdChart} margin={{ top: 50, right: 30, left: 20, bottom: 15 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" name="BGS IMD Score" label={{ value: 'BGS IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                        <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                        <Tooltip />
+                        <Bar dataKey="count" fill="#dcab1bff">
+                          <LabelList />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </Box>
                 )
               }
