@@ -92,6 +92,30 @@ export const system = createSystem(defaultConfig, {
           color: "linkHover",
         },
       },
+      'h1, h2, h3, h4, h5, h6': {
+        fontFamily: 'heading',
+        fontWeight: 'bold',
+      },
+      h1: {
+        fontSize: '2.25rem',
+        lineHeight: '2.5rem',
+        my: '1rem',
+      },
+      h2: {
+        fontSize: '1.875rem',
+        lineHeight: '2.25rem',
+        my: '0.75rem',
+      },
+      h3: {
+        fontSize: '1.5rem',
+        lineHeight: '2rem',
+        my: '0.5rem',
+      },
+      h4: {
+        fontSize: '1.25rem',
+        lineHeight: '1.75rem',
+        my: '0.5rem',
+      },
     },
   },
 })
