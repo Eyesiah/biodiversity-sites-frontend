@@ -22,7 +22,7 @@ export default async function SiteListPage() {
     acc[decile] = (acc[decile] || 0) + 1;
     return acc;
   }, {});
-  const chartData = Object.entries(decileCounts)
+  const imdChartData = Object.entries(decileCounts)
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => {
       if (a.name === 'N/A') return 1;
@@ -32,7 +32,7 @@ export default async function SiteListPage() {
 
   return (
     <>
-      <SiteListPageContent sites={processedSites} summary={summary} imdChart={chartData} />
+      <SiteListPageContent sites={processedSites} summary={summary} imdChart={imdChartData} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
