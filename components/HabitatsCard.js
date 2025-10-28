@@ -69,8 +69,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
 };
 
 export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites }) => {
-  const [isOpen, setIsOpen] = useState(true);
-
+  
   if (!habitats || habitats.length == 0)
   {
     return null;
@@ -87,63 +86,58 @@ export const HabitatTable = ({ title, habitats, requestSort, sortConfig, isImpro
 
   return (
     <DataSection>
-      <SectionTitle onClick={() => setIsOpen(!isOpen)}>
-        {title} {isOpen ? '▼' : '▶'}
-      </SectionTitle>
-      {isOpen && 
-        <TableContainer>
-          <DataTable.Root>
-            <DataTable.Header>
-              <DataTable.Row>
-                <DataTable.ColumnHeader onClick={() => requestSort('type')}>
-                  Habitat{getSortIndicator('type')}
+      <TableContainer>
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader onClick={() => requestSort('type')}>
+                Habitat{getSortIndicator('type')}
+              </DataTable.ColumnHeader>
+              <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')}>
+                Distinctiveness{getSortIndicator('distinctiveness')}
+              </DataTable.ColumnHeader>
+              {hasSites && (
+                <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
+                  # BGS Sites{getSortIndicator('sites.length')}
                 </DataTable.ColumnHeader>
-                <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')}>
-                  Distinctiveness{getSortIndicator('distinctiveness')}
+              )}
+              <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
+                # Parcels{getSortIndicator('parcels')}
+              </DataTable.ColumnHeader>
+              <DataTable.ColumnHeader onClick={() => requestSort('area')}>
+                Size ({title === 'Areas' ? 'ha' : 'km'}){getSortIndicator('area')}
+              </DataTable.ColumnHeader>
+              {isImprovement && (
+                <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
+                  % Allocated{getSortIndicator('allocated')}
                 </DataTable.ColumnHeader>
-                {hasSites && (
-                  <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
-                    # BGS Sites{getSortIndicator('sites.length')}
-                  </DataTable.ColumnHeader>
-                )}
-                <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
-                  # Parcels{getSortIndicator('parcels')}
-                </DataTable.ColumnHeader>
-                <DataTable.ColumnHeader onClick={() => requestSort('area')}>
-                  Size ({title === 'Areas' ? 'ha' : 'km'}){getSortIndicator('area')}
-                </DataTable.ColumnHeader>
-                {isImprovement && (
-                  <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
-                    % Allocated{getSortIndicator('allocated')}
-                  </DataTable.ColumnHeader>
-                )}
-                <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
-                  HUs{getSortIndicator('HUs')}
-                </DataTable.ColumnHeader>
-              </DataTable.Row>
-            </DataTable.Header>
-            <DataTable.Body>
-              {habitats.map((habitat) => (
-                <HabitatRow 
-                  key={habitat.type}
-                  habitat={habitat}
-                  isImprovement={isImprovement}
-                  units={title === 'Areas' ? 'ha' : 'km'}
-                  onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
-                  isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
-                  sites={habitat.sites?.map(s => {
-                    return {
-                      ...sites[s.r],
-                      siteSize: s.ta,
-                      allocatedHabitatArea: s.aa || 0
-                    }
-                  }) ?? null}
-                />
-              ))}
-            </DataTable.Body>
-          </DataTable.Root>
-        </TableContainer>
-      }
+              )}
+              <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
+                HUs{getSortIndicator('HUs')}
+              </DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            {habitats.map((habitat) => (
+              <HabitatRow 
+                key={habitat.type}
+                habitat={habitat}
+                isImprovement={isImprovement}
+                units={title === 'Areas' ? 'ha' : 'km'}
+                onHabitatToggle={onHabitatToggle ? () => onHabitatToggle(habitat) : null}
+                isHabitatOpen={isHabitatOpen ? isHabitatOpen(habitat) : null}
+                sites={habitat.sites?.map(s => {
+                  return {
+                    ...sites[s.r],
+                    siteSize: s.ta,
+                    allocatedHabitatArea: s.aa || 0
+                  }
+                }) ?? null}
+              />
+            ))}
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
     </DataSection>
   );
 };

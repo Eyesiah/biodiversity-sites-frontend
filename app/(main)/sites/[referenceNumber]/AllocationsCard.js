@@ -78,7 +78,6 @@ const AllocationRow = ({ alloc }) => {
 };
 
 export const AllocationsCard = ({allocations, title}) => {
-  const [isOpen, setIsOpen] = useState(true);
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
   
   const getSortIndicator = (name) => {
@@ -90,55 +89,48 @@ export const AllocationsCard = ({allocations, title}) => {
 
   return (
     <PrimaryCard>
-      <CardTitle onClick={() => setIsOpen(!isOpen)}>
-        {title} {isOpen ? '▼' : '▶'}
-      </CardTitle>
-      {isOpen && (
-        <>
-          {sortedAllocations.length > 0 ? (
-            <TableContainer>
-              <DataTable.Root>
-                <DataTable.Header>
-                  <DataTable.Row>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('planningReference')}>
-                      Reference{getSortIndicator('planningReference')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('localPlanningAuthority')}>
-                      LPA{getSortIndicator('localPlanningAuthority')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('lsoa.IMDDecile')}>
-                      IMD Decile{getSortIndicator('lsoa.IMDDecile')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('distance')}>
-                      Distance (km){getSortIndicator('distance')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('sr.cat')}>
-                      Spatial Risk{getSortIndicator('sr.cat')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('projectName')}>
-                      Address{getSortIndicator('projectName')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('areaUnits')}>
-                      Area units{getSortIndicator('areaUnits')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('hedgerowUnits')}>
-                      Hedgerow units{getSortIndicator('hedgerowUnits')}
-                    </DataTable.ColumnHeader>
-                    <DataTable.ColumnHeader onClick={() => requestSortAllocations('watercoursesUnits')}>
-                      Watercourse units{getSortIndicator('watercoursesUnits')}
-                    </DataTable.ColumnHeader>
-                  </DataTable.Row>
-                </DataTable.Header>
-                <DataTable.Body>
-                  {sortedAllocations.map((alloc) => (
-                    <AllocationRow key={alloc.planningReference} alloc={alloc} />
-                  ))}
-                </DataTable.Body>
-              </DataTable.Root>
-            </TableContainer>
-          ) : <Text>No allocation information available.</Text>}
-        </>
-      )}
+        {sortedAllocations.length > 0 ? (
+          <TableContainer>
+            <DataTable.Root>
+              <DataTable.Header>
+                <DataTable.Row>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('planningReference')}>
+                    Reference{getSortIndicator('planningReference')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('localPlanningAuthority')}>
+                    LPA{getSortIndicator('localPlanningAuthority')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('lsoa.IMDDecile')}>
+                    IMD Decile{getSortIndicator('lsoa.IMDDecile')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('distance')}>
+                    Distance (km){getSortIndicator('distance')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('sr.cat')}>
+                    Spatial Risk{getSortIndicator('sr.cat')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('projectName')}>
+                    Address{getSortIndicator('projectName')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('areaUnits')}>
+                    Area units{getSortIndicator('areaUnits')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('hedgerowUnits')}>
+                    Hedgerow units{getSortIndicator('hedgerowUnits')}
+                  </DataTable.ColumnHeader>
+                  <DataTable.ColumnHeader onClick={() => requestSortAllocations('watercoursesUnits')}>
+                    Watercourse units{getSortIndicator('watercoursesUnits')}
+                  </DataTable.ColumnHeader>
+                </DataTable.Row>
+              </DataTable.Header>
+              <DataTable.Body>
+                {sortedAllocations.map((alloc) => (
+                  <AllocationRow key={alloc.planningReference} alloc={alloc} />
+                ))}
+              </DataTable.Body>
+            </DataTable.Root>
+          </TableContainer>
+        ) : <Text>No allocation information available.</Text>}
     </PrimaryCard>
   );
 }

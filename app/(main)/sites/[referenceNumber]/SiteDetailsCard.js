@@ -27,7 +27,6 @@ export const SiteDetailsCard = ({ site }) => {
 
   return (
     <PrimaryCard>
-      <CardTitle>Site Details</CardTitle>
       <Box>
         <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
         <DetailRow 
