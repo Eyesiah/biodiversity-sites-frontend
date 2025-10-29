@@ -11,6 +11,7 @@ import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { PrimaryTable } from '@/components/ui/PrimaryTable';
 import { DataTable } from '@/components/ui/DataTable';
 import { Box, Text } from '@chakra-ui/react';
+import LinkButton from '@/components/ui/LinkButton'
 
 const PolygonMap = dynamic(() => import('@/components/Maps/PolygonMap'), {
   ssr: false,
@@ -44,7 +45,7 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
                   <DataTable.Cell>{adj.name}</DataTable.Cell>
                   <DataTable.Cell className="numeric-data">{formatNumber(adj.size, 0)}</DataTable.Cell>
                   <DataTable.Cell className="centered-data">{adjacentLpaObject?.siteCount || 0}</DataTable.Cell>
-                  <DataTable.Cell><button onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} className="linkButton">Display Map</button></DataTable.Cell>
+                  <DataTable.Cell><LinkButton onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} >Display Map</LinkButton></DataTable.Cell>
                 </DataTable.Row>
               );
             })}
@@ -68,9 +69,9 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
         <PrimaryTable.Cell className="centered-data">{lpa.allocationsCount}</PrimaryTable.Cell>
         <PrimaryTable.Cell className="centered-data">{lpa.adjacentsCount}</PrimaryTable.Cell>
         <PrimaryTable.Cell>
-          <button onClick={(e) => { e.stopPropagation(); onRowClick(lpa); }} className="linkButton">
+          <LinkButton onClick={(e) => { e.stopPropagation(); onRowClick(lpa); }}>
             Display Map
-          </button>
+          </LinkButton>
         </PrimaryTable.Cell>
       </>
     )}

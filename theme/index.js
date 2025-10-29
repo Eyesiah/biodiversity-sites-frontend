@@ -60,6 +60,7 @@ export const system = createSystem(defaultConfig, {
         bg: { value: { _light: "{colors.bone}", _dark: "{colors.charcoal}" } },
         // Links
         link: { value: { _light: "{colors.belize}", _dark: "{colors.sky}" } },
+        linkButton: { value: { _light: "{colors.nephritis}", _dark: "{colors.emerald}" } },
         linkHover: { value: { _light: "{colors.peter}", _dark: "{colors.peter}" } },
         brand: {
           default: { value: "{colors.brand.500}" },

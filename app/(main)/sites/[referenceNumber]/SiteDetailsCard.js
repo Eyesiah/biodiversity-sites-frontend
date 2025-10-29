@@ -6,8 +6,9 @@ import { DetailRow } from "@/components/DetailRow"
 import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/InfoModal';
-import { PrimaryCard, CardTitle } from '@/components/ui/PrimaryCard';
-import { Box, Button } from '@chakra-ui/react';
+import { PrimaryCard } from '@/components/ui/PrimaryCard';
+import { Box, Text } from '@chakra-ui/react';
+import LinkButton from '@/components/ui/LinkButton'
 
 export const SiteDetailsCard = ({ site }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
@@ -34,24 +35,9 @@ export const SiteDetailsCard = ({ site }) => {
             (site.responsibleBodies && site.responsibleBodies.length > 0) ? (
               site.responsibleBodies.map((bodyName, index) => (
                 <span key={index}>
-                  <Button
-                    onClick={() => showModal('body', bodyName, bodyName)}
-                    bg="none"
-                    border="none"
-                    color="nephritis"
-                    textDecoration="underline"
-                    padding="0"
-                    fontSize="inherit"
-                    fontFamily="inherit"
-                    cursor="pointer"
-                    minHeight="0"
-                    height="auto"
-                    lineHeight="inherit"
-                    verticalAlign="baseline"
-                    _hover={{ color: "brand.emphasis" }}
-                  >
-                    {bodyName}
-                  </Button>
+                  <LinkButton onClick={() => showModal('body', bodyName, bodyName)}>
+                    <Text>{bodyName}</Text>
+                  </LinkButton>
                   {index < site.responsibleBodies.length - 1 && ', '}
                 </span>
               ))
@@ -66,24 +52,9 @@ export const SiteDetailsCard = ({ site }) => {
           label="LPA" 
           value={
             site.lpaName ? (
-              <Button
-                onClick={() => showModal('lpa', site.lpaName, site.lpaName)}
-                bg="none"
-                border="none"
-                color="nephritis"
-                textDecoration="underline"
-                padding="0"
-                fontSize="inherit"
-                fontFamily="inherit"
-                cursor="pointer"
-                minHeight="0"
-                height="auto"
-                lineHeight="inherit"
-                verticalAlign="baseline"
-                _hover={{ color: "brand.emphasis" }}
-              >
-                {site.lpaName}
-              </Button>
+              <LinkButton onClick={() => showModal('lpa', site.lpaName, site.lpaName)}>
+                <Text>{site.lpaName}</Text>
+              </LinkButton>
             ) : 'N/A'
           } 
         />
@@ -92,42 +63,9 @@ export const SiteDetailsCard = ({ site }) => {
           value={
             site.lsoa?.name ? (
               <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
-                <Button
-                  onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}
-                  bg="none"
-                  border="none"
-                  color="nephritis"
-                  textDecoration="underline"
-                  padding="0"
-                  fontSize="inherit"
-                  fontFamily="inherit"
-                  cursor="pointer"
-                  minHeight="0"
-                  height="auto"
-                  lineHeight="inherit"
-                  verticalAlign="baseline"
-                  _hover={{ color: "brand.emphasis" }}
-                >
-                  {site.lsoa.name}
-                </Button>
-                <Button
-                  onClick={() => showModal('imd-graph', site.lsoa.name, 'IMD Score Transfers', site, "lg")}
-                  bg="none"
-                  border="none"
-                  color="nephritis"
-                  textDecoration="underline"
-                  padding="0"
-                  fontSize="inherit"
-                  fontFamily="inherit"
-                  cursor="pointer"
-                  minHeight="0"
-                  height="auto"
-                  lineHeight="inherit"
-                  verticalAlign="baseline"
-                  _hover={{ color: "brand.emphasis" }}
-                >
-                  IMD Scores Graph
-                </Button>
+                <LinkButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
+                  <Text>{site.lsoa.name}</Text>
+                </LinkButton>
               </Box>
             ) : 'N/A'
           } 
