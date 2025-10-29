@@ -1,6 +1,7 @@
 import 'styles/globals.css';
 import Script from 'next/script';
 import { Provider } from "@/components/ui/provider"
+import { Box } from '@chakra-ui/react';
 
 export const metadata = {
   title: 'BGS Register',
@@ -32,7 +33,9 @@ export default function RootLayout({ children }) {
             src="/api/umami/script"
             data-website-id={umamiWebsiteId}
           />
-          <main className="main">{children}</main>
+          <Box as="main" width="100%">
+            {children}
+          </Box>
         </Provider>
       </body>
     </html>

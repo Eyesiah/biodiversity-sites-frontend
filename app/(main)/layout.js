@@ -2,6 +2,7 @@ import Navigation from '@/components/Navigation';
 import 'styles/globals.css';
 import Script from 'next/script';
 import { Provider } from "@/components/ui/provider"
+import { Box } from '@chakra-ui/react';
 
 export const metadata = {
   metadataBase: new URL('https://bgs.bristoltrees.space'),
@@ -53,14 +54,16 @@ export default function RootLayout({ children }) {
             src="/api/umami/script"
             data-website-id={umamiWebsiteId}
           />
-          <div className="topContainer">
-            <div className="navRow">
+          <Box minHeight="100vh" display="flex" flexDirection="column">
+            <Box position="sticky" top="0" zIndex="1000">
               <Navigation />
-            </div>
-            <div className="mainRow">
-              <main className="main">{children}</main>
-            </div>
-          </div>
+            </Box>
+            <Box flex="1" overflowY="auto">
+              <Box as="main" width="100%">
+                {children}
+              </Box>
+            </Box>
+          </Box>
         </Provider>
       </body>
     </html>
