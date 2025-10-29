@@ -4,10 +4,10 @@ import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import { ColorModeProvider } from './color-mode'
 import system from '../../theme'
 
-export function Provider(props) {
+export function Provider({ children }) {
   return (
-    <ChakraProvider value={system || defaultSystem}>
-      <ColorModeProvider {...props} />
-    </ChakraProvider>
+    <ColorModeProvider>
+      <ChakraProvider value={system || defaultSystem}>{children}</ChakraProvider>
+    </ColorModeProvider>
   )
 }
