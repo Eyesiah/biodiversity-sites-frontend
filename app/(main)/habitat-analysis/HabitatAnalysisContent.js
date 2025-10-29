@@ -10,58 +10,62 @@ import { TableContainer } from '@/components/ui/PrimaryCard';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/FilteredHabitatPieChart'
 
+const processDataWithProportions = (data, module) => {
+  // Calculate totals
+  let totalBaseline = 0;
+  let totalImprovement = 0;
+  let totalAllocation = 0;
+  let totalBaselineParcels = 0;
+  let totalImprovementParcels = 0;
+  let totalAllocationParcels = 0;
+  let totalImprovementSites = 0;
+
+  const moduleData = module != null ? data.filter(h => h.module == module) : data;
+
+  moduleData.forEach(h => {
+    totalBaseline += h.baseline;
+    totalImprovement += h.improvement;
+    totalAllocation += h.allocation;
+    totalBaselineParcels += h.baselineParcels;
+    totalImprovementParcels += h.improvementParcels;
+    totalAllocationParcels += h.allocationParcels;
+    totalImprovementSites += h.improvementSites;
+  });
+
+  // Process data with calculated percentages (create new objects to avoid mutation)
+  const processedData = moduleData.map(h => ({
+    ...h,
+    baselineShare: totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0,
+    improvementShare: totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0,
+    allocationShare: totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0,
+    improvementAllocation: h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0,
+  }));
+
+  const totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
+
+  return {
+    processedData,
+    totals: {
+      totalBaseline,
+      totalImprovement,
+      totalAllocation,
+      totalBaselineParcels,
+      totalImprovementParcels,
+      totalAllocationParcels,
+      totalImprovementSites,
+      totalImprovementAllocation
+    }
+  };
+}
+
 const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
-    
+
   // Determine unit based on module type
   const unit = module === 'areas' ? 'ha' : 'km';
-  
+
   // Memoize all calculations to prevent unnecessary re-computation
   const { processedData, totals } = useMemo(() => {
-    // Calculate totals
-    let totalBaseline = 0;
-    let totalImprovement = 0;
-    let totalAllocation = 0;
-    let totalBaselineParcels = 0;
-    let totalImprovementParcels = 0;
-    let totalAllocationParcels = 0;
-    let totalImprovementSites = 0;
-
-    const moduleData = data.filter(h => h.module == module);
-
-    moduleData.forEach(h => {
-      totalBaseline += h.baseline;
-      totalImprovement += h.improvement;
-      totalAllocation += h.allocation;
-      totalBaselineParcels += h.baselineParcels;
-      totalImprovementParcels += h.improvementParcels;
-      totalAllocationParcels += h.allocationParcels;
-      totalImprovementSites += h.improvementSites;
-    });
-
-    // Process data with calculated percentages (create new objects to avoid mutation)
-    const processedData = moduleData.map(h => ({
-      ...h,
-      baselineShare: totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0,
-      improvementShare: totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0,
-      allocationShare: totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0,
-      improvementAllocation: h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0,
-    }));
-
-    const totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
-
-    return {
-      processedData,
-      totals: {
-        totalBaseline,
-        totalImprovement,
-        totalAllocation,
-        totalBaselineParcels,
-        totalImprovementParcels,
-        totalAllocationParcels,
-        totalImprovementSites,
-        totalImprovementAllocation
-      }
-    };
+    return processDataWithProportions(data, module);
   }, [data, module]);
 
   return (
@@ -86,7 +90,7 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)}>% Share</DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} style={{ textAlign: 'center' }}># Parcels</DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}>Allocation ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>                
+            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}>% of Improvements</DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
@@ -132,7 +136,10 @@ export default function HabitatAnalysisContent({ habitats }) {
 
   const handleExport = (allData) => {
 
-    const csvData = allData.map(row => ({
+    // Process data with calculated percentages (create new objects to avoid mutation)
+    const savedData = processDataWithProportions(allData).processedData;
+
+    const csvData = savedData.map(row => ({
       'Module': row.module,
       'Habitat': row.habitat,
       'Distinctiveness': row.distinctiveness,
@@ -154,23 +161,23 @@ export default function HabitatAnalysisContent({ habitats }) {
     triggerDownload(blob, 'bgs-habitat-analysis.csv');
   };
 
-    
+
   const tabs = [
     {
       title: 'Area<br>Habitats List',
-      content: ({ sortedItems, requestSort, sortConfig }) => (          
+      content: ({ sortedItems, requestSort, sortConfig }) => (
         <AnalysisTable data={sortedItems} module="areas" requestSort={requestSort} sortConfig={sortConfig} />
       )
-    },    
+    },
     {
       title: 'Hedgerow<br>Habitats List',
-      content: ({ sortedItems, requestSort, sortConfig }) => (          
+      content: ({ sortedItems, requestSort, sortConfig }) => (
         <AnalysisTable data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
       title: 'Watercourse<br>Habitats List',
-      content: ({ sortedItems, requestSort, sortConfig }) => (          
+      content: ({ sortedItems, requestSort, sortConfig }) => (
         <AnalysisTable data={sortedItems} module="watercourses" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
@@ -206,7 +213,7 @@ export default function HabitatAnalysisContent({ habitats }) {
       initialSortConfig={{ key: 'habitat', direction: 'ascending' }}
       placeholder="Search by habitat name..."
       exportConfig={{ onExportCsv: handleExport }}
-      tabs ={tabs}
+      tabs={tabs}
       filterPredicate={(item, term) => item.habitat.toLowerCase().includes(term.toLowerCase())}
     />
   )
