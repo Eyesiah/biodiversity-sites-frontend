@@ -8,7 +8,7 @@ import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/InfoModal';
 import { PrimaryCard } from '@/components/ui/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
-import LinkButton from '@/components/ui/LinkButton'
+import InfoButton from '@/components/ui/InfoButton'
 
 export const SiteDetailsCard = ({ site }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
@@ -35,9 +35,9 @@ export const SiteDetailsCard = ({ site }) => {
             (site.responsibleBodies && site.responsibleBodies.length > 0) ? (
               site.responsibleBodies.map((bodyName, index) => (
                 <span key={index}>
-                  <LinkButton onClick={() => showModal('body', bodyName, bodyName)}>
+                  <InfoButton onClick={() => showModal('body', bodyName, bodyName)}>
                     <Text>{bodyName}</Text>
-                  </LinkButton>
+                  </InfoButton>
                   {index < site.responsibleBodies.length - 1 && ', '}
                 </span>
               ))
@@ -52,9 +52,9 @@ export const SiteDetailsCard = ({ site }) => {
           label="LPA" 
           value={
             site.lpaName ? (
-              <LinkButton onClick={() => showModal('lpa', site.lpaName, site.lpaName)}>
+              <InfoButton onClick={() => showModal('lpa', site.lpaName, site.lpaName)}>
                 <Text>{site.lpaName}</Text>
-              </LinkButton>
+              </InfoButton>
             ) : 'N/A'
           } 
         />
@@ -63,9 +63,9 @@ export const SiteDetailsCard = ({ site }) => {
           value={
             site.lsoa?.name ? (
               <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
-                <LinkButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
+                <InfoButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
                   <Text>{site.lsoa.name}</Text>
-                </LinkButton>
+                </InfoButton>
               </Box>
             ) : 'N/A'
           } 
