@@ -129,8 +129,6 @@ export default function SearchableTableLayout({
         <Tabs.Root>
           <Tabs.List
             position="sticky"
-            // The search bar is ~60px high, and this provides a little extra space
-            top="3rem"
           >
             {tabs.map((tab, index) => (
               <Tabs.Trigger
