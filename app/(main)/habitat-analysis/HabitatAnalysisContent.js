@@ -202,7 +202,7 @@ export default function HabitatAnalysisContent({ habitats }) {
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Hedgerow Improvement' sizeParam='improvement' />
     },
     {
-      title: 'Improvement Watercourse Habitats Chart',
+      title: 'Improvement Watercourse<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Watercourse Improvement' sizeParam='improvement' />
     }
   ];
