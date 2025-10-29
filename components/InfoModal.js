@@ -3,7 +3,6 @@
 import Modal from '@/components/Modal';
 import { useState, useEffect } from 'react';
 import { DetailRow } from '@/components/DetailRow'
-import { ImdScoresChart } from './ImdScoresChart';
 import { formatNumber } from '@/lib/format'
 import { VStack, Box, Separator } from "@chakra-ui/react";
 
@@ -92,10 +91,6 @@ export const InfoModal = ({ modalState, onClose }) => {
           <DetailRow label="Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />          
         </dl>
       );
-    }
-
-    if (type === 'imd-graph' && data) {
-      return <ImdScoresChart site={data} />;
     }
 
     return <p>Details could not be loaded.</p>;

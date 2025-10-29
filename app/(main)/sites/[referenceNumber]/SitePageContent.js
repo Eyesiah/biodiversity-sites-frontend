@@ -12,6 +12,7 @@ import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/ui/Button';
 import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/ui/Tabs';
+import { ImdScoresChart } from '@/components/ImdScoresChart';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -129,6 +130,17 @@ export default function SitePageContent({site}) {
       )
     },
   ];
+
+  if (site.allocations.length > 0) {
+    tabs.push({
+      title: 'IMD Score<br>Transfers Chart',
+      content: () => {
+        return (          
+          <ImdScoresChart site={site} />
+        )
+      }
+    });
+  }
 
   return (  
     <MapContentLayout
