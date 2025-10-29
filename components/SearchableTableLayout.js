@@ -2,8 +2,9 @@
 
 import { useEffect } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
-import { Tabs, Box, InputGroup, Input, Flex } from "@chakra-ui/react"
+import { Box, InputGroup, Input, Flex } from "@chakra-ui/react"
 import { Button } from '@/components/ui/Button';
+import { Tabs } from '@/components/ui/Tabs';
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
@@ -125,21 +126,16 @@ export default function SearchableTableLayout({
       )}
 
       {tabs && tabs.length > 0 ? (
-        <Tabs.Root lazyMount defaultValue={0} width="100%">
+        <Tabs.Root>
           <Tabs.List
             position="sticky"
             // The search bar is ~60px high, and this provides a little extra space
             top="3rem"
-            zIndex="docked" // Chakra's theme value for sticky elements (often 10)
-            bg="#F9F6EE" // Match the background from globals.css
-            width="100%"
           >
             {tabs.map((tab, index) => (
               <Tabs.Trigger
                 key={index}
                 value={index}
-                _selected={{ color: '#333', borderColor: '#2980b9', borderBottomWidth: '2px' }}
-                color="#aaa"
               >
                 {tab.title}
               </Tabs.Trigger>

@@ -8,9 +8,10 @@ import { AllocationsTable } from './AllocationsTable'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/ui/ContentStack'
-import { Tabs, Flex } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/ui/Button';
 import { useSortableData } from '@/lib/hooks';
+import { Tabs } from '@/components/ui/Tabs';
 
 const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
   ssr: false,
@@ -141,15 +142,11 @@ export default function SitePageContent({site}) {
           <SiteDetailsCard site={site} />
 
           <Tabs.Root lazyMount defaultValue={0} width="100%">
-            <Tabs.List
-              width="100%"
-            >
+            <Tabs.List>
               {tabs.map((tab, index) => (
                 <Tabs.Trigger
                   key={index}
                   value={index}
-                  _selected={{ color: '#333', borderColor: '#2980b9', borderBottomWidth: '2px' }}
-                  color="#aaa"
                 >
                   {tab.title}
                 </Tabs.Trigger>
