@@ -1,16 +1,16 @@
 'use client'
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { getSortProps } from '@/lib/hooks';
 import Papa from 'papaparse';
 import { triggerDownload } from '@/lib/utils';
 import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, CardTitle, TableContainer } from '@/components/ui/PrimaryCard';
+import { TableContainer } from '@/components/ui/PrimaryCard';
 import SearchableTableLayout from '@/components/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/FilteredHabitatPieChart'
 
-const AnalysisTable = ({ title, data, module, requestSort, sortConfig }) => {
+const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
     
   // Determine unit based on module type
   const unit = module === 'areas' ? 'ha' : 'km';
@@ -159,19 +159,19 @@ export default function HabitatAnalysisContent({ habitats }) {
     {
       title: 'Area<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems} module="areas" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable data={sortedItems} module="areas" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },    
     {
       title: 'Hedgerow<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
       title: 'Watercourse<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
-        <AnalysisTable title="Area habitats" data={sortedItems} module="watercourses" requestSort={requestSort} sortConfig={sortConfig} />
+        <AnalysisTable data={sortedItems} module="watercourses" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
@@ -195,7 +195,7 @@ export default function HabitatAnalysisContent({ habitats }) {
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Hedgerow Improvement' sizeParam='improvement' />
     },
     {
-      title: 'Improvement Watercourse<br>Habitats Chart',
+      title: 'Improvement Watercourse Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Watercourse Improvement' sizeParam='improvement' />
     }
   ];
