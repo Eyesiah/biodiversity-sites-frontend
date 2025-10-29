@@ -4,7 +4,7 @@ import Modal from '@/components/Modal';
 import { useState, useEffect } from 'react';
 import { DetailRow } from '@/components/DetailRow'
 import { formatNumber } from '@/lib/format'
-import { VStack, Box, Separator } from "@chakra-ui/react";
+import { VStack, Box, Separator, Text, Heading } from "@chakra-ui/react";
 
 export const InfoModal = ({ modalState, onClose }) => {
   const { show, type, name, title, size } = modalState;
@@ -38,20 +38,20 @@ export const InfoModal = ({ modalState, onClose }) => {
   }, [show, type, name, modalState.data]);
 
   const renderContent = () => {
-    if (isLoading) return <p>Loading...</p>;
-    if (!data) return <p>No data available.</p>;
+    if (isLoading) return <Text>Loading...</Text>;
+    if (!data) return <Text>No data available.</Text>;
 
     if (type === 'body' && data.body) {
       const { body } = data;
       return (
         <dl>
-          <DetailRow label="Designation Date" value={body.designationDate} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Area of Expertise" value={body.expertise} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Type of Organisation" value={body.organisationType} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Address" value={body.address} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Email" value={body.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Telephone" value={body.telephone} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="# BGS Sites" value={body.siteCount} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="Designation Date" value={body.designationDate} />
+          <DetailRow label="Area of Expertise" value={body.expertise} />
+          <DetailRow label="Type of Organisation" value={body.organisationType} />
+          <DetailRow label="Address" value={body.address} />
+          <DetailRow label="Email" value={body.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} />
+          <DetailRow label="Telephone" value={body.telephone} />
+          <DetailRow label="# BGS Sites" value={body.siteCount} />
         </dl>
       );
     }
@@ -60,12 +60,12 @@ export const InfoModal = ({ modalState, onClose }) => {
       const { lpa } = data;
       return (
         <dl>
-          <DetailRow label="ID" value={lpa.id} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Area (ha)" value={formatNumber(lpa.size, 0)} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} labelColor="#f0f0f0" valueColor="#bdc3c7" />
+          <DetailRow label="ID" value={lpa.id} />
+          <DetailRow label="Area (ha)" value={formatNumber(lpa.size, 0)} />
+          <DetailRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} />
           {lpa.adjacents?.length > 0 && (
             <Box mt={4}>
-              <h4>Adjacent LPAs</h4>
+              <Heading as="h4" size="md">Adjacent LPAs</Heading>
               <VStack spacing={0} align="stretch" pl={4}>
                 {lpa.adjacents.map((adj, index) => (
                   <Box key={adj.id}>
@@ -85,15 +85,15 @@ export const InfoModal = ({ modalState, onClose }) => {
     if (type === 'lsoa' && data) {
       return (
         <dl>
-          <DetailRow label="Index of Multiple Deprivation values"labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Decile" value={data.IMDDecile ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Score" value={data.IMDScore ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />
-          <DetailRow label="Rank" value={data.IMDRank ?? 'N/A'} labelColor="#f0f0f0" valueColor="#bdc3c7" />          
+          <DetailRow label="Index of Multiple Deprivation values" />
+          <DetailRow label="Decile" value={data.IMDDecile ?? 'N/A'} />
+          <DetailRow label="Score" value={data.IMDScore ?? 'N/A'} />
+          <DetailRow label="Rank" value={data.IMDRank ?? 'N/A'} />
         </dl>
       );
     }
 
-    return <p>Details could not be loaded.</p>;
+    return <Text>Details could not be loaded.</Text>;
   };
 
   return (
