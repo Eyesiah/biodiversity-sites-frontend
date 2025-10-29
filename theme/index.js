@@ -12,6 +12,7 @@ export const system = createSystem(defaultConfig, {
         clouds: { value: "#ecf0f1" },
         black: { value: "#000000" },
         white: { value: "#ffffff" },
+        lightGray: { value: "#aaa" },
         // Greens
         emerald: { value: "#2ecc71" },
         nephritis: { value: "#27ae60" },

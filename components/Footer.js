@@ -4,7 +4,7 @@ import { Box, Text } from '@chakra-ui/react';
 
 export default function Footer({ lastUpdated }) {
   return (
-    <Box as="footer" textAlign="center" padding="1rem" fontSize="0.8rem" color="#aaa" bg="charcoal">
+    <Box as="footer" textAlign="center" padding="1rem" fontSize="0.8rem" color="lightGray" bg="charcoal">
       <Text>
         Designed and built by <ExternalLink href="https://bristoltreeforum.org/"><Text as="b">Bristol Tree Forum</Text></ExternalLink> | <Link href="/about#privacy-policy" target="_blank">Privacy Policy</Link>
       </Text>
