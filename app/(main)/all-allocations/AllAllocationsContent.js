@@ -80,15 +80,15 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
     },
     {
-      title: 'Area Habitats Chart',
+      title: 'Area<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='areas' name='Area' />
     },
     {
-      title: 'Hedgerow Habitats Chart',
+      title: 'Hedgerow<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='hedgerows' name='Hedgerow' />
     },
     {
-      title: 'Watercourse Habitats Chart',
+      title: 'Watercourse<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='watercourses' name='Watercourse' />
     }
   ]

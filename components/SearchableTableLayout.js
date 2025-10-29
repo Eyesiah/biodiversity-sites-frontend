@@ -136,8 +136,8 @@ export default function SearchableTableLayout({
               <Tabs.Trigger
                 key={index}
                 value={index}
+                dangerouslySetInnerHTML={{ __html: tab.title }}
               >
-                {tab.title}
               </Tabs.Trigger>
             ))}
           </Tabs.List>

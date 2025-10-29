@@ -157,45 +157,45 @@ export default function HabitatAnalysisContent({ habitats }) {
     
   const tabs = [
     {
-      title: 'Area Habitats List',
+      title: 'Area<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
         <AnalysisTable title="Area habitats" data={sortedItems} module="areas" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },    
     {
-      title: 'Hedgerow Habitats List',
+      title: 'Hedgerow<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
         <AnalysisTable title="Area habitats" data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
-      title: 'Watercourse Habitats List',
+      title: 'Watercourse<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (          
         <AnalysisTable title="Area habitats" data={sortedItems} module="watercourses" requestSort={requestSort} sortConfig={sortConfig} />
       )
     },
     {
-      title: 'Baseline Area Habitats Chart',
+      title: 'Baseline Area<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Baseline Area' sizeParam='baseline' />
     },
     {
-      title: 'Baseline Hedgerow Habitats Chart',
+      title: 'Baseline Hedgerow<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Baseline Hedgerow' sizeParam='baseline' />
     },
     {
-      title: 'Baseline Watercourse Habitats Chart',
+      title: 'Baseline Watercourse<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Baseline Watercourse' sizeParam='baseline' />
     },
     {
-      title: 'Improvement Area Habitats Chart',
+      title: 'Improvement Area<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Area Improvement' sizeParam='improvement' />
     },
     {
-      title: 'Improvement Hedgerow Habitats Chart',
+      title: 'Improvement Hedgerow<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Hedgerow Improvement' sizeParam='improvement' />
     },
     {
-      title: 'Improvement Watercourse Habitats Chart',
+      title: 'Improvement Watercourse<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='watercourses' name='Watercourse Improvement' sizeParam='improvement' />
     }
   ];
