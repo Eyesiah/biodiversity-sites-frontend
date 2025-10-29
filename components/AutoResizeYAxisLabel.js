@@ -16,17 +16,17 @@ function getTextWidth(text, font) {
 }
 
 const ELLIPSIS = '...';
-const FONT_STYLE = '0.9rem sans-serif'; // Must match the font in the Text component
+// FONT_STYLE will be dynamically constructed from fontSize prop
 
-export const AutoResizeYAxisLabel = (props) => {
-  const { x, y, payload, width } = props;
+export const AutoResizeYAxisLabel = ({ x, y, payload, width, fontSize = '0.9rem' }) => {
   const [displayText, setDisplayText] = useState(payload.value);
 
   useEffect(() => {
     const originalText = payload.value;
     if (!originalText) return;
 
-    const textWidth = getTextWidth(originalText, FONT_STYLE);
+    const fontStyle = `${fontSize} sans-serif`;
+    const textWidth = getTextWidth(originalText, fontStyle);
 
     if (textWidth > width) {
       // Text is too long, so we need to truncate it.
@@ -37,7 +37,7 @@ export const AutoResizeYAxisLabel = (props) => {
 
       // Iteratively remove characters until the text with ellipsis fits.
       while (truncated.length > 0) {
-        const truncatedWidth = getTextWidth(`${truncated}${ELLIPSIS}`, FONT_STYLE);
+        const truncatedWidth = getTextWidth(`${truncated}${ELLIPSIS}`, fontStyle);
         if (truncatedWidth <= width) break;
         truncated = truncated.slice(0, -1);
       }
@@ -46,11 +46,11 @@ export const AutoResizeYAxisLabel = (props) => {
       // Text fits, so display it as is.
       setDisplayText(originalText);
     }
-  }, [payload.value, width]);
+  }, [payload.value, width, fontSize]);
 
   return (
     <g transform={`translate(${x},${y})`}>
-      <Text x={0} y={0} dy={0} textAnchor="end" verticalAnchor="middle" fill="#594c4cff" fontSize="0.9rem" fontFamily="sans-serif">
+      <Text x={0} y={0} dy={0} textAnchor="end" verticalAnchor="middle" fill="#594c4cff" style={{ fontSize, fontFamily: 'sans-serif' }}>
         {displayText}
       </Text>
     </g>

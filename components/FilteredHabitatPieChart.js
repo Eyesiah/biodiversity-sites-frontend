@@ -100,13 +100,13 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
   };
 
   return (
-    <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
-      <Box flex="2" display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="row" width="100%" marginBottom="5">
+      <Box flex="3" display="flex" flexDirection="column" height="500px" >
         <Heading as="h3" size="md" textAlign="center" mb={4}>
           {name} Habitats by {module === 'areas' ? 'Size' : 'Length'}
         </Heading>
         <ResponsiveContainer width="100%" height="100%">
-          <PieChart margin={{ top: 20, right: 50, bottom: 20, left: 50 }}>
+          <PieChart>
             <Pie
               data={chartData}
               cx="50%"
@@ -131,18 +131,16 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
         </ResponsiveContainer>
       </Box>
       {otherData.length > 0 && (
-        <Box flex="1" display="flex" alignItems="center" justifyContent="center">
-                
-          <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+        <Box flex="2" display="flex" height="500px" >
+          <Box width='100%' height='100%'>
             <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Habitats less than 1%</h4>
             <ResponsiveContainer>
               <BarChart
                 layout="vertical"
                 data={otherData}
-                margin={{ top: 5, right: 60, left: 100, bottom: 20 }}
               >
                 <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" width={200} tick={<AutoResizeYAxisLabel width={200} />} interval={0} />
+                <YAxis type="category" dataKey="name" width={250} tick={<AutoResizeYAxisLabel width={250} />} interval={0} />
                 <Tooltip 
                   formatter={(value, name, props) => {
                     const unit = module === 'area' || module === 'areas' ? 'ha' : 'km';
@@ -155,7 +153,7 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </Box>
         </Box>
       )}
     </Box>
