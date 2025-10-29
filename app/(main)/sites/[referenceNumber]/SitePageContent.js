@@ -48,7 +48,7 @@ export default function SitePageContent({site}) {
 
   const tabs = [
     {
-      title: `Area Improvements (${site.improvements.areas.length})`,
+      title: `Area<br>Improvements&nbsp;(${site.improvements.areas.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedImprovementAreas}
@@ -60,7 +60,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Hedgerow Improvements (${site.improvements.hedgerows.length})`,
+      title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedImprovementHedgerows}
@@ -72,7 +72,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Watercourse Improvements (${site.improvements.watercourses.length})`,
+      title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedImprovementWatercourses}
@@ -84,7 +84,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Baseline Areas (${site.habitats.areas.length})`,
+      title: `Baseline<br>Areas&nbsp;(${site.habitats.areas.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedBaselineAreas}
@@ -96,7 +96,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Baseline Hedgerows (${site.habitats.hedgerows.length})`,
+      title: `Baseline<br>Hedgerows&nbsp;(${site.habitats.hedgerows.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedBaselineHedgerows}
@@ -108,7 +108,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Baseline Watercourses (${site.habitats.watercourses.length})`,
+      title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedBaselineWatercourses}
@@ -120,7 +120,7 @@ export default function SitePageContent({site}) {
       }
     },
     {
-      title: `Allocations (${site.allocations.length})`,
+      title: `Allocations&nbsp;(${site.allocations.length})`,
       content: () => (
         <AllocationsTable 
           title="Allocations"
@@ -147,8 +147,8 @@ export default function SitePageContent({site}) {
                 <Tabs.Trigger
                   key={index}
                   value={index}
+                  dangerouslySetInnerHTML={{ __html: tab.title }}
                 >
-                  {tab.title}
                 </Tabs.Trigger>
               ))}
             </Tabs.List>
