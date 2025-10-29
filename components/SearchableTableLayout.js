@@ -76,11 +76,13 @@ export default function SearchableTableLayout({
                     bg="transparent"
                     border="none"
                     padding="0.25rem"
-                    color="#666"
+                    color="fg"
+                    opacity={0.6}
                     fontSize="1.5rem"
                     lineHeight="1"
                     _hover={{
-                      color: "black"
+                      color: "fg",
+                      opacity: 1,
                     }}
                     aria-label="Clear search"
                   >
@@ -100,17 +102,19 @@ export default function SearchableTableLayout({
                 paddingRight="2.5rem"
                 fontSize="1rem"
                 borderRadius="5px"
-                border="1px solid #ccc"
-                bg="ivory"
-                color="#333"
+                border="1px solid"
+                borderColor="border"
+                bg="cardBg"
+                color="fg"
                 _placeholder={{
-                  color: "#888",
-                  fontWeight: "bold"
+                  color: "fg",
+                  fontWeight: "bold",
+                  opacity: 0.6,
                 }}
                 _focus={{
                   outline: "none",
                   borderColor: "brand.default",
-                  boxShadow: "0 0 0 1px {colors.brand.default}"
+                  boxShadow: `0 0 0 1px var(--chakra-colors-brand-default)`,
                 }}
               />
             </InputGroup>

@@ -22,23 +22,27 @@ const Modal = ({ show, onClose, title, children, size = "lg" }) => {
       <Dialog.Backdrop bg="rgba(74, 73, 73, 0.6)" />
       <Dialog.Positioner>
         <Dialog.Content
-          bg="#3a4049"
-          color="#bebbbb"
+          bg="midnight"
+          color="white"
           p="20px"
-          borderRadius="8px"
+          borderRadius="md"
           width="90%"
           maxWidth={maxWidth}
-          boxShadow="0 5px 15px rgba(0, 0, 0, 0.3)"
+          boxShadow="lg"
           textAlign="left"
+          border="none"
         >
           <Flex
             as={Dialog.Header}
             p={0}
-            borderBottom="1px solid #555"
+            bg="midnight"
+            borderBottom="1px solid"
+            borderColor="subtleBorder"
             paddingBottom="10px"
             marginBottom="20px"
             justify="space-between"
             align="center"
+            borderRadius="md md 0 0"
           >
             <Dialog.Title asChild>
               <Heading as="h4" size="lg" fontSize="1.5rem" m={0}>
@@ -46,14 +50,21 @@ const Modal = ({ show, onClose, title, children, size = "lg" }) => {
               </Heading>
             </Dialog.Title>
             <Dialog.CloseTrigger
-              style={{
-                background: "none",
-                border: "none",
-                fontSize: "2rem",
-                color: "#f0f0f0",
-                cursor: "pointer",
-                lineHeight: 1,
-                padding: 0,
+              bg="transparent"
+              border="none"
+              fontSize="2rem"
+              color="white"
+              cursor="pointer"
+              lineHeight="1"
+              padding="0"
+              _hover={{
+                bg: "subtleBorder",
+                borderRadius: "sm",
+              }}
+              _focus={{
+                outline: "2px solid",
+                outlineColor: "brand.default",
+                outlineOffset: "2px",
               }}
             >
               &times;

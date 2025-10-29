@@ -263,15 +263,18 @@ const ModalButton = ({
         {label}
       </ButtonComponent>
 
-      <Modal 
-        show={showModal} 
-        onClose={() => setShowModal(false)} 
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
         title={title}
         size={modalSize}
       >
-        <iframe 
+        <Box
+          as="iframe"
           src={src}
-          style={{ width: '100%', height: '80vh', border: 'none' }}
+          width="100%"
+          height="80vh"
+          border="none"
           title={iframeTitle}
         />
       </Modal>
