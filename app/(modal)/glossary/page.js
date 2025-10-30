@@ -27,10 +27,10 @@ export default function Glossary() {
         <Text>The ecological health and functional status of a habitat, indicating its resilience and how well it supports its ecosystem. It&apos;s assessed using criteria for specific habitat types, often resulting in a rating - good, moderate or poor - which is based on factors like species presence, management and disturbance.</Text>
 
         <Heading as="h3" size="md">Decile</Heading>
-        <text>An decile is calculated by ranking the 33,755 neighbourhoods in England from most deprived to least deprived and dividing them into 10 equal groups (i.e. each containing 3,375 or 3,376 neighbourhoods). These deciles range from the most deprived 10 per cent of neighbourhoods nationally to the least deprived 10 per cent of neighbourhoods nationally.</text>
+        <text>A decile is calculated by ranking the 33,755 neighbourhoods in England from most deprived to least deprived and dividing them into 10 equal groups (i.e. each containing 3,375 or 3,376 neighbourhoods). These deciles range from the most deprived 10 per cent of neighbourhoods nationally to the least deprived 10 per cent of neighbourhoods nationally.</text>
         
         <Heading as="h3" size="md">Deprivation</Heading>
-        <Text>Deprivation refers to people’s unmet needs, a lack of access to opportunities and resources which we might expect in our society.</Text>
+        <Text>Deprivation refers to people&apos;s unmet needs, a lack of access to opportunities and resources which we might expect in our society.</Text>
         
         <Heading as="h3" size="md">Habitat</Heading>
         <Text>An environment or area that supports living organisms, including plants, animals and fungi.</Text>
@@ -45,7 +45,7 @@ export default function Glossary() {
         <Text>A local government body, often a council department, responsible for managing land use and development in a specific area. Its functions include deciding on planning applications, preparing and implementing local plans, and enforcing planning policies to ensure that development is sustainable and balances economic, environmental and social considerations.</Text>
 
         <Heading as="h3" size="md">Lower Layer Super Output Areas (LSOAs)</Heading>
-        <Text>LSOAs are small areas designed to be of a similar population size, with an average of approximately 1,600 residents or 650 households. There are 33,755 LSOAs in England. They are a standard statistical geography and were produced by the Office for National Statistics for the reporting of small area statistics. LSOAs are referred to as ‘neighbourhoods’ .</Text>
+        <Text>LSOAs are small areas designed to be of a similar population size, with an average of approximately 1,600 residents or 650 households. There are 33,755 LSOAs in England. They are a standard statistical geography and were produced by the Office for National Statistics for the reporting of small area statistics. LSOAs are referred to as &apos;neighbourhoods&apos; .</Text>
         <Text><ExternalLink href="https://deprivation.communities.gov.uk/">Deprivation in England (2025).</ExternalLink>.</Text>
 
         <Heading as="h3" size="md">National Character Area (NCA)</Heading>
