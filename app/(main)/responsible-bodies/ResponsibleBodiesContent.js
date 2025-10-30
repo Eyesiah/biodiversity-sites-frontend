@@ -11,6 +11,7 @@ import MapContentLayout from '@/components/ui/MapContentLayout';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { Box, Text, Heading } from '@chakra-ui/react';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -116,16 +117,16 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                 placeholder="Search by name, expertise, type, or address."
                 exportConfig={{ onExportCsv: handleExport }}
                 summary={(filteredCount, totalCount) => (
-                    <div className="summary" style={{ textAlign: 'center' }}>           
+                    <Box>
                         {filteredCount != totalCount ? (
-                        <p>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</p>
+                        <Text>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</Text>
                         ) : (
-                        <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
+                        <Text fontSize="1.2rem" fontWeight="normal">
                           These <strong>{numDesignated}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
                           {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
-                        </p>
+                        </Text>
                     )}
-                    </div>
+                    </Box>
                 )}
               >
                 {({ sortedItems, requestSort, getSortIndicator }) => (
