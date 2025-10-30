@@ -38,24 +38,11 @@ export const ImdScoresChart = ({ site }) => {
     const loadChartData = async () => {
       // Check if the detailed allocation data (with LSOA) is already present.
       const allocationsHaveLsoa = site.allocations?.every(a => a.lsoa && typeof a.lsoa.IMDScore === 'number');
-
-      if (site.allocations?.length > 0 && !allocationsHaveLsoa) {
-        // If not, fetch the full site details.
-        setIsLoading(true);
-        setError(null);
-        try {
-          const res = await fetch(`/api/sites/${site.referenceNumber}`);
-          if (!res.ok) throw new Error(`Failed to fetch site data: ${res.status}`);
-          const fullSite = await res.json();
-          setChartData(processData(fullSite));
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setIsLoading(false);
-        }
+      debugger;
+      if (allocationsHaveLsoa) {
+        setChartData(processData(site));      
       } else {
-        // If data is already present, just process it.
-        setChartData(processData(site));
+        setError('no allocations or allocs have no LSOA or IMDScores')
       }
     };
 
