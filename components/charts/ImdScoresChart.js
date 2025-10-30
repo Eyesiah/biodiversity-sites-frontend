@@ -28,24 +28,14 @@ export const ImdScoresChart = ({ site }) => {
       return currentSite.allocations
         .map((alloc, index) => ({
           name: alloc.planningReference || `Allocation ${index + 1}`,
-          'Allocation IMD Score': alloc.lsoa?.IMDScore,
-          'Site IMD Score': currentSite.lsoa.IMDScore,
+          'Allocation IMD Score': alloc.lsoa?.IMDScore || 'N/A',
+          'Site IMD Score': currentSite.lsoa.IMDScore || 'N/A',
         }))
         .filter(item => typeof item['Allocation IMD Score'] === 'number')
         .sort((a, b) => b['Allocation IMD Score'] - a['Allocation IMD Score']);
     };
 
-    const loadChartData = async () => {
-      // Check if the detailed allocation data (with LSOA) is already present.
-      const allocationsHaveLsoa = site.allocations?.every(a => a.lsoa && typeof a.lsoa.IMDScore === 'number');
-      if (allocationsHaveLsoa) {
-        setChartData(processData(site));      
-      } else {
-        setError('no allocations or allocs have no LSOA or IMDScores')
-      }
-    };
-
-    loadChartData();
+    setChartData(processData(site)); 
   }, [site]); // Depend only on the initial site prop.
 
   if (isLoading) return <Text>Loading chart data...</Text>;
