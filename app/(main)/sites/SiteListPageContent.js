@@ -7,7 +7,7 @@ import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
@@ -19,7 +19,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
 const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-export default function SiteListPageContent({ sites, summary, imdChart, imdDiffChart = [] }) {
+export default function SiteListPageContent({ sites, summary, imdChart, imdDiffChart = [], imdStats = {} }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
@@ -125,6 +125,33 @@ export default function SiteListPageContent({ sites, summary, imdChart, imdDiffC
                         </BarChart>
                       </ResponsiveContainer>
                     </Box>
+
+                    {imdStats.count && imdStats.count > 0 && (
+                      <Box marginTop="6" border="1px" borderColor="#e2e8f0" borderRadius="md" padding="4">
+                        <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
+                          IMD Statistics
+                        </Text>
+                        <SimpleGrid columns={{ base: 2, md: 4 }} spacing="4">
+                          <Box textAlign="center">
+                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Count</Text>
+                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(imdStats.count, 0)}</Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Correlation</Text>
+                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.correlation?.toFixed(4)}</Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Mean Difference</Text>
+                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.meanDifference?.toFixed(4)}</Text>
+                          </Box>
+                          <Box textAlign="center">
+                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
+                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.stdDevDifference?.toFixed(4)}</Text>
+                          </Box>
+                        </SimpleGrid>
+                      </Box>
+                    )}
+
                     <Text fontSize="0.9rem" color="#36454F" textAlign="center" marginTop="2">
                       A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
                     </Text>

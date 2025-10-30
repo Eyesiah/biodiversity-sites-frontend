@@ -74,7 +74,13 @@ export default async function SiteListPage() {
 
   return (
     <>
-      <SiteListPageContent sites={processedSites} summary={summary} imdChart={imdChartData} imdDiffChart={imdDiffChart} />
+      <SiteListPageContent
+        sites={processedSites}
+        summary={summary}
+        imdChart={imdChartData}
+        imdDiffChart={imdDiffChart}
+        imdStats={imdStats}
+      />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
