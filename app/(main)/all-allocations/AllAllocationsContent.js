@@ -188,7 +188,7 @@ export default function AllAllocationsContent({ allocations }) {
             {stats.count && stats.count > 0 && (
               <Box marginTop="6" border="1px" borderColor="#e2e8f0" borderRadius="md" padding="4">
                 <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
-                  IMD Scores Histogram
+                  IMD Score Transfer Histogram - a negative value indicates a transfer to a less-deprived LSOA. A positive value indicates a transfer to a more-deprived LSOA.
                 </Text>
                 <SimpleGrid columns={{ base: 2, md: 4 }} spacing="4">
                   <Box textAlign="center">
@@ -210,10 +210,6 @@ export default function AllAllocationsContent({ allocations }) {
                 </SimpleGrid>
               </Box>
             )}
-
-            <Text fontSize="1.15rem" color="#36454F" textAlign="center" marginTop="2">
-              A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
-            </Text>
           </>
         );
       }
