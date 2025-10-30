@@ -42,13 +42,16 @@ export default function About() {
         <Text>The boundaries of LNRS sites are used to identify the LNRS in which a development site or BGS site is located</Text>
         <Text><ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies-areas-and-responsible-authorities">LNRSs and their Profiles</ExternalLink>.</Text>
 
-        <Heading as="h3" size="md">7. Lower Layer Super Output Areas (LSOAs)</Heading>
-        <Text>A Lower Layer Super Output Area (LSOA) is a geographic statistical unit in the UK, used for the publication of small-area statistics. Each LSOA comprises between 4 and 5 Output Areas (OAs) and contains 1,000 to 3,000 people (between 400 and 1,200 households).</Text>
-        <Text><ExternalLink href="https://www.data.gov.uk/dataset/c481f2d3-91fc-4767-ae10-2efdf6d58996/lower-layer-super-output-areas-lsoas">LSOAs and their Profiles</ExternalLink>.</Text>
+        <Heading as="h3" size="md">7. Deprivation</Heading>
+        <Text>Deprivation refers to people’s unmet needs, a lack of access to opportunities and resources which we might expect in our society.</Text>
+        
+        <Heading as="h3" size="md">7 a). Lower Layer Super Output Areas (LSOAs)</Heading>
+        <Text>LSOAs are small areas designed to be of a similar population size, with an average of approximately 1,600 residents or 650 households. There are 33,755 LSOAs in England. They are a standard statistical geography and were produced by the Office for National Statistics for the reporting of small area statistics. LSOAs are referred to as ‘neighbourhoods’ .</Text>
+        <Text><ExternalLink href="https://deprivation.communities.gov.uk/">Deprivation in England (2025).</ExternalLink>.</Text>
 
-        <Heading as="h3" size="md">8. Index of Multiple Deprivation (IMD)</Heading>
-        <Text>Levels of deprivation are shown in deciles - between 1 to 10 - with band 1 being within the most deprived 10% areas of the country and band 10 being within the least deprived 10% of the country.</Text>
-
+        <Heading as="h3" size="md">7 b). Decile</Heading>
+        <Text>An decile is calculated by ranking the 33,755 neighbourhoods in England from most deprived to least deprived and dividing them into 10 equal groups (i.e. each containing 3,375 or 3,376 neighbourhoods). These deciles range from the most deprived 10 per cent of neighbourhoods nationally to the least deprived 10 per cent of neighbourhoods nationally.</Text>
+        
         <Heading as="h2" size="lg">How we processed the data</Heading>
         <Text>We enhanced the base data extracted from the BGS register in a number of ways:</Text>
 

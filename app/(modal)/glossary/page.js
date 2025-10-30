@@ -26,15 +26,17 @@ export default function Glossary() {
         <Heading as="h3" size="md">Condition</Heading>
         <Text>The ecological health and functional status of a habitat, indicating its resilience and how well it supports its ecosystem. It&apos;s assessed using criteria for specific habitat types, often resulting in a rating - good, moderate or poor - which is based on factors like species presence, management and disturbance.</Text>
 
+        <Heading as="h3" size="md">Decile</Heading>
+        <text>An decile is calculated by ranking the 33,755 neighbourhoods in England from most deprived to least deprived and dividing them into 10 equal groups (i.e. each containing 3,375 or 3,376 neighbourhoods). These deciles range from the most deprived 10 per cent of neighbourhoods nationally to the least deprived 10 per cent of neighbourhoods nationally.</text>
+        
+        <Heading as="h3" size="md">Deprivation</Heading>
+        <Text>Deprivation refers to people’s unmet needs, a lack of access to opportunities and resources which we might expect in our society.</Text>
+        
         <Heading as="h3" size="md">Habitat</Heading>
         <Text>An environment or area that supports living organisms, including plants, animals and fungi.</Text>
 
         <Heading as="h3" size="md">Habitat Unit (HU)</Heading>
         <Text>A quantitative measure of the value of a natural habitat, used in Biodiversity Net Gain calculations. It is calculated based on a habitat&apos;s size (area or length), distinctiveness, condition and strategic significance, with higher values indicating better ecological quality and greater biodiversity.</Text>
-
-        <Heading as="h3" size="md">IMD (Index of Multiple Deprivation) Decile/Score</Heading>
-        <Text>An official measure used in England to assess relative deprivation in small geographic areas by combining data from seven different domains: Income, Employment, Education, Skills and Training, Health Deprivation and Disability, Crime, Barriers to Housing and Services, and Living Environment. The IMD helps identify areas with high concentrations of different types of deprivation, allowing users to understand and compare levels of disadvantage across the country.</Text>
-        <Text>The IMD decile score ranges from 1 (the most deprived) to 10 (the least deprived). See <ExternalLink href="https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019">IMDs and their Profiles</ExternalLink></Text>
 
         <Heading as="h3" size="md">Local Nature Recovery Strategy (LNRS) site</Heading>
         <Text>An England-wide system of spatial strategies required by the Environment Act 2021 that identifies priorities and maps proposals for nature recovery at the local level. These strategies are designed to map existing important habitats, identify areas for new or improved habitats, set out priorities for action, and integrate with the planning system to support wider environmental benefits like biodiversity, flood management, carbon storage, and water quality. See <ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies/local-nature-recovery-strategies">Local nature recovery strategies policy paper</ExternalLink>.</Text>
@@ -42,8 +44,9 @@ export default function Glossary() {
         <Heading as="h3" size="md">Local Planning Authority (LPA)</Heading>
         <Text>A local government body, often a council department, responsible for managing land use and development in a specific area. Its functions include deciding on planning applications, preparing and implementing local plans, and enforcing planning policies to ensure that development is sustainable and balances economic, environmental and social considerations.</Text>
 
-        <Heading as="h3" size="md">Lower Layer Super Output Area (LSOA)</Heading>
-        <Text>The smallest geographic unit used in England and Wales for statistical purposes, typically comprising 1,000 to 3,000 residents and 400 to 1,200 households. See <ExternalLink href="https://www.ons.gov.uk/methodology/geography/ukgeographies/statisticalgeographies">ONS - Statistical geographies</ExternalLink>.</Text>
+        <Heading as="h3" size="md">Lower Layer Super Output Areas (LSOAs)</Heading>
+        <Text>LSOAs are small areas designed to be of a similar population size, with an average of approximately 1,600 residents or 650 households. There are 33,755 LSOAs in England. They are a standard statistical geography and were produced by the Office for National Statistics for the reporting of small area statistics. LSOAs are referred to as ‘neighbourhoods’ .</Text>
+        <Text><ExternalLink href="https://deprivation.communities.gov.uk/">Deprivation in England (2025).</ExternalLink>.</Text>
 
         <Heading as="h3" size="md">National Character Area (NCA)</Heading>
         <Text>A distinctive and recognisable unit of England&apos;s landscape, defined by a unique sense of place resulting from its specific natural, cultural and economic features. NCAs follow the natural lines of the landscape, rather than administrative boundaries like counties, making them a useful framework for planning and decision making for landscape and environmental projects. There are 159 NCAs in England, and each has a detailed profile outlining its characteristics and how it functions and can be sustained. See <ExternalLink href="https://nationalcharacterareas.co.uk/">National Character Area Profiles</ExternalLink>.</Text>
