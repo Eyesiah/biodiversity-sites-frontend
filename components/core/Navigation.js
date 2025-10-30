@@ -53,7 +53,7 @@ const PageTitle = ({ children, ...props }) => (
   <Text
     as="h1"
     color="clouds"
-    fontSize="2.5rem"
+    fontSize="2rem"
     fontWeight="500"
     margin="0"
     {...props}
