@@ -38,7 +38,6 @@ export const ImdScoresChart = ({ site }) => {
     const loadChartData = async () => {
       // Check if the detailed allocation data (with LSOA) is already present.
       const allocationsHaveLsoa = site.allocations?.every(a => a.lsoa && typeof a.lsoa.IMDScore === 'number');
-      debugger;
       if (allocationsHaveLsoa) {
         setChartData(processData(site));      
       } else {
