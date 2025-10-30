@@ -7,7 +7,7 @@ import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
@@ -19,7 +19,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
 const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-export default function SiteListPageContent({ sites, summary, imdChart }) {
+export default function SiteListPageContent({ sites, summary, imdChart, imdDiffChart = [] }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
@@ -106,6 +106,55 @@ export default function SiteListPageContent({ sites, summary, imdChart }) {
                       </BarChart>
                     </ResponsiveContainer>
                   </Box>
+                )
+              },
+              {
+                title: "IMD Allocation/BGS Scores Transfer Histogram",
+                content: ({ sortedItems }) => (
+                  <>
+                    <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={imdDiffChart} margin={{ top: 50, right: 30, left: 20, bottom: 15 }} barCategoryGap={0}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                          <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                          <Tooltip />
+                          <Bar dataKey="count" fill="#dcab1bff">
+                            <LabelList />
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </Box>
+                    <Text fontSize="0.9rem" color="#36454F" textAlign="center" marginTop="2">
+                      A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
+                    </Text>
+                    <Table variant="simple" size="sm" mt={4}>
+                      <Thead>
+                        <Tr>
+                          <Th>Statistic</Th>
+                          <Th isNumeric>Value</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        <Tr>
+                          <Td>Count (allocations with IMD data)</Td>
+                          <Td isNumeric>{formatNumber(625, 0)}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Correlation (site vs allocation IMD)</Td>
+                          <Td isNumeric>{formatNumber(0.11789098770940386, 3)}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Mean Difference</Td>
+                          <Td isNumeric>{formatNumber(0.6256, 3)}</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Standard Deviation of Differences</Td>
+                          <Td isNumeric>{formatNumber(3.0624876765843068, 3)}</Td>
+                        </Tr>
+                      </Tbody>
+                    </Table>
+                  </>
                 )
               }
             ]}
