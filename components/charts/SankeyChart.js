@@ -2,6 +2,7 @@
 
 import { Sankey, Tooltip, ResponsiveContainer, Layer, Rectangle } from 'recharts';
 import { formatNumber } from '@/lib/format';
+import { Box } from '@chakra-ui/react';
 
 const CustomSankeyNode = ({ x, y, width, height, index, payload, containerWidth }) => {
   const isOut = x + width + 6 < containerWidth;
@@ -61,7 +62,7 @@ export default function SankeyChart({ allocations }) {
   const data = processSankeyData(allocations);
 
   return (
-    <div style={{ width: '100vw', height: '80vh', border: '1px solid black', boxSizing: 'border-box', backgroundColor: 'ivory' }}>
+    <Box width="100vw" height="80vh" border="1px solid black" boxSizing="border-box" bg="ivory">
       <ResponsiveContainer width="100%" height="100%">
         <Sankey
           width={960}
@@ -82,6 +83,6 @@ export default function SankeyChart({ allocations }) {
           <Tooltip isAnimationActive={false} formatter={(value) => `${formatNumber(value, 2)} HU`} />
         </Sankey>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 }

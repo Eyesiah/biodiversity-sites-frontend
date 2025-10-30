@@ -13,6 +13,7 @@ import {
   ResponsiveContainer,
   Label
 } from 'recharts';
+import { Box, Text } from '@chakra-ui/react';
 
 export const ImdScoresChart = ({ site }) => {
   const [chartData, setChartData] = useState(null);
@@ -61,12 +62,12 @@ export const ImdScoresChart = ({ site }) => {
     loadChartData();
   }, [site]); // Depend only on the initial site prop.
 
-  if (isLoading) return <p>Loading chart data...</p>;
-  if (error) return <p className="error">Error: {error}</p>;
-  if (!chartData) return <p>Initializing chart...</p>; // Initial state before useEffect runs
+  if (isLoading) return <Text>Loading chart data...</Text>;
+  if (error) return <Text color="red">Error: {error}</Text>;
+  if (!chartData) return <Text>Initializing chart...</Text>; // Initial state before useEffect runs
 
   if (chartData.length === 0 && site.allocations?.length > 0) {
-    return <p>No allocation IMD data available to display.</p>;
+    return <Text>No allocation IMD data available to display.</Text>;
   }
 
   const formatYAxis = (tickItem) => {
@@ -74,7 +75,7 @@ export const ImdScoresChart = ({ site }) => {
   };
 
   return (
-    <div style={{ backgroundColor: 'ivory', padding: '1rem' }}>
+    <Box bg="ivory" p="1rem">
       <ResponsiveContainer width="100%" height={650}>
         <ComposedChart
           data={chartData}
@@ -83,12 +84,12 @@ export const ImdScoresChart = ({ site }) => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis 
+          <XAxis
             type="category"
-            dataKey="name" 
-            angle={-45} 
-            textAnchor="end" 
-            height={100} 
+            dataKey="name"
+            angle={-45}
+            textAnchor="end"
+            height={100}
             interval={'preserveStartEnd'}
             tick={{ fontSize: 12 }}>
             <Label value="Development Allocations" offset={-60} position="insideBottom" style={{ fontWeight: 'bold', textAnchor: 'middle' }} />
@@ -102,6 +103,6 @@ export const ImdScoresChart = ({ site }) => {
           <Line type="monotone" dataKey="Site IMD Score" stroke="#ff7300" strokeWidth={2} dot={false} />
         </ComposedChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };

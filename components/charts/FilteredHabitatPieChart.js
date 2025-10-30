@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, LabelList } from 'recharts';
 import { formatNumber } from '@/lib/format';
-import { Box, Heading } from '@chakra-ui/react';
+import { Box, Heading, Text } from '@chakra-ui/react';
 import { AutoResizeYAxisLabel } from './AutoResizeYAxisLabel';
 
 const CustomTooltip = ({ active, payload }) => {
@@ -14,9 +14,9 @@ const CustomTooltip = ({ active, payload }) => {
       unit = 'km';
     }
     return (
-      <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
-        <p className="label" style={{ color: '#000' }}>{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</p>
-      </div>
+      <Box bg="white" p="10px" border="1px solid #ccc">
+        <Text color="black">{`${data.name} : ${formatNumber(data.value, 2)} ${unit}`}</Text>
+      </Box>
     );
   }
   return null;
@@ -68,7 +68,7 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
   const OTHER_COLOR = '#889095ff'; // A neutral grey for the 'Other' category
 
   if (chartData.length === 0) {
-    return <p>No habitat data to display for the current selection.</p>;
+    return <Text>No habitat data to display for the current selection.</Text>;
   }
 
   const RADIAN = Math.PI / 180;
@@ -133,7 +133,7 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
       {otherData.length > 0 && (
         <Box flex="2" display="flex" height="500px" >
           <Box width='100%' height='100%'>
-            <h4 style={{ textAlign: 'center', fontSize: '1.2rem', color: '#000' }}>Habitats less than 1%</h4>
+            <Heading as="h4" textAlign="center" sx={{ fontSize: '1.2rem', color: '#000' }}>Habitats less than 1%</Heading>
             <ResponsiveContainer>
               <BarChart
                 layout="vertical"
