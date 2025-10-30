@@ -13,6 +13,7 @@ export const system = createSystem(defaultConfig, {
         black: { value: "#000000" },
         white: { value: "#ffffff" },
         lightGray: { value: "#aaa" },
+        veryLightGray: { value: "#f0f0f0" },
         // Greens
         emerald: { value: "#2ecc71" },
         nephritis: { value: "#27ae60" },
@@ -57,7 +58,7 @@ export const system = createSystem(defaultConfig, {
     semanticTokens: {
       colors: {
         // Foreground/background coordinated with next-themes
-        fg: { value: { _light: "{colors.black}", _dark: "#f0f0f0" } },
+        fg: { value: { _light: "{colors.black}", _dark: "{colors.veryLightGray}" } },
         bg: { value: { _light: "{colors.bone}", _dark: "{colors.charcoal}" } },
         // Links
         link: { value: { _light: "{colors.belize}", _dark: "{colors.sky}" } },
@@ -72,7 +73,7 @@ export const system = createSystem(defaultConfig, {
         border: { value: { _light: "{colors.silver}", _dark: "{colors.clouds}" } },
         tableHeaderBg: { value: { _light: "{colors.midnight}", _dark: "{colors.midnight}" } },
         tableBg: { value: { _light: "{colors.white}", _dark: "#1a1a1a" } },
-        tableText: { value: { _light: "{colors.black}", _dark: "#f0f0f0" } },
+        tableText: { value: { _light: "{colors.black}", _dark: "{colors.veryLightGray}" } },
         tableHoverBg: { value: { _light: "{colors.clouds}", _dark: "#2a2a2a" } },
         tableTotalsBg: { value: { _light: "{colors.silver}", _dark: "{colors.charcoal}" } },
         cardBg: { value: { _light: "{colors.white}", _dark: "#2a2a2a" } },

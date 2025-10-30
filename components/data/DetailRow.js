@@ -1,7 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 
 // Helper component for a detail row to keep the JSX clean.
-export const DetailRow = ({ label, value, labelColor, valueColor }) => (
+export const DetailRow = ({ label, value, textColor }) => (
   <Box 
     display="flex" 
     justifyContent="space-between" 
@@ -13,7 +13,7 @@ export const DetailRow = ({ label, value, labelColor, valueColor }) => (
     <Text 
       as="dt" 
       fontWeight="bold" 
-      color={labelColor || "fg"} 
+      color={textColor || "fg"} 
       margin="0"
       paddingRight="1rem"
     >
@@ -21,7 +21,7 @@ export const DetailRow = ({ label, value, labelColor, valueColor }) => (
     </Text>
     <Text 
       as="dd" 
-      color={valueColor || "fg"} 
+      color={textColor || "fg"} 
       margin="0"
       textAlign="right"
       flex="1"

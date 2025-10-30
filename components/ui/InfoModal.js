@@ -6,6 +6,10 @@ import { DetailRow } from '@/components/data/DetailRow'
 import { formatNumber } from '@/lib/format'
 import { VStack, Box, Separator, Text, Heading } from "@chakra-ui/react";
 
+const InfoModalRow = ({ label, value }) => (
+  <DetailRow label={label} value={value} textColor="veryLightGray" />
+)
+
 export const InfoModal = ({ modalState, onClose }) => {
   const { show, type, name, title, size } = modalState;
   const [data, setData] = useState(null);
@@ -45,13 +49,13 @@ export const InfoModal = ({ modalState, onClose }) => {
       const { body } = data;
       return (
         <dl>
-          <DetailRow label="Designation Date" value={body.designationDate} />
-          <DetailRow label="Area of Expertise" value={body.expertise} />
-          <DetailRow label="Type of Organisation" value={body.organisationType} />
-          <DetailRow label="Address" value={body.address} />
-          <DetailRow label="Email" value={body.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} />
-          <DetailRow label="Telephone" value={body.telephone} />
-          <DetailRow label="# BGS Sites" value={body.siteCount} />
+          <InfoModalRow label="Designation Date" value={body.designationDate} />
+          <InfoModalRow label="Area of Expertise" value={body.expertise} />
+          <InfoModalRow label="Type of Organisation" value={body.organisationType} />
+          <InfoModalRow label="Address" value={body.address} />
+          <InfoModalRow label="Email" value={body.emails.map(e => <div key={e}><a href={`mailto:${e}`}>{e}</a></div>)} />
+          <InfoModalRow label="Telephone" value={body.telephone} />
+          <InfoModalRow label="# BGS Sites" value={body.siteCount} />
         </dl>
       );
     }
@@ -60,9 +64,9 @@ export const InfoModal = ({ modalState, onClose }) => {
       const { lpa } = data;
       return (
         <dl>
-          <DetailRow label="ID" value={lpa.id} />
-          <DetailRow label="Area (ha)" value={formatNumber(lpa.size, 0)} />
-          <DetailRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} />
+          <InfoModalRow label="ID" value={lpa.id} />
+          <InfoModalRow label="Area (ha)" value={formatNumber(lpa.size, 0)} />
+          <InfoModalRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} />
           {lpa.adjacents?.length > 0 && (
             <Box mt={4}>
               <Heading as="h4" size="md">Adjacent LPAs</Heading>
@@ -85,10 +89,10 @@ export const InfoModal = ({ modalState, onClose }) => {
     if (type === 'lsoa' && data) {
       return (
         <dl>
-          <DetailRow label="Index of Multiple Deprivation values" />
-          <DetailRow label="Decile" value={data.IMDDecile ?? 'N/A'} />
-          <DetailRow label="Score" value={data.IMDScore ?? 'N/A'} />
-          <DetailRow label="Rank" value={data.IMDRank ?? 'N/A'} />
+          <InfoModalRow label="Index of Multiple Deprivation values" />
+          <InfoModalRow label="Decile" value={data.IMDDecile ?? 'N/A'} />
+          <InfoModalRow label="Score" value={data.IMDScore ?? 'N/A'} />
+          <InfoModalRow label="Rank" value={data.IMDRank ?? 'N/A'} />
         </dl>
       );
     }
