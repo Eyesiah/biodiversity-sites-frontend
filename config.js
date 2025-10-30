@@ -7,3 +7,6 @@ export const ARCGIS_NCA_URL = 'https://services.arcgis.com/JJzESW51TqeY9uat/arcg
 export const ARCGIS_LPA_URL = 'https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/LPA_APR_2023_UK_BUC_V2/FeatureServer/0/query';
 
 export const WFS_URL = 'https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS&REQUEST=GetCapabilities'
+
+export const NAV_HEIGHT = '4rem';
+export const MAP_KEY_HEIGHT = '3rem';

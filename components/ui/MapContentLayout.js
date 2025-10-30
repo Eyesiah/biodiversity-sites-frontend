@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useIsMobile } from '@/lib/hooks.js';
 import { Box, Flex } from '@chakra-ui/react';
+import { NAV_HEIGHT } from '@/config';
 
 const MapContentLayout = ({ map, content }) => {
   const isMobile = useIsMobile();
@@ -21,9 +22,10 @@ const MapContentLayout = ({ map, content }) => {
           flex="1 1 33%"
           marginRight="1rem"
           position="sticky"
-          top="3rem"
+          top={NAV_HEIGHT}
           alignSelf="flex-start"
           zIndex="1001"
+          height={`calc(100vh - ${NAV_HEIGHT})`}
         >
           {hasMounted ? map : null}
         </Box>

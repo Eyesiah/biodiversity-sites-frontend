@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
-import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD } from '@/config'
+import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD, MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
 
 function MapController({ lsoa, lnrs, nca, lpa }) {
@@ -135,10 +135,10 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
   };
 
   const displayKey = onSiteSelect == null;
-  const mapHeight = displayKey ? 'calc(100% - 1rem)' : '100%'
+  const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
   return (
-    <div style={{ height: 'calc(100vh - 10rem)', width: '100%' }}>
+    <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }}>
         <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} />
         <PolylinePane />
