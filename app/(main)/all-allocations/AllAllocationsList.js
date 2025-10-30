@@ -4,11 +4,12 @@ import { DataFetchingCollapsibleRow } from '@/components/data/DataFetchingCollap
 import Tooltip from '@/components/ui/Tooltip';
 import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { Text } from '@chakra-ui/react';
 
 const AllocationHabitats = ({ habitats }) => {
 
   if (habitats.length === 0) {
-    return <p>No habitat details for this allocation.</p>;
+    return <Text>No habitat details for this allocation.</Text>;
   }
 
   return (
@@ -97,17 +98,17 @@ export default function AllAllocationsList ({sortedItems, requestSort, sortConfi
         </PrimaryTable.Row>
       </PrimaryTable.Header>
       <PrimaryTable.Body>
-        <PrimaryTable.Row style={{ fontWeight: 'bold', backgroundColor: '#ecf0f1' }}>
-          <PrimaryTable.Cell colSpan="6" style={{ textAlign: 'center', border: '3px solid #ddd' }}>Totals</PrimaryTable.Cell>
-          <PrimaryTable.CenteredNumericCell style={{ border: '3px solid #ddd' }}>
+        <PrimaryTable.Row fontWeight="bold" bg="#ecf0f1">
+          <PrimaryTable.Cell colSpan={6} textAlign="center" sx={{ border: '3px solid #ddd' }}>Totals</PrimaryTable.Cell>
+          <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
             {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
           </PrimaryTable.CenteredNumericCell>
-          <PrimaryTable.CenteredNumericCell style={{ border: '3px solid #ddd' }}>
+          <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
             {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
           </PrimaryTable.CenteredNumericCell>
-          <PrimaryTable.NumericCell style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</PrimaryTable.NumericCell>
-          <PrimaryTable.NumericCell style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</PrimaryTable.NumericCell>
-          <PrimaryTable.NumericCell style={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
+          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</PrimaryTable.NumericCell>
+          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</PrimaryTable.NumericCell>
+          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
         </PrimaryTable.Row>
         {sortedItems.map((alloc) => (
           <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />

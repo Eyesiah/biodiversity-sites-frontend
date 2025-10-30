@@ -38,7 +38,7 @@ export default function NCAContent({ ncas, sites, error }) {
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
 
   if (error) {
-    return <p className="error">Error fetching data: {error}</p>;
+    return <Text color="red">Error fetching data: {error}</Text>;
   }
 
   return (

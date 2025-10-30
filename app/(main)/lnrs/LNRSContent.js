@@ -11,7 +11,7 @@ import { ARCGIS_LNRS_URL } from '@/config';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Button } from '@chakra-ui/react';
 
 const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
@@ -39,7 +39,7 @@ export default function LNRSContent({ lnrs, sites, error }) {
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
 
   if (error) {
-    return <p className="error">Error fetching data: {error}</p>;
+    return <Text color="red">Error fetching data: {error}</Text>;
   }
 
   return (

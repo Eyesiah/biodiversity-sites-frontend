@@ -3,7 +3,7 @@ import { formatNumber } from '@/lib/format';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
 import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
-import { Heading } from '@chakra-ui/react';
+import { Heading, Flex, Box, Text } from '@chakra-ui/react';
 
 export default function AllocationAnalysis({ allocations }) {
 
@@ -191,20 +191,20 @@ export default function AllocationAnalysis({ allocations }) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ height: '12px', width: '12px', backgroundColor: '#e2742fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
-            <span>LPA</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ height: '12px', width: '12px', backgroundColor: '#6ac98fff', marginRight: '5px', border: '1px solid #ccc' }}></span>
-            <span>NCA</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span style={{ height: '12px', width: '12px', backgroundColor: '#8884d8', marginRight: '5px', border: '1px solid #ccc' }}></span>
-            <span>Outside</span>
-          </div>
-        </div>
+        <Flex justifyContent="center" alignItems="center" gap={4} mt={2} fontSize="0.9rem">
+          <Flex alignItems="center">
+            <Box w="12px" h="12px" bg="#e2742fff" mr="5px" border="1px solid #ccc"></Box>
+            <Text>LPA</Text>
+          </Flex>
+          <Flex alignItems="center">
+            <Box w="12px" h="12px" bg="#6ac98fff" mr="5px" border="1px solid #ccc"></Box>
+            <Text>NCA</Text>
+          </Flex>
+          <Flex alignItems="center">
+            <Box w="12px" h="12px" bg="#8884d8" mr="5px" border="1px solid #ccc"></Box>
+            <Text>Outside</Text>
+          </Flex>
+        </Flex>
       </ChartItem>
     </ChartRow >
     </>
