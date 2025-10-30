@@ -11,7 +11,7 @@ import MapContentLayout from '@/components/ui/MapContentLayout';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
-import { Box, Text, Heading } from '@chakra-ui/react';
+import { Box, Text, Heading, Link } from '@chakra-ui/react';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -29,7 +29,19 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
         <PrimaryTable.Cell>{body.address}</PrimaryTable.Cell>
         <PrimaryTable.Cell>
           {body.emails.map(email => (
-            <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
+            <div key={email}>
+              <Link href={`mailto:${email}`}>
+                <Text
+                  maxW="250px"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  display="inline-block"
+                >
+                  {email}
+                </Text>
+              </Link>
+            </div>
           ))}
         </PrimaryTable.Cell>
         <PrimaryTable.Cell>{body.telephone}</PrimaryTable.Cell>
