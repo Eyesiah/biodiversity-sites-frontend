@@ -1,6 +1,7 @@
 // components/ExternalLink.js
 import React from 'react';
-import { Link as ChakraLink, Box } from '@chakra-ui/react';
+import { Link as ChakraLink } from '@chakra-ui/react';
+import { FiExternalLink } from 'react-icons/fi';
 
 const ExternalLink = ({ href, children, className, showIcon = true }) => {
   return (
@@ -18,18 +19,7 @@ const ExternalLink = ({ href, children, className, showIcon = true }) => {
     >
       {children}
       {showIcon && (
-        <Box
-          as="span"
-          display="inline-block"
-          width="12px"
-          height="12px"
-          marginLeft="0.25rem"
-          backgroundImage="url('/icons/external-link.svg')"
-          backgroundSize="contain"
-          backgroundRepeat="no-repeat"
-          backgroundPosition="center"
-          verticalAlign="middle"
-        />
+        <FiExternalLink size={12} color="inherit" />
       )}
     </ChakraLink>
   );
