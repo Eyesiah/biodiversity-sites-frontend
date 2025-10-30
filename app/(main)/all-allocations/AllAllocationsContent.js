@@ -150,6 +150,18 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems, requestSort, sortConfig }) => <AllAllocationsList sortedItems={sortedItems} requestSort={requestSort} sortConfig={sortConfig} summaryData={summaryData} />
     },
     {
+      title: 'Area<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='areas' name='Area' />
+    },
+    {
+      title: 'Hedgerow<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='hedgerows' name='Hedgerow' />
+    },
+    {
+      title: 'Watercourse<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='watercourses' name='Watercourse' />
+    },
+    {
       title: 'Analysis Charts',
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
     },
@@ -206,18 +218,7 @@ export default function AllAllocationsContent({ allocations }) {
         );
       }
     },
-    {
-      title: 'Area<br>Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='areas' name='Area' />
-    },
-    {
-      title: 'Hedgerow<br>Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='hedgerows' name='Hedgerow' />
-    },
-    {
-      title: 'Watercourse<br>Habitats Chart',
-      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='watercourses' name='Watercourse' />
-    }
+    
   ]
 
   return (
