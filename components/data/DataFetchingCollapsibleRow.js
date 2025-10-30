@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import { Box, Text } from '@chakra-ui/react';
 
 /**
  * A reusable component that renders a collapsible table row and fetches 
@@ -57,11 +58,11 @@ export const DataFetchingCollapsibleRow = ({
   }, [isOpen, details, isLoading, dataUrl, dataExtractor]);
 
   const collapsibleContent = (
-    <div style={{ padding: '0.5rem' }}>
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="error">Error: {error}</p>}
+    <Box p="0.5rem">
+      {isLoading && <Text>Loading...</Text>}
+      {error && <Text color="red">Error: {error}</Text>}
       {details && renderDetails(details)}
-    </div>
+    </Box>
   );
 
   return (

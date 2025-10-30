@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useLayoutEffect, useRef, useEffect } from 'react';
+import { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { Box } from '@chakra-ui/react';
 
 const Tooltip = ({ children, text }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [position, setPosition] = useState({ top: 0, left: 0 });
   const targetRef = useRef(null);
   const tooltipRef = useRef(null);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -15,7 +16,6 @@ const Tooltip = ({ children, text }) => {
   }, []);
 
   const handleMouseEnter = () => {
-    if (!text) return;
     setIsVisible(true);
   };
 
@@ -59,40 +59,40 @@ const Tooltip = ({ children, text }) => {
   }, [isVisible]);
 
   const tooltipContent = (
-    <div
+    <Box
       ref={tooltipRef}
-      style={{
-        position: 'fixed',
-        top: position.top,
-        left: position.left,
-        // Start invisible to measure dimensions
-        visibility: isVisible && position.top !== 0 ? 'visible' : 'hidden',
-        backgroundColor: 'ivory',
-        color: 'black',
-        padding: '8px 12px',
-        borderRadius: '6px',
-        zIndex: 9999,
-        whiteSpace: 'normal',
-        pointerEvents: 'none',
-        maxWidth: '300px',
-        border: '1px solid #2d618fff',
+      position="fixed"
+      top={position.top}
+      left={position.left}
+      bg="ivory"
+      color="black"
+      p="8px 12px"
+      borderRadius="6px"
+      border="1px solid #2d618fff"
+      whiteSpace="normal"
+      pointerEvents="none"
+      maxW="300px"
+      zIndex="9999"
+      sx={{
+        visibility: isVisible && position.top !== 0 ? 'visible' : 'hidden'
       }}
     >
       {text}
-    </div>
+    </Box>
   );
 
   return (
-    <span 
-      style={{ borderBottom: '1px dotted', cursor: text ? 'help' : 'default' }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <span ref={targetRef}>
+    <>
+      <span
+        ref={targetRef}
+        style={{ borderBottom: '1px dotted', cursor: 'help' }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         {children}
       </span>
       {isMounted && isVisible && createPortal(tooltipContent, document.body)}
-    </span>
+    </>
   );
 };
 
