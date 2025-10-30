@@ -152,7 +152,7 @@ export default function SiteListPageContent({ sites, summary, imdChart, imdDiffC
                       </Box>
                     )}
 
-                    <Text fontSize="0.9rem" color="#36454F" textAlign="center" marginTop="2">
+                    <Text fontSize="1.15rem" color="#36454F" textAlign="center" marginTop="2">
                       A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
                     </Text>
                   </>
