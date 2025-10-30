@@ -7,7 +7,7 @@ import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { Box, Text, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
@@ -128,32 +128,6 @@ export default function SiteListPageContent({ sites, summary, imdChart, imdDiffC
                     <Text fontSize="0.9rem" color="#36454F" textAlign="center" marginTop="2">
                       A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
                     </Text>
-                    <Table variant="simple" size="sm" mt={4}>
-                      <Thead>
-                        <Tr>
-                          <Th>Statistic</Th>
-                          <Th isNumeric>Value</Th>
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        <Tr>
-                          <Td>Count (allocations with IMD data)</Td>
-                          <Td isNumeric>{formatNumber(625, 0)}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Correlation (site vs allocation IMD)</Td>
-                          <Td isNumeric>{formatNumber(0.11789098770940386, 3)}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Mean Difference</Td>
-                          <Td isNumeric>{formatNumber(0.6256, 3)}</Td>
-                        </Tr>
-                        <Tr>
-                          <Td>Standard Deviation of Differences</Td>
-                          <Td isNumeric>{formatNumber(3.0624876765843068, 3)}</Td>
-                        </Tr>
-                      </Tbody>
-                    </Table>
                   </>
                 )
               }
