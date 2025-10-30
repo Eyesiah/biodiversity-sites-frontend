@@ -24,7 +24,6 @@ const MapContentLayout = ({ map, content }) => {
           position="sticky"
           top={NAV_HEIGHT}
           alignSelf="flex-start"
-          zIndex="1001"
           height={`calc(100vh - ${NAV_HEIGHT})`}
         >
           {hasMounted ? map : null}
