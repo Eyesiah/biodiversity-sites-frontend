@@ -43,8 +43,8 @@ function LpaDetails({ lpa, onAdjacentClick, lpas, onRowClick }) {
                 <DataTable.Row key={adj.id}>
                   <DataTable.Cell>{adj.id}</DataTable.Cell>
                   <DataTable.Cell>{adj.name}</DataTable.Cell>
-                  <DataTable.Cell className="numeric-data">{formatNumber(adj.size, 0)}</DataTable.Cell>
-                  <DataTable.Cell className="centered-data">{adjacentLpaObject?.siteCount || 0}</DataTable.Cell>
+                  <DataTable.NumericCell>{formatNumber(adj.size, 0)}</DataTable.NumericCell>
+                  <DataTable.CenteredNumericCell>{adjacentLpaObject?.siteCount || 0}</DataTable.CenteredNumericCell>
                   <DataTable.Cell><InfoButton onClick={(e) => { e.stopPropagation(); onAdjacentClick(adjacentLpaObject); }} >Display Map</InfoButton></DataTable.Cell>
                 </DataTable.Row>
               );
@@ -64,10 +64,10 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
       <>
         <PrimaryTable.Cell>{lpa.id}</PrimaryTable.Cell>
         <PrimaryTable.Cell>{lpa.name}</PrimaryTable.Cell>
-        <PrimaryTable.Cell className="numeric-data">{formatNumber(lpa.size, 0)}</PrimaryTable.Cell>
-        <PrimaryTable.Cell className="centered-data">{lpa.siteCount}</PrimaryTable.Cell>
-        <PrimaryTable.Cell className="centered-data">{lpa.allocationsCount}</PrimaryTable.Cell>
-        <PrimaryTable.Cell className="centered-data">{lpa.adjacentsCount}</PrimaryTable.Cell>
+        <PrimaryTable.NumericCell>{formatNumber(lpa.size, 0)}</PrimaryTable.NumericCell>
+        <PrimaryTable.CenteredNumericCell>{lpa.siteCount}</PrimaryTable.CenteredNumericCell>
+        <PrimaryTable.CenteredNumericCell>{lpa.allocationsCount}</PrimaryTable.CenteredNumericCell>
+        <PrimaryTable.CenteredNumericCell>{lpa.adjacentsCount}</PrimaryTable.CenteredNumericCell>
         <PrimaryTable.Cell>
           <InfoButton onClick={(e) => { e.stopPropagation(); onRowClick(lpa); }}>
             Display Map
@@ -152,9 +152,9 @@ export default function LPAContent({ lpas, sites }) {
                       <PrimaryTable.Row fontWeight="bold" bg="tableTotalsBg">
                         <PrimaryTable.Cell colSpan="2" textAlign="center">Totals</PrimaryTable.Cell>
                         <PrimaryTable.Cell></PrimaryTable.Cell>
-                        <PrimaryTable.Cell className="centered-data">{formatNumber(summaryData.totalSites, 0)}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell className="centered-data">{formatNumber(summaryData.totalAllocations, 0)}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell className="centered-data">{formatNumber(summaryData.totalAdjacents, 0)}</PrimaryTable.Cell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalSites, 0)}</PrimaryTable.CenteredNumericCell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAllocations, 0)}</PrimaryTable.CenteredNumericCell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAdjacents, 0)}</PrimaryTable.CenteredNumericCell>
                         <PrimaryTable.Cell></PrimaryTable.Cell>
                       </PrimaryTable.Row>
                       {sortedItems.map((lpa) => (
