@@ -143,7 +143,7 @@ export default function AllocationAnalysis({ allocations }) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="decile" name="IMD Decile" />
             <YAxis name="Number of Sites" allowDecimals={false} />
-            <RechartsTooltip formatter={(value) => [value, 'Sites']} />
+            <RechartsTooltip formatter={(value, name, props) => [value, name]} />
             <Legend />
             <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites" />
             <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites" />
