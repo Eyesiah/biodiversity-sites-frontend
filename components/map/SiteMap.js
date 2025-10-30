@@ -6,7 +6,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
-import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL } from '@/config';
+import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD } from '@/config'
 import MapKey from '@/components/map/MapKey';
 
 function MapController({ lsoa, lnrs, nca, lpa }) {
@@ -64,7 +64,7 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
       fetchPromises.push(Promise.resolve(lsoaFromCache));
     } else {
       if (lsoaName && lsoaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, 'LSOA11NM', lsoaName));
+        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, ARCGIS_LSOA_NAME_FIELD, lsoaName));
       } else {
         fetchPromises.push(Promise.resolve(null)); // Push null if no LSOA name
       }
