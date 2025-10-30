@@ -11,24 +11,27 @@ const MapContentLayout = ({ map, content }) => {
   }, []);
 
   return (
-    <Flex 
+    <Flex
       flexDirection={{ base: "column", md: "row" }}
       width="100%"
+      minHeight={{ base: "auto", md: "100vh" }}
     >
       {!isMobile &&
-        <Box 
+        <Box
           flex="1 1 33%"
           marginRight="1rem"
           position="sticky"
-          top="2rem"
+          top="3rem"
           alignSelf="flex-start"
+          zIndex="1001"
         >
           {hasMounted ? map : null}
         </Box>
       }
-      <Box 
+      <Box
         flex={{ base: "1 1 100%", md: "1 1 67%" }}
         py="1rem"
+        overflowY={{ base: "visible", md: "auto" }}
       >
         {content}
       </Box>

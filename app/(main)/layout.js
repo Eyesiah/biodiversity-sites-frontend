@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
             <Box position="sticky" top="0" zIndex="1000">
               <Navigation />
             </Box>
-            <Box flex="1" overflowY="auto">
+            <Box flex="1">
               <Box as="main" width="100%">
                 {children}
               </Box>
