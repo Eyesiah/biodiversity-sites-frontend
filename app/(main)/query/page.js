@@ -1,5 +1,6 @@
 import APIQueryForm from './APIQueryForm';
 import Footer from '@/components/core/Footer';
+import { ContentLayout } from '@/components/styles/ContentLayout';
 
 export const metadata = {
   title: 'Data Export / API Query',
@@ -9,13 +10,8 @@ export const metadata = {
 export default function QueryPage({}) {
 
   return (
-    <>
-      <div>
-        <section>
-          <APIQueryForm></APIQueryForm>
-        </section>
-      </div>
-      <Footer />
-    </>
+    <ContentLayout footer={<Footer />}>
+      <APIQueryForm />
+    </ContentLayout>
   )
 }
