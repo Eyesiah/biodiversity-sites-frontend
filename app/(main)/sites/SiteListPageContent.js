@@ -19,7 +19,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
 const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-export default function SiteListPageContent({ sites, summary, imdChart, imdDiffChart = [], imdStats = {} }) {
+export default function SiteListPageContent({ sites, summary, imdChart }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
@@ -108,56 +108,7 @@ export default function SiteListPageContent({ sites, summary, imdChart, imdDiffC
                   </Box>
                 )
               },
-              {
-                title: "IMD Allocation/BGS Scores Transfer Histogram",
-                content: ({ sortedItems }) => (
-                  <>
-                    <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={imdDiffChart} margin={{ top: 50, right: 30, left: 20, bottom: 15 }} barCategoryGap={0}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
-                          <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
-                          <Tooltip />
-                          <Bar dataKey="count" fill="#dcab1bff">
-                            <LabelList />
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </Box>
 
-                    {imdStats.count && imdStats.count > 0 && (
-                      <Box marginTop="6" border="1px" borderColor="#e2e8f0" borderRadius="md" padding="4">
-                        <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
-                          IMD Statistics
-                        </Text>
-                        <SimpleGrid columns={{ base: 2, md: 4 }} spacing="4">
-                          <Box textAlign="center">
-                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Count</Text>
-                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(imdStats.count, 0)}</Text>
-                          </Box>
-                          <Box textAlign="center">
-                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Correlation</Text>
-                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.correlation?.toFixed(4)}</Text>
-                          </Box>
-                          <Box textAlign="center">
-                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Mean Difference</Text>
-                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.meanDifference?.toFixed(4)}</Text>
-                          </Box>
-                          <Box textAlign="center">
-                            <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
-                            <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{imdStats.stdDevDifference?.toFixed(4)}</Text>
-                          </Box>
-                        </SimpleGrid>
-                      </Box>
-                    )}
-
-                    <Text fontSize="1.15rem" color="#36454F" textAlign="center" marginTop="2">
-                      A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
-                    </Text>
-                  </>
-                )
-              }
             ]}
           />
         </ContentStack>

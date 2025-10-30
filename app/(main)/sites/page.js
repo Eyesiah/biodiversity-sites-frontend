@@ -78,8 +78,6 @@ export default async function SiteListPage() {
         sites={processedSites}
         summary={summary}
         imdChart={imdChartData}
-        imdDiffChart={imdDiffChart}
-        imdStats={imdStats}
       />
       <Footer lastUpdated={lastUpdated} />
     </>

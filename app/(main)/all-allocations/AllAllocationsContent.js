@@ -6,7 +6,8 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart'
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
@@ -70,6 +71,79 @@ export default function AllAllocationsContent({ allocations }) {
     setSummaryData(calcSummaryData(sortedItems));
   }, [calcSummaryData]);
 
+  const calcIMDHistogramData = useCallback((filteredAllocations) => {
+    // Calculate IMD differences (Site IMD - Allocation IMD) for histogram
+    const validAllocations = filteredAllocations.filter(alloc =>
+      typeof alloc.simd === 'number' && typeof alloc.imd === 'number' &&
+      alloc.simd !== 'N/A' && alloc.imd !== 'N/A'
+    );
+
+    // Group by integer differences (-10 to +10 for reasonable range)
+    const diffCounts = {};
+    validAllocations.forEach(alloc => {
+      const diff = Math.round(alloc.simd - alloc.imd);
+      if (diff >= -10 && diff <= 10) {
+        diffCounts[diff] = (diffCounts[diff] || 0) + 1;
+      }
+    });
+
+    // Convert to chart data format
+    const chartData = [];
+    for (let i = -10; i <= 10; i++) {
+      if (diffCounts[i] || i === 0) { // Include 0 even if no data
+        chartData.push({
+          name: i === 0 ? '0' : i.toString(),
+          count: diffCounts[i] || 0
+        });
+      }
+    }
+
+    // Calculate IMD statistics
+    if (validAllocations.length > 0) {
+      const differences = validAllocations.map(alloc => alloc.simd - alloc.imd);
+      const meanDiff = differences.reduce((sum, diff) => sum + diff, 0) / differences.length;
+
+      // Calculate correlation between site IMD and allocation IMD
+      const siteIMDs = validAllocations.map(alloc => alloc.simd);
+      const allocIMDs = validAllocations.map(alloc => alloc.imd);
+
+      const meanSiteIMD = siteIMDs.reduce((sum, val) => sum + val, 0) / siteIMDs.length;
+      const meanAllocIMD = allocIMDs.reduce((sum, val) => sum + val, 0) / allocIMDs.length;
+
+      let correlation = 0;
+      let numerator = 0;
+      let denom1 = 0;
+      let denom2 = 0;
+
+      for (let i = 0; i < validAllocations.length; i++) {
+        const siteDiff = siteIMDs[i] - meanSiteIMD;
+        const allocDiff = allocIMDs[i] - meanAllocIMD;
+        numerator += siteDiff * allocDiff;
+        denom1 += siteDiff * siteDiff;
+        denom2 += allocDiff * allocDiff;
+      }
+
+      if (denom1 > 0 && denom2 > 0) {
+        correlation = numerator / Math.sqrt(denom1 * denom2);
+      }
+
+      const variance = differences.reduce((sum, diff) => sum + Math.pow(diff - meanDiff, 2), 0) / differences.length;
+      const stdDevDiff = Math.sqrt(variance);
+
+      return {
+        chartData,
+        stats: {
+          count: validAllocations.length,
+          correlation,
+          meanDifference: meanDiff,
+          stdDevDifference: stdDevDiff
+        }
+      };
+    }
+
+    return { chartData: [], stats: {} };
+  }, []);
+
   const tabs = [
     {
       title: 'All Allocations',
@@ -78,6 +152,59 @@ export default function AllAllocationsContent({ allocations }) {
     {
       title: 'Analysis Charts',
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
+    },
+    {
+      title: 'IMD Score Transfers',
+      content: ({ sortedItems }) => {
+        const { chartData, stats } = calcIMDHistogramData(sortedItems);
+        return (
+          <>
+            <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData} margin={{ top: 50, right: 30, left: 20, bottom: 15 }} barCategoryGap={0}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                  <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#dcab1bff">
+                    <LabelList />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
+
+            {stats.count && stats.count > 0 && (
+              <Box marginTop="6" border="1px" borderColor="#e2e8f0" borderRadius="md" padding="4">
+                <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
+                  IMD Scores Histogram
+                </Text>
+                <SimpleGrid columns={{ base: 2, md: 4 }} spacing="4">
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Allocation Count</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(stats.count, 0)}</Text>
+                  </Box>
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Correlation</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.correlation?.toFixed(4)}</Text>
+                  </Box>
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Mean Difference</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.meanDifference?.toFixed(4)}</Text>
+                  </Box>
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.stdDevDifference?.toFixed(4)}</Text>
+                  </Box>
+                </SimpleGrid>
+              </Box>
+            )}
+
+            <Text fontSize="1.15rem" color="#36454F" textAlign="center" marginTop="2">
+              A negative value shows a transfer to a less-deprived LSOA. A positive value shows a transfer to more deprived LSOA.
+            </Text>
+          </>
+        );
+      }
     },
     {
       title: 'Area<br>Habitats Chart',
