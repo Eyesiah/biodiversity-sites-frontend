@@ -5,10 +5,10 @@ import { formatNumber } from '@/lib/format';
 import { getSortProps } from '@/lib/hooks';
 import Papa from 'papaparse';
 import { triggerDownload } from '@/lib/utils';
-import { DataTable } from '@/components/ui/DataTable';
-import { TableContainer } from '@/components/ui/PrimaryCard';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { FilteredBaselinePieChart } from '@/components/FilteredHabitatPieChart'
+import { DataTable } from '@/components/styles/DataTable';
+import { TableContainer } from '@/components/styles/PrimaryCard';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
 
 const processDataWithProportions = (data, module) => {
   // Calculate totals

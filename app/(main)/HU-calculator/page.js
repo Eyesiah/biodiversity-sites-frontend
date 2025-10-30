@@ -1,6 +1,6 @@
 import HUCalculatorForm from './HUCalculatorForm';
 import { getAllConditions, getAllHabitats } from '@/lib/habitat';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 export const metadata = {
   title: 'Habitat unit calculator',

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { formatNumber } from '@/lib/format';
 import { Text, Box } from '@chakra-ui/react';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { useSortableData } from '@/lib/hooks';
 
 // Default column configuration for basic site list

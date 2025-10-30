@@ -2,7 +2,7 @@
 import { fetchAllSites } from '@/lib/api';
 import { processSitesForListView } from '@/lib/sites';
 import NCAContent from './NCAContent';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 import { getNCAData } from '@/lib/habitat'
 
 export const metadata = {

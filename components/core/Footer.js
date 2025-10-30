@@ -1,4 +1,4 @@
-import ExternalLink from '@/components/ExternalLink';
+import ExternalLink from '@/components/ui/ExternalLink';
 import Link from 'next/link';
 import { Box, Text } from '@chakra-ui/react';
 

@@ -1,20 +1,20 @@
 'use client'
 
-import { HabitatTable } from "@/components/HabitatsTable"
+import { HabitatTable } from "@/components/data/HabitatsTable"
 import { XMLBuilder } from 'fast-xml-parser';
-import MapContentLayout from '@/components/MapContentLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
 import { SiteDetailsCard} from './SiteDetailsCard'
 import { AllocationsTable } from './AllocationsTable'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { ContentStack } from '@/components/ui/ContentStack'
+import { ContentStack } from '@/components/styles/ContentStack'
 import { Flex } from "@chakra-ui/react"
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
-import { Tabs } from '@/components/ui/Tabs';
-import { ImdScoresChart } from '@/components/ImdScoresChart';
+import { Tabs } from '@/components/styles/Tabs';
+import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

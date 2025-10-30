@@ -5,7 +5,7 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteForListView } from '@/lib/sites';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 export const revalidate = 3600;
 

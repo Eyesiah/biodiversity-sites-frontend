@@ -4,16 +4,16 @@ import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
 import { exportToXml, exportToJson } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/CollapsibleRow';
-import ExternalLink from '@/components/ExternalLink';
-import MapContentLayout from '@/components/MapContentLayout';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import MapContentLayout from '@/components/ui/MapContentLayout';
 import { ARCGIS_LNRS_URL } from '@/config';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
-import { DataTable } from '@/components/ui/DataTable';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 
-const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
+const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

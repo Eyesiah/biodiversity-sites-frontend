@@ -4,7 +4,7 @@ import { fetchAllSites } from '@/lib/api';
 import { processSitesForListView} from '@/lib/sites';
 import { ARCGIS_LNRS_URL } from '@/config';
 import LNRSContent from './LNRSContent';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 export const metadata = {
   title: 'Local Nature Recovery Strategy Sites',

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
-import ChartRow from '@/components/ui/ChartRow';
-import ChartItem from '@/components/ui/ChartItem';
+import ChartRow from '@/components/styles/ChartRow';
+import ChartItem from '@/components/styles/ChartItem';
 import { Heading } from '@chakra-ui/react';
 
 export default function AllocationAnalysis({ allocations }) {

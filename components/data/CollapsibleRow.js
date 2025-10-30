@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
-import { DataTable } from '@/components/ui/DataTable';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { DataTable } from '@/components/styles/DataTable';
 
 export const CollapsibleRow = ({ 
   mainRow, 

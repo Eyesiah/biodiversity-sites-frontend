@@ -1,7 +1,7 @@
-import Navigation from '@/components/Navigation';
+import Navigation from '@/components/core/Navigation';
 import 'styles/globals.css';
 import Script from 'next/script';
-import { Provider } from "@/components/ui/provider"
+import { Provider } from "@/components/styles/provider"
 import { Box } from '@chakra-ui/react';
 
 export const metadata = {

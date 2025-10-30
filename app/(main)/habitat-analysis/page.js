@@ -1,6 +1,6 @@
 import { fetchAllSites } from '@/lib/api';
 import { getHabitatDistinctiveness } from '@/lib/habitat';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 import { slugify } from '@/lib/format'
 

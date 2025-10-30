@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import ExternalLink from './ExternalLink';
-import Modal from '@/components/Modal'
-import Tooltip from '@/components/Tooltip';
+import ExternalLink from '@/components/ui/ExternalLink';
+import Modal from '@/components/ui/Modal'
+import Tooltip from '@/components/ui/Tooltip';
 import { WFS_URL } from '@/config'
-import { ColorModeButton } from './ui/color-mode'
+import { ColorModeButton } from '@/components/styles/color-mode'
 import { 
   Box, 
   Flex, 

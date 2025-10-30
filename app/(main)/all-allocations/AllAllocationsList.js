@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { formatNumber, slugify } from '@/lib/format';
-import { DataFetchingCollapsibleRow } from '@/components/DataFetchingCollapsibleRow'
-import Tooltip from '@/components/Tooltip';
+import { DataFetchingCollapsibleRow } from '@/components/data/DataFetchingCollapsibleRow'
+import Tooltip from '@/components/ui/Tooltip';
 import { getSortProps } from '@/lib/hooks';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
 
 const AllocationHabitats = ({ habitats }) => {
 

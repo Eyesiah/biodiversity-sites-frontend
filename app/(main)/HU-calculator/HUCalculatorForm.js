@@ -5,7 +5,7 @@ import { calcHU } from './actions';
 import { useActionState } from 'react';
 import dynamic from 'next/dynamic';
 
-const SearchableDropdown = dynamic(() => import('@/components/SearchableDropdown'), { ssr: false });
+const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
 const initialState = {
   size: 0,

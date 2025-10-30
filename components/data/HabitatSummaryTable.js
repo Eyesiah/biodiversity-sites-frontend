@@ -1,5 +1,5 @@
 import { formatNumber } from '@/lib/format';
-import { DataTable } from '@/components/ui/DataTable';
+import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
 
 export const HabitatSummaryTable = ({ site }) => {

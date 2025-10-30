@@ -5,9 +5,9 @@ import { Polyline } from 'react-leaflet/Polyline'
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/Maps/BaseMap';
+import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL } from '@/config';
-import MapKey from '@/components/Maps/MapKey';
+import MapKey from '@/components/map/MapKey';
 
 function MapController({ lsoa, lnrs, nca, lpa }) {
   const map = useMap();

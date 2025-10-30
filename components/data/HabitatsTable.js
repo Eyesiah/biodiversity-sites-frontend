@@ -1,10 +1,10 @@
 'use client'
 
 import { formatNumber } from '@/lib/format';
-import { CollapsibleRow } from "components/CollapsibleRow"
-import SiteList from '@/components/SiteList';
-import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, TableContainer } from '@/components/ui/PrimaryCard';
+import { CollapsibleRow } from "@/components/data/CollapsibleRow"
+import SiteList from '@/components/data/SiteList';
+import { DataTable } from '@/components/styles/DataTable';
+import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
 
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {

@@ -2,17 +2,17 @@
 
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import ExternalLink from '@/components/ExternalLink';
+import ExternalLink from '@/components/ui/ExternalLink';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { exportToXml, exportToJson } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/CollapsibleRow';
-import MapContentLayout from '@/components/MapContentLayout';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
-import { DataTable } from '@/components/ui/DataTable';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import MapContentLayout from '@/components/ui/MapContentLayout';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 
-const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
+const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

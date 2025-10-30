@@ -4,8 +4,8 @@ import { useState, useCallback, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { FilteredAllocationsPieChart } from '@/components/FilteredHabitatPieChart'
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart'
 import { Box, Text } from '@chakra-ui/react';
 
 import AllAllocationsList from './AllAllocationsList';

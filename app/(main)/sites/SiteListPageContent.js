@@ -2,16 +2,16 @@
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
-import MapContentLayout from '@/components/MapContentLayout';
-import SiteList from '@/components/SiteList';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
+import SiteList from '@/components/data/SiteList';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text } from '@chakra-ui/react';
-import { ContentStack } from '@/components/ui/ContentStack'
+import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

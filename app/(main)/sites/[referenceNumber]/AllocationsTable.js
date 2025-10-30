@@ -1,10 +1,10 @@
 'use client'
 
 import { useSortableData } from '@/lib/hooks';
-import { CollapsibleRow } from "@/components/CollapsibleRow"
+import { CollapsibleRow } from "@/components/data/CollapsibleRow"
 import { formatNumber } from '@/lib/format';
-import { DataTable } from '@/components/ui/DataTable';
-import { PrimaryCard, TableContainer } from '@/components/ui/PrimaryCard';
+import { DataTable } from '@/components/styles/DataTable';
+import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { Text } from '@chakra-ui/react';
 
 // component to display the habitats within an allocation

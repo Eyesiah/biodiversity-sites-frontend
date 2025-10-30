@@ -1,10 +1,10 @@
 import clientPromise from '@/lib/mongodb';
 import Link from 'next/link';
 import { StatsChart } from './StatisticsChart'
-import Footer from '@/components/Footer';
-import ChartRow from '@/components/ui/ChartRow';
-import ChartItem from '@/components/ui/ChartItem';
-import PrimaryTable from '@/components/ui/PrimaryTable';
+import Footer from '@/components/core/Footer';
+import ChartRow from '@/components/styles/ChartRow';
+import ChartItem from '@/components/styles/ChartItem';
+import PrimaryTable from '@/components/styles/PrimaryTable';
 import { Heading } from "@chakra-ui/react"
 
 // Revalidate this page at most once every hour (3600 seconds)

@@ -1,5 +1,5 @@
 import APIQueryForm from './APIQueryForm';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 export const metadata = {
   title: 'Data Export / API Query',

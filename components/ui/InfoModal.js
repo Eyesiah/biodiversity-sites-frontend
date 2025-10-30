@@ -1,8 +1,8 @@
 'use client'
 
-import Modal from '@/components/Modal';
+import Modal from '@/components/ui/Modal';
 import { useState, useEffect } from 'react';
-import { DetailRow } from '@/components/DetailRow'
+import { DetailRow } from '@/components/data/DetailRow'
 import { formatNumber } from '@/lib/format'
 import { VStack, Box, Separator, Text, Heading } from "@chakra-ui/react";
 

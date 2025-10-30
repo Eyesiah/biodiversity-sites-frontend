@@ -1,8 +1,8 @@
-import ExternalLink from '@/components/ExternalLink';
-import Footer from '@/components/Footer';
+import ExternalLink from '@/components/ui/ExternalLink';
+import Footer from '@/components/core/Footer';
 import { WFS_URL } from '@/config'
 import { Heading, Text, List } from "@chakra-ui/react";
-import ProseContainer from '@/components/ui/ProseContainer';
+import ProseContainer from '@/components/styles/ProseContainer';
 
 export const metadata = {
   title: 'About',

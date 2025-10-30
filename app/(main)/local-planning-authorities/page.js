@@ -1,5 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 import LPAContent from './LPAContent'
 import { getLPAData } from '@/lib/habitat';
 

@@ -1,6 +1,6 @@
 import { fetchAllSites } from '@/lib/api';
 import AllAllocationsContent from './AllAllocationsContent';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;

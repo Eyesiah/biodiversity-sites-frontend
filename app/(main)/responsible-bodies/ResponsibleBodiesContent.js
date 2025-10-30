@@ -4,15 +4,15 @@ import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/CollapsibleRow';
-import SiteList from '@/components/SiteList';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import SiteList from '@/components/data/SiteList';
 import dynamic from 'next/dynamic';
-import MapContentLayout from '@/components/MapContentLayout';
-import ExternalLink from '@/components/ExternalLink';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { PrimaryTable } from '@/components/ui/PrimaryTable';
+import MapContentLayout from '@/components/ui/MapContentLayout';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

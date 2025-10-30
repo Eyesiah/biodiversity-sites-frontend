@@ -1,14 +1,14 @@
 'use client'
 
-import ExternalLink from '@/components/ExternalLink';
-import { HabitatSummaryTable } from "@/components/HabitatSummaryTable"
-import { DetailRow } from "@/components/DetailRow"
+import ExternalLink from '@/components/ui/ExternalLink';
+import { HabitatSummaryTable } from "@/components/data/HabitatSummaryTable"
+import { DetailRow } from "@/components/data/DetailRow"
 import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
-import { InfoModal } from '@/components/InfoModal';
-import { PrimaryCard } from '@/components/ui/PrimaryCard';
+import { InfoModal } from '@/components/ui/InfoModal';
+import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
-import InfoButton from '@/components/ui/InfoButton'
+import InfoButton from '@/components/styles/InfoButton'
 
 export const SiteDetailsCard = ({ site }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });

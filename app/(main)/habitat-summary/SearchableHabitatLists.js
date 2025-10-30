@@ -2,15 +2,15 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { XMLBuilder } from 'fast-xml-parser';
-import MapContentLayout from '@/components/MapContentLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
-import { HabitatSummaryTable } from '@/components/HabitatSummaryTable';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import { HabitatTable } from '@/components/HabitatsTable';
-import { DataSection, SectionTitle } from '@/components/ui/DataSection';
+import { HabitatSummaryTable } from '@/components/data/HabitatSummaryTable';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { HabitatTable } from '@/components/data/HabitatsTable';
+import { DataSection, SectionTitle } from '@/components/styles/DataSection';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });

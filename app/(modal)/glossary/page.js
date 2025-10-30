@@ -1,6 +1,6 @@
-import ExternalLink from '@/components/ExternalLink';
+import ExternalLink from '@/components/ui/ExternalLink';
 import { Heading, Text } from "@chakra-ui/react";
-import ProseContainer from '@/components/ui/ProseContainer';
+import ProseContainer from '@/components/styles/ProseContainer';
 
 export const metadata = {
   title: 'Glossary',

@@ -1,5 +1,5 @@
-import ExternalLink from '@/components/ExternalLink';
-import Footer from '@/components/Footer';
+import ExternalLink from '@/components/ui/ExternalLink';
+import Footer from '@/components/core/Footer';
 
 export const metadata = {
   title: 'Feedback',
