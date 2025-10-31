@@ -31,6 +31,8 @@ export default async function AllocationsPage() {
         sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
         simd: site.lsoa?.IMDDecile || 'N/A',
+        imdS: alloc.lsoa?.IMDScore || 'N/A',
+        simdS: site.lsoa?.IMDScore || 'N/A',
         habitats: alloc.habitats
       };
     });

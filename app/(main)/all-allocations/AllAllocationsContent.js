@@ -144,12 +144,12 @@ export default function AllAllocationsContent({ allocations }) {
 
     // Calculate IMD statistics
     if (validAllocations.length > 0) {
-      const differences = validAllocations.map(alloc => alloc.simd - alloc.imd);
+      const differences = validAllocations.map(alloc => alloc.simdS - alloc.imdS);
       const meanDiff = differences.reduce((sum, diff) => sum + diff, 0) / differences.length;
 
-      // Calculate correlation between site IMD and allocation IMD
-      const siteIMDs = validAllocations.map(alloc => alloc.simd);
-      const allocIMDs = validAllocations.map(alloc => alloc.imd);
+      // Calculate correlation between site IMD and allocation IMD scores
+      const siteIMDs = validAllocations.map(alloc => alloc.simdS);
+      const allocIMDs = validAllocations.map(alloc => alloc.imdS);
 
       const meanSiteIMD = siteIMDs.reduce((sum, val) => sum + val, 0) / siteIMDs.length;
       const meanAllocIMD = allocIMDs.reduce((sum, val) => sum + val, 0) / allocIMDs.length;
