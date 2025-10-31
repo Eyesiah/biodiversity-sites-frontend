@@ -1,115 +1,48 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react';
-import Link from 'next/link';
-import { useSortableData } from '@/lib/hooks';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
-import MapContentLayout from '@/components/MapContentLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
+import SiteList from '@/components/data/SiteList';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
-import ChartModalButton from '@/components/ChartModalButton';
 import { triggerDownload } from '@/lib/utils';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
+import { ContentStack } from '@/components/styles/ContentStack'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
 
-const DEBOUNCE_DELAY_MS = 300;
+// Column configuration for the main sites list page (includes LNRS and IMD Decile)
+const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-const SiteList = ({ sites, onSiteHover, onSiteClick }) => {
-  
-  const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(sites, { key: 'referenceNumber', direction: 'ascending' });
-
-  if (!sites || sites.length === 0) {
-    return <p>No site data available.</p>;
-  }
-
-  return (
-    <table className="site-table">
-      <thead>
-        <tr>
-          <th onClick={() => requestSort('referenceNumber')}>{getSortIndicator('referenceNumber')}BGS Reference</th>
-          <th onClick={() => requestSort('responsibleBodies')}>{getSortIndicator('responsibleBodies')}Responsible Body</th>
-          <th onClick={() => requestSort('siteSize')}>{getSortIndicator('siteSize')}Size (ha)</th>
-          <th onClick={() => requestSort('allocationsCount')}>{getSortIndicator('allocationsCount')}# Allocations</th>
-          <th onClick={() => requestSort('lpaName')}>{getSortIndicator('lpaName')}Local Planning Authority (LPA)</th>
-          <th onClick={() => requestSort('ncaName')}>{getSortIndicator('ncaName')}National Character Area (NCA)</th>
-          <th onClick={() => requestSort('lnrsName')}>{getSortIndicator('lnrsName')}Local Nature Recovery Strategy (LNRS)</th>
-          <th onClick={() => requestSort('imdDecile')}>{getSortIndicator('imdDecile')}IMD Decile</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedSites.map((site) => (
-          <tr
-            key={site.referenceNumber}
-            onMouseEnter={() => onSiteHover(site)}
-            onMouseLeave={() => onSiteHover(null)}
-            onClick={() => onSiteClick(site)}
-            style={{ cursor: 'pointer' }}
-          >
-            <td>
-              <Link href={`/sites/${site.referenceNumber}`}>
-                {site.referenceNumber}
-              </Link>
-            </td>
-            <td>{Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join(', ') : site.responsibleBodies}</td>
-            <td className="numeric-data">{formatNumber(site.siteSize)}</td>
-            <td className="centered-data">{site.allocationsCount}</td>
-            <td>{site.lpaName}</td>
-            <td>{site.ncaName}</td>
-            <td>{site.lnrsName}</td>
-            <td className="centered-data">{site.imdDecile}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-export default function SiteListPageContent({sites, summary}) {
-  const [inputValue, setInputValue] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+export default function SiteListPageContent({ sites, summary, imdChart }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
+  const [filteredSites, setFilteredSites] = useState(sites);
+
+  // Update filteredSites when sites prop changes
+  useEffect(() => {
+    setFilteredSites(sites);
+  }, [sites]);
 
   const handleSiteSelect = (site) => {
     setSelectedSite(site);
   };
 
-  // Debounce the search term
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setDebouncedSearchTerm(inputValue);
-    }, DEBOUNCE_DELAY_MS);
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [inputValue]);
-
-  const filteredSites = useMemo(() => {
-    if (!sites) {
-      return [];
-    }
-    if (!debouncedSearchTerm) {
-      return sites;
-    }
-    const lowercasedTerm = debouncedSearchTerm.toLowerCase();
-    return sites.filter(site =>
-      (site.referenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.responsibleBodies?.join(', ').toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.lpaName?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.ncaName?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.lnrsName?.toLowerCase() || '').includes(lowercasedTerm) ||
-      (site.imdDecile?.toString() || '').includes(lowercasedTerm)
-    );
-  }, [sites, debouncedSearchTerm]);
-
   const handleExport = async () => {
-    const response = await fetch ('api/query/sites/csv');
+    const response = await fetch('api/query/sites/csv');
     const blob = await response.blob();
     triggerDownload(blob, 'bgs-sites.csv');
   };
+
+  const handleSortedItemsChange = useCallback((sortedItems) => {
+    // todo: fix infinite loop here
+    //setFilteredSites(sortedItems);
+  }, []);
 
   return (
     <MapContentLayout
@@ -117,54 +50,69 @@ export default function SiteListPageContent({sites, summary}) {
         <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
-        <>
-          <div className="summary">
-            <div className="summary" style={{ textAlign: 'center' }}>
-            {inputValue ? (
-              <p>Displaying <strong>{formatNumber(filteredSites.length, 0)}</strong> of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites</p>
-            ) : (
-              <p style={{ fontSize: '1.2rem' }}>
-                This list of <strong>{formatNumber(summary.totalSites, 0)}</strong> sites covers <strong>{formatNumber(summary.totalArea, 0)}</strong> hectares.
-                They comprise <strong>{formatNumber(summary.totalBaselineHUs, 0)}</strong> baseline and <strong>{formatNumber(summary.totalCreatedHUs, 0)}</strong> created improvement habitat units.            </p>
+        <ContentStack>
+          <SearchableTableLayout
+            initialItems={sites}
+            filterPredicate={(item, term) => {
+              const lowercasedTerm = term.toLowerCase();
+              return (
+                (item.referenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.responsibleBodies?.join(', ').toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.lpaName?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.ncaName?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.lnrsName?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.imdDecile?.toString() || '').includes(lowercasedTerm)
+              );
+            }}
+            initialSortConfig={{ key: 'referenceNumber', direction: 'descending' }}
+            placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
+            exportConfig={{
+              onExportCsv: handleExport
+            }}
+            summary={(filteredCount, totalCount) => (
+              <Text fontSize="1.2rem">
+                This list of <Text as="strong">{formatNumber(totalCount, 0)}</Text> sites covers <Text as="strong">{formatNumber(summary.totalArea, 0)}</Text> hectares.
+                They comprise <Text as="strong">{formatNumber(summary.totalBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(summary.totalCreatedHUs, 0)}</Text> created improvement habitat units.
+              </Text>
             )}
-            </div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }} className="sticky-search">
-            <div className="search-container" style={{ margin: 0 }}>
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                autoFocus
-              />
-              {inputValue && (
-                <button
-                  onClick={() => setInputValue('')}
-                  className="clear-search-button"
-                  aria-label="Clear search"
-                >
-                  &times;
-                </button>
-              )}
-            </div>
-            <button onClick={handleExport} className="linkButton" style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}>
-              Export to CSV
-            </button>
-            <ChartModalButton
-              url="/charts/imd-decile-distribution"
-              title="IMD Decile Distribution"
-              buttonText="IMD Decile Chart"
-              className="linkButton"
-              style={{ fontSize: '1rem', padding: '0.75rem 1rem', border: '1px solid #27ae60', borderRadius: '5px' }}
-            />
-          </div>
-          <div className="table-container">
-            <SiteList sites={filteredSites} onSiteHover={setHoveredSite} onSiteClick={handleSiteSelect} />
-          </div>
-        </>
+            onSortedItemsChange={handleSortedItemsChange}
+            tabs={[
+              {
+                title: "Sites",
+                content: ({ sortedItems }) => (
+                  <Box width="100%" overflowX="auto">
+                    <SiteList
+                      sites={sortedItems}
+                      onSiteHover={setHoveredSite}
+                      onSiteClick={handleSiteSelect}
+                      columns={FULL_SITE_COLUMNS}
+                    />
+                  </Box>
+                )
+              },
+              {
+                title: "IMD Decile chart",
+                content: ({ sortedItems }) => (
+                  <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={imdChart} margin={{ top: 50, right: 30, left: 20, bottom: 15 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" name="BGS IMD Score" label={{ value: 'BGS IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                        <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+                        <Tooltip />
+                        <Bar dataKey="count" fill="#dcab1bff">
+                          <LabelList />
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </Box>
+                )
+              },
+
+            ]}
+          />
+        </ContentStack>
       }
-    />      
+    />
   )
 }

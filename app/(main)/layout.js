@@ -1,14 +1,17 @@
-import Navigation from '@/components/Navigation';
+import Navigation from '@/components/core/Navigation';
 import 'styles/globals.css';
 import Script from 'next/script';
+import { Provider } from "@/components/styles/provider"
+import { Box } from '@chakra-ui/react';
 
 export const metadata = {
+  metadataBase: new URL('https://bgs.bristoltrees.space'),
   title: 'Biodiversity Gain Sites Register',
-  description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+  description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
   keywords: ['biodiversity', 'gain', 'sites', 'register', 'england', 'habitat', 'conservation', 'environment'],
   openGraph: {
     title: 'Biodiversity Gain Sites Register',
-    description: 'This site presents data from the UK government&apos;s Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.',
+    description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
     url: 'https://bgs.bristoltrees.space/',
     siteName: 'Biodiversity Gain Sites Register',
     images: [
@@ -43,21 +46,25 @@ export default function RootLayout({ children }) {
       : 'b718ac79-8ca2-494a-a398-47adf5e8188a';
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Script
-          strategy="afterInteractive"
-          src="/api/umami/script"
-          data-website-id={umamiWebsiteId}
-        />
-        <div className="topContainer">
-          <div className="navRow">
-            <Navigation />
-          </div>
-          <div className="mainRow">
-            <main className="main">{children}</main>
-          </div>
-        </div>
+        <Provider>
+          <Script
+            strategy="afterInteractive"
+            src="/api/umami/script"
+            data-website-id={umamiWebsiteId}
+          />
+          <Box minHeight="100vh" display="flex" flexDirection="column">
+            <Box position="sticky" top="0" zIndex="1000">
+              <Navigation />
+            </Box>
+            <Box flex="1">
+              <Box as="main" width="100%">
+                {children}
+              </Box>
+            </Box>
+          </Box>
+        </Provider>
       </body>
     </html>
   );

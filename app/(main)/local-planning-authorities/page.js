@@ -1,5 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 import LPAContent from './LPAContent'
 import { getLPAData } from '@/lib/habitat';
 
@@ -50,9 +50,7 @@ export default async function LocalPlanningAuthoritiesPage() {
   
   return (
     <>
-      <div className="container">
-        <LPAContent lpas={lpas} sites={sites}  />
-      </div>
+      <LPAContent lpas={lpas} sites={sites}  />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

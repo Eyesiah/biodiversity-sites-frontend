@@ -1,6 +1,6 @@
 import { fetchAllSites } from '@/lib/api';
-import AllAllocationsList from './AllAllocationsList';
-import Footer from '@/components/Footer';
+import AllAllocationsContent from './AllAllocationsContent';
+import Footer from '@/components/core/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -30,7 +30,10 @@ export default async function AllocationsPage() {
         d: alloc.distance,
         sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
-        simd: site.lsoa?.IMDDecile || 'N/A'
+        simd: site.lsoa?.IMDDecile || 'N/A',
+        imdS: alloc.lsoa?.IMDScore || 'N/A',
+        simdS: site.lsoa?.IMDScore || 'N/A',
+        habitats: alloc.habitats
       };
     });
   });
@@ -41,9 +44,7 @@ export default async function AllocationsPage() {
 
   return (
     <>
-      <div className="container">
-        <AllAllocationsList allocations={allocations}/>
-      </div>
+      <AllAllocationsContent allocations={allocations}/>
       <Footer lastUpdated={lastUpdated} />
     </>
   );

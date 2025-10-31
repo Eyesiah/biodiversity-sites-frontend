@@ -4,14 +4,16 @@ import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
 import { exportToXml, exportToJson } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/CollapsibleRow';
-import ExternalLink from '@/components/ExternalLink';
-import MapContentLayout from '@/components/MapContentLayout';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import ExternalLink from '@/components/ui/ExternalLink';
+import MapContentLayout from '@/components/ui/MapContentLayout';
 import { ARCGIS_LNRS_URL } from '@/config';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
-import styles from '@/styles/SiteDetails.module.css';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { DataTable } from '@/components/styles/DataTable';
+import { Box, Text, Button } from '@chakra-ui/react';
 
-const PolygonMap = dynamic(() => import('components/Maps/PolygonMap'), {
+const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -37,7 +39,7 @@ export default function LNRSContent({ lnrs, sites, error }) {
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
 
   if (error) {
-    return <p className="error">Error fetching data: {error}</p>;
+    return <Text color="red">Error fetching data: {error}</Text>;
   }
 
   return (
@@ -63,89 +65,114 @@ export default function LNRSContent({ lnrs, sites, error }) {
                 onExportJson: (items) => exportToJson(items, 'lnrs', 'lnrs-areas.json')
             }}
             summary={(filteredCount, totalCount) => (
-                <p style={{ fontSize: '1.2rem' }}>
-                    Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> LNRS areas, covering a total of <strong>{formatNumber(totalArea, 0)}</strong> hectares.
-                </p>
+                <Text fontSize="1.2rem">
+                    Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> LNRS areas, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+                </Text>
             )}
           >
             {({ sortedItems, requestSort, getSortIndicator }) => (
-              <table className="site-table">
-                <thead>
-                  <tr>
-                    <th onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</th>
-                    <th onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</th>
-                    <th onClick={() => requestSort('responsibleAuthority')}>Responsible Authority{getSortIndicator('responsibleAuthority')}</th>
-                    <th onClick={() => requestSort('publicationStatus')}>Publication Status{getSortIndicator('publicationStatus')}</th>
-                    <th onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</th>
-                    <th onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</th>
-                    <th onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</th>
-                    <th>Map</th>
-                  </tr>
-                </thead>
-                <tbody>
+              <PrimaryTable.Root>
+                <PrimaryTable.Header>
+                  <PrimaryTable.Row>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>LNRS Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('responsibleAuthority')}>Responsible Authority{getSortIndicator('responsibleAuthority')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('publicationStatus')}>Publication Status{getSortIndicator('publicationStatus')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader onClick={() => requestSort('adjacents.length')}># Adjacent LNRS{getSortIndicator('adjacents.length')}</PrimaryTable.ColumnHeader>
+                    <PrimaryTable.ColumnHeader>Map</PrimaryTable.ColumnHeader>
+                  </PrimaryTable.Row>
+                </PrimaryTable.Header>
+                <PrimaryTable.Body>
                   {sortedItems.map((item) => (
                     <CollapsibleRow 
                       key={item.id}
                       isOpen={openRowId === item.id}
                       setIsOpen={(isOpen) => setOpenRowId(isOpen ? item.id : null)}
+                      tableType="primary"
                       mainRow={(
                         <>
-                          <td>{item.id}</td>
-                          <td>{item.name}</td>
-                          <td>{item.responsibleAuthority}</td>
-                          <td>{item.link ? <ExternalLink href={item.link}>{item.publicationStatus}</ExternalLink> : item.publicationStatus}</td>
-                          <td className="numeric-data">{formatNumber(item.size, 0)}</td>
-                          <td className="centered-data">{item.siteCount}</td>
-                          <td className="centered-data">{item.adjacents?.length || 0}</td>
-                          <td>
-                            <button onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }} className="linkButton">
+                          <PrimaryTable.Cell>{item.id}</PrimaryTable.Cell>
+                          <PrimaryTable.Cell>{item.name}</PrimaryTable.Cell>
+                          <PrimaryTable.Cell>{item.responsibleAuthority}</PrimaryTable.Cell>
+                          <PrimaryTable.Cell>{item.link ? <ExternalLink href={item.link}>{item.publicationStatus}</ExternalLink> : item.publicationStatus}</PrimaryTable.Cell>
+                          <PrimaryTable.NumericCell>{formatNumber(item.size, 0)}</PrimaryTable.NumericCell>
+                          <PrimaryTable.CenteredNumericCell>{item.siteCount}</PrimaryTable.CenteredNumericCell>
+                          <PrimaryTable.CenteredNumericCell>{item.adjacents?.length || 0}</PrimaryTable.CenteredNumericCell>
+                          <PrimaryTable.Cell>
+                            <Text
+                              as="button"
+                              onClick={(e) => { e.stopPropagation(); handleMapSelection(item); }}
+                              bg="transparent"
+                              border="none"
+                              color="link"
+                              textDecoration="underline"
+                              cursor="pointer"
+                              padding="0"
+                              _hover={{ color: "linkHover" }}
+                            >
                               Display Map
-                            </button>
-                          </td>
+                            </Text>
+                          </PrimaryTable.Cell>
                         </>
                       )}
                       collapsibleContent={(
-                        <div style={{ padding: '0.5rem' }}>
-                          <h4>Adjacent LNRS Areas</h4>
+                        <Box padding="0.5rem">
+                          <Text as="h4" fontSize="1rem" fontWeight="bold" marginTop="0" marginBottom="0.75rem">Adjacent LNRS Areas</Text>
                           {item.adjacents && item.adjacents.length > 0 ? (
-                            <table className={styles.subTable}>
-                              <thead>
-                                <tr>
-                                  <th>ID</th>
-                                  <th>Name</th>
-                                  <th>Area (ha)</th>
-                                  <th># BGS Sites</th>
-                                  <th>Map</th>
-                                </tr>
-                              </thead>
-                              <tbody>
+                            <DataTable.Root>
+                              <DataTable.Header>
+                                <DataTable.Row>
+                                  <DataTable.ColumnHeader>ID</DataTable.ColumnHeader>
+                                  <DataTable.ColumnHeader>Name</DataTable.ColumnHeader>
+                                  <DataTable.ColumnHeader>Area (ha)</DataTable.ColumnHeader>
+                                  <DataTable.ColumnHeader># BGS Sites</DataTable.ColumnHeader>
+                                  <DataTable.ColumnHeader>Map</DataTable.ColumnHeader>
+                                </DataTable.Row>
+                              </DataTable.Header>
+                              <DataTable.Body>
                                 {item.adjacents.map(adj => {
                                   const adjacentLnrsObject = lnrs.find(l => l.id === adj.id);
                                   return (
-                                    <tr key={adj.id}>
-                                      <td>{adj.id}</td>
-                                      <td>{adj.name}</td>
-                                      <td className="numeric-data">{formatNumber(adj.size, 0)}</td>
-                                      <td className="centered-data">{adjacentLnrsObject?.siteCount || 0}</td>
-                                      <td><button onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentLnrsObject); }} className="linkButton">Display Map</button></td>
-                                    </tr>
+                                    <DataTable.Row key={adj.id}>
+                                      <DataTable.Cell>{adj.id}</DataTable.Cell>
+                                      <DataTable.Cell>{adj.name}</DataTable.Cell>
+                                      <DataTable.CenteredNumericCell>{formatNumber(adj.size, 0)}</DataTable.CenteredNumericCell>
+                                      <DataTable.CenteredNumericCell>{adjacentLnrsObject?.siteCount || 0}</DataTable.CenteredNumericCell>
+                                      <DataTable.Cell>
+                                        <Text
+                                          as="button"
+                                          onClick={(e) => { e.stopPropagation(); handleAdjacentMapSelection(adjacentLnrsObject); }}
+                                          bg="transparent"
+                                          border="none"
+                                          color="link"
+                                          textDecoration="underline"
+                                          cursor="pointer"
+                                          padding="0"
+                                          _hover={{ color: "linkHover" }}
+                                        >
+                                          Display Map
+                                        </Text>
+                                      </DataTable.Cell>
+                                    </DataTable.Row>
                                   );
                                 })}
-                              </tbody>
-                            </table>
+                              </DataTable.Body>
+                            </DataTable.Root>
                           ) : (
-                            <p>No adjacency data available.</p>
+                            <Text>No adjacency data available.</Text>
                           )}
-                        </div>
+                        </Box>
                       )}
                       colSpan={8}
                     />
                   ))}
-                </tbody>
-              </table>
+                </PrimaryTable.Body>
+              </PrimaryTable.Root>
             )}
           </SearchableTableLayout>
-          <p style={{ fontStyle: 'italic' }}>When a site map is selected, adjacent LNRS sites are shown coloured pink.</p>
+          <Text fontStyle="italic">When a site map is selected, adjacent LNRS sites are shown coloured pink.</Text>
         </>
       }
     />

@@ -5,7 +5,7 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteForListView } from '@/lib/sites';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 export const revalidate = 3600;
 
@@ -85,9 +85,7 @@ export default async function ResponsibleBodiesPage() {
 
   return (
     <>
-      <div className="container">
-        <ResponsibleBodiesContent responsibleBodies={responsibleBodies} error={error} />
-      </div>
+      <ResponsibleBodiesContent responsibleBodies={responsibleBodies} error={error} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

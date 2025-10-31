@@ -1,15 +1,20 @@
 'use client'
 
-import { HabitatsCard } from "@/components/HabitatsCard"
+import { HabitatTable } from "@/components/data/HabitatsTable"
 import { XMLBuilder } from 'fast-xml-parser';
-import MapContentLayout from '@/components/MapContentLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
 import { SiteDetailsCard} from './SiteDetailsCard'
-import { AllocationsCard } from './AllocationsCard'
-import styles from '@/styles/SiteDetails.module.css';
+import { AllocationsTable } from './AllocationsTable'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
+import { ContentStack } from '@/components/styles/ContentStack'
+import { Flex } from "@chakra-ui/react"
+import { Button } from '@/components/styles/Button';
+import { useSortableData } from '@/lib/hooks';
+import { Tabs } from '@/components/styles/Tabs';
+import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -34,41 +39,145 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({site}) {
+    
+  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
+  const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
+  const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(site.improvements.watercourses, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(site.habitats.areas, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
+
+  const tabs = [
+    {
+      title: `Area<br>Improvements&nbsp;(${site.improvements.areas.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedImprovementAreas}
+          sortConfig={sortConfigImprovementAreas}
+          isImprovement={true}
+          requestSort={requestSortImprovementAreas}
+          units='ha'
+        />)
+      }
+    },
+    {
+      title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedImprovementHedgerows}
+          sortConfig={sortConfigImprovementHedgerows}
+          isImprovement={true}
+          requestSort={requestSortImprovementHedgerows}
+          units='km'
+        />)
+      }
+    },
+    {
+      title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedImprovementWatercourses}
+          sortConfig={sortConfigImprovementWatercourses}
+          isImprovement={true}
+          requestSort={requestSortImprovementWatercourses}
+          units='km'
+        />)
+      }
+    },
+    {
+      title: `Baseline<br>Areas&nbsp;(${site.habitats.areas.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedBaselineAreas}
+          sortConfig={sortConfigBaselineAreas}
+          isBaseline={true}
+          requestSort={requestSortBaselineAreas}
+          units='ha'
+        />)
+      }
+    },
+    {
+      title: `Baseline<br>Hedgerows&nbsp;(${site.habitats.hedgerows.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedBaselineHedgerows}
+          sortConfig={sortConfigBaselineHedgerows}
+          isBaseline={true}
+          requestSort={requestSortBaselineHedgerows}
+          units='km'
+        />)
+      }
+    },
+    {
+      title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedBaselineWatercourses}
+          sortConfig={sortConfigBaselineWatercourses}
+          isBaseline={true}
+          requestSort={requestSortBaselineWatercourses}
+          units='km'
+        />)
+      }
+    },
+    {
+      title: `Allocations&nbsp;(${site.allocations.length})`,
+      content: () => (
+        <AllocationsTable 
+          title="Allocations"
+          allocations={site.allocations}
+        />
+      )
+    },
+  ];
+
+  if (site.allocations.length > 0) {
+    tabs.push({
+      title: 'IMD Score<br>Transfers Chart',
+      content: () => {
+        return (          
+          <ImdScoresChart site={site} />
+        )
+      }
+    });
+  }
+
   return (  
     <MapContentLayout
       map={
         <SiteMap sites={[site]} selectedSite={site} />
       }
-      content={(<>
+      content={(
 
-        <div className={styles.detailsGrid}>
+        <ContentStack>
                     
           <SiteDetailsCard site={site} />
 
-          <HabitatsCard
-            title="Improvement Habitats (click any habitat cell for more detail)"
-            habitats = {site.improvements}
-            isImprovement={true}
-          />
+          <Tabs.Root lazyMount defaultValue={0} width="100%">
+            <Tabs.List>
+              {tabs.map((tab, index) => (
+                <Tabs.Trigger
+                  key={index}
+                  value={index}
+                  dangerouslySetInnerHTML={{ __html: tab.title }}
+                >
+                </Tabs.Trigger>
+              ))}
+            </Tabs.List>
+            {tabs.map((tab, index) => (
+              <Tabs.Content key={index} value={index}>
+                {tab.content()}
+              </Tabs.Content>
+            ))}
+          </Tabs.Root>
 
-          <HabitatsCard
-            title="Baseline Habitats (click any habitat cell for more detail)"
-            habitats = {site.habitats}
-            isImprovement={false}
-          />
-
-          <AllocationsCard 
-            title="Allocations (click any allocation for more detail)"
-            allocations={site.allocations}
-          />
-
-          <div className={styles.buttonGroup}>
-            <button onClick={() => handleExportXML(site)} className={styles.exportButton}>Export to XML</button>
-            <button onClick={() => handleExportJSON(site)} className={styles.exportButton}>Export to JSON</button>
-          </div>
+          <Flex gap="0.5rem" justifyContent="center">
+            <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
+            <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
+          </Flex>
           
-        </div>
-        </>
+        </ContentStack>
+        
       )}          
     />
   )

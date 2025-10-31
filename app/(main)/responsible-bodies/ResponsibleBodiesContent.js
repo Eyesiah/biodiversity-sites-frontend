@@ -4,14 +4,16 @@ import Papa from 'papaparse';
 import { useState, useMemo, useEffect } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/CollapsibleRow';
-import SiteList from '@/components/SiteList';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import SiteList from '@/components/data/SiteList';
 import dynamic from 'next/dynamic';
-import MapContentLayout from '@/components/MapContentLayout';
-import ExternalLink from '@/components/ExternalLink';
-import SearchableTableLayout from '@/components/SearchableTableLayout';
+import MapContentLayout from '@/components/ui/MapContentLayout';
+import ExternalLink from '@/components/ui/ExternalLink';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { Box, Text, Heading, Link } from '@chakra-ui/react';
 
-const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
+const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -19,18 +21,30 @@ const SiteMap = dynamic(() => import('@/components/Maps/SiteMap'), {
 const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const mainRow = (
       <>
-        <td>{body.name}</td>
-        <td>{body.sites.length}</td>
-        <td>{body.designationDate}</td>
-        <td>{body.expertise}</td>
-        <td>{body.organisationType}</td>
-        <td>{body.address}</td>
-        <td>
+        <PrimaryTable.Cell>{body.name}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.sites.length}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.designationDate}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.expertise}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.organisationType}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.address}</PrimaryTable.Cell>
+        <PrimaryTable.Cell>
           {body.emails.map(email => (
-            <div key={email}><a href={`mailto:${email}`}>{email}</a></div>
+            <div key={email}>
+              <Link href={`mailto:${email}`}>
+                <Text
+                  maxW="250px"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                  display="inline-block"
+                >
+                  {email}
+                </Text>
+              </Link>
+            </div>
           ))}
-        </td>
-        <td>{body.telephone}</td>
+        </PrimaryTable.Cell>
+        <PrimaryTable.Cell>{body.telephone}</PrimaryTable.Cell>
       </>
     )
   
@@ -100,7 +114,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     return (
         <MapContentLayout
           map={
-            <SiteMap sites={mapSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
+            <SiteMap sites={mapSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
           }
           content={
             <>
@@ -115,33 +129,33 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                 placeholder="Search by name, expertise, type, or address."
                 exportConfig={{ onExportCsv: handleExport }}
                 summary={(filteredCount, totalCount) => (
-                    <div className="summary" style={{ textAlign: 'center' }}>           
+                    <Box>
                         {filteredCount != totalCount ? (
-                        <p>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</p>
+                        <Text>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</Text>
                         ) : (
-                        <p style={{ fontStyle: 'normalitalic', fontSize: '1.2rem' }}>
+                        <Text fontSize="1.2rem" fontWeight="normal">
                           These <strong>{numDesignated}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
                           {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
-                        </p>
+                        </Text>
                     )}
-                    </div>
+                    </Box>
                 )}
               >
                 {({ sortedItems, requestSort, getSortIndicator }) => (
-                    <table className="site-table">
-                        <thead>
-                        <tr>
-                            <th onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</th>
-                            <th onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</th>
-                            {<th onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</th>}
-                            {<th onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</th>}
-                            {<th onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</th>}
-                            {<th onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</th>}
-                            {<th>Email</th>}
-                            {<th>Telephone</th>}
-                        </tr>
-                        </thead>
-                        <tbody>
+                    <PrimaryTable.Root>
+                        <PrimaryTable.Header>
+                        <PrimaryTable.Row>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
+                            <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
+                        </PrimaryTable.Row>
+                        </PrimaryTable.Header>
+                        <PrimaryTable.Body>
                         {sortedItems.map((body) => (
                             <BodyRow
                             body={body}
@@ -152,8 +166,8 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                             onSiteClick={setSelectedSite}
                             />              
                         ))}
-                        </tbody>
-                    </table>
+                        </PrimaryTable.Body>
+                    </PrimaryTable.Root>
                 )}
               </SearchableTableLayout>
             </>

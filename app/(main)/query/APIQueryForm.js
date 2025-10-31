@@ -3,14 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { triggerDownload } from '@/lib/utils';
-
-function SubmitButton({ pending }) {
-  return (
-    <button type="submit" disabled={pending}>
-      {pending ? 'Downloading...' : 'Download'}
-    </button>
-  );
-}
+import { VStack, HStack, Text, NativeSelect, Button, Code } from '@chakra-ui/react';
+import { PrimaryCard } from '@/components/styles/PrimaryCard';
 
 export default function APIQueryForm({ }) {
   const [query, setQuery] = useState('sites');
@@ -44,34 +38,36 @@ export default function APIQueryForm({ }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <table className="site-table">
-        <tbody>
-          <tr>
-            <td>Query</td>
-            <td>
-              <select name="query" value={query} onChange={(e) => setQuery(e.target.value)}>
+      <PrimaryCard maxWidth="1000px" margin="20px">
+        <VStack spacing={4} align="stretch">
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Query</Text>
+            <NativeSelect.Root flex="2" size="sm">
+              <NativeSelect.Field value={query} onChange={(e) => setQuery(e.currentTarget.value)}>
                 <option value="sites">All BGS Sites Summary</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td>Format</td>
-            <td>
-              <select name="format" value={format} onChange={(e) => setFormat(e.target.value)}>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </HStack>
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Format</Text>
+            <NativeSelect.Root flex="2" size="sm">
+              <NativeSelect.Field value={format} onChange={(e) => setFormat(e.currentTarget.value)}>
                 <option value="csv">CSV</option>
                 <option value="json">JSON</option>
                 <option value="xml">XML</option>
-              </select>
-            </td>
-          </tr>
-          <tr>
-            <td><SubmitButton pending={isLoading} /></td>
-          </tr>
-          <tr>
-            <td><p>API URL: <Link href={fullUrl} target="_blank"><code>{fullUrl}</code></Link></p></td>
-          </tr>
-        </tbody>
-      </table>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </HStack>
+          <HStack spacing={4}>
+            <Button type="submit" isLoading={isLoading} loadingText="Downloading..." colorScheme="teal">
+              Download
+            </Button>
+          </HStack>
+          <Text>API URL: <Link href={fullUrl} target="_blank"><Code>{fullUrl}</Code></Link></Text>
+        </VStack>
+      </PrimaryCard>
     </form>
   )
 }

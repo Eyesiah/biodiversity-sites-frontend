@@ -1,7 +1,9 @@
+import { Box } from '@chakra-ui/react';
+
 export default function Loading() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
-      <div className="loader"></div>
-    </div>
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="80vh">
+      <Box className="loader"></Box>
+    </Box>
   );
 }

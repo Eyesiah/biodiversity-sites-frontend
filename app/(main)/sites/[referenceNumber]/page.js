@@ -1,8 +1,7 @@
-import styles from '@/styles/SiteDetails.module.css';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { collateAllHabitats } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
-import Footer from '@/components/Footer';
+import Footer from '@/components/core/Footer';
 
 // Revalidate this page at most once every hour (3600 seconds)
 export const revalidate = 3600;
@@ -36,10 +35,7 @@ export default async function SitePage({params}) {
   const site = await fetchSite(referenceNumber, true, true)
   if (!site)
   {
-    return (
-        <div className={styles.container}>
-          <p>Site not found</p>
-        </div>);
+    return <p>Site not found</p>
   }
 
   if (site.latitude && site.longitude) {
@@ -51,9 +47,7 @@ export default async function SitePage({params}) {
 
   return (
     <>
-      <div className={styles.container}>
-        <SitePageContent site={site}/>
-      </div>
+      <SitePageContent site={site}/>
       <Footer lastUpdated={lastUpdated} />
     </>
   );
