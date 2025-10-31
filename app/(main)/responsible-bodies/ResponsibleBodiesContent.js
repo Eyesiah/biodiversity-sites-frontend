@@ -114,7 +114,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     return (
         <MapContentLayout
           map={
-            <SiteMap sites={mapSites} height="85vh" hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
+            <SiteMap sites={mapSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
           }
           content={
             <>
