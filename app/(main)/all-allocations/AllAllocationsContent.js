@@ -12,6 +12,37 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import AllAllocationsList from './AllAllocationsList';
 import AllocationAnalysis from './AllocationAnalysis';
 
+const CustomIMDTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="custom-tooltip" style={{
+        backgroundColor: '#fff',
+        border: '1px solid #ccc',
+        padding: '10px',
+        borderRadius: '4px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+        fontSize: '14px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', color: '#36454F' }}>
+          IMD Difference: {label}
+        </p>
+        <p style={{ margin: '0 0 4px 0', color: '#36454F' }}>
+          Count: {data.count}
+        </p>
+        <p style={{ margin: '0 0 4px 0', color: '#36454F' }}>
+          Mean Allocation IMD: {data.meanAllocIMD.toFixed(2)}
+        </p>
+        <p style={{ margin: 0, color: '#36454F' }}>
+          Mean Site IMD: {data.meanSiteIMD.toFixed(2)}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const filterPredicate = (alloc, searchTerm) => {
   const lowercasedTerm = searchTerm.toLowerCase();
   const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
@@ -80,10 +111,16 @@ export default function AllAllocationsContent({ allocations }) {
 
     // Group by integer differences (-10 to +10 for reasonable range)
     const diffCounts = {};
+    const diffAllocIMDs = {};
+    const diffSiteIMDs = {};
     validAllocations.forEach(alloc => {
       const diff = Math.round(alloc.simd - alloc.imd);
       if (diff >= -10 && diff <= 10) {
         diffCounts[diff] = (diffCounts[diff] || 0) + 1;
+        if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
+        if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
+        diffAllocIMDs[diff].push(alloc.imd);
+        diffSiteIMDs[diff].push(alloc.simd);
       }
     });
 
@@ -91,9 +128,16 @@ export default function AllAllocationsContent({ allocations }) {
     const chartData = [];
     for (let i = -10; i <= 10; i++) {
       if (diffCounts[i] || i === 0) { // Include 0 even if no data
+        const allocIMDs = diffAllocIMDs[i] || [];
+        const siteIMDs = diffSiteIMDs[i] || [];
+        const meanAllocIMD = allocIMDs.length > 0 ? allocIMDs.reduce((sum, val) => sum + val, 0) / allocIMDs.length : 0;
+        const meanSiteIMD = siteIMDs.length > 0 ? siteIMDs.reduce((sum, val) => sum + val, 0) / siteIMDs.length : 0;
+
         chartData.push({
           name: i === 0 ? '0' : i.toString(),
-          count: diffCounts[i] || 0
+          count: diffCounts[i] || 0,
+          meanAllocIMD: meanAllocIMD,
+          meanSiteIMD: meanSiteIMD
         });
       }
     }
@@ -177,7 +221,7 @@ export default function AllAllocationsContent({ allocations }) {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                   <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
-                  <Tooltip />
+                  <Tooltip content={<CustomIMDTooltip />} />
                   <Bar dataKey="count" fill="#dcab1bff">
                     <LabelList />
                   </Bar>

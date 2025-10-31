@@ -31,12 +31,12 @@ export default async function SiteListPage() {
       return Number(a.name) - Number(b.name);
     });
 
-  // Flatten allocations and prepare IMD difference data
+  // Flatten allocations and prepare IMD Score difference data
   const allocationsForDiff = allSites.flatMap(site => {
     if (!site.allocations) return [];
     return site.allocations.map(alloc => ({
-      imd: typeof alloc.lsoa?.IMDDecile === 'number' ? alloc.lsoa.IMDDecile : null,
-      simd: typeof site.lsoa?.IMDDecile === 'number' ? site.lsoa.IMDDecile : null
+      imd: typeof alloc.lsoa?.IMDScore === 'number' ? alloc.lsoa.IMDScore : null,
+      simd: typeof site.lsoa?.IMDScore === 'number' ? site.lsoa.IMDScore : null
     }));
   }).filter(alloc => alloc.imd !== null && alloc.simd !== null);
 
