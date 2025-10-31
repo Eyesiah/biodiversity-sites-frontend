@@ -1,7 +1,6 @@
 
 import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
-import { groupDifferences, scatter_sums, correlation, scatter_diffs } from '@/lib/Stats';
 import SiteListPageContent from './SiteListPageContent';
 import Footer from '@/components/core/Footer';
 
@@ -14,7 +13,7 @@ export const metadata = {
 export const revalidate = 3600;
 
 export default async function SiteListPage() {
-  const allSites = await fetchAllSites(true, true);
+  const allSites = await fetchAllSites(true);
   const { processedSites, summary } = processSiteDataForIndex(allSites);
   const lastUpdated = Date.now();
 
@@ -30,47 +29,6 @@ export default async function SiteListPage() {
       if (b.name === 'N/A') return -1;
       return Number(a.name) - Number(b.name);
     });
-
-  // Flatten allocations and prepare IMD Score difference data
-  const allocationsForDiff = allSites.flatMap(site => {
-    if (!site.allocations) return [];
-    return site.allocations.map(alloc => ({
-      imd: typeof alloc.lsoa?.IMDScore === 'number' ? alloc.lsoa.IMDScore : null,
-      simd: typeof site.lsoa?.IMDScore === 'number' ? site.lsoa.IMDScore : null
-    }));
-  }).filter(alloc => alloc.imd !== null && alloc.simd !== null);
-
-  // Calculate statistics
-  let imdStats = {};
-  if (allocationsForDiff.length > 0) {
-    // Separate arrays for correlation
-    const x = allocationsForDiff.map(a => a.simd); // site IMD
-    const y = allocationsForDiff.map(a => a.imd);  // alloc IMD
-    
-    const sums = scatter_sums(x, y);
-    const corr = correlation(sums);
-    
-    // Calculate mean and std dev of differences
-    const diffs = allocationsForDiff.map(a => a.simd - a.imd);
-    const meanDiff = diffs.reduce((sum, d) => sum + d, 0) / diffs.length;
-    const variance = diffs.reduce((sum, d) => sum + (d - meanDiff) ** 2, 0) / (diffs.length - 1); // sample variance
-    const stdDev = Math.sqrt(variance);
-    
-    imdStats = {
-      count: allocationsForDiff.length,
-      correlation: corr,
-      meanDifference: meanDiff,
-      stdDevDifference: stdDev
-    };
-    
-    // Log the statistics
-    console.log('IMD Statistics:', imdStats);
-  }
-
-  const imdDiffGrouped = groupDifferences(allocationsForDiff, 1);
-  const imdDiffChart = Object.entries(imdDiffGrouped)
-    .map(([diff, count]) => ({ name: diff, count }))
-    .sort((a, b) => Number(a.name) - Number(b.name));
 
   return (
     <>
