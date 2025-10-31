@@ -32,10 +32,10 @@ const CustomIMDTooltip = ({ active, payload, label }) => {
           Count: {data.count}
         </p>
         <p style={{ margin: '0 0 4px 0', color: '#36454F' }}>
-          Mean Allocation IMD: {data.meanAllocIMD.toFixed(2)}
+          Mean Allocation IMD Score: {data.meanAllocIMD.toFixed(2)}
         </p>
         <p style={{ margin: 0, color: '#36454F' }}>
-          Mean Site IMD: {data.meanSiteIMD.toFixed(2)}
+          Mean Site IMD Score: {data.meanSiteIMD.toFixed(2)}
         </p>
       </div>
     );
