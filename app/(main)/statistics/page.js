@@ -158,7 +158,7 @@ export default async function StatisticsPage() {
 
               { siteAdditions && siteAdditions.length > 0 && <ChartItem>
                 <Heading as="h2" size="lg" textAlign="center">Site Register Addition Date</Heading>
-                <PrimaryTable.Root>
+                <PrimaryTable.Root maxWidth='700px'>
                   <PrimaryTable.Header>
                     <PrimaryTable.Row>
                       <PrimaryTable.ColumnHeader>Date</PrimaryTable.ColumnHeader>
