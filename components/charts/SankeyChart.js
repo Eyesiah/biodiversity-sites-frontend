@@ -23,8 +23,8 @@ const processSankeyData = (allocations) => {
   const IMDPairMap = new Map();
 
   allocations.forEach((alloc) => {
-    const siteScore = alloc.simd;
-    const allocScore = alloc.imd;
+    const siteScore = alloc.siteIMDDecile;
+    const allocScore = alloc.allocationIMDDecile;
 
     if (siteScore && allocScore && typeof siteScore === 'number' && typeof allocScore === 'number') {
       let allocMap = IMDPairMap.get(allocScore);

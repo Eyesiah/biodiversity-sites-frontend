@@ -29,10 +29,10 @@ export default async function AllocationsPage() {
         srn: site.referenceNumber,
         d: alloc.distance,
         sr: alloc.sr,
-        imd: alloc.lsoa?.IMDDecile || 'N/A',
-        simd: site.lsoa?.IMDDecile || 'N/A',
-        imdS: alloc.lsoa?.IMDScore || 'N/A',
-        simdS: site.lsoa?.IMDScore || 'N/A',
+        allocationIMDDecile: alloc.lsoa?.IMDDecile || 'N/A',
+        siteIMDDecile: site.lsoa?.IMDDecile || 'N/A',
+        allocationIMDScore: alloc.lsoa?.IMDScore || 'N/A',
+        siteIMDScore: site.lsoa?.IMDScore || 'N/A',
         habitats: alloc.habitats
       };
     });
