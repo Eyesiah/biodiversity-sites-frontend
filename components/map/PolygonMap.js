@@ -18,7 +18,7 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height = '85vh', style = lnrsStyle }) => {
+const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
   const [error, setError] = useState(null);
@@ -50,8 +50,8 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
       const adjacentPromises = (selectedItem.adjacents || []).map(adj => getPolys(geoJsonUrl, queryField, adj.name));
 
       try {
-        const mainGeoJsonPromise = cache.current[name] 
-          ? Promise.resolve(cache.current[name]) 
+        const mainGeoJsonPromise = cache.current[name]
+          ? Promise.resolve(cache.current[name])
           : getPolys(geoJsonUrl, queryField, name);
 
         const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
@@ -63,10 +63,10 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
           }
           return;
         }
-        
+
         if (!isCancelled) {
           setGeoJson(cache.current[name] = mainData);
-          
+
           const validAdjacentData = adjacentResponses.filter(data => data && !data.error && data.features && data.features.length > 0);
           setAdjacentGeoJson(validAdjacentData.length > 0 ? validAdjacentData : null);
 
@@ -86,26 +86,28 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], height
   }, [selectedItem, geoJsonUrl, nameProperty, sites]);
 
   return (
-    <BaseMap key={mapKey} style={{ height: height, width: '100%' }}>
-      {error && (
-        <div style={{ position: 'absolute', top: '10px', left: '50px', zIndex: 1000, backgroundColor: 'white', padding: '10px', borderRadius: '5px', border: '1px solid red' }}>
-          <p style={{ color: 'red', margin: 0 }}>{error}</p>
-        </div>
-      )}
-      {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
-        <GeoJSON 
-          key={`${mapKey}-adj-${index}`} 
-          data={adjGeoJson} 
-          style={adjacentStyle} 
-        />
-      ))}
-      {geoJson && <GeoJSON data={geoJson} style={style} />}
-      <MapController geoJson={geoJson} />
+    <div style={{ height: '100%', width: '100%' }}>
+      <BaseMap key={mapKey} style={{ height: '100%', width: '100%' }}>
+        {error && (
+          <div style={{ position: 'absolute', top: '10px', left: '50px', zIndex: 1000, backgroundColor: 'white', padding: '10px', borderRadius: '5px', border: '1px solid red' }}>
+            <p style={{ color: 'red', margin: 0 }}>{error}</p>
+          </div>
+        )}
+        {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
+          <GeoJSON
+            key={`${mapKey}-adj-${index}`}
+            data={adjGeoJson}
+            style={adjacentStyle}
+          />
+        ))}
+        {geoJson && <GeoJSON data={geoJson} style={style} />}
+        <MapController geoJson={geoJson} />
 
-      {sites.filter(site => site.position != null).map(site => (
-        <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
-      ))}
-    </BaseMap>
+        {sites.filter(site => site.position != null).map(site => (
+          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
+        ))}
+      </BaseMap>
+    </div>
   );
 };
 
