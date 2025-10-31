@@ -113,20 +113,22 @@ export default function AllAllocationsContent({ allocations }) {
     const diffCounts = {};
     const diffAllocIMDs = {};
     const diffSiteIMDs = {};
+    let minDiff = -10;
+    let maxDiff = 10;
     validAllocations.forEach(alloc => {
       const diff = Math.round(alloc.simdS - alloc.imdS);
-      if (diff >= -10 && diff <= 10) {
-        diffCounts[diff] = (diffCounts[diff] || 0) + 1;
-        if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
-        if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
-        diffAllocIMDs[diff].push(alloc.imdS);
-        diffSiteIMDs[diff].push(alloc.simdS);
-      }
+      minDiff = Math.min(minDiff, diff);
+      maxDiff = Math.max(maxDiff, diff);
+      diffCounts[diff] = (diffCounts[diff] || 0) + 1;
+      if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
+      if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
+      diffAllocIMDs[diff].push(alloc.imdS);
+      diffSiteIMDs[diff].push(alloc.simdS);    
     });
 
     // Convert to chart data format
     const chartData = [];
-    for (let i = -10; i <= 10; i++) {
+    for (let i = minDiff; i <= maxDiff; i++) {
       if (diffCounts[i] || i === 0) { // Include 0 even if no data
         const allocIMDs = diffAllocIMDs[i] || [];
         const siteIMDs = diffSiteIMDs[i] || [];
