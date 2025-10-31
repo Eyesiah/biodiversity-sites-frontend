@@ -105,8 +105,8 @@ export default function AllAllocationsContent({ allocations }) {
   const calcIMDHistogramData = useCallback((filteredAllocations) => {
     // Calculate IMD differences (Site IMD - Allocation IMD) for histogram
     const validAllocations = filteredAllocations.filter(alloc =>
-      typeof alloc.simd === 'number' && typeof alloc.imd === 'number' &&
-      alloc.simd !== 'N/A' && alloc.imd !== 'N/A'
+      typeof alloc.simdS === 'number' && typeof alloc.imdS === 'number' &&
+      alloc.simdS !== 'N/A' && alloc.imdS !== 'N/A'
     );
 
     // Group by integer differences (-10 to +10 for reasonable range)
@@ -114,13 +114,13 @@ export default function AllAllocationsContent({ allocations }) {
     const diffAllocIMDs = {};
     const diffSiteIMDs = {};
     validAllocations.forEach(alloc => {
-      const diff = Math.round(alloc.simd - alloc.imd);
+      const diff = Math.round(alloc.simdS - alloc.imdS);
       if (diff >= -10 && diff <= 10) {
         diffCounts[diff] = (diffCounts[diff] || 0) + 1;
         if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
         if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
-        diffAllocIMDs[diff].push(alloc.imd);
-        diffSiteIMDs[diff].push(alloc.simd);
+        diffAllocIMDs[diff].push(alloc.imdS);
+        diffSiteIMDs[diff].push(alloc.simdS);
       }
     });
 
