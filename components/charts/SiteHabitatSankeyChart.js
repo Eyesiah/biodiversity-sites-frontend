@@ -70,6 +70,7 @@ const CustomSankeyLink = (props) => {
 
   return (
     <path
+      key={`CustomLink${index}`}
       d={`
         M${sourceX},${sourceY + linkWidth / 2}
         C${sourceControlX},${sourceY + linkWidth / 2}
