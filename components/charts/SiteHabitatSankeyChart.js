@@ -22,6 +22,11 @@ const CustomSankeyNode = ({
     }
   };
 
+  let name = payload.name;
+  if (name.length > 50) {
+    name = name.slice(0, 50) + '...';
+  }
+
   return (
     <Layer key={`CustomNode${index}`}>
       <Rectangle
@@ -34,22 +39,12 @@ const CustomSankeyNode = ({
       />
       <text
         textAnchor={isOut ? "end" : "start"}
-        x={isOut ? x - 6 : x + width + 6}
-        y={y + height / 2}
-        fontSize="14"
-        stroke="#333"
+        x={isOut ? x - 3 : x + width + 3}
+        y={y + height / 2 + 6}
+        fill="#000"
+        style={{fontSize: '14px'}}
       >
-        {payload.name}
-      </text>
-      <text
-        textAnchor={isOut ? "end" : "start"}
-        x={isOut ? x - 6 : x + width + 6}
-        y={y + height / 2 + 13}
-        fontSize="12"
-        stroke="#333"
-        strokeOpacity="0.5"
-      >
-        {formatNumber(payload.value, 2) + (payload.unit == 'areas' ? 'ha' : 'km')}
+        {`${formatNumber(payload.value, 2)}${payload.unit == 'areas' ? 'ha' : 'km'} - ${name}`}
       </text>
     </Layer>
   );
@@ -103,25 +98,22 @@ export default function SiteHabitatSankeyChart ({data}) {
           margin={{ top: 20, bottom: 20 }}
           data={data}
           sort={data.sort}
-          nodeWidth={10}
-          nodePadding={40}
+          nodeWidth={30}
+          nodePadding={20}
           linkCurvature={0.61}
           iterations={64}
-          node={<CustomSankeyNode containerWidth={800} />}
+          node={<CustomSankeyNode containerWidth={400} />}
           link={<CustomSankeyLink />}
         >
           <defs>
             <linearGradient id="linkGradient-areas">
               <stop offset="45%" stopColor="#8bb68dff" />
-              <stop offset="85%" stopColor="#507e52ff" />
             </linearGradient>
             <linearGradient id="linkGradient-hedgerows">
               <stop offset="45%" stopColor="#f4ebb8ff" />
-              <stop offset="85%" stopColor="#FFCE1B" />
             </linearGradient>
             <linearGradient id="linkGradient-watercourses">
               <stop offset="45%" stopColor="#82CAFF" />
-              <stop offset="85%" stopColor="#0041C2" />
             </linearGradient>
           </defs>
           <Tooltip
