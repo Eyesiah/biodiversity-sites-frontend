@@ -50,7 +50,7 @@ export default function SitePageContent({site, sankeyData}) {
 
   const tabs = [ 
     {
-      title: 'Habitat<br>Transfer',
+      title: 'Habitat<br>Transformation',
       content: () => {
         return <SiteHabitatSankeyChart data={sankeyData} />;
       }
@@ -68,30 +68,6 @@ export default function SitePageContent({site, sankeyData}) {
       }
     },
     {
-      title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedImprovementHedgerows}
-          sortConfig={sortConfigImprovementHedgerows}
-          isImprovement={true}
-          requestSort={requestSortImprovementHedgerows}
-          units='km'
-        />)
-      }
-    },
-    {
-      title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedImprovementWatercourses}
-          sortConfig={sortConfigImprovementWatercourses}
-          isImprovement={true}
-          requestSort={requestSortImprovementWatercourses}
-          units='km'
-        />)
-      }
-    },
-    {
       title: `Baseline<br>Areas&nbsp;(${site.habitats.areas.length})`,
       content: () => {
         return (<HabitatTable
@@ -100,6 +76,18 @@ export default function SitePageContent({site, sankeyData}) {
           isBaseline={true}
           requestSort={requestSortBaselineAreas}
           units='ha'
+        />)
+      }
+    },
+    {
+      title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedImprovementHedgerows}
+          sortConfig={sortConfigImprovementHedgerows}
+          isImprovement={true}
+          requestSort={requestSortImprovementHedgerows}
+          units='km'
         />)
       }
     },
@@ -115,6 +103,18 @@ export default function SitePageContent({site, sankeyData}) {
         />)
       }
     },
+    {
+      title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedImprovementWatercourses}
+          sortConfig={sortConfigImprovementWatercourses}
+          isImprovement={true}
+          requestSort={requestSortImprovementWatercourses}
+          units='km'
+        />)
+      }
+    },    
     {
       title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
       content: () => {

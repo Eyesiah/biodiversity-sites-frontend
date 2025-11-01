@@ -15,10 +15,10 @@ const CustomSankeyNode = ({
   // Define colors based on unit
   const getNodeColor = (unit) => {
     switch (unit) {
-      case 'areas': return '#FF9800'; // Orange
-      case 'hedgerows': return '#4CAF50'; // Green
-      case 'watercourses': return '#00BCD4'; // Cyan
-      default: return '#FF9800'; // Default orange
+      case 'areas': return '#2E7D32'; // Dark Green
+      case 'hedgerows': return '#FFCE1B'; // Mustard Yellow
+      case 'watercourses': return '#0041C2'; // Blueberry Blue
+      default: return '#2E7D32'; // Dark Green
     }
   };
 
@@ -92,11 +92,10 @@ export default function SiteHabitatSankeyChart ({data}) {
   const sankeyHeight = data.dynamicHeight || 900;
   return (
     <div>
-      <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px', fontStyle: 'italic' }}>
-        NOTE: The source data does not contain information about which
-        specific baseline habitats convert to which improvement habitats, so flows are estimated proportionally.
-        This chart shows habitat flows using a heuristic that prioritizes same-habitat maintenance,
-        then allocates remaining baseline to improvements. 
+      <p style={{ fontSize: '14px', color: '#565555ff', marginBottom: '16px', fontStyle: 'italic' }}>
+        This Sankey diagram shows habitat transformations from baseline to improved, using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats.
+        The width of the arrows relates to the size of the transformation. 
+        (NB The source data for this Sankey diagram does not contain information about which baseline habitats (on the left) convert to which improvement habitats (on the right).)
       </p>
       <ResponsiveContainer width="100%" height={sankeyHeight}>
         <Sankey
@@ -113,16 +112,16 @@ export default function SiteHabitatSankeyChart ({data}) {
         >
           <defs>
             <linearGradient id="linkGradient-areas">
-              <stop offset="45%" stopColor="#FF9800" />
-              <stop offset="85%" stopColor="#E65100" />
+              <stop offset="45%" stopColor="#8bb68dff" />
+              <stop offset="85%" stopColor="#507e52ff" />
             </linearGradient>
             <linearGradient id="linkGradient-hedgerows">
-              <stop offset="45%" stopColor="#66BB6A" />
-              <stop offset="85%" stopColor="#2E7D32" />
+              <stop offset="45%" stopColor="#f4ebb8ff" />
+              <stop offset="85%" stopColor="#FFCE1B" />
             </linearGradient>
             <linearGradient id="linkGradient-watercourses">
-              <stop offset="45%" stopColor="#26C6DA" />
-              <stop offset="85%" stopColor="#00838F" />
+              <stop offset="45%" stopColor="#82CAFF" />
+              <stop offset="85%" stopColor="#0041C2" />
             </linearGradient>
           </defs>
           <Tooltip
