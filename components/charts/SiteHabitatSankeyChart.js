@@ -2,6 +2,89 @@ import { Rectangle, Layer, Sankey, Tooltip, ResponsiveContainer } from 'recharts
 import { formatNumber } from '@/lib/format'
 import {   useBreakpointValue} from '@chakra-ui/react';
 
+// Configuration constants
+const NUM_SHADES = 8;
+const LIGHTNESS_START = 80;
+const LIGHTNESS_STEP = 6;
+
+// Base colors in HSL for each unit type
+const BASE_COLORS = {
+  areas: { h: 120, s: 45, l: 25 }, // Green
+  hedgerows: { h: 50, s: 90, l: 55 }, // Yellow
+  watercourses: { h: 220, s: 90, l: 30 } // Blue
+};
+
+// Fallback colors for each unit type
+const FALLBACK_COLORS = {
+  areas: '#2E7D32', // Dark Green
+  hedgerows: '#FFCE1B', // Mustard Yellow
+  watercourses: '#0041C2', // Blueberry Blue
+  default: '#2E7D32' // Dark Green
+};
+
+// Generate shades for each unit type
+const generateHabitatShades = () => {
+  const shades = {
+    areas: [],
+    hedgerows: [],
+    watercourses: []
+  };
+
+  // Generate shades for each unit type (varying lightness)
+  for (const unit of ['areas', 'hedgerows', 'watercourses']) {
+    const base = BASE_COLORS[unit];
+    for (let i = 0; i < NUM_SHADES; i++) {
+      // Create shades from medium-dark to dark (better visibility)
+      const lightness = LIGHTNESS_START - (i * LIGHTNESS_STEP);
+      shades[unit].push(`hsl(${base.h}, ${base.s}%, ${lightness}%)`);
+    }
+  }
+
+  return shades;
+};
+
+// Get consistent shade index for a habitat name within a unit type
+const getHabitatShadeIndex = (habitatName, unit, allHabitats) => {
+  if (!allHabitats[unit]) return 0;
+
+  // Sort habitat names alphabetically for consistent assignment
+  const sortedHabitats = [...allHabitats[unit]].sort();
+  const index = sortedHabitats.indexOf(habitatName);
+
+  // Cycle through available shades
+  return index % NUM_SHADES;
+};
+
+// Get habitat-specific color for a node
+const getNodeColor = (habitatName, unit, habitatShades, allHabitats) => {
+  if (habitatShades && allHabitats) {
+    const shadeIndex = getHabitatShadeIndex(habitatName, unit, allHabitats);
+    return habitatShades[unit]?.[shadeIndex] || FALLBACK_COLORS.default;
+  }
+
+  // Fallback to original colors
+  return FALLBACK_COLORS[unit] || FALLBACK_COLORS.default;
+};
+
+// Extract all unique habitats per unit type from sankey data
+const extractAllHabitats = (data) => {
+  const habitats = {
+    areas: new Set(),
+    hedgerows: new Set(),
+    watercourses: new Set()
+  };
+
+  if (data.nodes) {
+    data.nodes.forEach(node => {
+      if (node.name && node.unit && habitats[node.unit]) {
+        habitats[node.unit].add(node.name);
+      }
+    });
+  }
+
+  return habitats;
+};
+
 const CustomSankeyNode = ({
   x,
   y,
@@ -9,19 +92,11 @@ const CustomSankeyNode = ({
   height,
   index,
   payload,
-  containerWidth}) =>
+  containerWidth,
+  habitatShades,
+  allHabitats}) =>
 {
   const isOut = x + width + 6 > containerWidth;
-
-  // Define colors based on unit
-  const getNodeColor = (unit) => {
-    switch (unit) {
-      case 'areas': return '#2E7D32'; // Dark Green
-      case 'hedgerows': return '#FFCE1B'; // Mustard Yellow
-      case 'watercourses': return '#0041C2'; // Blueberry Blue
-      default: return '#2E7D32'; // Dark Green
-    }
-  };
 
   let name = payload.name;
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -34,10 +109,10 @@ const CustomSankeyNode = ({
     <Layer key={`CustomNode${index}`}>
       <Rectangle
         x={x}
-        y={y-0.5}
+        y={y}
         width={width}
-        height={height +1}
-        fill={getNodeColor(payload.unit)}
+        height={height}
+        fill={getNodeColor(payload.name, payload.unit, habitatShades, allHabitats)}
         fillOpacity="1"
       />
       <text
@@ -54,64 +129,87 @@ const CustomSankeyNode = ({
 }
 
 const CustomSankeyLink = (props) => {
-  const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload } = props;
+  const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload, habitatShades, allHabitats } = props;
 
-  // Get colors based on unit for better readability
-  const getLinkColors = (unit) => {
-    switch (unit) {
-      case 'areas': return { fill: '#8bb68d', stroke: '#2E7D32' };
-      case 'hedgerows': return { fill: '#f4ebb8', stroke: '#D4A017' };
-      case 'watercourses': return { fill: '#82CAFF', stroke: '#0041C2' };
-      default: return { fill: '#8bb68d', stroke: '#2E7D32' };
-    }
-  };
+  // Get source and target habitat names from payload
+  const sourceHabitat = payload.sourceHabitat;
+  const targetHabitat = payload.targetHabitat;
+  const unit = payload.unit;
 
-  const colors = getLinkColors(payload.unit);
+  const sourceColor = getNodeColor(sourceHabitat, unit, habitatShades, allHabitats);
+  const targetColor = getNodeColor(targetHabitat, unit, habitatShades, allHabitats);
+
+  // Create gradient ID
+  const gradientId = `linkGradient${index}`;
 
   return (
-    <path
-      key={`CustomLink${index}`}
-      d={`
-        M${sourceX},${sourceY + linkWidth / 2}
-        C${sourceControlX},${sourceY + linkWidth / 2}
-         ${targetControlX},${targetY + linkWidth / 2}
-         ${targetX},${targetY + linkWidth / 2}
-        L${targetX},${targetY - linkWidth / 2}
-        C${targetControlX},${targetY - linkWidth / 2}
-         ${sourceControlX},${sourceY - linkWidth / 2}
-         ${sourceX},${sourceY - linkWidth / 2}
-        Z
-      `}
-      fill={colors.fill}
-      fillOpacity="0.7"
-      stroke={colors.stroke}
-      strokeWidth="1"
-      strokeOpacity="0.8"
-    />
+    <g>
+      <defs>
+        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="20%" stopColor={sourceColor} />
+          <stop offset="80%" stopColor={targetColor} />
+        </linearGradient>
+      </defs>
+      <path
+        key={`CustomLink${index}`}
+        d={`
+          M${sourceX},${sourceY + linkWidth / 2}
+          C${sourceControlX},${sourceY + linkWidth / 2}
+           ${targetControlX},${targetY + linkWidth / 2}
+           ${targetX},${targetY + linkWidth / 2}
+          L${targetX},${targetY - linkWidth / 2}
+          C${targetControlX},${targetY - linkWidth / 2}
+           ${sourceControlX},${sourceY - linkWidth / 2}
+           ${sourceX},${sourceY - linkWidth / 2}
+          Z
+        `}
+        fill={`url(#${gradientId})`}
+        fillOpacity="1"
+      />
+    </g>
   );
 }
 
 export default function SiteHabitatSankeyChart ({data}) {
   const sankeyHeight = data.dynamicHeight || 900;
+
+  // Generate habitat shades and extract all habitats
+  const habitatShades = generateHabitatShades();
+  const allHabitats = extractAllHabitats(data);
+
+  // Create enhanced data with source and target habitat info for links
+  const enhancedData = {
+    ...data,
+    links: data.links?.map(link => {
+      const sourceNode = data.nodes?.[link.source];
+      const targetNode = data.nodes?.[link.target];
+      return {
+        ...link,
+        sourceHabitat: sourceNode?.name || null,
+        targetHabitat: targetNode?.name || null
+      };
+    }) || []
+  };
+
   return (
     <div>
       <p style={{ fontSize: '14px', color: '#565555ff', marginBottom: '16px', fontStyle: 'italic' }}>
         This Sankey diagram shows habitat transformations from baseline to improved, using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats.
-        The width of the arrows relates to the size of the transformation. 
+        The width of the arrows relates to the size of the transformation.
         (NB The source data for this Sankey diagram does not contain information about which baseline habitats (on the left) convert to which improvement habitats (on the right).)
       </p>
       <ResponsiveContainer width="100%" height={sankeyHeight}>
         <Sankey
           height={sankeyHeight}
           margin={{ top: 20, bottom: 20 }}
-          data={data}
+          data={enhancedData}
           sort={data.sort}
-          nodeWidth={30}
+          nodeWidth={10}
           nodePadding={20}
-          linkCurvature={0.61}
+          linkCurvature={0.6}
           iterations={64}
-          node={<CustomSankeyNode containerWidth={400} />}
-          link={<CustomSankeyLink />}
+          node={<CustomSankeyNode containerWidth={400} habitatShades={habitatShades} allHabitats={allHabitats} />}
+          link={<CustomSankeyLink habitatShades={habitatShades} allHabitats={allHabitats} />}
         >
           <Tooltip
             isAnimationActive={false}
