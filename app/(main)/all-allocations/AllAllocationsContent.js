@@ -98,7 +98,7 @@ export default function AllAllocationsContent({ allocations }) {
   }, [allocations]);
 
   const [summaryData, setSummaryData] = useState(calcSummaryData(allocations));
-  const [binWidth, setBinWidth] = useState(1);
+  const [binWidth, setBinWidth] = useState(2);
 
   const handleSortedItemsChange = useCallback((sortedItems) => {
     setSummaryData(calcSummaryData(sortedItems));
@@ -230,28 +230,7 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems }) => {
         const { chartData, stats } = calcIMDHistogramData(sortedItems, binWidth);
         return (
-          <>
-            <Box display="flex" flexDirection="row" width="100%" marginBottom="1">
-              <Box width="20px" flexShrink={0}></Box>
-              <HStack spacing="4" align="center">
-                <Box maxWidth="200px">
-                  <Text fontSize="1.0rem" color="#666" fontWeight="bold" marginBottom="1">  Bin Width</Text>
-                  <Text fontSize="1.0rem" color="#666" fontWeight="bold" marginBottom="1">(1 to 5)</Text>
-                  <Input
-                    type="number"
-                    value={binWidth}
-                    onChange={(e) => setBinWidth(parseFloat(e.target.value) || 1)}
-                    min="1"
-                    max="5"
-                    step="1"
-                    size="sm"
-                  />
-                </Box>
-                <Text fontSize="0.9rem" color="#666">
-                  Controls the grouping of IMD difference values.
-                </Text>
-              </HStack>
-            </Box>
+          <>            
             <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 50, right: 30, left: 20, bottom: 15 }} barCategoryGap={0}>

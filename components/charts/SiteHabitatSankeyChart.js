@@ -195,7 +195,6 @@ export default function SiteHabitatSankeyChart ({data}) {
     <div>
       <p style={{ fontSize: '14px', color: '#565555ff', marginBottom: '16px', fontStyle: 'italic' }}>
         This Sankey diagram shows habitat transformations from baseline to improved, using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats.
-        The width of the arrows relates to the size of the transformation.
         (NB The source data for this Sankey diagram does not contain information about which baseline habitats (on the left) convert to which improvement habitats (on the right).)
       </p>
       <ResponsiveContainer width="100%" height={sankeyHeight}>
