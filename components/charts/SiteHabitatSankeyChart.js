@@ -1,5 +1,6 @@
 import { Rectangle, Layer, Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '@/lib/format'
+import {   useBreakpointValue} from '@chakra-ui/react';
 
 const CustomSankeyNode = ({
   x,
@@ -23,8 +24,10 @@ const CustomSankeyNode = ({
   };
 
   let name = payload.name;
-  if (name.length > 50) {
-    name = name.slice(0, 50) + '...';
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const maxLen = isMobile ? 12 : 50;
+  if (name.length > maxLen) {
+    name = name.slice(0, maxLen) + '...';
   }
 
   return (
