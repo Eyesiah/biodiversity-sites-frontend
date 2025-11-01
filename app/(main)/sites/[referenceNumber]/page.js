@@ -69,8 +69,18 @@ const getHabitatSankeyData = (site) => {
     }
 
     // Improved habitat allocation algorithm with proportional scaling
-    const baselineTotal = Array.from(siteBaselineTotals.values()).reduce((sum, amount) => sum + amount, 0);
+    let baselineTotal = Array.from(siteBaselineTotals.values()).reduce((sum, amount) => sum + amount, 0);
     const improvementTotal = Array.from(siteImprovementTotals.values()).reduce((sum, amount) => sum + amount, 0);
+
+    // Handle creation scenarios (baselineTotal = 0 but improvementTotal > 0)
+    if (baselineTotal === 0 && improvementTotal > 0) {
+      // Create baseline nodes with same names as improvements but tiny values
+      for (const [habitatType, improvementAmount] of siteImprovementTotals.entries()) {
+        siteBaselineTotals.set(habitatType, 0.001); // Tiny value to show creation
+        sourceNodeTypes.add(habitatType);
+      }
+      baselineTotal = Array.from(siteBaselineTotals.values()).reduce((sum, amount) => sum + amount, 0);
+    }
 
     // Calculate scaling factor to ensure all improvements get allocated
     const scalingFactor = improvementTotal > 0 ? improvementTotal / baselineTotal : 1;
