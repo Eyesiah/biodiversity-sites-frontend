@@ -170,7 +170,7 @@ const getHabitatSankeyData = (site) => {
   }
 
   const totalSize = Math.max(totalSourceSize, totalImprovementSize);
-  data.dynamicHeight = Math.min(totalSize * 25, 1500);
+  data.dynamicHeight = Math.max(Math.min(totalSize * 35, 1500), 200);
   data.sort = true;
 
   return data;
