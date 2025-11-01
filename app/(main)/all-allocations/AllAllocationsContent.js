@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
+import { bootstrapMedianCI } from '@/lib/Stats';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
@@ -117,7 +118,7 @@ export default function AllAllocationsContent({ allocations }) {
     let minDiff = -10;
     let maxDiff = 10;
     validAllocations.forEach(alloc => {
-      const rawDiff = alloc.siteIMDScore - alloc.allocationIMDScore;
+      const rawDiff = alloc.simdS - alloc.imdS;
       const diff = Math.round(rawDiff / binWidth) * binWidth;
       minDiff = Math.min(minDiff, diff);
       maxDiff = Math.max(maxDiff, diff);
@@ -125,7 +126,7 @@ export default function AllAllocationsContent({ allocations }) {
       if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
       if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
       diffAllocIMDs[diff].push(alloc.imdS);
-      diffSiteIMDs[diff].push(alloc.simdS);    
+      diffSiteIMDs[diff].push(alloc.simdS);
     });
 
     // Convert to chart data format
@@ -156,6 +157,9 @@ export default function AllAllocationsContent({ allocations }) {
       const medianDiff = sortedDifferences.length % 2 === 0
         ? (sortedDifferences[sortedDifferences.length / 2 - 1] + sortedDifferences[sortedDifferences.length / 2]) / 2
         : sortedDifferences[Math.floor(sortedDifferences.length / 2)];
+
+      // Calculate 95% confidence interval for median
+      const medianCI = bootstrapMedianCI(differences);
 
       // Calculate correlation between site IMD and allocation IMD scores
       const siteIMDs = validAllocations.map(alloc => alloc.simdS);
@@ -191,6 +195,7 @@ export default function AllAllocationsContent({ allocations }) {
           correlation,
           meanDifference: meanDiff,
           medianDifference: medianDiff,
+          medianCI,
           stdDevDifference: stdDevDiff
         }
       };
@@ -266,7 +271,7 @@ export default function AllAllocationsContent({ allocations }) {
                 <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
                   IMD Score Transfer Histogram - a negative value indicates a transfer to a less-deprived LSOA. A positive value indicates a transfer to a more-deprived LSOA.
                 </Text>
-                <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing="4">
+                <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing="4">
                   <Box textAlign="center">
                     <Text fontSize="0.9rem" color="#666" fontWeight="bold">Allocation Count</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(stats.count, 0)}</Text>
@@ -284,7 +289,15 @@ export default function AllAllocationsContent({ allocations }) {
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.medianDifference?.toFixed(4)}</Text>
                   </Box>
                   <Box textAlign="center">
-                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Median 95% Confidence Interval</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">
+                      {stats.medianCI?.lower !== null && stats.medianCI?.upper !== null
+                        ? `${stats.medianCI.lower.toFixed(4)} - ${stats.medianCI.upper.toFixed(4)}`
+                        : 'N/A'}
+                    </Text>
+                  </Box>
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Standard Deviation Difference</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.stdDevDifference?.toFixed(4)}</Text>
                   </Box>
                 </SimpleGrid>
@@ -294,7 +307,7 @@ export default function AllAllocationsContent({ allocations }) {
         );
       }
     },
-    
+
   ]
 
   return (
