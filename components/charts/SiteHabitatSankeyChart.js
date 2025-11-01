@@ -31,9 +31,9 @@ const CustomSankeyNode = ({
     <Layer key={`CustomNode${index}`}>
       <Rectangle
         x={x}
-        y={y}
+        y={y-0.5}
         width={width}
-        height={height}
+        height={height +1}
         fill={getNodeColor(payload.unit)}
         fillOpacity="1"
       />
@@ -53,15 +53,17 @@ const CustomSankeyNode = ({
 const CustomSankeyLink = (props) => {
   const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload } = props;
 
-  // Get gradient based on unit
-  const getLinkGradient = (unit) => {
+  // Get colors based on unit for better readability
+  const getLinkColors = (unit) => {
     switch (unit) {
-      case 'areas': return 'url(#linkGradient-areas)';
-      case 'hedgerows': return 'url(#linkGradient-hedgerows)';
-      case 'watercourses': return 'url(#linkGradient-watercourses)';
-      default: return 'url(#linkGradient-areas)';
+      case 'areas': return { fill: '#8bb68d', stroke: '#2E7D32' };
+      case 'hedgerows': return { fill: '#f4ebb8', stroke: '#D4A017' };
+      case 'watercourses': return { fill: '#82CAFF', stroke: '#0041C2' };
+      default: return { fill: '#8bb68d', stroke: '#2E7D32' };
     }
   };
+
+  const colors = getLinkColors(payload.unit);
 
   return (
     <path
@@ -77,8 +79,11 @@ const CustomSankeyLink = (props) => {
          ${sourceX},${sourceY - linkWidth / 2}
         Z
       `}
-      fill={getLinkGradient(payload.unit)}
-      stroke="none"
+      fill={colors.fill}
+      fillOpacity="0.7"
+      stroke={colors.stroke}
+      strokeWidth="1"
+      strokeOpacity="0.8"
     />
   );
 }
@@ -105,17 +110,6 @@ export default function SiteHabitatSankeyChart ({data}) {
           node={<CustomSankeyNode containerWidth={400} />}
           link={<CustomSankeyLink />}
         >
-          <defs>
-            <linearGradient id="linkGradient-areas">
-              <stop offset="45%" stopColor="#8bb68dff" />
-            </linearGradient>
-            <linearGradient id="linkGradient-hedgerows">
-              <stop offset="45%" stopColor="#f4ebb8ff" />
-            </linearGradient>
-            <linearGradient id="linkGradient-watercourses">
-              <stop offset="45%" stopColor="#82CAFF" />
-            </linearGradient>
-          </defs>
           <Tooltip
             isAnimationActive={false}
             formatter={(value) => `${formatNumber(value, 2)}`}
