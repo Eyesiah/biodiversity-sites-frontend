@@ -62,11 +62,11 @@ export default function AllocationAnalysis({ allocations }) {
     }));
 
     allocations.forEach(alloc => {
-      if (typeof alloc.allocationIMDDecile === 'number' && alloc.allocationIMDDecile >= 1 && alloc.allocationIMDDecile <= 10) {
-        bins[alloc.allocationIMDDecile - 1].developmentSites++;
+      if (typeof alloc.imd === 'number' && alloc.imd >= 1 && alloc.imd <= 10) {
+        bins[alloc.imd - 1].developmentSites++;
       }
-      if (typeof alloc.siteIMDDecile === 'number' && alloc.siteIMDDecile >= 1 && alloc.siteIMDDecile <= 10) {
-        bins[alloc.siteIMDDecile - 1].bgsSites++;
+      if (typeof alloc.simd === 'number' && alloc.simd >= 1 && alloc.simd <= 10) {
+        bins[alloc.simd - 1].bgsSites++;
       }
     });
 

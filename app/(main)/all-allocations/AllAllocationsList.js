@@ -39,7 +39,7 @@ const AllocationHabitats = ({ habitats }) => {
 };
 
 const AllocationRow = ({ alloc }) => {
-  const imdTransfer = `${typeof alloc.allocationIMDDecile === 'number' ? formatNumber(alloc.allocationIMDDecile, 0) : alloc.allocationIMDDecile} → ${typeof alloc.siteIMDDecile === 'number' ? formatNumber(alloc.siteIMDDecile, 0) : alloc.siteIMDDecile}`;
+  const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
   return (<DataFetchingCollapsibleRow
     mainRow={(
       <>
@@ -82,7 +82,7 @@ export default function AllAllocationsList ({sortedItems, requestSort, sortConfi
               Spatial Risk
             </Tooltip>
           </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('allocationIMDDecile')} {...getSortProps('allocationIMDDecile', sortConfig)}>
+          <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
             <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
               IMD transfer
             </Tooltip>

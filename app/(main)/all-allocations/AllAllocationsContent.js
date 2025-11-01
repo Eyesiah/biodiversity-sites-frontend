@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
-import { bootstrapMedianCI } from '@/lib/Stats';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
@@ -82,8 +81,8 @@ export default function AllAllocationsContent({ allocations }) {
     const totalUniquePlanningRefs = new Set(allocations.map(alloc => alloc.pr)).size;
 
     let medianDistance = calcMedian(filteredAllocations, 'd');
-    let meanIMD = calcMean(filteredAllocations, 'allocationIMDDecile');
-    let meanSiteIMD = calcMean(filteredAllocations, 'siteIMDDecile');
+    let meanIMD = calcMean(filteredAllocations, 'imd');
+    let meanSiteIMD = calcMean(filteredAllocations, 'simd');
 
     return {
       totalArea,
@@ -107,8 +106,8 @@ export default function AllAllocationsContent({ allocations }) {
   const calcIMDHistogramData = useCallback((filteredAllocations, binWidth = 1) => {
     // Calculate IMD differences (Site IMD - Allocation IMD) for histogram
     const validAllocations = filteredAllocations.filter(alloc =>
-      typeof alloc.siteIMDScore === 'number' && typeof alloc.allocationIMDScore === 'number' &&
-      alloc.siteIMDScore !== 'N/A' && alloc.allocationIMDScore !== 'N/A'
+      typeof alloc.simdS === 'number' && typeof alloc.imdS === 'number' &&
+      alloc.simdS !== 'N/A' && alloc.imdS !== 'N/A'
     );
 
     // Group by configurable bin width
@@ -125,8 +124,8 @@ export default function AllAllocationsContent({ allocations }) {
       diffCounts[diff] = (diffCounts[diff] || 0) + 1;
       if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
       if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
-      diffAllocIMDs[diff].push(alloc.allocationIMDScore);
-      diffSiteIMDs[diff].push(alloc.siteIMDScore);
+      diffAllocIMDs[diff].push(alloc.imdS);
+      diffSiteIMDs[diff].push(alloc.simdS);    
     });
 
     // Convert to chart data format
@@ -149,7 +148,7 @@ export default function AllAllocationsContent({ allocations }) {
 
     // Calculate IMD statistics
     if (validAllocations.length > 0) {
-      const differences = validAllocations.map(alloc => alloc.siteIMDScore - alloc.allocationIMDScore);
+      const differences = validAllocations.map(alloc => alloc.simdS - alloc.imdS);
       const meanDiff = differences.reduce((sum, diff) => sum + diff, 0) / differences.length;
 
       // Calculate median difference
@@ -158,12 +157,9 @@ export default function AllAllocationsContent({ allocations }) {
         ? (sortedDifferences[sortedDifferences.length / 2 - 1] + sortedDifferences[sortedDifferences.length / 2]) / 2
         : sortedDifferences[Math.floor(sortedDifferences.length / 2)];
 
-      // Calculate 95% confidence interval for median
-      const medianCI = bootstrapMedianCI(differences);
-
       // Calculate correlation between site IMD and allocation IMD scores
-      const siteIMDs = validAllocations.map(alloc => alloc.siteIMDScore);
-      const allocIMDs = validAllocations.map(alloc => alloc.allocationIMDScore);
+      const siteIMDs = validAllocations.map(alloc => alloc.simdS);
+      const allocIMDs = validAllocations.map(alloc => alloc.imdS);
 
       const meanSiteIMD = siteIMDs.reduce((sum, val) => sum + val, 0) / siteIMDs.length;
       const meanAllocIMD = allocIMDs.reduce((sum, val) => sum + val, 0) / allocIMDs.length;
@@ -195,7 +191,6 @@ export default function AllAllocationsContent({ allocations }) {
           correlation,
           meanDifference: meanDiff,
           medianDifference: medianDiff,
-          medianCI,
           stdDevDifference: stdDevDiff
         }
       };
@@ -271,7 +266,7 @@ export default function AllAllocationsContent({ allocations }) {
                 <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
                   IMD Score Transfer Histogram - a negative value indicates a transfer to a less-deprived LSOA. A positive value indicates a transfer to a more-deprived LSOA.
                 </Text>
-                <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing="4">
+                <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing="4">
                   <Box textAlign="center">
                     <Text fontSize="0.9rem" color="#666" fontWeight="bold">Allocation Count</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(stats.count, 0)}</Text>
@@ -289,15 +284,7 @@ export default function AllAllocationsContent({ allocations }) {
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.medianDifference?.toFixed(4)}</Text>
                   </Box>
                   <Box textAlign="center">
-                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Median 95% Confidence Interval</Text>
-                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">
-                      {stats.medianCI?.lower !== null && stats.medianCI?.upper !== null
-                        ? `${stats.medianCI.lower.toFixed(4)} - ${stats.medianCI.upper.toFixed(4)}`
-                        : 'N/A'}
-                    </Text>
-                  </Box>
-                  <Box textAlign="center">
-                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Standard Deviation Difference</Text>
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.stdDevDifference?.toFixed(4)}</Text>
                   </Box>
                 </SimpleGrid>
