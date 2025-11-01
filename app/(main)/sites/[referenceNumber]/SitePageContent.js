@@ -13,6 +13,7 @@ import { Button } from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
+import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -38,7 +39,7 @@ const handleExportJSON = (site) => {
   triggerDownload(blob, `bgs-site-${site.referenceNumber}.json`);
 };
 
-export default function SitePageContent({site}) {
+export default function SitePageContent({site, sankeyData}) {
     
   const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
@@ -47,7 +48,13 @@ export default function SitePageContent({site}) {
   const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
 
-  const tabs = [
+  const tabs = [ 
+    {
+      title: 'Habitat<br>Transfer',
+      content: () => {
+        return <SiteHabitatSankeyChart data={sankeyData} />;
+      }
+    },
     {
       title: `Area<br>Improvements&nbsp;(${site.improvements.areas.length})`,
       content: () => {
