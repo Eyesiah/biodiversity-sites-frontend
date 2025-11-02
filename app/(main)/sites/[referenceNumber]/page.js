@@ -69,7 +69,7 @@ const getHabitatSankeyData = (site) => {
     const remainingImprovement = new Map(siteImprovementTotals);
 
     const createdBaseline = '<CREATED>';
-    const destroyedImprovement = '<DESTROYED>'
+    const destroyedImprovement = '<RETAINED>'
 
     const AllocateHabitat = (baseline, improvement, allocatedAmount) => {
       // add to the sets of types
