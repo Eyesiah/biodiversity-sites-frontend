@@ -77,7 +77,7 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineArea, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>            
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineArea - improvementArea), 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell color={baselineArea - improvementArea < 0 ? "red.500" : undefined}>{formatNumber(baselineArea - improvementArea, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementArea, 2)}</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
