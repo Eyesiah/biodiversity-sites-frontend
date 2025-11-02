@@ -135,27 +135,27 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
       )
     },
     {
-      title: 'Improvement Hedgerows',
-      content: (props) => (
-        <HabitatTabContent {...props} isImprovement={true} module="Hedgerow" sites={sites} />
-      )
-    },
-    {
-      title: 'Improvement Watercourses',
-      content: (props) => (
-        <HabitatTabContent {...props} isImprovement={true} module="Watercourses" sites={sites} />
-      )
-    },
-    {
       title: 'Baseline Areas',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={false} module="Area" sites={sites} />
       )
     },
     {
+      title: 'Improvement Hedgerows',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Hedgerow" sites={sites} />
+      )
+    },      
+    {
       title: 'Baseline Hedgerows',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={false} module="Hedgerow" sites={sites} />
+      )
+    },
+    {
+      title: 'Improvement Watercourses',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Watercourses" sites={sites} />
       )
     },
     {
