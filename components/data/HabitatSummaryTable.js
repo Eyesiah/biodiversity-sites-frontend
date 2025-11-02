@@ -63,7 +63,8 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.ColumnHeader>Habitat</DataTable.ColumnHeader>
             <DataTable.ColumnHeader># Parcels</DataTable.ColumnHeader>
             <DataTable.ColumnHeader>Baseline Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader>Baseline HUs</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader>Baseline HUs</DataTable.ColumnHeader>            
+            <DataTable.ColumnHeader>Retained Size</DataTable.ColumnHeader>
             <DataTable.ColumnHeader>Improvements Size</DataTable.ColumnHeader>
             {hasAllocs && <DataTable.ColumnHeader>Allocations Size</DataTable.ColumnHeader>}
             {hasAllocs && <DataTable.ColumnHeader>% Allocated</DataTable.ColumnHeader>}
@@ -75,7 +76,8 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.Cell>Areas (ha)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineArea, 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>            
+            <DataTable.NumericCell>{formatNumber(baselineArea - improvementArea, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementArea, 2)}</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
@@ -87,6 +89,7 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineHedgerow - improvementHedgerow, 2)}</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationHedgerowHUs)}</DataTable.NumericCell>}
@@ -97,6 +100,7 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineWatercourse - improvementWatercourse, 2)}</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
