@@ -1,5 +1,5 @@
 import { fetchSite, fetchAllSites } from '@/lib/api';
-import { collateAllHabitats, getDistinctivenessScore } from '@/lib/habitat';
+import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -94,11 +94,18 @@ const getHabitatSankeyData = (site) => {
       }
     };
 
-    // conversions only allowed if they would lead to an increase in distinciveness
-    const IsConversionPossible = (baseline, improvement) => {
+    // conversions only allowed if they would lead to an increase in distinctiveness
+    // or, if the same broad habitat, the same distinctiveness
+    const IsConversionPossible = (baseline, improvement, sameGroupOnly) => {
+      const baselineGroup = getHabitatGroup(baseline);
+      const improvementGroup = getHabitatGroup(improvement);
+      if (sameGroupOnly && baselineGroup != improvementGroup) {
+        return false;
+      }
+      const sameGroup = baselineGroup == improvementGroup;
       const baselineD = getDistinctivenessScore(baseline);
       const improvementD = getDistinctivenessScore(improvement);
-      return baselineD < improvementD;
+      return sameGroup ? baselineD <= improvementD : baselineD < improvementD;
     }
 
     // Pass 1: Allocate same-habitat types
@@ -114,30 +121,42 @@ const getHabitatSankeyData = (site) => {
     }
 
     // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
-    // sort by distinctiveness to allocate the highest first
-    const sortedBaseline = Array.from(remainingBaseline.entries())
-        .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB)); // Sort by amount descending
-    for (const [baselineType, baselineAmount] of sortedBaseline) {
-      if (baselineAmount <= 0) continue;
+    const allocateRemaining = (sameGroupOnly, baselineGroupsOnly) => {
+      // sort by distinctiveness to allocate the lowest first (as higher distinctiveness habitats are more likely to be retained)
+      const sortedBaseline = Array.from(remainingBaseline.entries())
+          .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB));
+      for (const [baselineType, baselineAmount] of sortedBaseline) {
+        if (baselineAmount <= 0) continue;
+        if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineType))) continue;
 
-      let remainingToAllocate = baselineAmount;
+        let remainingToAllocate = baselineAmount;
 
-      // Sort remaining improvements by size (largest first)
-      const sortedImprovements = Array.from(remainingImprovement.entries())
-        .filter(([, amount]) => amount > 0)
-        .sort(([, a], [, b]) => b - a); // Sort by amount descending
+        // Sort remaining improvements by size (largest first)
+        const sortedImprovements = Array.from(remainingImprovement.entries())
+          .filter(([, amount]) => amount > 0)
+          .sort(([, a], [, b]) => b - a); // Sort by amount descending
 
-      for (const [improvementType, improvementAmount] of sortedImprovements) {
-        if (remainingToAllocate <= 0 || improvementAmount <= 0 || !IsConversionPossible(baselineType, improvementType)) continue;
+        for (const [improvementType, improvementAmount] of sortedImprovements) {
+          if (remainingToAllocate <= 0 || improvementAmount <= 0 || !IsConversionPossible(baselineType, improvementType, sameGroupOnly)) continue;
 
-        const allocatedAmount = Math.min(remainingToAllocate, improvementAmount);
+          const allocatedAmount = Math.min(remainingToAllocate, improvementAmount);
 
-        if (allocatedAmount > 0) {
-          AllocateHabitat(baselineType, improvementType, allocatedAmount);
-          remainingToAllocate -= allocatedAmount;
+          if (allocatedAmount > 0) {
+            AllocateHabitat(baselineType, improvementType, allocatedAmount);
+            remainingToAllocate -= allocatedAmount;
+          }
         }
       }
     }
+    // first do a pass only within habitat groups
+    allocateRemaining(true);
+    if (unit == 'areas') {
+      // special handling for undesirable area baseline groups - assume these are more likely to be improved to process them first
+      const unwantedGroups = ['Cropland', 'Urban', 'Intertidal hard structures'];
+      allocateRemaining(false, unwantedGroups);
+    }
+    // then allow allocation between groups
+    allocateRemaining(false);
 
 
     // Pass 3: allocate any remaining baseline to a "destroyed" improvement node
