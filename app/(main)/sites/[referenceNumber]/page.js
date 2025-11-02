@@ -142,7 +142,7 @@ const getHabitatSankeyData = (site) => {
 
     // Pass 3: allocate any remaining baseline to a "destroyed" improvement node
     for (const [baselineType, baselineAmount] of remainingBaseline.entries()) {
-      if (baselineAmount > 0) {
+      if (baselineAmount > 0.01) {
         AllocateHabitat(baselineType, destroyedImprovement, baselineAmount);
       }
     }
@@ -150,7 +150,7 @@ const getHabitatSankeyData = (site) => {
 
     // Pass 4: allocate any remaining improvements to a "created" baseline node
     for (const [improvementType, improvementAmount] of remainingImprovement) {
-      if (improvementAmount > 0) {
+      if (improvementAmount > 0.01) {
         AllocateHabitat(createdBaseline, improvementType, improvementAmount);
       }
     }
