@@ -94,11 +94,11 @@ const getHabitatSankeyData = (site) => {
       }
     };
 
-    // conversions not allowed if they would lead to a decrease in distinciveness
+    // conversions only allowed if they would lead to an increase in distinciveness
     const IsConversionPossible = (baseline, improvement) => {
       const baselineD = getDistinctivenessScore(baseline);
       const improvementD = getDistinctivenessScore(improvement);
-      return baselineD <= improvementD;
+      return baselineD < improvementD;
     }
 
     // Pass 1: Allocate same-habitat types
@@ -116,7 +116,7 @@ const getHabitatSankeyData = (site) => {
     // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
     // sort by distinctiveness to allocate the highest first
     const sortedBaseline = Array.from(remainingBaseline.entries())
-        .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeB) - getDistinctivenessScore(typeA)); // Sort by amount descending
+        .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB)); // Sort by amount descending
     for (const [baselineType, baselineAmount] of sortedBaseline) {
       if (baselineAmount <= 0) continue;
 

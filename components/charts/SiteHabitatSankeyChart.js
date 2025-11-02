@@ -194,8 +194,9 @@ export default function SiteHabitatSankeyChart ({data}) {
   return (
     <div>
       <p style={{ fontSize: '14px', color: '#565555ff', marginBottom: '16px', fontStyle: 'italic' }}>
-        This Sankey diagram shows habitat transformations from baseline to improved, using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats of at least the same Distinctiveness.
-        (NB The source data for this Sankey diagram does not contain information about which baseline habitats (on the left) convert to which improvement habitats (on the right).)
+        This Sankey diagram shows habitat transformations from baseline to improved, using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats with Distinctiveness. The lowest distinctiveness baseline habitats are assumed to be the most likely to be improved.
+        <br />
+        NB: The source data for this Sankey diagram does not contain information about which baseline habitats (on the left) convert to which improvement habitats (on the right).
       </p>
       <ResponsiveContainer width="100%" height={sankeyHeight}>
         <Sankey
