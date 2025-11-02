@@ -1,5 +1,5 @@
 import { fetchSite, fetchAllSites } from '@/lib/api';
-import { collateAllHabitats } from '@/lib/habitat';
+import { collateAllHabitats, getDistinctivenessScore } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -48,7 +48,6 @@ const getHabitatSankeyData = (site) => {
           if (habitat.area > 0) {
             totalSourceSize += habitat.area;
             siteBaselineTotals.set(habitat.type, (siteBaselineTotals.get(habitat.type) || 0) + habitat.area);
-            sourceNodeTypes.add(habitat.type);
           }
         }
       }
@@ -61,82 +60,100 @@ const getHabitatSankeyData = (site) => {
           if (habitat.area > 0) {
             totalImprovementSize += habitat.area;
             siteImprovementTotals.set(habitat.type, (siteImprovementTotals.get(habitat.type) || 0) + habitat.area);
-            improvementNodeTypes.add(habitat.type);
           }
         }
       }
-
     }
 
-    // Improved habitat allocation algorithm with proportional scaling
-    let baselineTotal = Array.from(siteBaselineTotals.values()).reduce((sum, amount) => sum + amount, 0);
-    const improvementTotal = Array.from(siteImprovementTotals.values()).reduce((sum, amount) => sum + amount, 0);
-
-    // Handle creation scenarios (baselineTotal = 0 but improvementTotal > 0)
-    if (baselineTotal === 0 && improvementTotal > 0) {
-      // Create baseline nodes with same names as improvements but tiny values
-      for (const [habitatType, improvementAmount] of siteImprovementTotals.entries()) {
-        siteBaselineTotals.set(habitatType, 0.001); // Tiny value to show creation
-        sourceNodeTypes.add(habitatType);
-      }
-      baselineTotal = Array.from(siteBaselineTotals.values()).reduce((sum, amount) => sum + amount, 0);
-    }
-
-    // Calculate scaling factor to ensure all improvements get allocated
-    const scalingFactor = improvementTotal > 0 ? improvementTotal / baselineTotal : 1;
-
-    // Pass 1: Allocate same-habitat types (maintenance/enhancement)
     const remainingBaseline = new Map(siteBaselineTotals);
     const remainingImprovement = new Map(siteImprovementTotals);
 
+    const createdBaseline = '<CREATED>';
+    const destroyedImprovement = '<DESTROYED>'
+
+    const AllocateHabitat = (baseline, improvement, allocatedAmount) => {
+      // add to the sets of types
+      sourceNodeTypes.add(baseline);
+      improvementNodeTypes.add(improvement);
+
+      // increment the amount allocated to this link
+      const linkKey = `${unit}|${baseline}|${improvement}`;
+      const newAmount = (aggregatedLinks.get(linkKey) || 0) + allocatedAmount;
+      aggregatedLinks.set(linkKey, newAmount);
+
+      // reduce the remaining amounts
+      if (baseline != createdBaseline) {
+        const newRemainingBaseline = (remainingBaseline.get(baseline) || 0) - allocatedAmount;
+        if (newRemainingBaseline < 0) throw new Error('negative remaining baseline');
+        remainingBaseline.set(baseline, newRemainingBaseline);
+      }
+      if (improvement != destroyedImprovement) {
+        const newRemainingImprovement = (remainingImprovement.get(improvement) || 0) - allocatedAmount;
+        if (newRemainingImprovement < 0) throw new Error('negative remaining improvement');
+        remainingImprovement.set(improvement, newRemainingImprovement);
+      }
+    };
+
+    // conversions not allowed if they would lead to a decrease in distinciveness
+    const IsConversionPossible = (baseline, improvement) => {
+      const baselineD = getDistinctivenessScore(baseline);
+      const improvementD = getDistinctivenessScore(improvement);
+      return baselineD <= improvementD;
+    }
+
+    // Pass 1: Allocate same-habitat types
     for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
       if (remainingImprovement.has(habitatType)) {
         const improvementAmount = remainingImprovement.get(habitatType);
         const allocatedAmount = Math.min(baselineAmount, improvementAmount);
 
         if (allocatedAmount > 0) {
-          const scaledAmount = allocatedAmount * scalingFactor;
-          const linkKey = `${unit}|${habitatType}|${habitatType}`;
-          aggregatedLinks.set(linkKey, (aggregatedLinks.get(linkKey) || 0) + scaledAmount);
-
-          // Reduce remaining amounts
-          remainingBaseline.set(habitatType, baselineAmount - allocatedAmount);
-          remainingImprovement.set(habitatType, improvementAmount - scaledAmount);
+          AllocateHabitat(habitatType, habitatType, allocatedAmount);
         }
       }
     }
 
     // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
-    const remainingBaselineTotal = Array.from(remainingBaseline.values()).reduce((sum, amount) => sum + amount, 0);
+    // sort by distinctiveness to allocate the highest first
+    const sortedBaseline = Array.from(remainingBaseline.entries())
+        .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeB) - getDistinctivenessScore(typeA)); // Sort by amount descending
+    for (const [baselineType, baselineAmount] of sortedBaseline) {
+      if (baselineAmount <= 0) continue;
 
-    if (remainingBaselineTotal > 0) {
+      let remainingToAllocate = baselineAmount;
+
       // Sort remaining improvements by size (largest first)
       const sortedImprovements = Array.from(remainingImprovement.entries())
         .filter(([, amount]) => amount > 0)
         .sort(([, a], [, b]) => b - a); // Sort by amount descending
 
-      for (const [baselineType, baselineAmount] of remainingBaseline.entries()) {
-        if (baselineAmount <= 0) continue;
+      for (const [improvementType, improvementAmount] of sortedImprovements) {
+        if (remainingToAllocate <= 0 || improvementAmount <= 0 || !IsConversionPossible(baselineType, improvementType)) continue;
 
-        let remainingToAllocate = baselineAmount;
+        const allocatedAmount = Math.min(remainingToAllocate, improvementAmount);
 
-        for (const [improvementType, improvementAmount] of sortedImprovements) {
-          if (remainingToAllocate <= 0 || improvementAmount <= 0) continue;
-
-          const allocatedAmount = Math.min(remainingToAllocate, improvementAmount);
-
-          if (allocatedAmount > 0) {
-            const scaledAmount = allocatedAmount * scalingFactor;
-            const linkKey = `${unit}|${baselineType}|${improvementType}`;
-            aggregatedLinks.set(linkKey, (aggregatedLinks.get(linkKey) || 0) + scaledAmount);
-
-            remainingToAllocate -= allocatedAmount;
-            sortedImprovements.find(([type]) => type === improvementType)[1] -= scaledAmount;
-          }
+        if (allocatedAmount > 0) {
+          AllocateHabitat(baselineType, improvementType, allocatedAmount);
+          remainingToAllocate -= allocatedAmount;
         }
       }
     }
 
+
+    // Pass 3: allocate any remaining baseline to a "destroyed" improvement node
+    for (const [baselineType, baselineAmount] of remainingBaseline.entries()) {
+      if (baselineAmount > 0) {
+        AllocateHabitat(baselineType, destroyedImprovement, baselineAmount);
+      }
+    }
+
+
+    // Pass 4: allocate any remaining improvements to a "created" baseline node
+    for (const [improvementType, improvementAmount] of remainingImprovement) {
+      if (improvementAmount > 0) {
+        AllocateHabitat(createdBaseline, improvementType, improvementAmount);
+      }
+    }
 
     const baselineNodeMap = new Map();
     const improvementNodeMap = new Map();
@@ -144,7 +161,7 @@ const getHabitatSankeyData = (site) => {
     // Create baseline (source) nodes
     for (const type of sourceNodeTypes) {
       baselineNodeMap.set(type, data.nodes.length);
-      data.nodes.push({ name: type, unit: unit});
+      data.nodes.push({ name: type, unit: unit });
     }
 
     // Create improvement (destination) nodes
