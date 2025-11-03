@@ -194,8 +194,8 @@ const getHabitatSankeyData = (site) => {
     // Create baseline (source) nodes
     const sortedSourceNodeTypes = Array.from(sourceNodeTypes)
       .sort((keyA, keyB) => {
-        if (keyA === createdBaseline) return -1;
-        if (keyB === createdBaseline) return 1;
+        if (keyA === createdBaseline) return 1;
+        if (keyB === createdBaseline) return -1;
 
         const [typeA, conditionA] = keyA.split('|');
         const [typeB, conditionB] = keyB.split('|');
