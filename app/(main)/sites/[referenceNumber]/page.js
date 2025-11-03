@@ -220,8 +220,9 @@ const getHabitatSankeyData = (site) => {
       });
     for (const key of sortedSourceNodeTypes) {
       baselineNodeMap.set(key, data.nodes.length);
-      const displayName = key.includes('|') ? `[${key.split('|')[1]}] ${key.split('|')[0]}` : key;
-      data.nodes.push({ name: displayName, unit: unit });
+      const habitatName = key.includes('|') ? key.split('|')[0] : key;
+      const conditionName = key.includes('|') ? key.split('|')[1] : '';
+      data.nodes.push({ name: habitatName, unit: unit, condition: conditionName });
     }
 
     // Create improvement (destination) nodes
@@ -244,8 +245,9 @@ const getHabitatSankeyData = (site) => {
       });
     for (const key of sortedimprovementNodeTypes) {
       improvementNodeMap.set(key, data.nodes.length);
-      const displayName = key.includes('|') ? `${key.split('|')[0]} [${key.split('|')[1]}]` : key;
-      data.nodes.push({ name: displayName, unit: unit });
+      const habitatName = key.includes('|') ? key.split('|')[0] : key;
+      const conditionName = key.includes('|') ? key.split('|')[1] : '';
+      data.nodes.push({ name: habitatName, unit: unit, condition: conditionName });
     }
 
     for (const [linkKey, linkValue] of aggregatedLinks.entries()) {

@@ -103,7 +103,7 @@ const CustomSankeyNode = ({
 {
   const isOut = x + width + 6 > containerWidth;
 
-  let name = payload.name;
+  let name = payload.condition.length > 0 ? `[${payload.condition}] ${payload.name}` : payload.name;
   const isMobile = useBreakpointValue({ base: true, md: false });
   const maxLen = isMobile ? 12 : 50;
   if (name.length > maxLen) {
