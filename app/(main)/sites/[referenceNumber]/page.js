@@ -69,7 +69,7 @@ const getHabitatSankeyData = (site) => {
     const remainingImprovement = new Map(siteImprovementTotals);
 
     const createdBaseline = '<CREATED>';
-    const destroyedImprovement = '<RETAINED>'
+    const retainedImprovement = '<RETAINED>'
 
     const AllocateHabitat = (baseline, improvement, allocatedAmount) => {
       // add to the sets of types
@@ -87,7 +87,7 @@ const getHabitatSankeyData = (site) => {
         if (newRemainingBaseline < 0) throw new Error('negative remaining baseline');
         remainingBaseline.set(baseline, newRemainingBaseline);
       }
-      if (improvement != destroyedImprovement) {
+      if (improvement != retainedImprovement) {
         const newRemainingImprovement = (remainingImprovement.get(improvement) || 0) - allocatedAmount;
         if (newRemainingImprovement < 0) throw new Error('negative remaining improvement');
         remainingImprovement.set(improvement, newRemainingImprovement);
@@ -124,7 +124,7 @@ const getHabitatSankeyData = (site) => {
     const allocateRemaining = (sameGroupOnly, baselineGroupsOnly) => {
       // sort by distinctiveness to allocate the lowest first (as higher distinctiveness habitats are more likely to be retained)
       const sortedBaseline = Array.from(remainingBaseline.entries())
-          .sort(([typeA, ], [typeB, ]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB));
+        .sort(([typeA,], [typeB,]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB));
       for (const [baselineType, baselineAmount] of sortedBaseline) {
         if (baselineAmount <= 0) continue;
         if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineType))) continue;
@@ -162,7 +162,7 @@ const getHabitatSankeyData = (site) => {
     // Pass 3: allocate any remaining baseline to a "destroyed" improvement node
     for (const [baselineType, baselineAmount] of remainingBaseline.entries()) {
       if (baselineAmount > 0.01) {
-        AllocateHabitat(baselineType, destroyedImprovement, baselineAmount);
+        AllocateHabitat(baselineType, retainedImprovement, baselineAmount);
       }
     }
 
@@ -177,14 +177,39 @@ const getHabitatSankeyData = (site) => {
     const baselineNodeMap = new Map();
     const improvementNodeMap = new Map();
 
+
     // Create baseline (source) nodes
-    for (const type of sourceNodeTypes) {
+    const sortedSourceNodeTypes = Array.from(sourceNodeTypes)
+      .sort((typeA, typeB) => {
+        const aScore = getDistinctivenessScore(typeA);
+        const bScore = getDistinctivenessScore(typeB);
+        if (aScore == bScore) {
+          return siteBaselineTotals.get(typeB) - siteBaselineTotals.get(typeA);
+        }
+        else {
+          return bScore - aScore;
+        }
+      });
+    for (const type of sortedSourceNodeTypes) {
       baselineNodeMap.set(type, data.nodes.length);
       data.nodes.push({ name: type, unit: unit });
     }
 
     // Create improvement (destination) nodes
-    for (const type of improvementNodeTypes) {
+    const sortedimprovementNodeTypes = Array.from(improvementNodeTypes)
+      .sort((typeA, typeB) => {
+        if (typeA == retainedImprovement) return -1;
+        if (typeB == retainedImprovement) return 1;
+        const aScore = getDistinctivenessScore(typeA);
+        const bScore = getDistinctivenessScore(typeB);
+        if (aScore == bScore) {
+          return siteImprovementTotals.get(typeB) - siteImprovementTotals.get(typeA);
+        }
+        else {
+          return bScore - aScore;
+        }
+      });
+    for (const type of sortedimprovementNodeTypes) {
       improvementNodeMap.set(type, data.nodes.length);
       data.nodes.push({ name: type, unit: unit });
     }
@@ -207,7 +232,7 @@ const getHabitatSankeyData = (site) => {
 
   const totalSize = Math.max(totalSourceSize, totalImprovementSize);
   data.dynamicHeight = Math.max(Math.min(totalSize * 35, 1500), 200);
-  data.sort = true;
+  data.sort = false;
 
   return data;
 };
