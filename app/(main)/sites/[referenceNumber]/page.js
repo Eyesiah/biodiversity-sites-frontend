@@ -116,14 +116,22 @@ const getHabitatSankeyData = (site) => {
       return sameGroup ? baselineD <= improvementD : baselineD < improvementD;
     }
 
-    // Pass 1: Allocate same-habitat types
+    // Pass 1: Allocate same-habitat types of at least the same condition
     for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
-      if (remainingImprovement.has(habitatType)) {
-        const improvementAmount = remainingImprovement.get(habitatType);
-        const allocatedAmount = Math.min(baselineAmount, improvementAmount);
-
-        if (allocatedAmount > 0) {
-          AllocateHabitat(habitatType, habitatType, allocatedAmount);
+      let remainingBaselineAmount = baselineAmount;
+      const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
+      for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
+        const improvementType = improvementHabitat.includes('|') ? improvementHabitat.split('|')[0] : improvementHabitat;
+        if (baselineType == improvementType) {
+          const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
+          const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
+          if (getConditionScore(improvementCondition) >= getConditionScore(baselineCondition)) {
+            const allocatedAmount = Math.min(baselineAmount, improvementAmount);
+            if (allocatedAmount > 0) {
+              AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
+              remainingBaselineAmount -= allocatedAmount;
+            }
+          }
         }
       }
     }
@@ -141,7 +149,8 @@ const getHabitatSankeyData = (site) => {
         });
       for (const [baselineType, baselineAmount] of sortedBaseline) {
         if (baselineAmount <= 0) continue;
-        if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineType))) continue;
+        const baselineHabitat = baselineType.includes('|') ? baselineType.split('|')[0] : baselineType;
+        if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineHabitat))) continue;
 
         let remainingToAllocate = baselineAmount;
 
@@ -162,13 +171,13 @@ const getHabitatSankeyData = (site) => {
         }
       }
     }
-    // first do a pass only within habitat groups
-    allocateRemaining(true);
     if (unit == 'areas') {
       // special handling for undesirable area baseline groups - assume these are more likely to be improved to process them first
       const unwantedGroups = ['Cropland', 'Urban', 'Intertidal hard structures'];
       allocateRemaining(false, unwantedGroups);
     }
+    // first do a pass only within habitat groups
+    allocateRemaining(true);
     // then allow allocation between groups
     allocateRemaining(false);
 
