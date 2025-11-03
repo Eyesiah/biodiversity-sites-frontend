@@ -137,9 +137,9 @@ const getHabitatSankeyData = (site) => {
     }
 
     // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
-    const allocateRemaining = (sameGroupOnly, baselineGroupsOnly) => {
+    const allocateRemaining = (sourceHabitats, sameGroupOnly) => {
       // sort by combined distinctiveness & condition score to allocate the lowest first (poorer quality habitats first)
-      const sortedBaseline = Array.from(remainingBaseline.entries())
+      const sortedBaseline = sourceHabitats
         .sort(([keyA,], [keyB,]) => {
           const [typeA, conditionA] = keyA.split('|');
           const [typeB, conditionB] = keyB.split('|');
@@ -149,9 +149,6 @@ const getHabitatSankeyData = (site) => {
         });
       for (const [baselineType, baselineAmount] of sortedBaseline) {
         if (baselineAmount <= 0) continue;
-        const baselineHabitat = baselineType.includes('|') ? baselineType.split('|')[0] : baselineType;
-        if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineHabitat))) continue;
-
         let remainingToAllocate = baselineAmount;
 
         // Sort remaining improvements by size (largest first)
@@ -172,14 +169,19 @@ const getHabitatSankeyData = (site) => {
       }
     }
     if (unit == 'areas') {
-      // special handling for undesirable area baseline groups - assume these are more likely to be improved to process them first
-      const unwantedGroups = ['Cropland', 'Urban', 'Intertidal hard structures'];
-      allocateRemaining(false, unwantedGroups);
+      // special handling for artificial area habitats - assume these are more likely to be improved to process them first
+      const artificialGroups = ['cropland', 'urban', 'intertidal hard structures'];
+      const artificalHabitats = ['modified grassland'];
+      allocateRemaining(Array.from(remainingBaseline.entries())
+        .filter(([habitat]) => {
+          const baselineHabitat = habitat.includes('|') ? habitat.split('|')[0] : habitat;
+          return artificalHabitats.includes(baselineHabitat.toLowerCase()) || artificialGroups.includes(getHabitatGroup(baselineHabitat).toLowerCase());
+        }), false);
     }
     // first do a pass only within habitat groups
-    allocateRemaining(true);
+    allocateRemaining(Array.from(remainingBaseline.entries()), true);
     // then allow allocation between groups
-    allocateRemaining(false);
+    allocateRemaining(Array.from(remainingBaseline.entries()), false);
 
 
     // Pass 3: allocate any remaining baseline to a "destroyed" improvement node
