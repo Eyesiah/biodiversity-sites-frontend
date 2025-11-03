@@ -15,6 +15,19 @@ import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
 import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
 
+// Constants for Individual trees habitat types
+const INDIVIDUAL_TREES_TYPES = ['Urban tree', 'Rural tree'];
+
+// Units constants
+const UNITS = {
+  HECTARES: 'ha',
+  KILOMETRES: 'km'
+};
+
+// Helper functions for filtering habitats
+const isIndividualTree = (habitat) => INDIVIDUAL_TREES_TYPES.includes(habitat.type);
+const isNotIndividualTree = (habitat) => !INDIVIDUAL_TREES_TYPES.includes(habitat.type);
+
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
@@ -40,15 +53,27 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({site, sankeyData}) {
-    
-  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
+
+  // Filter out Individual trees from area data for existing tabs
+  const filteredImprovementAreas = site.improvements.areas.filter(isNotIndividualTree);
+  const filteredBaselineAreas = site.habitats.areas.filter(isNotIndividualTree);
+
+  // Extract Individual trees data for new tabs
+  const individualTreesImprovements = site.improvements.areas.filter(isIndividualTree);
+  const individualTreesBaseline = site.habitats.areas.filter(isIndividualTree);
+
+  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(filteredImprovementAreas, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(site.improvements.watercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(site.habitats.areas, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(filteredBaselineAreas, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
 
-  const tabs = [ 
+  // Sort Individual trees data
+  const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(individualTreesImprovements, { key: 'type', direction: 'ascending' });
+  const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(individualTreesBaseline, { key: 'type', direction: 'ascending' });
+
+  const tabs = [
     {
       title: 'Habitat<br>Transformation',
       content: () => {
@@ -56,26 +81,50 @@ export default function SitePageContent({site, sankeyData}) {
       }
     },
     {
-      title: `Area<br>Improvements&nbsp;(${site.improvements.areas.length})`,
+      title: `Area<br>Improvements&nbsp;(${filteredImprovementAreas.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedImprovementAreas}
           sortConfig={sortConfigImprovementAreas}
           isImprovement={true}
           requestSort={requestSortImprovementAreas}
-          units='ha'
+          units={UNITS.HECTARES}
         />)
       }
     },
     {
-      title: `Baseline<br>Areas&nbsp;(${site.habitats.areas.length})`,
+      title: `Baseline<br>Areas&nbsp;(${filteredBaselineAreas.length})`,
       content: () => {
         return (<HabitatTable
           habitats={sortedBaselineAreas}
           sortConfig={sortConfigBaselineAreas}
           isBaseline={true}
           requestSort={requestSortBaselineAreas}
-          units='ha'
+          units={UNITS.HECTARES}
+        />)
+      }
+    },
+    {
+      title: `Individual Trees<br>Improvements&nbsp;(${individualTreesImprovements.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedIndividualTreesImprovements}
+          sortConfig={sortConfigIndividualTreesImprovements}
+          isImprovement={true}
+          requestSort={requestSortIndividualTreesImprovements}
+          units={UNITS.HECTARES}
+        />)
+      }
+    },
+    {
+      title: `Individual Trees<br>Baseline&nbsp;(${individualTreesBaseline.length})`,
+      content: () => {
+        return (<HabitatTable
+          habitats={sortedIndividualTreesBaseline}
+          sortConfig={sortConfigIndividualTreesBaseline}
+          isBaseline={true}
+          requestSort={requestSortIndividualTreesBaseline}
+          units={UNITS.HECTARES}
         />)
       }
     },
@@ -87,7 +136,7 @@ export default function SitePageContent({site, sankeyData}) {
           sortConfig={sortConfigImprovementHedgerows}
           isImprovement={true}
           requestSort={requestSortImprovementHedgerows}
-          units='km'
+          units={UNITS.KILOMETRES}
         />)
       }
     },
@@ -99,7 +148,7 @@ export default function SitePageContent({site, sankeyData}) {
           sortConfig={sortConfigBaselineHedgerows}
           isBaseline={true}
           requestSort={requestSortBaselineHedgerows}
-          units='km'
+          units={UNITS.KILOMETRES}
         />)
       }
     },
@@ -111,10 +160,10 @@ export default function SitePageContent({site, sankeyData}) {
           sortConfig={sortConfigImprovementWatercourses}
           isImprovement={true}
           requestSort={requestSortImprovementWatercourses}
-          units='km'
+          units={UNITS.KILOMETERS}
         />)
       }
-    },    
+    },
     {
       title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
       content: () => {
@@ -123,7 +172,7 @@ export default function SitePageContent({site, sankeyData}) {
           sortConfig={sortConfigBaselineWatercourses}
           isBaseline={true}
           requestSort={requestSortBaselineWatercourses}
-          units='km'
+          units={UNITS.KILOMETERS}
         />)
       }
     },
