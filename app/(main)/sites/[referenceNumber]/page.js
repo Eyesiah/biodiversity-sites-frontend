@@ -110,6 +110,13 @@ const getHabitatSankeyData = (site) => {
       const baselineType = baseline.includes('|') ? baseline.split('|')[0] : baseline;
       const improvementType = improvement.includes('|') ? improvement.split('|')[0] : improvement;
 
+      if (baselineType == improvementType) {
+        const baselineCond = baseline.includes('|') ? baseline.split('|')[1] : 'n/a';
+        const improvementCond = improvement.includes('|') ? improvement.split('|')[1] : 'n/a';
+        // only allowed if condition is same or better
+        return getConditionScore(improvementCond) >= getConditionScore(baselineCond);
+      }
+
       const baselineGroup = getHabitatGroup(baselineType);
       const improvementGroup = getHabitatGroup(improvementType);
       if (sameGroupOnly && baselineGroup != improvementGroup) {
