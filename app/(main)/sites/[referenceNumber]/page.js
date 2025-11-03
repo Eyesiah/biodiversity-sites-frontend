@@ -1,5 +1,5 @@
 import { fetchSite, fetchAllSites } from '@/lib/api';
-import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup } from '@/lib/habitat';
+import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup, getConditionScore } from '@/lib/habitat';
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -46,8 +46,11 @@ const getHabitatSankeyData = (site) => {
       if (site.habitats[unit]) {
         for (const habitat of site.habitats[unit]) {
           if (habitat.area > 0) {
-            totalSourceSize += habitat.area;
-            siteBaselineTotals.set(habitat.type, (siteBaselineTotals.get(habitat.type) || 0) + habitat.area);
+            for (const sub of habitat.subRows) {
+              totalSourceSize += sub.area;
+              const key = `${habitat.type}|${sub.condition}`;
+              siteBaselineTotals.set(key, (siteBaselineTotals.get(key) || 0) + habitat.area);
+            }
           }
         }
       }
@@ -57,9 +60,10 @@ const getHabitatSankeyData = (site) => {
     if (site.improvements) {
       if (site.improvements[unit]) {
         for (const habitat of site.improvements[unit]) {
-          if (habitat.area > 0) {
-            totalImprovementSize += habitat.area;
-            siteImprovementTotals.set(habitat.type, (siteImprovementTotals.get(habitat.type) || 0) + habitat.area);
+          for (const sub of habitat.subRows) {
+            totalImprovementSize += sub.area;
+            const key = `${habitat.type}|${sub.condition}`;
+            siteImprovementTotals.set(key, (siteImprovementTotals.get(key) || 0) + sub.area);
           }
         }
       }
@@ -97,14 +101,18 @@ const getHabitatSankeyData = (site) => {
     // conversions only allowed if they would lead to an increase in distinctiveness
     // or, if the same broad habitat, the same distinctiveness
     const IsConversionPossible = (baseline, improvement, sameGroupOnly) => {
-      const baselineGroup = getHabitatGroup(baseline);
-      const improvementGroup = getHabitatGroup(improvement);
+      // Extract habitat types from compound keys (type|condition)
+      const baselineType = baseline.includes('|') ? baseline.split('|')[0] : baseline;
+      const improvementType = improvement.includes('|') ? improvement.split('|')[0] : improvement;
+
+      const baselineGroup = getHabitatGroup(baselineType);
+      const improvementGroup = getHabitatGroup(improvementType);
       if (sameGroupOnly && baselineGroup != improvementGroup) {
         return false;
       }
       const sameGroup = baselineGroup == improvementGroup;
-      const baselineD = getDistinctivenessScore(baseline);
-      const improvementD = getDistinctivenessScore(improvement);
+      const baselineD = getDistinctivenessScore(baselineType);
+      const improvementD = getDistinctivenessScore(improvementType);
       return sameGroup ? baselineD <= improvementD : baselineD < improvementD;
     }
 
@@ -122,9 +130,15 @@ const getHabitatSankeyData = (site) => {
 
     // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
     const allocateRemaining = (sameGroupOnly, baselineGroupsOnly) => {
-      // sort by distinctiveness to allocate the lowest first (as higher distinctiveness habitats are more likely to be retained)
+      // sort by combined distinctiveness & condition score to allocate the lowest first (poorer quality habitats first)
       const sortedBaseline = Array.from(remainingBaseline.entries())
-        .sort(([typeA,], [typeB,]) => getDistinctivenessScore(typeA) - getDistinctivenessScore(typeB));
+        .sort(([keyA,], [keyB,]) => {
+          const [typeA, conditionA] = keyA.split('|');
+          const [typeB, conditionB] = keyB.split('|');
+          const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
+          const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
+          return scoreA - scoreB;
+        });
       for (const [baselineType, baselineAmount] of sortedBaseline) {
         if (baselineAmount <= 0) continue;
         if (baselineGroupsOnly && !baselineGroupsOnly.includes(getHabitatGroup(baselineType))) continue;
@@ -180,44 +194,56 @@ const getHabitatSankeyData = (site) => {
 
     // Create baseline (source) nodes
     const sortedSourceNodeTypes = Array.from(sourceNodeTypes)
-      .sort((typeA, typeB) => {
-        const aScore = getDistinctivenessScore(typeA);
-        const bScore = getDistinctivenessScore(typeB);
-        if (aScore == bScore) {
-          return siteBaselineTotals.get(typeB) - siteBaselineTotals.get(typeA);
+      .sort((keyA, keyB) => {
+        if (keyA === '<CREATED>') return -1;
+        if (keyB === '<CREATED>') return 1;
+
+        const [typeA, conditionA] = keyA.split('|');
+        const [typeB, conditionB] = keyB.split('|');
+        const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
+        const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
+
+        if (scoreA == scoreB) {
+          return siteBaselineTotals.get(keyB) - siteBaselineTotals.get(keyA);
         }
         else {
-          return bScore - aScore;
+          return scoreB - scoreA; // Higher scores first for display
         }
       });
-    for (const type of sortedSourceNodeTypes) {
-      baselineNodeMap.set(type, data.nodes.length);
-      data.nodes.push({ name: type, unit: unit });
+    for (const key of sortedSourceNodeTypes) {
+      baselineNodeMap.set(key, data.nodes.length);
+      const displayName = key.includes('|') ? `[${key.split('|')[1]}] ${key.split('|')[0]}` : key;
+      data.nodes.push({ name: displayName, unit: unit });
     }
 
     // Create improvement (destination) nodes
     const sortedimprovementNodeTypes = Array.from(improvementNodeTypes)
-      .sort((typeA, typeB) => {
-        if (typeA == retainedImprovement) return -1;
-        if (typeB == retainedImprovement) return 1;
-        const aScore = getDistinctivenessScore(typeA);
-        const bScore = getDistinctivenessScore(typeB);
-        if (aScore == bScore) {
-          return siteImprovementTotals.get(typeB) - siteImprovementTotals.get(typeA);
+      .sort((keyA, keyB) => {
+        if (keyA == retainedImprovement) return -1;
+        if (keyB == retainedImprovement) return 1;
+
+        const [typeA, conditionA] = keyA.split('|');
+        const [typeB, conditionB] = keyB.split('|');
+        const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
+        const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
+
+        if (scoreA == scoreB) {
+          return siteImprovementTotals.get(keyB) - siteImprovementTotals.get(keyA);
         }
         else {
-          return bScore - aScore;
+          return scoreB - scoreA; // Higher scores first for display
         }
       });
-    for (const type of sortedimprovementNodeTypes) {
-      improvementNodeMap.set(type, data.nodes.length);
-      data.nodes.push({ name: type, unit: unit });
+    for (const key of sortedimprovementNodeTypes) {
+      improvementNodeMap.set(key, data.nodes.length);
+      const displayName = key.includes('|') ? `${key.split('|')[0]} [${key.split('|')[1]}]` : key;
+      data.nodes.push({ name: displayName, unit: unit });
     }
 
     for (const [linkKey, linkValue] of aggregatedLinks.entries()) {
-      const [unitType, sourceType, improvementType] = linkKey.split('|');
-      const sourceIndex = baselineNodeMap.get(sourceType);
-      const targetIndex = improvementNodeMap.get(improvementType);
+      const [unitType, sourceType, sourceCondition, improvementType, improvementCondition] = linkKey.split('|');
+      const sourceIndex = baselineNodeMap.get(sourceType == createdBaseline ? sourceType : `${sourceType}|${sourceCondition}`);
+      const targetIndex = improvementNodeMap.get(improvementType == retainedImprovement ? improvementType : `${improvementType}|${improvementCondition}`);
 
       if (sourceIndex !== undefined && targetIndex !== undefined) {
         data.links.push({
