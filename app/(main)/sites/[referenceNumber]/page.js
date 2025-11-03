@@ -81,7 +81,7 @@ const getHabitatSankeyData = (site) => {
       improvementNodeTypes.add(improvement);
 
       // increment the amount allocated to this link
-      const linkKey = `${unit}|${baseline}|${improvement}`;
+      const linkKey = `${unit}_${baseline}_${improvement}`;
       const newAmount = (aggregatedLinks.get(linkKey) || 0) + allocatedAmount;
       aggregatedLinks.set(linkKey, newAmount);
 
@@ -191,12 +191,11 @@ const getHabitatSankeyData = (site) => {
     const baselineNodeMap = new Map();
     const improvementNodeMap = new Map();
 
-
     // Create baseline (source) nodes
     const sortedSourceNodeTypes = Array.from(sourceNodeTypes)
       .sort((keyA, keyB) => {
-        if (keyA === '<CREATED>') return -1;
-        if (keyB === '<CREATED>') return 1;
+        if (keyA === createdBaseline) return -1;
+        if (keyB === createdBaseline) return 1;
 
         const [typeA, conditionA] = keyA.split('|');
         const [typeB, conditionB] = keyB.split('|');
@@ -241,9 +240,9 @@ const getHabitatSankeyData = (site) => {
     }
 
     for (const [linkKey, linkValue] of aggregatedLinks.entries()) {
-      const [unitType, sourceType, sourceCondition, improvementType, improvementCondition] = linkKey.split('|');
-      const sourceIndex = baselineNodeMap.get(sourceType == createdBaseline ? sourceType : `${sourceType}|${sourceCondition}`);
-      const targetIndex = improvementNodeMap.get(improvementType == retainedImprovement ? improvementType : `${improvementType}|${improvementCondition}`);
+      const [unitType, sourceType, improvementType] = linkKey.split('_');
+      const sourceIndex = baselineNodeMap.get(sourceType);
+      const targetIndex = improvementNodeMap.get(improvementType);
 
       if (sourceIndex !== undefined && targetIndex !== undefined) {
         data.links.push({
