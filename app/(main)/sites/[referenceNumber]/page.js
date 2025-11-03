@@ -103,6 +103,26 @@ const getHabitatSankeyData = (site) => {
       }
     };
 
+    // Allocate same-habitat types of better same condition
+    for (const [habitatType, baselineAmount] of remainingBaseline.entries()) {
+      let remainingBaselineAmount = baselineAmount;
+      const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
+      for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
+        const improvementType = improvementHabitat.includes('|') ? improvementHabitat.split('|')[0] : improvementHabitat;
+        if (baselineType == improvementType) {
+          const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
+          const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
+          if (getConditionScore(improvementCondition) > getConditionScore(baselineCondition)) {
+            const allocatedAmount = Math.min(remainingBaselineAmount, improvementAmount);
+            if (allocatedAmount > 0) {
+              AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
+              remainingBaselineAmount -= allocatedAmount;
+            }
+          }
+        }
+      }
+    }
+
     // conversions only allowed if they would lead to an increase in distinctiveness
     // or, if the same broad habitat, the same distinctiveness
     const IsConversionPossible = (baseline, improvement, sameGroupOnly) => {
@@ -177,26 +197,6 @@ const getHabitatSankeyData = (site) => {
           return distinctivenessScore <= 2 && (artificalHabitats.includes(baselineHabitat.toLowerCase()) || artificialGroups.includes(getHabitatGroup(baselineHabitat).toLowerCase()));
         });
       allocateRemaining(artificialRemaining, false);
-    }
-
-    // Allocate same-habitat types of at least the same condition
-    for (const [habitatType, baselineAmount] of remainingBaseline.entries()) {
-      let remainingBaselineAmount = baselineAmount;
-      const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
-      for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
-        const improvementType = improvementHabitat.includes('|') ? improvementHabitat.split('|')[0] : improvementHabitat;
-        if (baselineType == improvementType) {
-          const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
-          const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
-          if (getConditionScore(improvementCondition) >= getConditionScore(baselineCondition)) {
-            const allocatedAmount = Math.min(remainingBaselineAmount, improvementAmount);
-            if (allocatedAmount > 0) {
-              AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
-              remainingBaselineAmount -= allocatedAmount;
-            }
-          }
-        }
-      }
     }
 
     // first do a pass only within habitat groups
