@@ -57,6 +57,11 @@ const getHabitatShadeIndex = (habitatName, unit, allHabitats) => {
 
 // Get habitat-specific color for a node
 const getNodeColor = (habitatName, unit, habitatShades, allHabitats) => {
+  // Special handling for Individual trees habitats
+  if (habitatName === 'Urban tree' || habitatName === 'Rural tree') {
+    return '#b0500cff'; // Burnt Orange colour for Individual trees
+  }
+
   if (habitatShades && allHabitats) {
     const shadeIndex = getHabitatShadeIndex(habitatName, unit, allHabitats);
     return habitatShades[unit]?.[shadeIndex] || FALLBACK_COLORS.default;
