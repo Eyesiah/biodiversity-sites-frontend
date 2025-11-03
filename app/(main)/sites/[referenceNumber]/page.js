@@ -180,7 +180,7 @@ const getHabitatSankeyData = (site) => {
     }
 
     // Allocate same-habitat types of at least the same condition
-    for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
+    for (const [habitatType, baselineAmount] of remainingBaseline.entries()) {
       let remainingBaselineAmount = baselineAmount;
       const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
       for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
