@@ -135,9 +135,15 @@ const getHabitatSankeyData = (site) => {
         .sort(([keyA,], [keyB,]) => {
           const [typeA, conditionA] = keyA.split('|');
           const [typeB, conditionB] = keyB.split('|');
-          const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
-          const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
-          return scoreA - scoreB;
+          const scoreA = getDistinctivenessScore(typeA);
+          const scoreB = getDistinctivenessScore(typeB);
+          if (scoreA == scoreB) { 
+            const condScoreA = getConditionScore(conditionA);
+            const condScoreB = getConditionScore(conditionB);
+            return condScoreA - condScoreB;
+          } else {
+            return scoreA - scoreB;
+          }
         });
       for (const [baselineType, baselineAmount] of sortedBaseline) {
         if (baselineAmount <= 0) continue;
