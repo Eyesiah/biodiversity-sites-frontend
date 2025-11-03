@@ -41,15 +41,19 @@ const getHabitatSankeyData = (site) => {
     const sourceNodeTypes = new Set();
     const improvementNodeTypes = new Set();
 
+    const siteBaselineHabTotals = new Map();
+    const siteImprovementHabTotals = new Map();
+
     // Aggregate baseline sizes for the current site
     if (site.habitats) {
       if (site.habitats[unit]) {
         for (const habitat of site.habitats[unit]) {
           if (habitat.area > 0) {
+            siteBaselineHabTotals.set(habitat.type, (siteBaselineHabTotals.get(habitat.type) || 0) + habitat.area);
             for (const sub of habitat.subRows) {
               totalSourceSize += sub.area;
               const key = `${habitat.type}|${sub.condition}`;
-              siteBaselineTotals.set(key, (siteBaselineTotals.get(key) || 0) + habitat.area);
+              siteBaselineTotals.set(key, (siteBaselineTotals.get(key) || 0) + sub.area);
             }
           }
         }
@@ -60,6 +64,7 @@ const getHabitatSankeyData = (site) => {
     if (site.improvements) {
       if (site.improvements[unit]) {
         for (const habitat of site.improvements[unit]) {
+          siteImprovementHabTotals.set(habitat.type, (siteImprovementHabTotals.get(habitat.type) || 0) + habitat.area);
           for (const sub of habitat.subRows) {
             totalImprovementSize += sub.area;
             const key = `${habitat.type}|${sub.condition}`;
@@ -160,7 +165,7 @@ const getHabitatSankeyData = (site) => {
         });
       allocateRemaining(artificialRemaining, false);
     }
-    
+
     // Allocate same-habitat types of at least the same condition
     for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
       let remainingBaselineAmount = baselineAmount;
@@ -213,11 +218,16 @@ const getHabitatSankeyData = (site) => {
 
         const [typeA, conditionA] = keyA.split('|');
         const [typeB, conditionB] = keyB.split('|');
-        const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
-        const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
+        const scoreA = getDistinctivenessScore(typeA);
+        const scoreB = getDistinctivenessScore(typeB);
 
         if (scoreA == scoreB) {
-          return siteBaselineTotals.get(keyB) - siteBaselineTotals.get(keyA);
+          if (typeA == typeB) {
+            const condAScore = getConditionScore(conditionA)
+            const condBScore = getConditionScore(conditionB)
+            return condBScore - condAScore;
+          }
+          return siteBaselineHabTotals.get(typeB) - siteBaselineHabTotals.get(typeA);
         }
         else {
           return scoreB - scoreA; // Higher scores first for display
@@ -238,11 +248,16 @@ const getHabitatSankeyData = (site) => {
 
         const [typeA, conditionA] = keyA.split('|');
         const [typeB, conditionB] = keyB.split('|');
-        const scoreA = getDistinctivenessScore(typeA) * getConditionScore(conditionA);
-        const scoreB = getDistinctivenessScore(typeB) * getConditionScore(conditionB);
+        const scoreA = getDistinctivenessScore(typeA);
+        const scoreB = getDistinctivenessScore(typeB);
 
         if (scoreA == scoreB) {
-          return siteImprovementTotals.get(keyB) - siteImprovementTotals.get(keyA);
+          if (typeA == typeB) {
+            const condAScore = getConditionScore(conditionA)
+            const condBScore = getConditionScore(conditionB)
+            return condBScore - condAScore;
+          }
+          return siteImprovementHabTotals.get(typeB) - siteImprovementHabTotals.get(typeA);
         }
         else {
           return scoreB - scoreA; // Higher scores first for display
