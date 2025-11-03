@@ -10,6 +10,7 @@ import { triggerDownload } from '@/lib/utils';
 import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -19,7 +20,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
 const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
-export default function SiteListPageContent({ sites, summary, imdChart }) {
+export default function SiteListPageContent({ sites, fullSites, summary, imdChart }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
@@ -107,6 +108,16 @@ export default function SiteListPageContent({ sites, summary, imdChart }) {
                     </ResponsiveContainer>
                   </Box>
                 )
+              },
+              {
+                title: "BGS Site Use Chart",
+                content: ({ sortedItems }) => {
+                  // Map processed sites back to full sites for chart data
+                  const fullSitesForChart = sortedItems.map(processedSite =>
+                    fullSites.find(fullSite => fullSite.referenceNumber === processedSite.referenceNumber)
+                  ).filter(Boolean);
+                  return <SitesAreaCompositionChart sites={fullSitesForChart} />;
+                }
               },
 
             ]}

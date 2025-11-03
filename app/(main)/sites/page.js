@@ -34,6 +34,7 @@ export default async function SiteListPage() {
     <>
       <SiteListPageContent
         sites={processedSites}
+        fullSites={allSites}
         summary={summary}
         imdChart={imdChartData}
       />
