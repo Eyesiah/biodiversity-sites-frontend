@@ -116,27 +116,7 @@ const getHabitatSankeyData = (site) => {
       return sameGroup ? baselineD <= improvementD : baselineD < improvementD;
     }
 
-    // Pass 1: Allocate same-habitat types of at least the same condition
-    for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
-      let remainingBaselineAmount = baselineAmount;
-      const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
-      for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
-        const improvementType = improvementHabitat.includes('|') ? improvementHabitat.split('|')[0] : improvementHabitat;
-        if (baselineType == improvementType) {
-          const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
-          const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
-          if (getConditionScore(improvementCondition) >= getConditionScore(baselineCondition)) {
-            const allocatedAmount = Math.min(remainingBaselineAmount, improvementAmount);
-            if (allocatedAmount > 0) {
-              AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
-              remainingBaselineAmount -= allocatedAmount;
-            }
-          }
-        }
-      }
-    }
-
-    // Pass 2: Allocate remaining baseline to improvements, preferring large blocks
+    // Allocate remaining baseline to improvements, preferring large blocks
     const allocateRemaining = (sourceHabitats, sameGroupOnly) => {
       // sort by combined distinctiveness & condition score to allocate the lowest first (poorer quality habitats first)
       const sortedBaseline = sourceHabitats
@@ -172,12 +152,35 @@ const getHabitatSankeyData = (site) => {
       // special handling for artificial area habitats - assume these are more likely to be improved to process them first
       const artificialGroups = ['cropland', 'urban', 'intertidal hard structures'];
       const artificalHabitats = ['modified grassland'];
-      allocateRemaining(Array.from(remainingBaseline.entries())
+      const artificialRemaining = Array.from(remainingBaseline.entries())
         .filter(([habitat]) => {
           const baselineHabitat = habitat.includes('|') ? habitat.split('|')[0] : habitat;
-          return artificalHabitats.includes(baselineHabitat.toLowerCase()) || artificialGroups.includes(getHabitatGroup(baselineHabitat).toLowerCase());
-        }), false);
+          const distinctivenessScore = getDistinctivenessScore(baselineHabitat);
+          return distinctivenessScore <= 2 && (artificalHabitats.includes(baselineHabitat.toLowerCase()) || artificialGroups.includes(getHabitatGroup(baselineHabitat).toLowerCase()));
+        });
+      allocateRemaining(artificialRemaining, false);
     }
+    
+    // Allocate same-habitat types of at least the same condition
+    for (const [habitatType, baselineAmount] of siteBaselineTotals.entries()) {
+      let remainingBaselineAmount = baselineAmount;
+      const baselineType = habitatType.includes('|') ? habitatType.split('|')[0] : habitatType;
+      for (const [improvementHabitat, improvementAmount] of remainingImprovement) {
+        const improvementType = improvementHabitat.includes('|') ? improvementHabitat.split('|')[0] : improvementHabitat;
+        if (baselineType == improvementType) {
+          const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
+          const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
+          if (getConditionScore(improvementCondition) >= getConditionScore(baselineCondition)) {
+            const allocatedAmount = Math.min(remainingBaselineAmount, improvementAmount);
+            if (allocatedAmount > 0) {
+              AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
+              remainingBaselineAmount -= allocatedAmount;
+            }
+          }
+        }
+      }
+    }
+
     // first do a pass only within habitat groups
     allocateRemaining(Array.from(remainingBaseline.entries()), true);
     // then allow allocation between groups
