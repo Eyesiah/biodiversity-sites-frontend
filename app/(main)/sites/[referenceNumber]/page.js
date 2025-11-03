@@ -126,7 +126,7 @@ const getHabitatSankeyData = (site) => {
           const baselineCondition = habitatType.includes('|') ? habitatType.split('|')[1] : 'condition assessment n/a';
           const improvementCondition = improvementHabitat.includes('|') ? improvementHabitat.split('|')[1] : 'condition assessment n/a';
           if (getConditionScore(improvementCondition) >= getConditionScore(baselineCondition)) {
-            const allocatedAmount = Math.min(baselineAmount, improvementAmount);
+            const allocatedAmount = Math.min(remainingBaselineAmount, improvementAmount);
             if (allocatedAmount > 0) {
               AllocateHabitat(habitatType, improvementHabitat, allocatedAmount);
               remainingBaselineAmount -= allocatedAmount;
