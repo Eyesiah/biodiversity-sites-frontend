@@ -11,6 +11,60 @@ import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
+// Constants for habitat calculations
+const HABITAT_DISTINCTIVENESS_SCORES = {
+  'low': 1, 'medium': 2, 'high': 3
+};
+
+const HABITAT_CONDITION_SCORES = {
+  'good': 3,
+  'fairly good': 2.5,
+  'moderate': 2,
+  'fairly poor': 1.5,
+  'poor': 1,
+  'condition assessment n/a': 1,
+  'n/a – other': 0,
+  'n/a - other': 0,
+};
+
+const CALCULATION_CONSTANTS = {
+  STRATEGIC_SIGNIFICANCE: 1.0,
+  SPATIAL_RISK: 1.0,
+  TEMPORAL_RISK: 1.0, // Simplified
+  DIFFICULTY_FACTOR: 1.0 // Simplified
+};
+
+// Utility functions for habitat calculations
+const getDistinctivenessScore = (habitat) => HABITAT_DISTINCTIVENESS_SCORES[habitat] || 1;
+
+const getConditionScore = (condition) => {
+  const key = condition.toLowerCase().trim();
+  return HABITAT_CONDITION_SCORES[key] || 1;
+};
+
+const calculateBaselineHUInline = (size, habitat, condition) => {
+  return size * getDistinctivenessScore(habitat) * getConditionScore(condition) * CALCULATION_CONSTANTS.STRATEGIC_SIGNIFICANCE;
+};
+
+const calculateImprovementHUInline = (size, habitat, condition, interventionType) => {
+  if (interventionType.toLowerCase() === 'creation') {
+    return size * getDistinctivenessScore(habitat) * getConditionScore(condition) *
+           CALCULATION_CONSTANTS.STRATEGIC_SIGNIFICANCE * CALCULATION_CONSTANTS.TEMPORAL_RISK *
+           CALCULATION_CONSTANTS.DIFFICULTY_FACTOR * CALCULATION_CONSTANTS.SPATIAL_RISK;
+  } else if (interventionType.toLowerCase() === 'enhanced') {
+    return 0; // No HU calculation for enhanced
+  }
+  return 0;
+};
+
+// Helper function to sum habitat units from an array of habitats
+const sumHabitatUnits = (habitats, calculateFn) => {
+  if (!habitats) return 0;
+  return habitats.reduce((sum, habitat) => {
+    if (habitat.HUs !== undefined) return sum + habitat.HUs;
+    return sum + calculateFn(habitat.size || 0, habitat.type || '', habitat.condition || 'N/A - Other', habitat.interventionType || '');
+  }, 0);
+};
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -70,12 +124,41 @@ export default function SiteListPageContent({ sites, fullSites, summary, imdChar
             exportConfig={{
               onExportCsv: handleExport
             }}
-            summary={(filteredCount, totalCount) => (
-              <Text fontSize="1.2rem">
-                This list of <Text as="strong">{formatNumber(totalCount, 0)}</Text> sites covers <Text as="strong">{formatNumber(summary.totalArea, 0)}</Text> hectares.
-                They comprise <Text as="strong">{formatNumber(summary.totalBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(summary.totalCreatedHUs, 0)}</Text> created improvement habitat units.
-              </Text>
-            )}
+            summary={(filteredCount, totalCount, sortedItems) => {
+              // Calculate filtered totals from the current sorted/filtered items
+              const filteredFullSites = sortedItems.map(processedSite =>
+                fullSites.find(fullSite => fullSite.referenceNumber === processedSite.referenceNumber)
+              ).filter(Boolean);
+
+              const filteredArea = filteredFullSites.reduce((sum, site) => sum + (site.siteSize || 0), 0);
+
+              let filteredBaselineHUs = 0;
+              let filteredCreatedHUs = 0;
+
+              // Calculate habitat units for all filtered sites
+              filteredFullSites.forEach(site => {
+                // Sum baseline HUs from all habitat types
+                if (site.habitats) {
+                  filteredBaselineHUs += sumHabitatUnits(site.habitats.areas, calculateBaselineHUInline);
+                  filteredBaselineHUs += sumHabitatUnits(site.habitats.hedgerows, calculateBaselineHUInline);
+                  filteredBaselineHUs += sumHabitatUnits(site.habitats.watercourses, calculateBaselineHUInline);
+                }
+
+                // Sum improvement HUs from all habitat types
+                if (site.improvements) {
+                  filteredCreatedHUs += sumHabitatUnits(site.improvements.areas, calculateImprovementHUInline);
+                  filteredCreatedHUs += sumHabitatUnits(site.improvements.hedgerows, calculateImprovementHUInline);
+                  filteredCreatedHUs += sumHabitatUnits(site.improvements.watercourses, calculateImprovementHUInline);
+                }
+              });
+
+              return (
+                <Text fontSize="1.2rem">
+                  This list of <Text as="strong">{formatNumber(filteredCount, 0)}</Text> sites covers <Text as="strong">{formatNumber(filteredArea, 0)}</Text> hectares.
+                  They comprise <Text as="strong">{formatNumber(filteredBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(filteredCreatedHUs, 0)}</Text> created improvement habitat units.
+                </Text>
+              );
+            }}
             onSortedItemsChange={handleSortedItemsChange}
             tabs={[
               {
@@ -110,7 +193,7 @@ export default function SiteListPageContent({ sites, fullSites, summary, imdChar
                 )
               },
               {
-                title: "BGS Site Use Chart",
+                title: ({ sortedItems }) => `BGS Site Use Chart (${sortedItems.length})`,
                 content: ({ sortedItems }) => {
                   // Map processed sites back to full sites for chart data
                   const fullSitesForChart = sortedItems.map(processedSite =>

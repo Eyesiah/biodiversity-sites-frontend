@@ -130,18 +130,21 @@ export default function SearchableTableLayout({
       )}
 
       {tabs && tabs.length > 0 ? (
-        <Tabs.Root>
+        <Tabs.Root key={`tabs-${sortedItems.length}`}>
           <Tabs.List
             position="sticky"
           >
-            {tabs.map((tab, index) => (
-              <Tabs.Trigger
-                key={index}
-                value={index}
-                dangerouslySetInnerHTML={{ __html: tab.title }}
-              >
-              </Tabs.Trigger>
-            ))}
+            {tabs.map((tab, index) => {
+              const title = typeof tab.title === 'function' ? tab.title(renderProps) : tab.title;
+              return (
+                <Tabs.Trigger
+                  key={index}
+                  value={index}
+                  dangerouslySetInnerHTML={{ __html: title }}
+                >
+                </Tabs.Trigger>
+              );
+            })}
           </Tabs.List>
           {tabs.map((tab, index) => (
             <Tabs.Content key={index} value={index}>

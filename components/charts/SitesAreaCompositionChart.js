@@ -115,7 +115,7 @@ export const SitesAreaCompositionChart = ({ sites }) => {
   };
 
   return (
-    <Box bg="ivory" p="1rem">
+    <Box bg="bone" p="1rem">
       <Heading as="h3" size="xd" textAlign="center" mb={4}>
         BGS Site Area Use Composition
       </Heading>
