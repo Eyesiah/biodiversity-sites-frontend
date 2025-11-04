@@ -133,7 +133,7 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
   );
 }
 
-export default function HabitatAnalysisContent({ habitats, sankeyData }) {
+export default function HabitatAnalysisContent({ habitats }) {
 
   const handleExport = (allData) => {
 
@@ -163,13 +163,7 @@ export default function HabitatAnalysisContent({ habitats, sankeyData }) {
   };
 
 
-  const tabs = [    
-    {
-      title: 'Habitat<br>Transformation',
-      content: () => {
-        return <SiteHabitatSankeyChart data={sankeyData} />;
-      }
-    },
+  const tabs = [
     {
       title: 'Area<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (

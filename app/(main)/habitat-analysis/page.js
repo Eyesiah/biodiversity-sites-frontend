@@ -3,7 +3,6 @@ import { getHabitatDistinctiveness } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 import { slugify } from '@/lib/format'
-import { getAllHabitatSankeyGraph } from '@/lib/sites'
 
 export const metadata = {
   title: 'BGS Habitat Analysis',
@@ -97,7 +96,7 @@ export default async function HabitatAnalysis() {
 
   return (
     <>
-      <HabitatAnalysisContent habitats={processedData} sankeyData={sankeyData} />
+      <HabitatAnalysisContent habitats={processedData} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
