@@ -123,7 +123,7 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
         isHabitatOpen={isHabitatOpen}
         sites={sites}
         requestSort={requestSort}
-        units={module == 'areas' ? 'ha' : 'km'}
+        units={module == 'Area' ? 'ha' : 'km'}
       />
     );
   };
