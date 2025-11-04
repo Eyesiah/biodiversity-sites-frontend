@@ -92,8 +92,6 @@ export default async function HabitatAnalysis() {
     };
   });
 
-  const sankeyData = getAllHabitatSankeyGraph(allSites);
-
   return (
     <>
       <HabitatAnalysisContent habitats={processedData} />
