@@ -22,25 +22,11 @@ const UNITS = {
   HECTARES: 'ha'
 };
 
-// Individual tree habitat types to exclude
-const INDIVIDUAL_TREE_TYPES = ['Urban tree', 'Rural tree'];
-
 // Color scheme for different categories
 const COLORS = {
   NON_BASELINE: '#FF9800',     // Orange - Non-baseline land uses
   NET_RETAINED: '#4CAF50',     // Green - Net retained baseline
   IMPROVEMENTS: '#2196F3'      // Blue - Improvement areas
-};
-
-// Utility functions
-const isNotIndividualTree = (habitat) => !INDIVIDUAL_TREE_TYPES.includes(habitat.type);
-
-const calculateHabitatArea = (sites, habitatPath, filterFn = () => true) => {
-  return sites.reduce((sum, site) => {
-    const habitats = habitatPath.split('.').reduce((obj, key) => obj?.[key], site) || [];
-    const filteredHabitats = habitats.filter(habitat => filterFn(habitat) && isNotIndividualTree(habitat));
-    return sum + filteredHabitats.reduce((areaSum, habitat) => areaSum + (habitat.size || 0), 0);
-  }, 0);
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -67,8 +53,8 @@ export const SitesAreaCompositionChart = ({ sites }) => {
     const totalBGSSize = sites.reduce((sum, site) => sum + (site.siteSize || 0), 0);
 
     // Calculate baseline and improvement areas using utility function
-    const totalBaselineAreas = calculateHabitatArea(sites, 'habitats.areas');
-    const totalImprovementAreas = calculateHabitatArea(sites, 'improvements.areas');
+    const totalBaselineAreas = sites.reduce((sum, site) => sum + (site.baselineAreaSize || 0), 0);
+    const totalImprovementAreas = sites.reduce((sum, site) => sum + (site.improvementAreaSize || 0), 0);
 
     // Three pie slices as specified:
     // 1. Total BGS areas minus baseline areas
