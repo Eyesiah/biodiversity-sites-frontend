@@ -82,7 +82,7 @@ export const SitesAreaCompositionChart = ({ sites }) => {
 
     // Create pie chart data format (ordered for legend: habitat areas first, Non Habitat-based Land Use last)
     const chartData = [
-      { name: 'Net Retained Baseline Habitat', value: netRetainedBaseline, color: COLORS.NET_RETAINED },
+      { name: 'Retained Baseline Area Habitat', value: netRetainedBaseline, color: COLORS.NET_RETAINED },
       { name: 'Improvement Area Habitat', value: improvementAreas, color: COLORS.IMPROVEMENTS },
       { name: 'Non Habitat-based Land Use', value: nonBaselineLand, color: COLORS.NON_BASELINE }
     ].filter(item => item.value > 0); // Only include items with positive values
