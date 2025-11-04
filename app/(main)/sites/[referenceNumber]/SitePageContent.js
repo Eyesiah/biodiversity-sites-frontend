@@ -114,7 +114,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortIndividualTreesImprovements}
           units={UNITS.HECTARES}
         />)
-      }
+      },
+      shouldRender: () => individualTreesImprovements.length > 0 || individualTreesBaseline.length > 0
     },
     {
       title: `Individual Trees<br>Baseline&nbsp;(${individualTreesBaseline.length})`,
@@ -126,7 +127,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortIndividualTreesBaseline}
           units={UNITS.HECTARES}
         />)
-      }
+      },
+      shouldRender: () => individualTreesImprovements.length > 0 || individualTreesBaseline.length > 0
     },
     {
       title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
@@ -212,12 +214,13 @@ export default function SitePageContent({site, sankeyData}) {
           <Tabs.Root lazyMount defaultValue={0} width="100%">
             <Tabs.List>
               {tabs.map((tab, index) => (
-                <Tabs.Trigger
-                  key={index}
-                  value={index}
-                  dangerouslySetInnerHTML={{ __html: tab.title }}
-                >
-                </Tabs.Trigger>
+                (tab.shouldRender == null || tab.shouldRender()) && (
+                  <Tabs.Trigger
+                    key={index}
+                    value={index}
+                    dangerouslySetInnerHTML={{ __html: tab.title }}
+                  />
+                )
               ))}
             </Tabs.List>
             {tabs.map((tab, index) => (

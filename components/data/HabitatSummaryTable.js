@@ -73,6 +73,7 @@ export const HabitatSummaryTable = ({ site }) => {
 
   const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || allocationIndividualTrees > 0 || site.allocations != null;
   const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
+  const hasIndividualTrees = baselineIndividualTrees > 0 || improvementIndividualTrees > 0 || allocationIndividualTrees > 0;
 
   return (
     <Box overflowX="auto">
@@ -102,7 +103,7 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationAreaHUs)}</DataTable.NumericCell>}
           </DataTable.Row>
-          <DataTable.Row>
+          {hasIndividualTrees && <DataTable.Row>
             <DataTable.Cell>Individual trees (ha)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTrees, 2)}</DataTable.NumericCell>
@@ -112,7 +113,7 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationIndividualTrees, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementIndividualTrees > 0 ? formatNumber((allocationIndividualTrees / improvementIndividualTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
-          </DataTable.Row>
+          </DataTable.Row>}
           <DataTable.Row>
             <DataTable.Cell>Hedgerows (km)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
