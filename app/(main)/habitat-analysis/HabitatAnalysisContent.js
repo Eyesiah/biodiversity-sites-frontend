@@ -9,6 +9,7 @@ import { DataTable } from '@/components/styles/DataTable';
 import { TableContainer } from '@/components/styles/PrimaryCard';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
+import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
 
 const processDataWithProportions = (data, module) => {
   // Calculate totals
@@ -132,7 +133,7 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
   );
 }
 
-export default function HabitatAnalysisContent({ habitats }) {
+export default function HabitatAnalysisContent({ habitats, sankeyData }) {
 
   const handleExport = (allData) => {
 
@@ -162,7 +163,13 @@ export default function HabitatAnalysisContent({ habitats }) {
   };
 
 
-  const tabs = [
+  const tabs = [    
+    {
+      title: 'Habitat<br>Transformation',
+      content: () => {
+        return <SiteHabitatSankeyChart data={sankeyData} />;
+      }
+    },
     {
       title: 'Area<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (
