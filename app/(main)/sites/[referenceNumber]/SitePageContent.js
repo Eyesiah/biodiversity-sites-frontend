@@ -140,7 +140,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortImprovementHedgerows}
           units={UNITS.KILOMETRES}
         />)
-      }
+      },
+      shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
     },
     {
       title: `Baseline<br>Hedgerows&nbsp;(${site.habitats.hedgerows.length})`,
@@ -152,7 +153,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortBaselineHedgerows}
           units={UNITS.KILOMETRES}
         />)
-      }
+      },
+      shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
     },
     {
       title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
@@ -164,7 +166,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortImprovementWatercourses}
           units={UNITS.KILOMETERS}
         />)
-      }
+      },
+      shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
     },
     {
       title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
@@ -176,7 +179,8 @@ export default function SitePageContent({site, sankeyData}) {
           requestSort={requestSortBaselineWatercourses}
           units={UNITS.KILOMETERS}
         />)
-      }
+      },
+      shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
     },
     {
       title: `Allocations&nbsp;(${site.allocations.length})`,

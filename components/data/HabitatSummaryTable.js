@@ -74,6 +74,9 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || allocationIndividualTrees > 0 || site.allocations != null;
   const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
   const hasIndividualTrees = baselineIndividualTrees > 0 || improvementIndividualTrees > 0 || allocationIndividualTrees > 0;
+  const hasArea = baselineArea > 0 || improvementArea > 0 || allocationArea > 0;
+  const hasHedgerow = baselineHedgerow > 0 || improvementHedgerow > 0 || allocationHedgerow > 0;
+  const hasWatercourse = baselineWatercourse > 0 || improvementWatercourse > 0 || allocationWatercourse > 0;
 
   return (
     <Box overflowX="auto">
@@ -92,7 +95,7 @@ export const HabitatSummaryTable = ({ site }) => {
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
-          <DataTable.Row>
+          {hasArea && <DataTable.Row>
             <DataTable.Cell>Areas (ha)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineArea, 2)}</DataTable.NumericCell>
@@ -102,7 +105,7 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationAreaHUs)}</DataTable.NumericCell>}
-          </DataTable.Row>
+          </DataTable.Row>}
           {hasIndividualTrees && <DataTable.Row>
             <DataTable.Cell>Individual trees (ha)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
@@ -114,7 +117,7 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{improvementIndividualTrees > 0 ? formatNumber((allocationIndividualTrees / improvementIndividualTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
           </DataTable.Row>}
-          <DataTable.Row>
+          {hasHedgerow && <DataTable.Row>
             <DataTable.Cell>Hedgerows (km)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)}</DataTable.NumericCell>
@@ -124,8 +127,8 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationHedgerowHUs)}</DataTable.NumericCell>}
-          </DataTable.Row>
-          <DataTable.Row>
+          </DataTable.Row>}
+          {hasWatercourse && <DataTable.Row>
             <DataTable.Cell>Watercourses (km)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)}</DataTable.NumericCell>
@@ -135,7 +138,7 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
-          </DataTable.Row>
+          </DataTable.Row>}
         </DataTable.Body>
       </DataTable.Root>
     </Box>
