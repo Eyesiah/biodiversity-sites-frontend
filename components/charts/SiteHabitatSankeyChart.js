@@ -32,11 +32,6 @@ const getNodeColor = (node) => {
     return '#b0500cff'; // Burnt Orange colour for Individual trees
   }
 
-  // Special handling for dummy nodes
-  if (habitatName === '<CREATED>' || habitatName === '<RETAINED>') {
-    return '#808080'; // Gray for dummy nodes
-  }
-
   // Get distinctiveness band
   const band = DISTINCTIVENESS_BANDS[distinctivenessScore] || DISTINCTIVENESS_BANDS[3];
 
