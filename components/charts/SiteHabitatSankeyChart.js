@@ -243,7 +243,7 @@ export default function SiteHabitatSankeyChart({ data }) {
           The BGS Register contains information about the site&apos;s habitats before (baseline) and after (improved) the enhancement works, but does not specify exactly which habitats have been converted to which.
         </Text>
         <br />
-        <Text>This Sankey chart estimates what these conversions might plausibly be, using a custom heuristic (i.e., a guess) that we have developed. You can view the open source code for this on our <ExternalLink a='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>, but here is a brief summary:</Text>
+        <Text>This Sankey chart estimates what these conversions might plausibly be. Higher distinctiveness habitats are higher on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a custom heuristic (i.e., a guess) that we have developed:</Text>
         <br />
         <List.Root ml="6">
           <List.Item>First, habitats that have been improved (ie, the condition score is better) are assigned;</List.Item>
@@ -253,7 +253,7 @@ export default function SiteHabitatSankeyChart({ data }) {
           <List.Item>Any remaining habitats that cannot be assigned to an improvement are then considered Retained.</List.Item>
         </List.Root>
         <br />
-        <Text>We think this way of viewing the data gives you a good overview of how the site has been transformed to become a BGS site, despite the limitations of the source data. Please do give us feedback about how you think this could be improved, using the <b>Feedback</b> button at the top of the page.</Text>
+        <Text>We think this way of viewing the data gives you a good overview of how the site has been transformed to become a BGS site, despite the limitations of the source data. Please do give us feedback about how you think this could be improved, using the <b>Feedback</b> button at the top of the page. You can view the open source code for the algorithm on our <ExternalLink a='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>.</Text>
       </Modal>
     </Stack>
   );
