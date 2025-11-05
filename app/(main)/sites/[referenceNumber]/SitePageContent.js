@@ -75,7 +75,7 @@ export default function SitePageContent({site, sankeyData}) {
 
   const tabs = [
     {
-      title: 'Habitat<br>Transformation',
+      title: 'Habitat<br>Improvement',
       content: () => {
         return <SiteHabitatSankeyChart data={sankeyData} />;
       }

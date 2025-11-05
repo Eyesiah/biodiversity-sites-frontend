@@ -1,6 +1,10 @@
 import { Rectangle, Layer, Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import { formatNumber } from '@/lib/format'
-import {   useBreakpointValue} from '@chakra-ui/react';
+import { useBreakpointValue, Flex, Heading, Text, Stack, List } from '@chakra-ui/react';
+import InfoButton from '@/components/styles/InfoButton'
+import Modal from '@/components/ui/Modal';
+import { useState } from 'react';
+import ExternalLink from '@/components/ui/ExternalLink';
 
 // Configuration constants
 const NUM_SHADES = 8;
@@ -99,8 +103,7 @@ const CustomSankeyNode = ({
   payload,
   containerWidth,
   habitatShades,
-  allHabitats}) =>
-{
+  allHabitats }) => {
   const isOut = x + width + 6 > containerWidth;
 
   let name = payload.condition.length > 0 ? `[${payload.condition}] ${payload.name}` : payload.name;
@@ -125,7 +128,7 @@ const CustomSankeyNode = ({
         x={isOut ? x - 3 : x + width + 3}
         y={y + height / 2 + 6}
         fill="#000"
-        style={{fontSize: '14px'}}
+        style={{ fontSize: '14px' }}
       >
         {`${formatNumber(payload.value, 2)}${payload.unit == 'areas' ? 'ha' : 'km'} - ${name}`}
       </text>
@@ -175,7 +178,9 @@ const CustomSankeyLink = (props) => {
   );
 }
 
-export default function SiteHabitatSankeyChart ({data}) {
+export default function SiteHabitatSankeyChart({ data }) {
+  const [modalState, setModalState] = useState(false);
+
   const sankeyHeight = data.dynamicHeight || 900;
 
   // Generate habitat shades and extract all habitats
@@ -196,15 +201,24 @@ export default function SiteHabitatSankeyChart ({data}) {
     }) || []
   };
 
+  const showModal = () => {
+    setModalState(true);
+  };
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
-    <div>
-      <p style={{ fontSize: '14px', color: '#565555ff', marginBottom: '16px', fontStyle: 'italic' }}>
-        This Sankey diagram shows habitat transformations from baseline (on the left) to created or enhanced (improved) habitats (on the right), using a heuristic that prioritises same-habitat maintenance and then allocates the remaining baseline habitats to improved habitats based on the trading rules.
-        <br />
-        The lowest distinctiveness baseline habitats are assumed to be the most likely to be improved; habitats are assumed to be improved within their broad habitat category where possible. Where not possible, a higher distinctiveness habitat is used.
-        <br />
-        NB: The source data for this diagram does not contain information about which baseline habitats convert to which improved habitats.
-      </p>
+    <Stack>
+      <InfoButton onClick={() => showModal()}>
+        <Heading as="h2" size="lg" textAlign="center">Habitat Improvement Chart</Heading>
+      </InfoButton>
+
+      <Flex width='100%' justifyContent="space-between" alignItems="flex-end">
+        <Text textAlign='left' marginLeft='10px' fontSize={12} fontWeight='bold' >Baseline<br />Habitats</Text>
+        {!isMobile && <Text fontSize={12} fontWeight='bold'>... which are becoming ...</Text>}
+        <Text textAlign='right' marginRight='10px' fontSize={12} fontWeight='bold'>Improved<br />Habitats</Text>
+      </Flex>
+
       <ResponsiveContainer width="100%" height={sankeyHeight}>
         <Sankey
           height={sankeyHeight}
@@ -224,6 +238,23 @@ export default function SiteHabitatSankeyChart ({data}) {
           />
         </Sankey>
       </ResponsiveContainer>
-    </div>
+      <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='md'>
+        <Text>
+          The BGS Register contains information about the site&apos;s habitats before (baseline) and after (improved) the enhancement works, but does not specify exactly which habitats have been converted to which.
+        </Text>
+        <br />
+        <Text>This Sankey chart estimates what these conversions might plausibly be, using a custom heuristic (i.e., a guess) that we have developed. You can view the open source code for this on our <ExternalLink a='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>, but here is a brief summary:</Text>
+        <br />
+        <List.Root ml="6">
+          <List.Item>First, habitats that have been improved (ie, the condition score is better) are assigned;</List.Item>
+          <List.Item>Then, artificial baseline habitats are assumed to be converted to improved habitats;</List.Item>
+          <List.Item>Habitats are converted within the same broad category where possible;</List.Item>
+          <List.Item>Finally, the remaining habitats are converted, prioritising the lowest distinctiveness baseline habitats first;</List.Item>
+          <List.Item>Any remaining habitats that cannot be assigend to an improvement are then considered Retained.</List.Item>
+        </List.Root>
+        <br />
+        <Text>We think this way of viewing the data gives you a good overview of how the site has been transformed to become a BGS site, despite the limitations of the source data. Please do give us feedback about how you think this could be improved, using the <b>Feedback</b> button at the top of the page.</Text>
+      </Modal>
+    </Stack>
   );
 }
