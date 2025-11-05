@@ -239,21 +239,21 @@ export default function SiteHabitatSankeyChart({ data }) {
         </Sankey>
       </ResponsiveContainer>
       <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='md'>
-        <Text>
-          The BGS Register contains information about the site&apos;s habitats before (baseline) and after (improved) the enhancement works, but does not specify exactly which habitats have been converted to which.
-        </Text>
+        <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
         <br />
-        <Text>This Sankey chart estimates what these conversions might plausibly be. Higher distinctiveness habitats are higher on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a custom heuristic (i.e. a guess) that we have developed based on the <ExternalLink a='https://bristoltreeforum.org/2024/10/27/biodiversity-metrics-the-trading-rules-explained/ '>trading rules</ExternalLink>:</Text>
+        <Text>This Sankey chart shows what these improvements might plausibly be. Higher distinctiveness habitats are higher up on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
         <br />
-        <List.Root ml="6">
-          <List.Item>First, habitats that have been improved (i.e. where the condition score is better) are assigned;</List.Item>
-          <List.Item>Low and Very Low distinctiveness habitats are assumed to be converted to higher distinctiveness habitats first;</List.Item>
-          <List.Item>Then, Medium distinctiveness habitats are converted within the same broad category where possible;</List.Item>
-          <List.Item>Finally, remaining habitats are converted, prioritising the lowest distinctiveness habitats;</List.Item>
-          <List.Item>Any remaining habitats that cannot be assigned to an improvement are then considered Retained.</List.Item>
-        </List.Root>
+        <ol type="1">
+          <li>1. First, habitats that have been enhanced (i.e. where the condition score is better) are assigned to their new condition.</li>
+          <li>2. Low and very low distinctiveness baseline habitats are assumed to be converted to higher distinctiveness habitats.</li>
+          <li>3. Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</li>
+          <li>4. Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</li>
+          <li>5. Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</li>
+        </ol>
+        <br />        
+        <text>Despite the limitations of the source data, we think this way of viewing the data gives you a good overview of how a site has become a biodiversity gain site.</text>
         <br />
-        <Text>We think this way of viewing the data gives you a good overview of how the site has been transformed to become a BGS site, despite the limitations of the source data. Please do give us feedback about how you think this could be improved, using the <b>Feedback</b> button at the top of the page. You can view the open source code for the algorithm on our <ExternalLink a='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>.</Text>
+        <Text>Please tell us how you think this chart might be improved, using the Feedback button at the top of the page. You can view the open source code for the algorithm on our <ExternalLink a='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>.</Text>
       </Modal>
     </Stack>
   );
