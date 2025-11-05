@@ -5,6 +5,7 @@ import Tooltip from '@/components/ui/Tooltip';
 import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Text } from '@chakra-ui/react';
+import { TableContainer } from '@/components/styles/PrimaryCard';
 
 const AllocationHabitats = ({ habitats }) => {
 
@@ -66,54 +67,56 @@ const AllocationRow = ({ alloc }) => {
   )
 };
 
-export default function AllAllocationsList ({sortedItems, requestSort, sortConfig, summaryData}) {
+export default function AllAllocationsList({ sortedItems, requestSort, sortConfig, summaryData }) {
 
   return (
-    <PrimaryTable.Root>
-      <PrimaryTable.Header>
-        <PrimaryTable.Row>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}>LPA</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}>NCA</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
-            <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
-              Spatial Risk
-            </Tooltip>
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
-            <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
-              IMD transfer
-            </Tooltip>
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} {...getSortProps('d', sortConfig)}>
-            <Tooltip text="The distance from the development site to the BGS offset site.">
-              Distance (km)
-            </Tooltip>
-          </PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} {...getSortProps('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} {...getSortProps('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader onClick={() => requestSort('wu')} {...getSortProps('wu', sortConfig)}>Watercourse HUs</PrimaryTable.ColumnHeader>
-        </PrimaryTable.Row>
-      </PrimaryTable.Header>
-      <PrimaryTable.Body>
-        <PrimaryTable.Row fontWeight="bold" bg="#ecf0f1">
-          <PrimaryTable.Cell colSpan={6} textAlign="center" sx={{ border: '3px solid #ddd' }}>Totals</PrimaryTable.Cell>
-          <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
-            {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
-          </PrimaryTable.CenteredNumericCell>
-          <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
-            {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
-          </PrimaryTable.CenteredNumericCell>
-          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</PrimaryTable.NumericCell>
-          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</PrimaryTable.NumericCell>
-          <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
-        </PrimaryTable.Row>
-        {sortedItems.map((alloc) => (
-          <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
-        ))}
-      </PrimaryTable.Body>
-    </PrimaryTable.Root>
+    <TableContainer>
+      <PrimaryTable.Root>
+        <PrimaryTable.Header>
+          <PrimaryTable.Row>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}>LPA</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}>NCA</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
+              <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
+                Spatial Risk
+              </Tooltip>
+            </PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
+              <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
+                IMD transfer
+              </Tooltip>
+            </PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} {...getSortProps('d', sortConfig)}>
+              <Tooltip text="The distance from the development site to the BGS offset site.">
+                Distance (km)
+              </Tooltip>
+            </PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} {...getSortProps('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} {...getSortProps('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('wu')} {...getSortProps('wu', sortConfig)}>Watercourse HUs</PrimaryTable.ColumnHeader>
+          </PrimaryTable.Row>
+        </PrimaryTable.Header>
+        <PrimaryTable.Body>
+          <PrimaryTable.Row fontWeight="bold" bg="#ecf0f1">
+            <PrimaryTable.Cell colSpan={6} textAlign="center" sx={{ border: '3px solid #ddd' }}>Totals</PrimaryTable.Cell>
+            <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
+              {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
+            </PrimaryTable.CenteredNumericCell>
+            <PrimaryTable.CenteredNumericCell sx={{ border: '3px solid #ddd' }}>
+              {summaryData.medianDistance !== null ? `${formatNumber(summaryData.medianDistance, 2)} (median)` : 'N/A'}
+            </PrimaryTable.CenteredNumericCell>
+            <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalArea)}</PrimaryTable.NumericCell>
+            <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalHedgerow)}</PrimaryTable.NumericCell>
+            <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
+          </PrimaryTable.Row>
+          {sortedItems.map((alloc) => (
+            <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
+          ))}
+        </PrimaryTable.Body>
+      </PrimaryTable.Root>
+    </TableContainer>
   )
 };
