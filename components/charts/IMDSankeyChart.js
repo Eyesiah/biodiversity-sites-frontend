@@ -58,7 +58,7 @@ const processSankeyData = (allocations) => {
   return data;
 };
 
-export default function SankeyChart({ allocations }) {
+export default function IMDSankeyChart({ allocations }) {
   const data = processSankeyData(allocations);
 
   return (

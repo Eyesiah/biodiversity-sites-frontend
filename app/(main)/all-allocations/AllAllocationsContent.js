@@ -2,11 +2,12 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
+import { bootstrapMedianCI } from '@/lib/Stats';
 import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart'
-import { Box, Text, SimpleGrid } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid, Input, HStack } from '@chakra-ui/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 
 import AllAllocationsList from './AllAllocationsList';
@@ -97,38 +98,40 @@ export default function AllAllocationsContent({ allocations }) {
   }, [allocations]);
 
   const [summaryData, setSummaryData] = useState(calcSummaryData(allocations));
+  const [binWidth, setBinWidth] = useState(2);
 
   const handleSortedItemsChange = useCallback((sortedItems) => {
     setSummaryData(calcSummaryData(sortedItems));
   }, [calcSummaryData]);
 
-  const calcIMDHistogramData = useCallback((filteredAllocations) => {
+  const calcIMDHistogramData = useCallback((filteredAllocations, binWidth = 1) => {
     // Calculate IMD differences (Site IMD - Allocation IMD) for histogram
     const validAllocations = filteredAllocations.filter(alloc =>
       typeof alloc.simdS === 'number' && typeof alloc.imdS === 'number' &&
       alloc.simdS !== 'N/A' && alloc.imdS !== 'N/A'
     );
 
-    // Group by integer differences (-10 to +10 for reasonable range)
+    // Group by configurable bin width
     const diffCounts = {};
     const diffAllocIMDs = {};
     const diffSiteIMDs = {};
     let minDiff = -10;
     let maxDiff = 10;
     validAllocations.forEach(alloc => {
-      const diff = Math.round(alloc.simdS - alloc.imdS);
+      const rawDiff = alloc.simdS - alloc.imdS;
+      const diff = Math.round(rawDiff / binWidth) * binWidth;
       minDiff = Math.min(minDiff, diff);
       maxDiff = Math.max(maxDiff, diff);
       diffCounts[diff] = (diffCounts[diff] || 0) + 1;
       if (!diffAllocIMDs[diff]) diffAllocIMDs[diff] = [];
       if (!diffSiteIMDs[diff]) diffSiteIMDs[diff] = [];
       diffAllocIMDs[diff].push(alloc.imdS);
-      diffSiteIMDs[diff].push(alloc.simdS);    
+      diffSiteIMDs[diff].push(alloc.simdS);
     });
 
     // Convert to chart data format
     const chartData = [];
-    for (let i = minDiff; i <= maxDiff; i++) {
+    for (let i = minDiff; i <= maxDiff; i += binWidth) {
       if (diffCounts[i] || i === 0) { // Include 0 even if no data
         const allocIMDs = diffAllocIMDs[i] || [];
         const siteIMDs = diffSiteIMDs[i] || [];
@@ -154,6 +157,9 @@ export default function AllAllocationsContent({ allocations }) {
       const medianDiff = sortedDifferences.length % 2 === 0
         ? (sortedDifferences[sortedDifferences.length / 2 - 1] + sortedDifferences[sortedDifferences.length / 2]) / 2
         : sortedDifferences[Math.floor(sortedDifferences.length / 2)];
+
+      // Calculate 95% confidence interval for median
+      const medianCI = bootstrapMedianCI(differences);
 
       // Calculate correlation between site IMD and allocation IMD scores
       const siteIMDs = validAllocations.map(alloc => alloc.simdS);
@@ -189,6 +195,7 @@ export default function AllAllocationsContent({ allocations }) {
           correlation,
           meanDifference: meanDiff,
           medianDifference: medianDiff,
+          medianCI,
           stdDevDifference: stdDevDiff
         }
       };
@@ -221,9 +228,9 @@ export default function AllAllocationsContent({ allocations }) {
     {
       title: 'IMD Score Transfers',
       content: ({ sortedItems }) => {
-        const { chartData, stats } = calcIMDHistogramData(sortedItems);
+        const { chartData, stats } = calcIMDHistogramData(sortedItems, binWidth);
         return (
-          <>
+          <>            
             <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 50, right: 30, left: 20, bottom: 15 }} barCategoryGap={0}>
@@ -243,7 +250,7 @@ export default function AllAllocationsContent({ allocations }) {
                 <Text fontSize="1.1rem" fontWeight="bold" color="#36454F" marginBottom="4" textAlign="center">
                   IMD Score Transfer Histogram - a negative value indicates a transfer to a less-deprived LSOA. A positive value indicates a transfer to a more-deprived LSOA.
                 </Text>
-                <SimpleGrid columns={{ base: 2, md: 3, lg: 5 }} spacing="4">
+                <SimpleGrid columns={{ base: 2, md: 3, lg: 6 }} spacing="4">
                   <Box textAlign="center">
                     <Text fontSize="0.9rem" color="#666" fontWeight="bold">Allocation Count</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{formatNumber(stats.count, 0)}</Text>
@@ -261,7 +268,15 @@ export default function AllAllocationsContent({ allocations }) {
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.medianDifference?.toFixed(4)}</Text>
                   </Box>
                   <Box textAlign="center">
-                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Std Dev Difference</Text>
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Median 95% Confidence Interval</Text>
+                    <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">
+                      {stats.medianCI?.lower !== null && stats.medianCI?.upper !== null
+                        ? `${stats.medianCI.lower.toFixed(4)} - ${stats.medianCI.upper.toFixed(4)}`
+                        : 'N/A'}
+                    </Text>
+                  </Box>
+                  <Box textAlign="center">
+                    <Text fontSize="0.9rem" color="#666" fontWeight="bold">Standard Deviation Difference</Text>
                     <Text fontSize="1.2rem" fontWeight="bold" color="#36454F">{stats.stdDevDifference?.toFixed(4)}</Text>
                   </Box>
                 </SimpleGrid>
@@ -271,7 +286,7 @@ export default function AllAllocationsContent({ allocations }) {
         );
       }
     },
-    
+
   ]
 
   return (

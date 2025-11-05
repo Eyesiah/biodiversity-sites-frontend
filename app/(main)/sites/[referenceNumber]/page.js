@@ -1,5 +1,6 @@
 import { fetchSite, fetchAllSites } from '@/lib/api';
-import { collateAllHabitats } from '@/lib/habitat';
+import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup, getConditionScore } from '@/lib/habitat';
+import { getHabitatSankeyGraph } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -10,7 +11,7 @@ export async function generateStaticParams() {
 
   const sites = await fetchAllSites();
   const paths = sites.map(site => {
-     return {referenceNumber: site.referenceNumber};
+    return { referenceNumber: site.referenceNumber };
   });
 
   return paths;
@@ -27,14 +28,13 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function SitePage({params}) {
+export default async function SitePage({ params }) {
 
   const { referenceNumber } = await params;
   const lastUpdated = Date.now();
 
   const site = await fetchSite(referenceNumber, true, true)
-  if (!site)
-  {
+  if (!site) {
     return <p>Site not found</p>
   }
 
@@ -45,9 +45,11 @@ export default async function SitePage({params}) {
   site.habitats = collateAllHabitats(site.habitats, false);
   site.improvements = collateAllHabitats(site.improvements, true);
 
+  const sankeyData = getHabitatSankeyGraph(site);
+
   return (
     <>
-      <SitePageContent site={site}/>
+      <SitePageContent site={site} sankeyData={sankeyData} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );

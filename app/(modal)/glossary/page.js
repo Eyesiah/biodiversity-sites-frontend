@@ -57,11 +57,17 @@ export default function Glossary() {
         <Heading as="h3" size="md">Responsible Body</Heading>
         <Text>An organisation designated by Defra to hold and administer conservation covenants for BNG projects, monitoring and enforcing habitat improvement plans to ensure long-term conservation. See <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenants-apply-to-become-a-responsible-body/conservation-covenants-criteria-for-being-a-responsible-body">Conservation covenants: criteria for being a responsible body guidance</ExternalLink>.</Text>
 
+        <Heading as="h3" size="md">Sankey diagram</Heading>
+        <text>Sankey diagrams are a data visualisation technique or flow diagram that emphasises flow/movement/change from one state to another or one time to another, in which the width of the arrows is proportional to the flow rate of the depicted transformation.</text>
+        
         <Heading as="h3" size="md">Size</Heading>
         <Text>The size of area habitats is measured in hectares (ha). Linear habitats - hedgerows and watercourses - are measured in kilometres (km).</Text>
 
         <Heading as="h3" size="md">SRM</Heading>
         <Text>The spatial risk multiplier is a factor used in the statutory BNG metric to reduce the measured ecological value of off-site habitat compensation based on its distance from the development site.</Text>
+
+        <Heading as="h3" size="md">Trading Rules</Heading>
+        <text>The trading rules require that lost habitats must be compensated for with habitats of equal or higher value on a &apos;like-for-like or like-for-better&apos; principle.</text>
 
       </ProseContainer>
     </>

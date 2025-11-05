@@ -115,9 +115,9 @@ const chartConfig = {
         }
     },
     'habitat-transfer-sankey': {
-        title: "Habitat Transfer",
+        title: "Habitat Transformations",
         chartType: 'Sankey',
-        chartProps: { title: "Habitat Transfer" },
+        chartProps: { title: "Habitat Transformations" },
         dataFetcher: async () => {
             const allSites = await fetchAllSites(true);
             allSites.forEach(site => processSiteHabitatData(site));
