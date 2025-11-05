@@ -147,21 +147,35 @@ const CustomTooltip = ({ active, payload, label }) => {
   // Check if it's a link (has source and target)
   if (data.sourceNode && data.targetNode) {
     // Link tooltip
-    debugger;
-    const sourceNode = data.sourceNode;
-    const targetNode = data.targetNode;
     const value = data.value;
 
-    return (
-      <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>{sourceNode.name} → {targetNode.name}</p>
-        <p>Condition: {sourceNode.condition} → {targetNode.condition}</p>
-        <p>Distinctiveness: {reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → {reverseDistinctivenessLookup[targetNode.distinctivenessScore]}</p>
-        <p style={{ margin: 0 }}>
-          Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
-        </p>
-      </div>
-    );
+    if (data.sourceNode.name == '<CREATED>' || data.targetNode.name == '<RETAINED>') {      
+      const node = data.sourceNode.name == '<CREATED>' ? data.targetNode : data.sourceNode;
+      return (
+        <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+          <p style={{ margin: 0, fontWeight: 'bold' }}>{data.sourceNode.name} → {data.targetNode.name}</p>
+          <p>Condition: {node.condition}</p>
+          <p>Distinctiveness: {reverseDistinctivenessLookup[node.distinctivenessScore]}</p>
+          <p style={{ margin: 0 }}>
+            Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
+          </p>
+        </div>
+      )
+    } else {
+      const sourceNode = data.sourceNode;
+      const targetNode = data.targetNode;
+
+      return (
+        <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+          <p style={{ margin: 0, fontWeight: 'bold' }}>{sourceNode.name} → {targetNode.name}</p>
+          <p>Condition: {sourceNode.condition} → {targetNode.condition}</p>
+          <p>Distinctiveness: {reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → {reverseDistinctivenessLookup[targetNode.distinctivenessScore]}</p>
+          <p style={{ margin: 0 }}>
+            Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
+          </p>
+        </div>
+      );
+    }
   } else {
     // Node tooltip
     const node = data;
@@ -244,14 +258,14 @@ export default function SiteHabitatSankeyChart({ data }) {
         <br />
         <Text>This Sankey chart shows what these improvements might plausibly be. Higher distinctiveness habitats are higher up on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
         <br />
-       <List.Root as="ol" ml="6">
-         <List.Item>First, habitats that have been enhanced (i.e. where the condition score is better) are assigned to their new condition.</List.Item>
-         <List.Item>Low and very low distinctiveness baseline habitats are assumed to be converted to higher distinctiveness habitats.</List.Item>
-         <List.Item>Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</List.Item>
-         <List.Item>Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</List.Item>
-         <List.Item>Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</List.Item>
+        <List.Root as="ol" ml="6">
+          <List.Item>First, habitats that have been enhanced (i.e. where the condition score is better) are assigned to their new condition.</List.Item>
+          <List.Item>Low and very low distinctiveness baseline habitats are assumed to be converted to higher distinctiveness habitats.</List.Item>
+          <List.Item>Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</List.Item>
+          <List.Item>Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</List.Item>
+          <List.Item>Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</List.Item>
         </List.Root>
-        <br />      
+        <br />
         <Text>Despite the limitations of the source data, we think this way of viewing the data gives you a good overview of how a site has become a biodiversity gain site.</Text>
         <br />
         <Text>Please tell us how you think this chart might be improved, using the Feedback button at the top of the page. You can view the open source code for the algorithm on our <ExternalLink href='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>.</Text>
