@@ -7,7 +7,7 @@ import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/ui/InfoModal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, HStack, VStack } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 
 export const SiteDetailsCard = ({ site }) => {
@@ -26,6 +26,8 @@ export const SiteDetailsCard = ({ site }) => {
   };
 
   return (
+    <VStack>
+    <HStack width='100%'>
     <PrimaryCard>
       <Box>
         <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
@@ -46,8 +48,16 @@ export const SiteDetailsCard = ({ site }) => {
         />
         <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
         <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
-        {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
-        <DetailRow label="NCA" value={site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'} />
+        {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}       
+        
+        <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
+        
+      </Box>
+    </PrimaryCard>
+    
+    <PrimaryCard>
+      <Box>
+       <DetailRow label="NCA" value={site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'} />
         <DetailRow 
           label="LPA" 
           value={
@@ -73,7 +83,13 @@ export const SiteDetailsCard = ({ site }) => {
         <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
         <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
         {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
-        <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
+        
+      </Box>
+    </PrimaryCard>
+      <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
+    </HStack>
+      <PrimaryCard>
+      <Box>
         <Box 
           display="flex" 
           justifyContent="space-between"
@@ -103,7 +119,7 @@ export const SiteDetailsCard = ({ site }) => {
           </Box>
         </Box>
       </Box>
-      <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
     </PrimaryCard>
+    </VStack>
   )
 }
