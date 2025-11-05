@@ -247,10 +247,10 @@ export default function SiteHabitatSankeyChart({ data }) {
         <br />
         <List.Root ml="6">
           <List.Item>First, habitats that have been improved (ie, the condition score is better) are assigned;</List.Item>
-          <List.Item>Then, artificial baseline habitats are assumed to be converted to improved habitats;</List.Item>
-          <List.Item>Habitats are converted within the same broad category where possible;</List.Item>
-          <List.Item>Finally, the remaining habitats are converted, prioritising the lowest distinctiveness baseline habitats first;</List.Item>
-          <List.Item>Any remaining habitats that cannot be assigend to an improvement are then considered Retained.</List.Item>
+          <List.Item>Artificial baseline habitats are assumed to be converted to improved habitats first;</List.Item>
+          <List.Item>Then, habitats are converted within the same broad category where possible;</List.Item>
+          <List.Item>Finally, remaining habitats are converted, prioritising the lowest distinctiveness habitats;</List.Item>
+          <List.Item>Any remaining habitats that cannot be assigned to an improvement are then considered Retained.</List.Item>
         </List.Root>
         <br />
         <Text>We think this way of viewing the data gives you a good overview of how the site has been transformed to become a BGS site, despite the limitations of the source data. Please do give us feedback about how you think this could be improved, using the <b>Feedback</b> button at the top of the page.</Text>
