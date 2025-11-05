@@ -243,12 +243,12 @@ export default function SiteHabitatSankeyChart({ data }) {
           The BGS Register contains information about the site&apos;s habitats before (baseline) and after (improved) the enhancement works, but does not specify exactly which habitats have been converted to which.
         </Text>
         <br />
-        <Text>This Sankey chart estimates what these conversions might plausibly be. Higher distinctiveness habitats are higher on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a custom heuristic (i.e., a guess) that we have developed:</Text>
+        <Text>This Sankey chart estimates what these conversions might plausibly be. Higher distinctiveness habitats are higher on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a custom heuristic (i.e. a guess) that we have developed based on the <ExternalLink a='https://bristoltreeforum.org/2024/10/27/biodiversity-metrics-the-trading-rules-explained/ '>trading rules</ExternalLink>:</Text>
         <br />
         <List.Root ml="6">
-          <List.Item>First, habitats that have been improved (ie, the condition score is better) are assigned;</List.Item>
-          <List.Item>Artificial baseline habitats are assumed to be converted to improved habitats first;</List.Item>
-          <List.Item>Then, habitats are converted within the same broad category where possible;</List.Item>
+          <List.Item>First, habitats that have been improved (i.e. where the condition score is better) are assigned;</List.Item>
+          <List.Item>Low and Very Low distinctiveness habitats are assumed to be converted to higher distinctiveness habitats first;</List.Item>
+          <List.Item>Then, Medium distinctiveness habitats are converted within the same broad category where possible;</List.Item>
           <List.Item>Finally, remaining habitats are converted, prioritising the lowest distinctiveness habitats;</List.Item>
           <List.Item>Any remaining habitats that cannot be assigned to an improvement are then considered Retained.</List.Item>
         </List.Root>
