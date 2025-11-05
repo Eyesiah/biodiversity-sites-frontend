@@ -6,11 +6,6 @@ import Modal from '@/components/ui/Modal';
 import { useState } from 'react';
 import ExternalLink from '@/components/ui/ExternalLink';
 
-// Configuration constants
-const NUM_SHADES = 8;
-const LIGHTNESS_START = 80;
-const LIGHTNESS_STEP = 6;
-
 // Base colors in HSL for each unit type
 const BASE_COLORS = {
   areas: { h: 120, s: 45, l: 25 }, // Green
@@ -18,81 +13,44 @@ const BASE_COLORS = {
   watercourses: { h: 220, s: 90, l: 30 } // Blue
 };
 
-// Fallback colors for each unit type
-const FALLBACK_COLORS = {
-  areas: '#2E7D32', // Dark Green
-  hedgerows: '#FFCE1B', // Mustard Yellow
-  watercourses: '#0041C2', // Blueberry Blue
-  default: '#2E7D32' // Dark Green
+// Distinctiveness bands for lightness mapping
+const DISTINCTIVENESS_BANDS = {
+  0: { min: 70, max: 75 }, // Very Low (area)
+  1: { min: 70, max: 75 }, // Very Low
+  2: { min: 60, max: 65 }, // Low
+  4: { min: 50, max: 55 }, // Medium
+  6: { min: 40, max: 45 }, // High
+  8: { min: 30, max: 35 }  // Very High
 };
 
-// Generate shades for each unit type
-const generateHabitatShades = () => {
-  const shades = {
-    areas: [],
-    hedgerows: [],
-    watercourses: []
-  };
+// Get habitat-specific color for a node based on unit hue and quality lightness
+const getNodeColor = (node) => {
+  const { name: habitatName, unit, distinctivenessScore, conditionScore } = node;
 
-  // Generate shades for each unit type (varying lightness)
-  for (const unit of ['areas', 'hedgerows', 'watercourses']) {
-    const base = BASE_COLORS[unit];
-    for (let i = 0; i < NUM_SHADES; i++) {
-      // Create shades from medium-dark to dark (better visibility)
-      const lightness = LIGHTNESS_START - (i * LIGHTNESS_STEP);
-      shades[unit].push(`hsl(${base.h}, ${base.s}%, ${lightness}%)`);
-    }
-  }
-
-  return shades;
-};
-
-// Get consistent shade index for a habitat name within a unit type
-const getHabitatShadeIndex = (habitatName, unit, allHabitats) => {
-  if (!allHabitats[unit]) return 0;
-
-  // Sort habitat names alphabetically for consistent assignment
-  const sortedHabitats = [...allHabitats[unit]].sort();
-  const index = sortedHabitats.indexOf(habitatName);
-
-  // Cycle through available shades
-  return index % NUM_SHADES;
-};
-
-// Get habitat-specific color for a node
-const getNodeColor = (habitatName, unit, habitatShades, allHabitats) => {
   // Special handling for Individual trees habitats
   if (habitatName === 'Urban tree' || habitatName === 'Rural tree') {
     return '#b0500cff'; // Burnt Orange colour for Individual trees
   }
 
-  if (habitatShades && allHabitats) {
-    const shadeIndex = getHabitatShadeIndex(habitatName, unit, allHabitats);
-    return habitatShades[unit]?.[shadeIndex] || FALLBACK_COLORS.default;
+  // Special handling for dummy nodes
+  if (habitatName === '<CREATED>' || habitatName === '<RETAINED>') {
+    return '#808080'; // Gray for dummy nodes
   }
 
-  // Fallback to original colors
-  return FALLBACK_COLORS[unit] || FALLBACK_COLORS.default;
+  // Get distinctiveness band
+  const band = DISTINCTIVENESS_BANDS[distinctivenessScore] || DISTINCTIVENESS_BANDS[3];
+
+  // Map condition within the band (higher condition = darker)
+  const conditionNormalized = conditionScore / 3; // 0 to 3
+  const lightness = band.min + (1 - conditionNormalized) * (band.max - band.min);
+
+  // Get base color for unit
+  const base = BASE_COLORS[unit] || BASE_COLORS.areas;
+
+  return `hsl(${base.h}, ${base.s}%, ${lightness}%)`;
 };
 
-// Extract all unique habitats per unit type from sankey data
-const extractAllHabitats = (data) => {
-  const habitats = {
-    areas: new Set(),
-    hedgerows: new Set(),
-    watercourses: new Set()
-  };
 
-  if (data.nodes) {
-    data.nodes.forEach(node => {
-      if (node.name && node.unit && habitats[node.unit]) {
-        habitats[node.unit].add(node.name);
-      }
-    });
-  }
-
-  return habitats;
-};
 
 const CustomSankeyNode = ({
   x,
@@ -101,9 +59,7 @@ const CustomSankeyNode = ({
   height,
   index,
   payload,
-  containerWidth,
-  habitatShades,
-  allHabitats }) => {
+  containerWidth }) => {
   const isOut = x + width + 6 > containerWidth;
 
   let name = payload.condition.length > 0 ? `[${payload.condition}] ${payload.name}` : payload.name;
@@ -120,7 +76,7 @@ const CustomSankeyNode = ({
         y={y}
         width={width}
         height={height}
-        fill={getNodeColor(payload.name, payload.unit, habitatShades, allHabitats)}
+        fill={getNodeColor(payload)}
         fillOpacity="1"
       />
       <text
@@ -137,15 +93,15 @@ const CustomSankeyNode = ({
 }
 
 const CustomSankeyLink = (props) => {
-  const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload, habitatShades, allHabitats } = props;
+  const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload } = props;
 
   // Get source and target habitat names from payload
   const sourceHabitat = payload.sourceHabitat;
   const targetHabitat = payload.targetHabitat;
   const unit = payload.unit;
 
-  const sourceColor = getNodeColor(sourceHabitat, unit, habitatShades, allHabitats);
-  const targetColor = getNodeColor(targetHabitat, unit, habitatShades, allHabitats);
+  const sourceColor = getNodeColor(payload.sourceNode);
+  const targetColor = getNodeColor(payload.targetNode);
 
   // Create gradient ID
   const gradientId = `linkGradient${index}`;
@@ -178,14 +134,63 @@ const CustomSankeyLink = (props) => {
   );
 }
 
+const reverseDistinctivenessLookup = {
+  0: 'Very Low',
+  1: 'Very Low',
+  2: 'Low',
+  4: 'Medium',
+  6: 'High',
+  8: 'Very High'
+}
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (!active || !payload || !payload.length) return null;
+
+  const data = payload[0]?.payload?.payload;
+  if (!data) return null;
+
+  // Check if it's a link (has source and target)
+  if (data.sourceNode && data.targetNode) {
+    // Link tooltip
+    debugger;
+    const sourceNode = data.sourceNode;
+    const targetNode = data.targetNode;
+    const value = data.value;
+
+    return (
+      <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+        <p style={{ margin: 0, fontWeight: 'bold' }}>{sourceNode.name} → {targetNode.name}</p>
+        <p>Condition: {sourceNode.condition} → {targetNode.condition}</p>
+        <p>Distinctiveness: {reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → {reverseDistinctivenessLookup[targetNode.distinctivenessScore]}</p>
+        <p style={{ margin: 0 }}>
+          Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
+        </p>
+      </div>
+    );
+  } else {
+    // Node tooltip
+    const node = data;
+    const value = node.value;
+
+    return (
+      <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
+        <p style={{ margin: 0, fontWeight: 'bold' }}>{node.name}</p>
+        {node.condition && <p style={{ margin: 0 }}>Condition: {node.condition}</p>}
+        <p style={{ margin: 0 }}>Distinctiveness: {reverseDistinctivenessLookup[node.distinctivenessScore]}</p>
+        <p style={{ margin: 0 }}>
+          Area: {formatNumber(value, 2)} {node.unit === 'areas' ? 'ha' : 'km'}
+        </p>
+      </div>
+    );
+  }
+};
+
 export default function SiteHabitatSankeyChart({ data }) {
   const [modalState, setModalState] = useState(false);
 
   const sankeyHeight = data.dynamicHeight || 900;
 
-  // Generate habitat shades and extract all habitats
-  const habitatShades = generateHabitatShades();
-  const allHabitats = extractAllHabitats(data);
+  // Note: Coloring now uses quality-based calculation, no longer needs pre-generated shades
 
   // Create enhanced data with source and target habitat info for links
   const enhancedData = {
@@ -196,7 +201,9 @@ export default function SiteHabitatSankeyChart({ data }) {
       return {
         ...link,
         sourceHabitat: sourceNode?.name || null,
-        targetHabitat: targetNode?.name || null
+        targetHabitat: targetNode?.name || null,
+        sourceNode,
+        targetNode
       };
     }) || []
   };
@@ -229,12 +236,11 @@ export default function SiteHabitatSankeyChart({ data }) {
           nodePadding={20}
           linkCurvature={0.6}
           iterations={64}
-          node={<CustomSankeyNode containerWidth={400} habitatShades={habitatShades} allHabitats={allHabitats} />}
-          link={<CustomSankeyLink habitatShades={habitatShades} allHabitats={allHabitats} />}
+          node={<CustomSankeyNode containerWidth={400} />}
+          link={<CustomSankeyLink />}
         >
           <Tooltip
-            isAnimationActive={false}
-            formatter={(value) => `${formatNumber(value, 2)}`}
+            content={<CustomTooltip />}
           />
         </Sankey>
       </ResponsiveContainer>
