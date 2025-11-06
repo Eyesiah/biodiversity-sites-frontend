@@ -58,6 +58,7 @@ export const SiteDetailsCard = ({ site }) => {
         <PrimaryCard>
           <Box>
             <DetailRow label="NCA" value={site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'} />
+            <DetailRow label="LNRS" value={site.lnrsName ? site.lnrsName : 'N/A'} />
             <DetailRow
               label="LPA"
               value={
@@ -81,7 +82,6 @@ export const SiteDetailsCard = ({ site }) => {
               }
             />
             <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
-            <DetailRow label="# Planning applications" value={site.allocations?.length || 0} />
             {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
 
           </Box>
