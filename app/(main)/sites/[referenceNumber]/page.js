@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
   const site = await fetchSite(referenceNumber);
 
   return {
-    title: site.name ? site.name : `Site Details: ${site.referenceNumber}`,
+    title: site.name ? `${site.name} | ${site.referenceNumber}` : `Site Details: ${site.referenceNumber}`,
     description: `Details for Biodiversity Gain Site ${site.referenceNumber} - NOTE: site names are best guesses as the register does not contain names for sites.`,
   };
 }
