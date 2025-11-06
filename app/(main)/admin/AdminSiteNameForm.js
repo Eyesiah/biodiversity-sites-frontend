@@ -32,6 +32,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
   const [state, formAction] = useActionState(addSiteName, initialState);
   const [showOnlyWithoutNames, setShowOnlyWithoutNames] = useState(false);
   const [hideNotFound, setHideNotFound] = useState(false);
+  const [hideNoMap, setHideNoMap] = useState(false);
   const [selectedReference, setSelectedReference] = useState('');
   const [currentSiteName, setCurrentSiteName] = useState('');
 
@@ -44,8 +45,11 @@ export default function AdminSiteNameForm({ referenceOptions }) {
     if (hideNotFound) {
       filtered = filtered.filter(option => !option.isMarkedNotFound);
     }
+    if (hideNoMap) { 
+      filtered = filtered.filter(option => option.map != null);
+    }
     return filtered;
-  }, [referenceOptions, showOnlyWithoutNames, hideNotFound]);
+  }, [referenceOptions, showOnlyWithoutNames, hideNotFound, hideNoMap]);
 
   // Convert filtered options to the format expected by SearchableDropdown (array of strings)
   const dropdownOptions = useMemo(() =>
@@ -97,7 +101,15 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               <Checkbox.Control />
               <Checkbox.Label>Hide sites marked Not-Found</Checkbox.Label>
             </Checkbox.Root>
+            <Checkbox.Root
+              onCheckedChange={setHideNoMap}
+            >
+              <Checkbox.HiddenInput />
+              <Checkbox.Control />
+              <Checkbox.Label>Hide sites without site boundaries</Checkbox.Label>
+            </Checkbox.Root>
           </HStack>
+          <Text>{`Displaying ${filteredOptions.length} of ${referenceOptions.length}`}</Text>
         </VStack>
       </PrimaryCard>
 
