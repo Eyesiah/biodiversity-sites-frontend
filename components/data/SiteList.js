@@ -38,7 +38,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, column
     if (column === 'referenceNumber') {
       return (
         <Link href={`/sites/${site.referenceNumber}`}>
-          {value}
+          {value}{site.name && <><br /><b>{site.name}</b></>}
         </Link>
       );
     }

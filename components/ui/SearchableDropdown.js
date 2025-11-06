@@ -2,9 +2,9 @@
 
 import Select from "react-select";
 
-export default function SearchableDropdown({ name, options, defaultValue }) {
+export default function SearchableDropdown({ name, options, defaultValue, onChange }) {
   const selectOptions = options.map(o => ({ value: o, label: o }));
-  const defaultOption = { value: defaultValue, label: defaultValue };
+  const defaultOption = defaultValue ? { value: defaultValue, label: defaultValue } : null;
 
   const customStyles = {
     container: (provided) => ({
@@ -14,11 +14,18 @@ export default function SearchableDropdown({ name, options, defaultValue }) {
     })
   };
 
+  const handleChange = (selectedOption) => {
+    if (onChange) {
+      onChange(selectedOption ? selectedOption.value : null);
+    }
+  };
+
   return (
     <Select
       name={name}
       options={selectOptions}
-      defaultValue={defaultOption}
+      value={defaultOption}
+      onChange={handleChange}
       styles={customStyles}
     />
   );
