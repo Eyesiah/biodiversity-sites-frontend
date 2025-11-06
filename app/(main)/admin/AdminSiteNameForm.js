@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import { addSiteName } from './actions';
-import { useActionState, useState } from 'react';
+import { useActionState, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, Text, VStack, HStack, Checkbox } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -35,17 +35,23 @@ export default function AdminSiteNameForm({ referenceOptions }) {
   const [selectedReference, setSelectedReference] = useState('');
   const [currentSiteName, setCurrentSiteName] = useState('');
 
-  // Apply client-side filtering
-  let filteredOptions = referenceOptions;
-  if (showOnlyWithoutNames) {
-    filteredOptions = filteredOptions.filter(option => !option.hasName);
-  }
-  if (hideNotFound) {
-    filteredOptions = filteredOptions.filter(option => !option.isMarkedNotFound);
-  }
+  // Apply client-side filtering with memoization
+  const filteredOptions = useMemo(() => {
+    let filtered = referenceOptions;
+    if (showOnlyWithoutNames) {
+      filtered = filtered.filter(option => !option.hasName);
+    }
+    if (hideNotFound) {
+      filtered = filtered.filter(option => !option.isMarkedNotFound);
+    }
+    return filtered;
+  }, [referenceOptions, showOnlyWithoutNames, hideNotFound]);
 
   // Convert filtered options to the format expected by SearchableDropdown (array of strings)
-  const dropdownOptions = filteredOptions.map(option => option.label);
+  const dropdownOptions = useMemo(() =>
+    filteredOptions.map(option => option.label),
+    [filteredOptions]
+  );
 
   // Handle dropdown selection change
   const handleReferenceChange = (selectedValue) => {
