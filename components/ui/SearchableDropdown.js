@@ -11,6 +11,14 @@ export default function SearchableDropdown({ name, options, defaultValue, onChan
       ...provided,
       minWidth: '500px',
       width: 'auto'
+    }),
+    menu: (provided) => ({
+      ...provided,
+      zIndex: 9999
+    }),
+    menuPortal: (provided) => ({
+      ...provided,
+      zIndex: 9999
     })
   };
 
@@ -27,6 +35,7 @@ export default function SearchableDropdown({ name, options, defaultValue, onChan
       value={defaultOption}
       onChange={handleChange}
       styles={customStyles}
+      menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
     />
   );
 }
