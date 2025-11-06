@@ -6,6 +6,8 @@ import { useActionState, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, Text, VStack, HStack, Checkbox } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
+import Link from 'next/link';
+import ExternalLink from '@/components/ui/ExternalLink';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
@@ -135,6 +137,12 @@ export default function AdminSiteNameForm({ referenceOptions }) {
                 </Box>
               )}
             </HStack>
+            {selectedReference && (
+              <HStack>
+                <Link href={`/sites/${selectedReference}`}><h2>Site Details</h2></Link>
+                <ExternalLink href={referenceOptions.find(s => s.value == selectedReference)?.map}>Site Boundary</ExternalLink>
+              </HStack>
+            )}
           </VStack>
         </PrimaryCard>
       </form>

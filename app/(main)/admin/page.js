@@ -55,6 +55,7 @@ export default async function AdminPage({}) {
     return {
       value: site.referenceNumber,
       label: displayText,
+      map: site.landBoundary,
       hasName,
       isMarkedNotFound
     };
