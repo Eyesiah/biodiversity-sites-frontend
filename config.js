@@ -10,3 +10,5 @@ export const WFS_URL = 'https://bristoltrees.space/wfs/wfs-server.xq?SERVICE=WFS
 
 export const NAV_HEIGHT = '4rem';
 export const MAP_KEY_HEIGHT = '3rem';
+
+export const MONGODB_DATABASE_NAME = 'biodiversity-sites-frontend';

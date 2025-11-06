@@ -87,6 +87,7 @@ export const SiteMapMarker = ({site, withColorKeys=false, isHovered=false, handl
     >
       <Popup>
         <h2><Link href={`/sites/${site.referenceNumber}`}>{site.referenceNumber}</Link></h2>
+        {site.name && <><b>{site.name}</b><br /></>}
         <b>Responsible Body:</b> {site.responsibleBody}<br />
         <b>LPA:</b> {site.lpaName || 'N/A'}
         {withColorKeys && site.lpaName && site.lpaName != 'N/A' && <ColorKey color={lpaStyle.color}/>}
