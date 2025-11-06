@@ -69,7 +69,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
         setCurrentSiteName('');
       }
 
-      setSelectedReference(selectedValue);
+      setSelectedReference(referenceNumber);
     } else {
       setSelectedReference('');
       setCurrentSiteName('');
