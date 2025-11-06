@@ -129,6 +129,9 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               <SubmitButton name="action" value="add">
                 Add Site Name
               </SubmitButton>
+              <SubmitButton name="action" value="clearSiteName" colorScheme="orange">
+                Clear Site Name
+              </SubmitButton>
               <SubmitButton name="action" value="markNotFound" colorScheme="orange">
                 Mark as Not Found
               </SubmitButton>

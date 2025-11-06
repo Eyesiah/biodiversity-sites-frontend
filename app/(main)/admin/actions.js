@@ -64,6 +64,20 @@ export async function addSiteName(prevState, formData) {
         message: `Marked site ${referenceNumber} as "name not found"`,
         error: null
       };
+    } else if (action === 'clearSiteName') {
+      // Mark site as not found - set flag and clear any existing name
+      await collection.deleteOne(
+        { _id: referenceNumber },
+      );
+
+      return {
+        apiKey: apiKey, // Keep API key
+        referenceNumber: '',
+        siteName: '',
+        message: `Cleared site ${referenceNumber} name`,
+        error: null
+      };
+     
     } else {
       // Add/update site name
       if (!siteName) {
