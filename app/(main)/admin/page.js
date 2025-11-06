@@ -44,7 +44,7 @@ export default async function AdminPage({}) {
   // Create reference number options with names
   const referenceOptions = sites.map(site => {
     const siteData = nameMap.get(site.referenceNumber);
-    const hasName = siteData && siteData.name;
+    const hasName = siteData && siteData.name && siteData.name.length > 0;
     const isMarkedNotFound = siteData && siteData.nameNotFound;
 
     let displayText = site.referenceNumber;
