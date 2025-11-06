@@ -52,7 +52,6 @@ export async function addSiteName(prevState, formData) {
             name: null,
             updatedAt: new Date()
           },
-          $unset: { name: "" } // Ensure name field is removed
         },
         { upsert: true }
       );

@@ -6,6 +6,9 @@ import { fetchAllSites } from '@/lib/api';
 import clientPromise from '@/lib/mongodb.js';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
+// Revalidate this page at most once every hour (3600 seconds)
+export const revalidate = 3600;
+
 export const metadata = {
   title: 'Admin Panel',
   description: 'Administrative functions for managing site data.'
