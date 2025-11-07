@@ -9,7 +9,6 @@ import { DataTable } from '@/components/styles/DataTable';
 import { TableContainer } from '@/components/styles/PrimaryCard';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
-import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
 
 const processDataWithProportions = (data, module) => {
   // Calculate totals

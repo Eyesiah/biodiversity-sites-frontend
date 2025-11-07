@@ -1,133 +1,13 @@
-import { Rectangle, Layer, Sankey, Tooltip, ResponsiveContainer } from 'recharts';
-import { formatNumber } from '@/lib/format'
-import { useBreakpointValue, Flex, Heading, Text, Stack, List } from '@chakra-ui/react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import dynamic from 'next/dynamic';
+import { useBreakpointValue, VStack, Heading, Text, Stack, List, HStack, Box } from '@chakra-ui/react';
+import { formatNumber } from '@/lib/format';
 import InfoButton from '@/components/styles/InfoButton'
 import Modal from '@/components/ui/Modal';
-import { useState } from 'react';
 import ExternalLink from '@/components/ui/ExternalLink';
 
-// Base colors in HSL for each unit type
-const BASE_COLORS = {
-  areas: { h: 120, s: 45, l: 25 }, // Green
-  hedgerows: { h: 50, s: 90, l: 55 }, // Yellow
-  watercourses: { h: 220, s: 90, l: 30 } // Blue
-};
-
-// Distinctiveness bands for lightness mapping
-const DISTINCTIVENESS_BANDS = {
-  0: { min: 70, max: 75 }, // Very Low (area)
-  1: { min: 70, max: 75 }, // Very Low
-  2: { min: 60, max: 65 }, // Low
-  4: { min: 50, max: 55 }, // Medium
-  6: { min: 40, max: 45 }, // High
-  8: { min: 30, max: 35 }  // Very High
-};
-
-// Get habitat-specific color for a node based on unit hue and quality lightness
-const getNodeColor = (node) => {
-  const { name: habitatName, unit, distinctivenessScore, conditionScore } = node;
-
-  // Special handling for Individual trees habitats
-  if (habitatName === 'Urban tree' || habitatName === 'Rural tree') {
-    return '#b0500cff'; // Burnt Orange colour for Individual trees
-  }
-
-  // Get distinctiveness band
-  const band = DISTINCTIVENESS_BANDS[distinctivenessScore] || DISTINCTIVENESS_BANDS[3];
-
-  // Map condition within the band (higher condition = darker)
-  const conditionNormalized = conditionScore / 3; // 0 to 3
-  const lightness = band.min + (1 - conditionNormalized) * (band.max - band.min);
-
-  // Get base color for unit
-  const base = BASE_COLORS[unit] || BASE_COLORS.areas;
-
-  return `hsl(${base.h}, ${base.s}%, ${lightness}%)`;
-};
-
-
-
-const CustomSankeyNode = ({
-  x,
-  y,
-  width,
-  height,
-  index,
-  payload,
-  containerWidth }) => {
-  const isOut = x + width + 6 > containerWidth;
-
-  let name = payload.condition.length > 0 ? `[${payload.condition}] ${payload.name}` : payload.name;
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  const maxLen = isMobile ? 12 : 50;
-  if (name.length > maxLen) {
-    name = name.slice(0, maxLen) + '...';
-  }
-
-  return (
-    <Layer key={`CustomNode${index}`}>
-      <Rectangle
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        fill={getNodeColor(payload)}
-        fillOpacity="1"
-      />
-      <text
-        textAnchor={isOut ? "end" : "start"}
-        x={isOut ? x - 3 : x + width + 3}
-        y={y + height / 2 + 6}
-        fill="#000"
-        style={{ fontSize: '14px' }}
-      >
-        {`${formatNumber(payload.value, 2)}${payload.unit == 'areas' ? 'ha' : 'km'} - ${name}`}
-      </text>
-    </Layer>
-  );
-}
-
-const CustomSankeyLink = (props) => {
-  const { sourceX, targetX, sourceY, targetY, sourceControlX, targetControlX, linkWidth, index, payload } = props;
-
-  // Get source and target habitat names from payload
-  const sourceHabitat = payload.sourceHabitat;
-  const targetHabitat = payload.targetHabitat;
-  const unit = payload.unit;
-
-  const sourceColor = getNodeColor(payload.sourceNode);
-  const targetColor = getNodeColor(payload.targetNode);
-
-  // Create gradient ID
-  const gradientId = `linkGradient${index}`;
-
-  return (
-    <g>
-      <defs>
-        <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="20%" stopColor={sourceColor} />
-          <stop offset="80%" stopColor={targetColor} />
-        </linearGradient>
-      </defs>
-      <path
-        key={`CustomLink${index}`}
-        d={`
-          M${sourceX},${sourceY + linkWidth / 2}
-          C${sourceControlX},${sourceY + linkWidth / 2}
-           ${targetControlX},${targetY + linkWidth / 2}
-           ${targetX},${targetY + linkWidth / 2}
-          L${targetX},${targetY - linkWidth / 2}
-          C${targetControlX},${targetY - linkWidth / 2}
-           ${sourceControlX},${sourceY - linkWidth / 2}
-           ${sourceX},${sourceY - linkWidth / 2}
-          Z
-        `}
-        fill={`url(#${gradientId})`}
-        fillOpacity="1"
-      />
-    </g>
-  );
-}
+// Dynamically import Plot to avoid SSR issues
+const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
 const reverseDistinctivenessLookup = {
   0: 'Very Low',
@@ -136,92 +16,172 @@ const reverseDistinctivenessLookup = {
   4: 'Medium',
   6: 'High',
   8: 'Very High'
+};
+
+const labelFontSize = 10;
+
+/**
+ * A cached canvas context for measuring text widths.
+ * This avoids creating a new canvas for every label.
+ */
+let canvasContext;
+function getTextWidth(text, font) {
+  if (!canvasContext) {
+    const canvas = document.createElement('canvas');
+    canvasContext = canvas.getContext('2d');
+  }
+  canvasContext.font = font;
+  return canvasContext.measureText(text).width;
 }
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload || !payload.length) return null;
+// Function to truncate text to fit within a given width
+const truncateTextToWidth = (text, maxWidth, fontSize = 12) => {
+  if (!text) return text;
 
-  const data = payload[0]?.payload?.payload;
-  if (!data) return null;
+  const fontStyle = `${fontSize}px sans-serif`;
+  const textWidth = getTextWidth(text, fontStyle);
 
-  // Check if it's a link (has source and target)
-  if (data.sourceNode && data.targetNode) {
-    // Link tooltip
-    const value = data.value;
-
-    if (data.sourceNode.name == '<CREATED>' || data.targetNode.name == '<RETAINED>') {      
-      const node = data.sourceNode.name == '<CREATED>' ? data.targetNode : data.sourceNode;
-      return (
-        <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-          <p style={{ margin: 0, fontWeight: 'bold' }}>{data.sourceNode.name} → {data.targetNode.name}</p>
-          <p>Condition: {node.condition}</p>
-          <p>Distinctiveness: {reverseDistinctivenessLookup[node.distinctivenessScore]}</p>
-          <p style={{ margin: 0 }}>
-            Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
-          </p>
-        </div>
-      )
-    } else {
-      const sourceNode = data.sourceNode;
-      const targetNode = data.targetNode;
-
-      return (
-        <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-          <p style={{ margin: 0, fontWeight: 'bold' }}>{sourceNode.name} → {targetNode.name}</p>
-          <p>Condition: {sourceNode.condition} → {targetNode.condition}</p>
-          <p>Distinctiveness: {reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → {reverseDistinctivenessLookup[targetNode.distinctivenessScore]}</p>
-          <p style={{ margin: 0 }}>
-            Area: {formatNumber(value, 2)} {data.unit === 'areas' ? 'ha' : 'km'}
-          </p>
-        </div>
-      );
-    }
-  } else {
-    // Node tooltip
-    const node = data;
-    const value = node.value;
-
-    return (
-      <div style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc', borderRadius: '4px' }}>
-        <p style={{ margin: 0, fontWeight: 'bold' }}>{node.name}</p>
-        {node.condition && <p style={{ margin: 0 }}>Condition: {node.condition}</p>}
-        <p style={{ margin: 0 }}>Distinctiveness: {reverseDistinctivenessLookup[node.distinctivenessScore]}</p>
-        <p style={{ margin: 0 }}>
-          Area: {formatNumber(value, 2)} {node.unit === 'areas' ? 'ha' : 'km'}
-        </p>
-      </div>
-    );
+  if (textWidth <= maxWidth) {
+    return text;
   }
+
+  // Text is too long, so we need to truncate it.
+  const ELLIPSIS = '...';
+  const avgCharWidth = textWidth / text.length;
+  // Estimate the number of characters that can fit, with a buffer for the ellipsis.
+  let estimatedChars = Math.floor(maxWidth / avgCharWidth) - ELLIPSIS.length;
+  let truncated = text.substring(0, estimatedChars);
+
+  // Iteratively remove characters until the text with ellipsis fits.
+  while (truncated.length > 0) {
+    const truncatedWidth = getTextWidth(`${truncated}${ELLIPSIS}`, fontStyle);
+    if (truncatedWidth <= maxWidth) break;
+    truncated = truncated.slice(0, -1);
+  }
+
+  return truncated.length > 1 ? `${truncated}${ELLIPSIS}` : '';
 };
 
 export default function SiteHabitatSankeyChart({ data }) {
   const [modalState, setModalState] = useState(false);
+  const [truncatedLabels, setTruncatedLabels] = useState([]);
+  const [chartWidth, setChartWidth] = useState(600); // Default fallback
+  const chartRef = useRef(null);
 
-  const sankeyHeight = data.dynamicHeight || 900;
+  const sankeyHeight = 400; // Default height since Plotly handles sizing differently
 
-  // Note: Coloring now uses quality-based calculation, no longer needs pre-generated shades
+  // Measure the chart container width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (chartRef.current) {
+        setChartWidth(chartRef.current.offsetWidth);
+      }
+    };
 
-  // Create enhanced data with source and target habitat info for links
-  const enhancedData = {
-    ...data,
-    links: data.links?.map(link => {
-      const sourceNode = data.nodes?.[link.source];
-      const targetNode = data.nodes?.[link.target];
-      return {
-        ...link,
-        sourceHabitat: sourceNode?.name || null,
-        targetHabitat: targetNode?.name || null,
-        sourceNode,
-        targetNode
-      };
-    }) || []
-  };
+    // Measure initially
+    updateWidth();
+
+    // Update on window resize
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   const showModal = () => {
     setModalState(true);
   };
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  // Truncate labels based on proportional width calculation for vertical Sankey
+  useEffect(() => {
+    if (data && data._originalNodes && data.link && data.link.source && data.link.target) {
+      // Parse link source/target arrays to determine which nodes are on each side
+      const baselineNodeIds = new Set(data.link.source);
+      const improvementNodeIds = new Set(data.link.target);
+
+      // Get nodes for each side
+      const baselineNodes = data._originalNodes.filter((_, index) => baselineNodeIds.has(index));
+      const improvementNodes = data._originalNodes.filter((_, index) => improvementNodeIds.has(index));
+
+      const availableWidth = chartWidth || 600; // Use measured width or fallback
+      const nodePad = data.node?.pad || 20; // Gap between nodes
+
+      // Calculate metrics for each side
+      const baselineTotalValue = baselineNodes.reduce((sum, node) => sum + (node.value || 0), 0);
+      const improvementTotalValue = improvementNodes.reduce((sum, node) => sum + (node.value || 0), 0);
+
+      // Use the side with more nodes for width calculation (Plotly makes both sides consistent)
+      const sideWithMoreNodes = baselineNodes.length >= improvementNodes.length ? 'baseline' : 'improvement';
+      const nodesInDominantGroup = sideWithMoreNodes === 'baseline' ? baselineNodes : improvementNodes;
+      const totalValueInDominantGroup = sideWithMoreNodes === 'baseline' ? baselineTotalValue : improvementTotalValue;
+
+      const gapSpace = nodePad * (nodesInDominantGroup.length - 1);
+      const availableChartWidth = Math.max(100, chartWidth - gapSpace);
+
+      const truncated = data._originalNodes.map((node, nodeIndex) => {
+        const isOnDominantSide = (sideWithMoreNodes === 'baseline' && baselineNodeIds.has(nodeIndex)) ||
+                                (sideWithMoreNodes === 'improvement' && improvementNodeIds.has(nodeIndex));
+
+        let nodeWidth;
+        if (isOnDominantSide) {
+          // Calculate proportional width for nodes on the dominant side
+          const proportion = totalValueInDominantGroup > 0 ? (node.value || 0) / totalValueInDominantGroup : 1 / nodesInDominantGroup.length;
+          nodeWidth = Math.max(20, availableChartWidth * proportion);
+        } else {
+          // For nodes on the other side, use the same proportional calculation
+          // (Plotly ensures both sides have consistent widths)
+          const proportion = totalValueInDominantGroup > 0 ? (node.value || 0) / totalValueInDominantGroup : 1 / nodesInDominantGroup.length;
+          nodeWidth = Math.max(20, availableChartWidth * proportion);
+        }
+
+        const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
+        return truncateTextToWidth(fullLabel, nodeWidth, labelFontSize);
+      });
+      setTruncatedLabels(truncated);
+    }
+  }, [data, chartWidth]);
+
+  // Create chart data with truncated labels and custom tooltips
+  const chartData = React.useMemo(() => {
+    if (!data || !truncatedLabels.length) return data;
+
+    // Create hover text arrays that match the original Recharts logic
+    const nodeHoverText = data._originalNodes.map(node => {
+      const condition = node.condition ? `<br>Condition: ${node.condition}` : '';
+      const distinctiveness = `<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}`;
+      const area = `<br>Area: ${formatNumber(node.value || 0, 2)} ${node.unit === 'areas' ? 'ha' : 'km'}`;
+      return `<b>${node.name}</b>${condition}${distinctiveness}${area}`;
+    });
+
+    const linkHoverText = data._originalLinks.map(link => {
+      const sourceNode = link.sourceNode;
+      const targetNode = link.targetNode;
+      const value = link.value;
+      const unit = link.unit;
+
+      // Special handling for CREATED/RETAINED nodes (same logic as original)
+      if (sourceNode.name === '[CREATED]' || targetNode.name === '[RETAINED]') {
+        const node = sourceNode.name === '[CREATED]' ? targetNode : sourceNode;
+        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${node.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' ? 'ha' : 'km'}`;
+      } else {
+        // Regular link tooltip
+        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' ? 'ha' : 'km'}`;
+      }
+    });
+
+    return {
+      ...data,
+      node: {
+        ...data.node,
+        label: truncatedLabels,
+        customdata: nodeHoverText,
+        hovertemplate: '%{customdata}<extra></extra>'
+      },
+      link: {
+        ...data.link,
+        customdata: linkHoverText,
+        hovertemplate: '%{customdata}<extra></extra>'
+      }
+    };
+  }, [data, truncatedLabels]);
 
   return (
     <Stack>
@@ -229,30 +189,30 @@ export default function SiteHabitatSankeyChart({ data }) {
         <Heading as="h2" size="lg" textAlign="center">Habitat Improvement Chart</Heading>
       </InfoButton>
 
-      <Flex width='100%' justifyContent="space-between" alignItems="flex-end">
-        <Text textAlign='left' marginLeft='10px' fontSize={12} fontWeight='bold' >Baseline<br />Habitats</Text>
-        {!isMobile && <Text fontSize={12} fontWeight='bold'>... which are becoming ...</Text>}
-        <Text textAlign='right' marginRight='10px' fontSize={12} fontWeight='bold'>Improved<br />Habitats</Text>
-      </Flex>
+      <HStack spacing={4} alignItems="stretch" width="100%">
+        <VStack justifyContent="space-between" alignItems="flex-end" minHeight={sankeyHeight} flexShrink={0}>
+          <Text textAlign='right' fontSize={12} fontWeight='bold'>Baseline<br />Habitats</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold'>...<br />which<br />are<br />becoming<br />...</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold'>Improved<br />Habitats</Text>
+        </VStack>
 
-      <ResponsiveContainer width="100%" height={sankeyHeight}>
-        <Sankey
-          height={sankeyHeight}
-          margin={{ top: 20, bottom: 20 }}
-          data={enhancedData}
-          sort={data.sort}
-          nodeWidth={10}
-          nodePadding={20}
-          linkCurvature={0.6}
-          iterations={64}
-          node={<CustomSankeyNode containerWidth={400} />}
-          link={<CustomSankeyLink />}
-        >
-          <Tooltip
-            content={<CustomTooltip />}
+        <Box ref={chartRef} flex={1} minWidth={0}>
+          <Plot
+            data={[chartData]}
+            layout={{
+              width: undefined, // Let Plotly handle responsive width
+              height: sankeyHeight,
+              margin: { t: 5, b: 5, l: 5, r: 5 },
+              font: { size: labelFontSize }
+            }}
+            config={{
+              responsive: true,
+              displayModeBar: false
+            }}
+            style={{ width: '100%', height: sankeyHeight }}
           />
-        </Sankey>
-      </ResponsiveContainer>
+        </Box>
+      </HStack>
       <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='md'>
         <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
         <br />

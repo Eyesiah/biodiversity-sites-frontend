@@ -14,6 +14,7 @@ import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
 import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
+import { useRef, useEffect, useState } from 'react';
 
 // Constants for Individual trees habitat types
 const INDIVIDUAL_TREES_TYPES = ['Urban tree', 'Rural tree'];
@@ -53,6 +54,25 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({site, sankeyData}) {
+  const [contentWidth, setContentWidth] = useState(600); // Default fallback
+  const contentRef = useRef(null);
+
+  // Measure the content area width
+  useEffect(() => {
+    const updateWidth = () => {
+      if (contentRef.current) {
+        const width = contentRef.current.offsetWidth;
+        setContentWidth(width);
+      }
+    };
+
+    // Measure initially
+    updateWidth();
+
+    // Update on window resize
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   // Filter out Individual trees from area data for existing tabs
   const filteredImprovementAreas = site.improvements.areas.filter(isNotIndividualTree);
@@ -211,7 +231,7 @@ export default function SitePageContent({site, sankeyData}) {
       }
       content={(
 
-        <ContentStack>
+        <ContentStack ref={contentRef}>
                     
           <SiteDetailsCard site={site} />
 
