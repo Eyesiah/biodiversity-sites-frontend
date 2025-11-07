@@ -18,7 +18,7 @@ const reverseDistinctivenessLookup = {
   8: 'Very High'
 };
 
-const labelFontSize = 12;
+const labelFontSize = 14;
 
 /**
  * A cached canvas context for measuring text widths.
@@ -34,32 +34,66 @@ function getTextWidth(text, font) {
   return canvasContext.measureText(text).width;
 }
 
-// Function to truncate text to fit within a given width
-const truncateTextToWidth = (text, maxWidth, fontSize = 12) => {
+// Function to wrap text into multiple lines with truncation
+const wrapTextToWidth = (text, maxWidth, fontSize = 12, maxLines = 3) => {
   if (!text) return text;
 
   const fontStyle = `${fontSize}px sans-serif`;
-  const textWidth = getTextWidth(text, fontStyle);
 
-  if (textWidth <= maxWidth) {
-    return text;
+  // If the width is too narrow to fit even a single character, don't show any label
+  const minCharWidth = getTextWidth('AA', fontStyle);
+  if (maxWidth < minCharWidth) {
+    return '';
   }
 
-  // Text is too long, so we need to truncate it.
-  const ELLIPSIS = '...';
-  const avgCharWidth = textWidth / text.length;
-  // Estimate the number of characters that can fit, with a buffer for the ellipsis.
-  let estimatedChars = Math.floor(maxWidth / avgCharWidth) - ELLIPSIS.length;
-  let truncated = text.substring(0, estimatedChars);
+  const lines = [];
+  let currentLine = '';
 
-  // Iteratively remove characters until the text with ellipsis fits.
-  while (truncated.length > 0) {
-    const truncatedWidth = getTextWidth(`${truncated}${ELLIPSIS}`, fontStyle);
-    if (truncatedWidth <= maxWidth) break;
-    truncated = truncated.slice(0, -1);
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const testLine = currentLine + char;
+    const testWidth = getTextWidth(testLine, fontStyle);
+
+    if (testWidth <= maxWidth) {
+      // Character fits on current line
+      currentLine = testLine;
+    } else {
+      // Character doesn't fit - start new line
+      if (currentLine) {
+        lines.push(currentLine);
+        currentLine = char;
+      } else {
+        // Single character doesn't fit - skip this character
+        continue;
+      }
+    }
   }
 
-  return truncated.length > 1 ? `${truncated}${ELLIPSIS}` : '';
+  // Add the last line
+  if (currentLine) {
+    lines.push(currentLine);
+  }
+
+  // If we have too many lines, truncate the last one and add ellipsis
+  if (lines.length > maxLines) {
+    const lastLineIndex = maxLines - 1;
+    const lastLine = lines[lastLineIndex];
+    const ELLIPSIS = '...';
+
+    // Try to fit ellipsis on the last line
+    let truncatedLastLine = lastLine;
+    while (truncatedLastLine.length > 0) {
+      const testWidth = getTextWidth(`${truncatedLastLine}${ELLIPSIS}`, fontStyle);
+      if (testWidth <= maxWidth) break;
+      truncatedLastLine = truncatedLastLine.slice(0, -1);
+    }
+
+    lines[lastLineIndex] = truncatedLastLine.length > 1 ? `${truncatedLastLine}${ELLIPSIS}` : '';
+    lines.splice(maxLines); // Remove any extra lines
+  }
+
+  // Join lines with HTML line breaks
+  return lines.join('<br>');
 };
 
 export default function SiteHabitatSankeyChart({ data }) {
@@ -133,7 +167,7 @@ export default function SiteHabitatSankeyChart({ data }) {
         }
 
         const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
-        return truncateTextToWidth(fullLabel, nodeWidth, labelFontSize);
+        return wrapTextToWidth(fullLabel, nodeWidth - 4, labelFontSize, 3);
       });
       setTruncatedLabels(truncated);
     }
@@ -163,17 +197,23 @@ export default function SiteHabitatSankeyChart({ data }) {
         return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${node.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       } else {
         // Regular link tooltip
-        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || units === 'trees' ? 'ha' : 'km'}`;
+        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       }
     });
 
     return {
+      type: "sankey",
+      orientation: "v",
+      arrangement: "fixed",
       ...data,
       node: {
         ...data.node,
         label: truncatedLabels,
         customdata: nodeHoverText,
-        hovertemplate: '%{customdata}<extra></extra>'
+        hovertemplate: '%{customdata}<extra></extra>',
+        pad: 10,
+        thickness: 70,
+        line: { color: "black", width: 0.5 }
       },
       link: {
         ...data.link,
@@ -203,7 +243,7 @@ export default function SiteHabitatSankeyChart({ data }) {
               width: undefined, // Let Plotly handle responsive width
               height: sankeyHeight,
               margin: { t: 5, b: 5, l: 5, r: 5 },
-              font: { size: labelFontSize }
+              font: { size: labelFontSize, color: 'white' }
             }}
             config={{
               responsive: true,
