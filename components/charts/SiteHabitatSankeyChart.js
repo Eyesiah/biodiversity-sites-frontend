@@ -231,9 +231,8 @@ export default function SiteHabitatSankeyChart({ data }) {
 
       <HStack spacing={4} alignItems="stretch" width="100%">
         <VStack justifyContent="space-between" alignItems="flex-end" minHeight={sankeyHeight} flexShrink={0}>
-          <Text textAlign='right' fontSize={12} fontWeight='bold'>Baseline<br />Habitats</Text>
-          <Text textAlign='right' fontSize={12} fontWeight='bold'>...<br />which<br />are<br />becoming<br />...</Text>
-          <Text textAlign='right' fontSize={12} fontWeight='bold'>Improved<br />Habitats</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl'>Baseline</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl'>Improved</Text>
         </VStack>
 
         <Box ref={chartRef} flex={1} minWidth={0}>
