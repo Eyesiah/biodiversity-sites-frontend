@@ -167,7 +167,7 @@ export default function SiteHabitatSankeyChart({ data }) {
         }
 
         const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
-        return wrapTextToWidth(fullLabel, nodeWidth - 4, labelFontSize, 3);
+        return wrapTextToWidth(fullLabel, nodeWidth * 0.9, labelFontSize, 3);
       });
       setTruncatedLabels(truncated);
     }
@@ -242,7 +242,7 @@ export default function SiteHabitatSankeyChart({ data }) {
             layout={{
               width: undefined, // Let Plotly handle responsive width
               height: sankeyHeight,
-              margin: { t: 5, b: 5, l: 5, r: 5 },
+              margin: { t: 0, b: 0, l: 0, r: 0 },
               font: { size: labelFontSize, color: 'white' }
             }}
             config={{
