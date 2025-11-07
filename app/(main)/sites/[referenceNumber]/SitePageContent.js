@@ -3,12 +3,12 @@
 import { HabitatTable } from "@/components/data/HabitatsTable"
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/ui/MapContentLayout';
-import { SiteDetailsCard} from './SiteDetailsCard'
+import { SiteDetailsCard } from './SiteDetailsCard'
 import { AllocationsTable } from './AllocationsTable'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/styles/ContentStack'
-import { Flex } from "@chakra-ui/react"
+import { Flex, Heading } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
@@ -42,7 +42,7 @@ const handleExportXML = (site) => {
   });
   const xmlDataStr = builder.build({ site });
 
-  const blob = new Blob([xmlDataStr], { type: 'application/xml' });  
+  const blob = new Blob([xmlDataStr], { type: 'application/xml' });
   triggerDownload(blob, `bgs-site-${site.referenceNumber}.xml`);
 };
 
@@ -53,7 +53,7 @@ const handleExportJSON = (site) => {
   triggerDownload(blob, `bgs-site-${site.referenceNumber}.json`);
 };
 
-export default function SitePageContent({site, sankeyData}) {
+export default function SitePageContent({ site, sankeyData }) {
   const [contentWidth, setContentWidth] = useState(600); // Default fallback
   const contentRef = useRef(null);
 
@@ -95,117 +95,116 @@ export default function SitePageContent({site, sankeyData}) {
 
   const tabs = [
     {
-      title: 'Habitat<br>Improvement',
+      title: `Areas&nbsp;(${Math.max(filteredBaselineAreas.length, filteredImprovementAreas.length)})`,
       content: () => {
-        return <SiteHabitatSankeyChart data={sankeyData} />;
+        return (
+          <ContentStack>
+            <SiteHabitatSankeyChart data={sankeyData.areas} />
+            <Heading as="h2" size="lg" textAlign="center">Area Improvements</Heading>
+            <HabitatTable
+              habitats={sortedImprovementAreas}
+              sortConfig={sortConfigImprovementAreas}
+              isImprovement={true}
+              requestSort={requestSortImprovementAreas}
+              units={UNITS.HECTARES}
+            />
+            <Heading as="h2" size="lg" textAlign="center">Baseline Areas</Heading>
+            <HabitatTable
+              habitats={sortedBaselineAreas}
+              sortConfig={sortConfigBaselineAreas}
+              isBaseline={true}
+              requestSort={requestSortBaselineAreas}
+              units={UNITS.HECTARES}
+            />
+          </ContentStack>
+        )
       }
     },
     {
-      title: `Area<br>Improvements&nbsp;(${filteredImprovementAreas.length})`,
+      title: `Individual Trees&nbsp;(${Math.max(sortedIndividualTreesBaseline.length, sortedIndividualTreesImprovements.length)})`,
       content: () => {
-        return (<HabitatTable
-          habitats={sortedImprovementAreas}
-          sortConfig={sortConfigImprovementAreas}
-          isImprovement={true}
-          requestSort={requestSortImprovementAreas}
-          units={UNITS.HECTARES}
-        />)
-      }
-    },
-    {
-      title: `Baseline<br>Areas&nbsp;(${filteredBaselineAreas.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedBaselineAreas}
-          sortConfig={sortConfigBaselineAreas}
-          isBaseline={true}
-          requestSort={requestSortBaselineAreas}
-          units={UNITS.HECTARES}
-        />)
-      }
-    },
-    {
-      title: `Individual Trees<br>Improvements&nbsp;(${individualTreesImprovements.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedIndividualTreesImprovements}
-          sortConfig={sortConfigIndividualTreesImprovements}
-          isImprovement={true}
-          requestSort={requestSortIndividualTreesImprovements}
-          units={UNITS.HECTARES}
-        />)
+        return (
+          <ContentStack>
+            <SiteHabitatSankeyChart data={sankeyData.trees} />
+            <Heading as="h2" size="lg" textAlign="center">Individual Trees Improvements</Heading>
+            <HabitatTable
+              habitats={sortedIndividualTreesImprovements}
+              sortConfig={sortConfigIndividualTreesImprovements}
+              isImprovement={true}
+              requestSort={requestSortIndividualTreesImprovements}
+              units={UNITS.HECTARES}
+            />
+            <Heading as="h2" size="lg" textAlign="center">Baseline Individual Trees</Heading>
+            <HabitatTable
+              habitats={sortedIndividualTreesBaseline}
+              sortConfig={sortConfigIndividualTreesBaseline}
+              isBaseline={true}
+              requestSort={requestSortIndividualTreesBaseline}
+              units={UNITS.HECTARES}
+            />
+          </ContentStack>
+        )
       },
       shouldRender: () => individualTreesImprovements.length > 0 || individualTreesBaseline.length > 0
     },
     {
-      title: `Individual Trees<br>Baseline&nbsp;(${individualTreesBaseline.length})`,
+      title: `Hedgerow&nbsp;(${Math.max(site.habitats.hedgerows.length, site.improvements.hedgerows.length)})`,
       content: () => {
-        return (<HabitatTable
-          habitats={sortedIndividualTreesBaseline}
-          sortConfig={sortConfigIndividualTreesBaseline}
-          isBaseline={true}
-          requestSort={requestSortIndividualTreesBaseline}
-          units={UNITS.HECTARES}
-        />)
-      },
-      shouldRender: () => individualTreesImprovements.length > 0 || individualTreesBaseline.length > 0
-    },
-    {
-      title: `Hedgerow<br>Improvements&nbsp;(${site.improvements.hedgerows.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedImprovementHedgerows}
-          sortConfig={sortConfigImprovementHedgerows}
-          isImprovement={true}
-          requestSort={requestSortImprovementHedgerows}
-          units={UNITS.KILOMETRES}
-        />)
-      },
-      shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
-    },
-    {
-      title: `Baseline<br>Hedgerows&nbsp;(${site.habitats.hedgerows.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedBaselineHedgerows}
-          sortConfig={sortConfigBaselineHedgerows}
-          isBaseline={true}
-          requestSort={requestSortBaselineHedgerows}
-          units={UNITS.KILOMETRES}
-        />)
+        return (
+          <ContentStack>
+            <SiteHabitatSankeyChart data={sankeyData.hedgerows} />
+            <Heading as="h2" size="lg" textAlign="center">Hedgerow Improvements</Heading>
+            <HabitatTable
+              habitats={sortedImprovementHedgerows}
+              sortConfig={sortConfigImprovementHedgerows}
+              isImprovement={true}
+              requestSort={requestSortImprovementHedgerows}
+              units={UNITS.KILOMETRES}
+            />
+            <Heading as="h2" size="lg" textAlign="center">Baseline Hedgerows</Heading>
+            <HabitatTable
+              habitats={sortedBaselineHedgerows}
+              sortConfig={sortConfigBaselineHedgerows}
+              isBaseline={true}
+              requestSort={requestSortBaselineHedgerows}
+              units={UNITS.KILOMETRES}
+            />
+          </ContentStack>
+        )
       },
       shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
     },
     {
-      title: `Watercourse<br>Improvements&nbsp;(${site.improvements.watercourses.length})`,
+      title: `Watercourse&nbsp;(${Math.max(site.habitats.watercourses.length, site.improvements.watercourses.length)})`,
       content: () => {
-        return (<HabitatTable
-          habitats={sortedImprovementWatercourses}
-          sortConfig={sortConfigImprovementWatercourses}
-          isImprovement={true}
-          requestSort={requestSortImprovementWatercourses}
-          units={UNITS.KILOMETERS}
-        />)
-      },
-      shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
-    },
-    {
-      title: `Baseline<br>Watercourses&nbsp;(${site.habitats.watercourses.length})`,
-      content: () => {
-        return (<HabitatTable
-          habitats={sortedBaselineWatercourses}
-          sortConfig={sortConfigBaselineWatercourses}
-          isBaseline={true}
-          requestSort={requestSortBaselineWatercourses}
-          units={UNITS.KILOMETERS}
-        />)
+        return (
+          <ContentStack>
+            <SiteHabitatSankeyChart data={sankeyData.watercourses} />
+            <Heading as="h2" size="lg" textAlign="center">Watercourse Improvements</Heading>
+            <HabitatTable
+              habitats={sortedImprovementWatercourses}
+              sortConfig={sortConfigImprovementWatercourses}
+              isImprovement={true}
+              requestSort={requestSortImprovementWatercourses}
+              units={UNITS.KILOMETERS}
+            />
+            <Heading as="h2" size="lg" textAlign="center">Baseline Watercourses</Heading>
+            <HabitatTable
+              habitats={sortedBaselineWatercourses}
+              sortConfig={sortConfigBaselineWatercourses}
+              isBaseline={true}
+              requestSort={requestSortBaselineWatercourses}
+              units={UNITS.KILOMETERS}
+            />
+          </ContentStack>
+        )
       },
       shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
     },
     {
       title: `Allocations&nbsp;(${site.allocations.length})`,
       content: () => (
-        <AllocationsTable 
+        <AllocationsTable
           title="Allocations"
           allocations={site.allocations}
         />
@@ -217,14 +216,14 @@ export default function SitePageContent({site, sankeyData}) {
     tabs.push({
       title: 'IMD Score<br>Transfers Chart',
       content: () => {
-        return (          
+        return (
           <ImdScoresChart site={site} />
         )
       }
     });
   }
 
-  return (  
+  return (
     <MapContentLayout
       map={
         <SiteMap sites={[site]} selectedSite={site} />
@@ -232,7 +231,7 @@ export default function SitePageContent({site, sankeyData}) {
       content={(
 
         <ContentStack ref={contentRef}>
-                    
+
           <SiteDetailsCard site={site} />
 
           <Tabs.Root lazyMount defaultValue={0} width="100%">
@@ -258,10 +257,10 @@ export default function SitePageContent({site, sankeyData}) {
             <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
             <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
           </Flex>
-          
+
         </ContentStack>
-        
-      )}          
+
+      )}
     />
   )
 }

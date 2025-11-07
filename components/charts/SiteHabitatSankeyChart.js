@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { useBreakpointValue, VStack, Heading, Text, Stack, List, HStack, Box } from '@chakra-ui/react';
+import { VStack, Heading, Text, Stack, List, HStack, Box } from '@chakra-ui/react';
 import { formatNumber } from '@/lib/format';
 import InfoButton from '@/components/styles/InfoButton'
 import Modal from '@/components/ui/Modal';
