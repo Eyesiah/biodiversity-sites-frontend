@@ -179,10 +179,14 @@ export default function SiteHabitatSankeyChart({ data }) {
 
     // Create hover text arrays that match the original Recharts logic
     const nodeHoverText = data._originalNodes.map(node => {
+      if (node.name === '[CREATED]' || node.name === '[RETAINED]') {
+        return node.name;
+      }
       const condition = node.condition ? `<br>Condition: ${node.condition}` : '';
       const distinctiveness = `<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}`;
       const area = `<br>Area: ${formatNumber(node.value || 0, 2)} ${node.unit === 'areas' || node.unit === 'trees' ? 'ha' : 'km'}`;
-      return `<b>${node.name}</b>${condition}${distinctiveness}${area}`;
+      const enhancement = node.enhancementType ? `<br>Improvement Type: ${node.enhancementType}` : '';
+      return `<b>${node.name}</b>${condition}${distinctiveness}${area}${enhancement}`;
     });
 
     const linkHoverText = data._originalLinks.map(link => {
@@ -263,6 +267,8 @@ export default function SiteHabitatSankeyChart({ data }) {
           <List.Item>Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</List.Item>
           <List.Item>Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</List.Item>
           <List.Item>Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</List.Item>
+          <List.Item>&apos;Creation&apos; improvements always require a change in broad habitat type.</List.Item>
+          <List.Item>&apos;Enhanced&apos; improvements always require either an increase in Condition of the same habitat, or an increase in Distinctiveness within the same broad habitat type.</List.Item>
         </List.Root>
         <br />
         <Text>Despite the limitations of the source data, we think this way of viewing the data gives you a good overview of how a site has become a biodiversity gain site.</Text>
