@@ -254,7 +254,7 @@ export default function SiteHabitatSankeyChart({ data }) {
           />
         </Box>
       </HStack>
-      <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='md'>
+      <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='lg'>
         <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
         <br />
         <Text>This Sankey chart shows what these improvements might plausibly be. Higher distinctiveness habitats are higher up on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
@@ -265,9 +265,9 @@ export default function SiteHabitatSankeyChart({ data }) {
           <List.Item>Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</List.Item>
           <List.Item>Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</List.Item>
           <List.Item>Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</List.Item>
-          <List.Item>&apos;Creation&apos; improvements always require a change in broad habitat type (unless the baseline habitat is Low or worse Distinctiveness).</List.Item>
-          <List.Item>&apos;Enhanced&apos; improvements always require either an increase in Condition of the same habitat, or an increase in Distinctiveness within the same broad habitat type.</List.Item>
         </List.Root>
+        <br />
+        <Text><b>Constraint Rules</b>: We base our allocation on the BNG Statutory Metric definitions: &apos;Enhanced&apos; requires either an increase in Condition of the same habitat, or an increase in Distinctiveness within the same broad habitat type. &apos;Creation&apos; generally requires a change in broad habitat type, though we treat a large distinctiveness increase from a Low/Very Low baseline as &apos;Creation&apos; to align with the data.</Text>
         <br />
         <Text>Despite the limitations of the source data, we think this way of viewing the data gives you a good overview of how a site has become a biodiversity gain site.</Text>
         <br />
