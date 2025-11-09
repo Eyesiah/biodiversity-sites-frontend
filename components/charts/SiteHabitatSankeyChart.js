@@ -179,14 +179,13 @@ export default function SiteHabitatSankeyChart({ data }) {
 
     // Create hover text arrays that match the original Recharts logic
     const nodeHoverText = data._originalNodes.map(node => {
-      if (node.name === '[CREATED]' || node.name === '[RETAINED]') {
+      if (node.name === '[CREATION]') {
         return node.name;
       }
       const condition = node.condition ? `<br>Condition: ${node.condition}` : '';
       const distinctiveness = `<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}`;
       const area = `<br>Area: ${formatNumber(node.value || 0, 2)} ${node.unit === 'areas' || node.unit === 'trees' ? 'ha' : 'km'}`;
-      const enhancement = node.enhancementType ? `<br>Improvement Type: ${node.enhancementType}` : '';
-      return `<b>${node.name}</b>${condition}${distinctiveness}${area}${enhancement}`;
+      return `<b>${node.name}</b>${condition}${distinctiveness}${area}`;
     });
 
     const linkHoverText = data._originalLinks.map(link => {
@@ -195,13 +194,12 @@ export default function SiteHabitatSankeyChart({ data }) {
       const value = link.value;
       const unit = link.unit;
 
-      // Special handling for CREATED/RETAINED nodes (same logic as original)
-      if (sourceNode.name === '[CREATED]' || targetNode.name === '[RETAINED]') {
-        const node = sourceNode.name === '[CREATED]' ? targetNode : sourceNode;
-        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${node.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
+      // Special handling for CREATED nodes
+      if (sourceNode.name === '[CREATION]') {
+        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       } else {
         // Regular link tooltip
-        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
+        return `<b>${link.enhancement.toUpperCase()}</b><br><b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       }
     });
 
