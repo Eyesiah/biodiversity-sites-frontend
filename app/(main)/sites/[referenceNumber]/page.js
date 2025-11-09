@@ -1,6 +1,6 @@
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup, getConditionScore } from '@/lib/habitat';
-import { getHabitatSankeyGraph } from '@/lib/sites'
+import { getHabitatSankeyGraph, isIndividualTree } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -44,6 +44,11 @@ export default async function SitePage({ params }) {
 
   site.habitats = collateAllHabitats(site.habitats, false);
   site.improvements = collateAllHabitats(site.improvements, true);
+
+  site.habitats.trees = site.habitats.areas.filter(h => isIndividualTree(h));
+  site.improvements.trees = site.improvements.areas.filter(h => isIndividualTree(h));
+  site.habitats.areas = site.habitats.areas.filter(h => !isIndividualTree(h));
+  site.improvements.areas = site.improvements.areas.filter(h => !isIndividualTree(h));
 
   const sankeyData = getHabitatSankeyGraph(site);
 

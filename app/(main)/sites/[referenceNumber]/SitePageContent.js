@@ -1,33 +1,25 @@
 'use client'
 
-import { HabitatTable } from "@/components/data/HabitatsTable"
 import { XMLBuilder } from 'fast-xml-parser';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import { SiteDetailsCard } from './SiteDetailsCard'
 import { AllocationsTable } from './AllocationsTable'
+import HabitatTabContent from './HabitatTabContent'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/styles/ContentStack'
-import { Flex, Heading } from "@chakra-ui/react"
+import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
-import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
 import { useRef, useEffect, useState } from 'react';
-
-// Constants for Individual trees habitat types
-const INDIVIDUAL_TREES_TYPES = ['Urban tree', 'Rural tree'];
 
 // Units constants
 const UNITS = {
   HECTARES: 'ha',
   KILOMETRES: 'km'
 };
-
-// Helper functions for filtering habitats
-const isIndividualTree = (habitat) => INDIVIDUAL_TREES_TYPES.includes(habitat.type);
-const isNotIndividualTree = (habitat) => !INDIVIDUAL_TREES_TYPES.includes(habitat.type);
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -74,131 +66,81 @@ export default function SitePageContent({ site, sankeyData }) {
     return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
-  // Filter out Individual trees from area data for existing tabs
-  const filteredImprovementAreas = site.improvements.areas.filter(isNotIndividualTree);
-  const filteredBaselineAreas = site.habitats.areas.filter(isNotIndividualTree);
-
-  // Extract Individual trees data for new tabs
-  const individualTreesImprovements = site.improvements.areas.filter(isIndividualTree);
-  const individualTreesBaseline = site.habitats.areas.filter(isIndividualTree);
-
-  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(filteredImprovementAreas, { key: 'type', direction: 'ascending' });
+  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
+  const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(site.improvements.trees, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(site.improvements.watercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(filteredBaselineAreas, { key: 'type', direction: 'ascending' });
+  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(site.habitats.areas, { key: 'type', direction: 'ascending' });
+  const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(site.habitats.trees, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
-
-  // Sort Individual trees data
-  const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(individualTreesImprovements, { key: 'type', direction: 'ascending' });
-  const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(individualTreesBaseline, { key: 'type', direction: 'ascending' });
-
+  
   const tabs = [
     {
-      title: `Areas&nbsp;(${Math.max(filteredBaselineAreas.length, filteredImprovementAreas.length)})`,
-      content: () => {
-        return (
-          <ContentStack>
-            <SiteHabitatSankeyChart data={sankeyData.areas} />
-            <Heading as="h2" size="lg" textAlign="center">Area Improvements</Heading>
-            <HabitatTable
-              habitats={sortedImprovementAreas}
-              sortConfig={sortConfigImprovementAreas}
-              isImprovement={true}
-              requestSort={requestSortImprovementAreas}
-              units={UNITS.HECTARES}
-            />
-            <Heading as="h2" size="lg" textAlign="center">Baseline Areas</Heading>
-            <HabitatTable
-              habitats={sortedBaselineAreas}
-              sortConfig={sortConfigBaselineAreas}
-              isBaseline={true}
-              requestSort={requestSortBaselineAreas}
-              units={UNITS.HECTARES}
-            />
-          </ContentStack>
-        )
-      }
+      title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
+      content: () => (
+        <HabitatTabContent
+          sankeyData={sankeyData.areas}
+          habitatType="Areas"
+          units={UNITS.HECTARES}
+          improvementHabitats={sortedImprovementAreas}
+          improvementSortConfig={sortConfigImprovementAreas}
+          improvementRequestSort={requestSortImprovementAreas}
+          baselineHabitats={sortedBaselineAreas}
+          baselineSortConfig={sortConfigBaselineAreas}
+          baselineRequestSort={requestSortBaselineAreas}
+        />
+      )
     },
     {
       title: `Individual Trees&nbsp;(${Math.max(sortedIndividualTreesBaseline.length, sortedIndividualTreesImprovements.length)})`,
-      content: () => {
-        return (
-          <ContentStack>
-            <SiteHabitatSankeyChart data={sankeyData.trees} />
-            <Heading as="h2" size="lg" textAlign="center">Individual Trees Improvements</Heading>
-            <HabitatTable
-              habitats={sortedIndividualTreesImprovements}
-              sortConfig={sortConfigIndividualTreesImprovements}
-              isImprovement={true}
-              requestSort={requestSortIndividualTreesImprovements}
-              units={UNITS.HECTARES}
-            />
-            <Heading as="h2" size="lg" textAlign="center">Baseline Individual Trees</Heading>
-            <HabitatTable
-              habitats={sortedIndividualTreesBaseline}
-              sortConfig={sortConfigIndividualTreesBaseline}
-              isBaseline={true}
-              requestSort={requestSortIndividualTreesBaseline}
-              units={UNITS.HECTARES}
-            />
-          </ContentStack>
-        )
-      },
-      shouldRender: () => individualTreesImprovements.length > 0 || individualTreesBaseline.length > 0
+      content: () => (
+        <HabitatTabContent
+          sankeyData={sankeyData.trees}
+          habitatType="Individual Trees"
+          units={UNITS.HECTARES}
+          improvementHabitats={sortedIndividualTreesImprovements}
+          improvementSortConfig={sortConfigIndividualTreesImprovements}
+          improvementRequestSort={requestSortIndividualTreesImprovements}
+          baselineHabitats={sortedIndividualTreesBaseline}
+          baselineSortConfig={sortConfigIndividualTreesBaseline}
+          baselineRequestSort={requestSortIndividualTreesBaseline}
+        />
+      ),
+      shouldRender: () => site.improvements.trees.length > 0 || site.habitats.trees.length > 0
     },
     {
       title: `Hedgerow&nbsp;(${Math.max(site.habitats.hedgerows.length, site.improvements.hedgerows.length)})`,
-      content: () => {
-        return (
-          <ContentStack>
-            <SiteHabitatSankeyChart data={sankeyData.hedgerows} />
-            <Heading as="h2" size="lg" textAlign="center">Hedgerow Improvements</Heading>
-            <HabitatTable
-              habitats={sortedImprovementHedgerows}
-              sortConfig={sortConfigImprovementHedgerows}
-              isImprovement={true}
-              requestSort={requestSortImprovementHedgerows}
-              units={UNITS.KILOMETRES}
-            />
-            <Heading as="h2" size="lg" textAlign="center">Baseline Hedgerows</Heading>
-            <HabitatTable
-              habitats={sortedBaselineHedgerows}
-              sortConfig={sortConfigBaselineHedgerows}
-              isBaseline={true}
-              requestSort={requestSortBaselineHedgerows}
-              units={UNITS.KILOMETRES}
-            />
-          </ContentStack>
-        )
-      },
+      content: () => (
+        <HabitatTabContent
+          sankeyData={sankeyData.hedgerows}
+          habitatType="Hedgerows"
+          units={UNITS.KILOMETRES}
+          improvementHabitats={sortedImprovementHedgerows}
+          improvementSortConfig={sortConfigImprovementHedgerows}
+          improvementRequestSort={requestSortImprovementHedgerows}
+          baselineHabitats={sortedBaselineHedgerows}
+          baselineSortConfig={sortConfigBaselineHedgerows}
+          baselineRequestSort={requestSortBaselineHedgerows}
+        />
+      ),
       shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
     },
     {
       title: `Watercourse&nbsp;(${Math.max(site.habitats.watercourses.length, site.improvements.watercourses.length)})`,
-      content: () => {
-        return (
-          <ContentStack>
-            <SiteHabitatSankeyChart data={sankeyData.watercourses} />
-            <Heading as="h2" size="lg" textAlign="center">Watercourse Improvements</Heading>
-            <HabitatTable
-              habitats={sortedImprovementWatercourses}
-              sortConfig={sortConfigImprovementWatercourses}
-              isImprovement={true}
-              requestSort={requestSortImprovementWatercourses}
-              units={UNITS.KILOMETERS}
-            />
-            <Heading as="h2" size="lg" textAlign="center">Baseline Watercourses</Heading>
-            <HabitatTable
-              habitats={sortedBaselineWatercourses}
-              sortConfig={sortConfigBaselineWatercourses}
-              isBaseline={true}
-              requestSort={requestSortBaselineWatercourses}
-              units={UNITS.KILOMETERS}
-            />
-          </ContentStack>
-        )
-      },
+      content: () => (
+        <HabitatTabContent
+          sankeyData={sankeyData.watercourses}
+          habitatType="Watercourses"
+          units={UNITS.KILOMETRES}
+          improvementHabitats={sortedImprovementWatercourses}
+          improvementSortConfig={sortConfigImprovementWatercourses}
+          improvementRequestSort={requestSortImprovementWatercourses}
+          baselineHabitats={sortedBaselineWatercourses}
+          baselineSortConfig={sortConfigBaselineWatercourses}
+          baselineRequestSort={requestSortBaselineWatercourses}
+        />
+      ),
       shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
     },
     {

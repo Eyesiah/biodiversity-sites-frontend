@@ -138,7 +138,7 @@ const wrapTextToWidth = (text, maxWidth, fontSize = 12, maxLines = 3) => {
   return lines.join('<br>');
 };
 
-export default function SiteHabitatSankeyChart({ data }) {
+export default function SiteHabitatSankeyChart({ data, habitatType }) {
   const [modalState, setModalState] = useState(false);
   const [nodeLabels, setNodeLabels] = useState([]);
 
@@ -218,7 +218,7 @@ export default function SiteHabitatSankeyChart({ data }) {
   return (
     <Stack>
       <InfoButton onClick={() => showModal()}>
-        <Heading as="h2" size="lg" textAlign="center">Habitat Improvement Chart</Heading>
+        <Heading as="h2" size="lg" textAlign="center">{habitatType} Improvement Chart</Heading>
       </InfoButton>
 
       <HStack spacing={4} alignItems="stretch" width="100%">
