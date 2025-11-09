@@ -18,7 +18,7 @@ const reverseDistinctivenessLookup = {
   8: 'Very High'
 };
 
-const labelFontSize = 12;
+const labelFontSize = 14;
 
 /**
  * A cached canvas context for measuring text widths.
@@ -193,6 +193,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       type: "sankey",
       orientation: "v",
       arrangement: "fixed",
+      textfont: { shadow: 'none' },
       ...data,
       node: {
         ...data.node,
@@ -234,7 +235,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
               width: undefined, // Let Plotly handle responsive width
               height: sankeyHeight,
               margin: { t: 0, b: 0, l: 0, r: 0 },
-              font: { size: labelFontSize, color: 'white' }
+              font: { size: labelFontSize, color: 'black' }
             }}
             config={{
               responsive: true,
