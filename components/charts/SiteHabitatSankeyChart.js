@@ -265,7 +265,7 @@ export default function SiteHabitatSankeyChart({ data }) {
           <List.Item>Then, medium distinctiveness baseline habitats are improved within the same broad category, where possible.</List.Item>
           <List.Item>Remaining habitats are improved, prioritising the lowest distinctiveness habitats.</List.Item>
           <List.Item>Finally, any remaining habitats that cannot be assigned to an improvement are treated as &apos;retained&apos;.</List.Item>
-          <List.Item>&apos;Creation&apos; improvements always require a change in broad habitat type.</List.Item>
+          <List.Item>&apos;Creation&apos; improvements always require a change in broad habitat type (unless the baseline habitat is Low or worse Distinctiveness).</List.Item>
           <List.Item>&apos;Enhanced&apos; improvements always require either an increase in Condition of the same habitat, or an increase in Distinctiveness within the same broad habitat type.</List.Item>
         </List.Root>
         <br />
