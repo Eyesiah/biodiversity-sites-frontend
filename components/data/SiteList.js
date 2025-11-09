@@ -22,8 +22,8 @@ const ALL_SITE_COLUMNS = {
 
 const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, columns = DEFAULT_COLUMNS }) => {
   const { items: sortedSites, requestSort, getSortIndicator } = useSortableData(
-    sites, 
-    { key: 'referenceNumber', direction: 'descending' }
+    sites,
+    { key: 'siteSize', direction: 'descending' }
   );
 
   if (!sortedSites || sortedSites.length === 0) {
