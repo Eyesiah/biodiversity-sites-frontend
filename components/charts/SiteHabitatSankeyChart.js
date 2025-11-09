@@ -18,7 +18,7 @@ const reverseDistinctivenessLookup = {
   8: 'Very High'
 };
 
-const labelFontSize = 14;
+const labelFontSize = 12;
 
 /**
  * A cached canvas context for measuring text widths.
@@ -34,7 +34,7 @@ function getTextWidth(text, font) {
   return canvasContext.measureText(text).width;
 }
 
-// Function to wrap text into multiple lines with truncation
+// Function to wrap text into multiple lines with word boundaries respected
 const wrapTextToWidth = (text, maxWidth, fontSize = 12, maxLines = 3) => {
   if (!text) return text;
 
@@ -46,79 +46,103 @@ const wrapTextToWidth = (text, maxWidth, fontSize = 12, maxLines = 3) => {
     return '';
   }
 
+  // Split text into words (split on spaces and preserve them)
+  const words = text.split(/(\s+)/);
   const lines = [];
   let currentLine = '';
+  let currentLineWidth = 0;
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const testLine = currentLine + char;
-    const testWidth = getTextWidth(testLine, fontStyle);
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const wordWidth = getTextWidth(word, fontStyle);
+    const testLine = currentLine + word;
+    const testLineWidth = currentLineWidth + wordWidth;
 
-    if (testWidth <= maxWidth) {
-      // Character fits on current line
+    // If this word fits on the current line
+    if (testLineWidth <= maxWidth) {
       currentLine = testLine;
+      currentLineWidth = testLineWidth;
     } else {
-      // Character doesn't fit - start new line
-      if (currentLine) {
-        lines.push(currentLine);
-        currentLine = char;
+      // Word doesn't fit on current line
+
+      // If we have a current line, save it and start a new one
+      if (currentLine.trim()) {
+        lines.push(currentLine.trim());
+
+        // Check if we've reached max lines
+        if (lines.length >= maxLines) {
+          // We've reached max lines, but we still have more content
+          // Add ellipsis to the last line if there's space, or create a new truncated line
+          const ellipsis = '...';
+          const ellipsisWidth = getTextWidth(ellipsis, fontStyle);
+
+          if (currentLineWidth + ellipsisWidth <= maxWidth) {
+            lines[lines.length - 1] = currentLine.trim() + ellipsis;
+          } else {
+            // Try to fit ellipsis on a new line
+            lines.push(ellipsis);
+          }
+          return lines.join('<br>');
+        }
+      }
+
+      // Start new line with this word
+      if (wordWidth <= maxWidth) {
+        // Word fits on a line by itself
+        currentLine = word;
+        currentLineWidth = wordWidth;
       } else {
-        // Single character doesn't fit - skip this character
-        continue;
+        // Word is too long even for its own line - truncate it
+        let truncatedWord = word;
+        while (truncatedWord.length > 0) {
+          const testWidth = getTextWidth(truncatedWord + '...', fontStyle);
+          if (testWidth <= maxWidth) {
+            lines.push(truncatedWord + '...');
+            return lines.join('<br>');
+          }
+          truncatedWord = truncatedWord.slice(0, -1);
+        }
+        // If we can't even fit '...', just return empty
+        return '';
       }
     }
   }
 
-  // Add the last line
-  if (currentLine) {
-    lines.push(currentLine);
+  // Add the final line if it has content
+  if (currentLine.trim()) {
+    lines.push(currentLine.trim());
   }
 
-  // If we have too many lines, truncate the last one and add ellipsis
+  // If we have too many lines, truncate the last one
   if (lines.length > maxLines) {
     const lastLineIndex = maxLines - 1;
     const lastLine = lines[lastLineIndex];
-    const ELLIPSIS = '...';
+    const ellipsis = '...';
+    const ellipsisWidth = getTextWidth(ellipsis, fontStyle);
 
     // Try to fit ellipsis on the last line
     let truncatedLastLine = lastLine;
     while (truncatedLastLine.length > 0) {
-      const testWidth = getTextWidth(`${truncatedLastLine}${ELLIPSIS}`, fontStyle);
-      if (testWidth <= maxWidth) break;
+      const testWidth = getTextWidth(truncatedLastLine + ellipsis, fontStyle);
+      if (testWidth <= maxWidth) {
+        lines[lastLineIndex] = truncatedLastLine + ellipsis;
+        break;
+      }
       truncatedLastLine = truncatedLastLine.slice(0, -1);
     }
 
-    lines[lastLineIndex] = truncatedLastLine.length > 1 ? `${truncatedLastLine}${ELLIPSIS}` : '';
-    lines.splice(maxLines); // Remove any extra lines
+    // Keep only the allowed number of lines
+    lines.splice(maxLines);
   }
 
-  // Join lines with HTML line breaks
   return lines.join('<br>');
 };
 
 export default function SiteHabitatSankeyChart({ data }) {
   const [modalState, setModalState] = useState(false);
-  const [truncatedLabels, setTruncatedLabels] = useState([]);
-  const [chartWidth, setChartWidth] = useState(600); // Default fallback
-  const chartRef = useRef(null);
+  const [nodeLabels, setNodeLabels] = useState([]);
 
   const sankeyHeight = 400; // Default height since Plotly handles sizing differently
-
-  // Measure the chart container width
-  useEffect(() => {
-    const updateWidth = () => {
-      if (chartRef.current) {
-        setChartWidth(chartRef.current.offsetWidth);
-      }
-    };
-
-    // Measure initially
-    updateWidth();
-
-    // Update on window resize
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
 
   const showModal = () => {
     setModalState(true);
@@ -126,56 +150,18 @@ export default function SiteHabitatSankeyChart({ data }) {
 
   // Truncate labels based on proportional width calculation for vertical Sankey
   useEffect(() => {
-    if (data && data._originalNodes && data.link && data.link.source && data.link.target) {
-      // Parse link source/target arrays to determine which nodes are on each side
-      const baselineNodeIds = new Set(data.link.source);
-      const improvementNodeIds = new Set(data.link.target);
-
-      // Get nodes for each side
-      const baselineNodes = data._originalNodes.filter((_, index) => baselineNodeIds.has(index));
-      const improvementNodes = data._originalNodes.filter((_, index) => improvementNodeIds.has(index));
-
-      const availableWidth = chartWidth || 600; // Use measured width or fallback
-      const nodePad = data.node?.pad || 20; // Gap between nodes
-
-      // Calculate metrics for each side
-      const baselineTotalValue = baselineNodes.reduce((sum, node) => sum + (node.value || 0), 0);
-      const improvementTotalValue = improvementNodes.reduce((sum, node) => sum + (node.value || 0), 0);
-
-      // Use the side with more nodes for width calculation (Plotly makes both sides consistent)
-      const sideWithMoreNodes = baselineNodes.length >= improvementNodes.length ? 'baseline' : 'improvement';
-      const nodesInDominantGroup = sideWithMoreNodes === 'baseline' ? baselineNodes : improvementNodes;
-      const totalValueInDominantGroup = sideWithMoreNodes === 'baseline' ? baselineTotalValue : improvementTotalValue;
-
-      const gapSpace = nodePad * (nodesInDominantGroup.length - 1);
-      const availableChartWidth = Math.max(100, chartWidth - gapSpace);
-
-      const truncated = data._originalNodes.map((node, nodeIndex) => {
-        const isOnDominantSide = (sideWithMoreNodes === 'baseline' && baselineNodeIds.has(nodeIndex)) ||
-                                (sideWithMoreNodes === 'improvement' && improvementNodeIds.has(nodeIndex));
-
-        let nodeWidth;
-        if (isOnDominantSide) {
-          // Calculate proportional width for nodes on the dominant side
-          const proportion = totalValueInDominantGroup > 0 ? (node.value || 0) / totalValueInDominantGroup : 1 / nodesInDominantGroup.length;
-          nodeWidth = Math.max(20, availableChartWidth * proportion);
-        } else {
-          // For nodes on the other side, use the same proportional calculation
-          // (Plotly ensures both sides have consistent widths)
-          const proportion = totalValueInDominantGroup > 0 ? (node.value || 0) / totalValueInDominantGroup : 1 / nodesInDominantGroup.length;
-          nodeWidth = Math.max(20, availableChartWidth * proportion);
-        }
-
+    if (data && data._originalNodes) {
+      const labels = data._originalNodes.map((node) => {
         const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
-        return wrapTextToWidth(fullLabel, nodeWidth * 0.9, labelFontSize, 3);
+        return fullLabel;
       });
-      setTruncatedLabels(truncated);
+      setNodeLabels(labels);
     }
-  }, [data, chartWidth]);
+  }, [data]);
 
   // Create chart data with truncated labels and custom tooltips
   const chartData = React.useMemo(() => {
-    if (!data || !truncatedLabels.length) return data;
+    if (!data || !nodeLabels.length) return data;
 
     // Create hover text arrays that match the original Recharts logic
     const nodeHoverText = data._originalNodes.map(node => {
@@ -210,7 +196,11 @@ export default function SiteHabitatSankeyChart({ data }) {
       ...data,
       node: {
         ...data.node,
-        label: truncatedLabels,
+        label: nodeLabels,
+        labelFormatter: function (label, nodeWidth, nodeHeight, fontSize, nodeIndex) {
+          // Your truncation logic
+          return wrapTextToWidth(label, nodeHeight * 0.8, fontSize, 3);
+        },
         customdata: nodeHoverText,
         hovertemplate: '%{customdata}<extra></extra>',
         pad: 10,
@@ -223,7 +213,7 @@ export default function SiteHabitatSankeyChart({ data }) {
         hovertemplate: '%{customdata}<extra></extra>'
       }
     };
-  }, [data, truncatedLabels]);
+  }, [data, nodeLabels]);
 
   return (
     <Stack>
@@ -237,7 +227,7 @@ export default function SiteHabitatSankeyChart({ data }) {
           <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginBottom={2}>Improved</Text>
         </VStack>
 
-        <Box ref={chartRef} flex={1} minWidth={0}>
+        <Box flex={1} minWidth={0}>
           <Plot
             data={[chartData]}
             layout={{
