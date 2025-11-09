@@ -171,7 +171,8 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       const condition = node.condition ? `<br>Condition: ${node.condition}` : '';
       const distinctiveness = `<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}`;
       const area = `<br>Area: ${formatNumber(node.value || 0, 2)} ${node.unit === 'areas' || node.unit === 'trees' ? 'ha' : 'km'}`;
-      return `<b>${node.name}</b>${condition}${distinctiveness}${area}`;
+      const broadHab = `<br>Broad Habitat: ${node.habGroup}`;
+      return `<b>${node.name}</b>${broadHab}${condition}${distinctiveness}${area}`;
     });
 
     const linkHoverText = data._originalLinks.map(link => {
