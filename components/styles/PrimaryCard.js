@@ -28,10 +28,9 @@ export const CardTitle = (props) => (
   <Box
     as="h3"
     marginTop="0"
-    borderBottom="1px solid"
     borderColor="border"
-    paddingBottom="0.5rem"
-    marginBottom="0.75rem"
+    paddingBottom="0.25rem"
+    marginBottom="0.3rem"
     fontSize="1.17rem"
     cursor={props.onClick ? "pointer" : "default"}
     userSelect={props.onClick ? "none" : "auto"}

@@ -105,7 +105,7 @@ export const SiteDetailsCard = ({ site }) => {
               margin="0"
               paddingRight="1rem"
             >
-              Habitat Summary
+              Habitat<br />Summary
             </Box>
             <Box
               as="dd"

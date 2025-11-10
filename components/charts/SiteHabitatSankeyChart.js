@@ -5,7 +5,7 @@ import { formatNumber } from '@/lib/format';
 import InfoButton from '@/components/styles/InfoButton'
 import Modal from '@/components/ui/Modal';
 import ExternalLink from '@/components/ui/ExternalLink';
-import { TableContainer } from '@/components/styles/PrimaryCard';
+import { PrimaryCard, TableContainer, CardTitle } from '@/components/styles/PrimaryCard';
 
 // Dynamically import Plot to avoid SSR issues
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
@@ -219,15 +219,17 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
   }, [data, nodeLabels]);
 
   return (
-    <Stack>
-      <InfoButton onClick={() => showModal()}>
-        <Heading as="h2" size="lg" textAlign="center">{habitatType} Improvement Chart</Heading>
-      </InfoButton>
+    <PrimaryCard>
+      <CardTitle>
+        <InfoButton onClick={() => showModal()}>
+          {habitatType} Biodiversity Gain
+        </InfoButton>
+      </CardTitle>
 
       <HStack spacing={4} alignItems="stretch" width="100%">
         <VStack justifyContent="space-between" alignItems="flex-end" minHeight={sankeyHeight} flexShrink={0}>
-          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginTop={3}>Baseline</Text>
-          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginBottom={2}>Improved</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginTop={4}>Before</Text>
+          <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginBottom={5}>After</Text>
         </VStack>
 
         <TableContainer>
@@ -238,7 +240,8 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
                 width: undefined, // Let Plotly handle responsive width
                 height: sankeyHeight,
                 margin: { t: 0, b: 0, l: 0, r: 0 },
-                font: { size: labelFontSize, color: 'black' }
+                font: { size: labelFontSize, color: 'black' },
+                paper_bgcolor: 'transparent'
               }}
               config={{
                 responsive: true,
@@ -268,6 +271,6 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
         <br />
         <Text>Please tell us how you think this chart might be improved, using the Feedback button at the top of the page. You can view the open source code for the algorithm on our <ExternalLink href='https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/lib/habitat.js'>github repository</ExternalLink>.</Text>
       </Modal>
-    </Stack>
+    </PrimaryCard>
   );
 }

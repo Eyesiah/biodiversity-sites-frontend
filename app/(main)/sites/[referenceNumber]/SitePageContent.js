@@ -74,14 +74,14 @@ export default function SitePageContent({ site, sankeyData }) {
   const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(site.habitats.trees, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
-  
+
   const tabs = [
     {
       title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
       content: () => (
         <HabitatTabContent
           sankeyData={sankeyData.areas}
-          habitatType="Areas"
+          habitatType="Area Habitats"
           units={UNITS.HECTARES}
           improvementHabitats={sortedImprovementAreas}
           improvementSortConfig={sortConfigImprovementAreas}
@@ -152,18 +152,26 @@ export default function SitePageContent({ site, sankeyData }) {
         />
       )
     },
-  ];
-
-  if (site.allocations.length > 0) {
-    tabs.push({
+    {
       title: 'IMD Score<br>Transfers Chart',
       content: () => {
         return (
           <ImdScoresChart site={site} />
         )
-      }
-    });
-  }
+      },
+      shouldRender: () => site.allocations.length > 0
+    },
+    {
+      title: 'Data Export',
+      content: () => (
+        <Flex gap="0.5rem" justifyContent="center">
+          <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
+          <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
+        </Flex>
+      )
+    }
+  ];
+
 
   return (
     <MapContentLayout
@@ -189,16 +197,12 @@ export default function SitePageContent({ site, sankeyData }) {
               ))}
             </Tabs.List>
             {tabs.map((tab, index) => (
-              <Tabs.Content key={index} value={index}>
+              <Tabs.Content key={index} value={index} paddingTop={1}>
                 {tab.content()}
               </Tabs.Content>
             ))}
           </Tabs.Root>
 
-          <Flex gap="0.5rem" justifyContent="center">
-            <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
-            <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
-          </Flex>
 
         </ContentStack>
 
