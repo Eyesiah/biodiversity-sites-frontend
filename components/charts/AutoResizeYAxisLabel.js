@@ -25,7 +25,7 @@ export const AutoResizeYAxisLabel = ({ x, y, payload, width, fontSize = '0.9rem'
     const originalText = payload.value;
     if (!originalText) return;
 
-    const fontStyle = `${fontSize}px sans-serif`;
+    const fontStyle = `${fontSize} sans-serif`;
     const textWidth = getTextWidth(originalText, fontStyle);
 
     if (textWidth > width) {
