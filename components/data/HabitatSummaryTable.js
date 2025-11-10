@@ -23,7 +23,7 @@ export const HabitatSummaryTable = ({ site }) => {
   const baselineWatercourseHUs = (habitats.watercourses || []).reduce((acc, h) => acc + h.HUs, 0);
 
   // Calculate Individual Trees (Urban tree + Rural tree) data
-  const individualTreesHabitats = (habitats.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
+  const individualTreesHabitats = habitats.trees || (habitats.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
   const baselineIndividualTrees = individualTreesHabitats.reduce((acc, h) => acc + h.area, 0);
   const baselineIndividualTreesParcels = individualTreesHabitats.reduce((acc, h) => acc + (h.parcels || 1), 0);
   const baselineIndividualTreesHUs = individualTreesHabitats.reduce((acc, h) => acc + h.HUs, 0);
@@ -35,7 +35,7 @@ export const HabitatSummaryTable = ({ site }) => {
   const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.area, 0);
 
   // Calculate Individual Trees improvements
-  const individualTreesImprovements = (improvements.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
+  const individualTreesImprovements = improvements.trees || (improvements.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
   const improvementIndividualTrees = individualTreesImprovements.reduce((acc, h) => acc + h.area, 0);
 
   let allocationArea = 0;
@@ -78,20 +78,22 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasHedgerow = baselineHedgerow > 0 || improvementHedgerow > 0 || allocationHedgerow > 0;
   const hasWatercourse = baselineWatercourse > 0 || improvementWatercourse > 0 || allocationWatercourse > 0;
 
+  const headerFontSize = '14px';
+
   return (
     <Box overflowX="auto">
       <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>
-            <DataTable.ColumnHeader>Habitat</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader>Baseline Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader>Baseline HUs</DataTable.ColumnHeader>            
-            <DataTable.ColumnHeader>Retained Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader>Improvements Size</DataTable.ColumnHeader>
-            {hasAllocs && <DataTable.ColumnHeader>Allocations Size</DataTable.ColumnHeader>}
-            {hasAllocs && <DataTable.ColumnHeader>% Allocated</DataTable.ColumnHeader>}
-            {hasAllocHUs && <DataTable.ColumnHeader>Allocations HUs</DataTable.ColumnHeader>}
+            <DataTable.ColumnHeader fontSize={headerFontSize}>Habitat</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}># Parcels</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}>Baseline Size</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}>Baseline HUs</DataTable.ColumnHeader>            
+            <DataTable.ColumnHeader fontSize={headerFontSize}>Retained Size</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}>Improvements Size</DataTable.ColumnHeader>
+            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>Allocations Size</DataTable.ColumnHeader>}
+            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% Allocated</DataTable.ColumnHeader>}
+            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}>Allocations HUs</DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>

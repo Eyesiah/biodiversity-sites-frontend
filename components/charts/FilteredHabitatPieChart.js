@@ -140,7 +140,7 @@ export default function FilteredHabitatPieChart ({ habitats, module, name }) {
                 data={otherData}
               >
                 <XAxis type="number" hide />
-                <YAxis type="category" dataKey="name" width={250} tick={<AutoResizeYAxisLabel width={250} />} interval={0} />
+                <YAxis type="category" dataKey="name" width={250} tick={<AutoResizeYAxisLabel width={250} fontSize='12px' />} interval={0} />
                 <Tooltip 
                   formatter={(value, name, props) => {
                     const unit = module === 'area' || module === 'areas' ? 'ha' : 'km';
