@@ -5,6 +5,7 @@ import { formatNumber } from '@/lib/format';
 import InfoButton from '@/components/styles/InfoButton'
 import Modal from '@/components/ui/Modal';
 import ExternalLink from '@/components/ui/ExternalLink';
+import { TableContainer } from '@/components/styles/PrimaryCard';
 
 // Dynamically import Plot to avoid SSR issues
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
@@ -229,22 +230,24 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
           <Text textAlign='right' fontSize={12} fontWeight='bold' writingMode='vertical-rl' marginBottom={2}>Improved</Text>
         </VStack>
 
-        <Box flex={1} minWidth={0}>
-          <Plot
-            data={[chartData]}
-            layout={{
-              width: undefined, // Let Plotly handle responsive width
-              height: sankeyHeight,
-              margin: { t: 0, b: 0, l: 0, r: 0 },
-              font: { size: labelFontSize, color: 'black' }
-            }}
-            config={{
-              responsive: true,
-              displayModeBar: false
-            }}
-            style={{ width: '100%', height: sankeyHeight }}
-          />
-        </Box>
+        <TableContainer>
+          <Box flex={1} minWidth={700}>
+            <Plot
+              data={[chartData]}
+              layout={{
+                width: undefined, // Let Plotly handle responsive width
+                height: sankeyHeight,
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                font: { size: labelFontSize, color: 'black' }
+              }}
+              config={{
+                responsive: true,
+                displayModeBar: false
+              }}
+              style={{ width: '100%', height: sankeyHeight }}
+            />
+          </Box>
+        </TableContainer>
       </HStack>
       <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='lg'>
         <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
