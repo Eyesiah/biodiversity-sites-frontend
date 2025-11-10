@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { VStack, Heading, Text, Stack, List, HStack, Box } from '@chakra-ui/react';
 import { formatNumber } from '@/lib/format';
@@ -143,26 +143,15 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
   const [modalState, setModalState] = useState(false);
   const [nodeLabels, setNodeLabels] = useState([]);
 
-  const sankeyHeight = 400; // Default height since Plotly handles sizing differently
+  const sankeyHeight = 350;
 
   const showModal = () => {
     setModalState(true);
   };
 
-  // Truncate labels based on proportional width calculation for vertical Sankey
-  useEffect(() => {
-    if (data && data._originalNodes) {
-      const labels = data._originalNodes.map((node) => {
-        const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
-        return fullLabel;
-      });
-      setNodeLabels(labels);
-    }
-  }, [data]);
-
   // Create chart data with truncated labels and custom tooltips
   const chartData = React.useMemo(() => {
-    if (!data || !nodeLabels.length) return data;
+    if (!data) return data;
 
     // Create hover text arrays that match the original Recharts logic
     const nodeHoverText = data._originalNodes.map(node => {
@@ -199,9 +188,11 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       ...data,
       node: {
         ...data.node,
-        label: nodeLabels,
+        label: data._originalNodes.map((node) => {
+          const fullLabel = node.condition.length > 0 ? `${node.name} [${node.condition}]` : node.name;
+          return fullLabel;
+        }),
         labelFormatter: function (label, nodeWidth, nodeHeight, fontSize, nodeIndex) {
-          // Your truncation logic
           return wrapTextToWidth(label, nodeHeight * 0.8, fontSize, 3);
         },
         customdata: nodeHoverText,
@@ -216,7 +207,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
         hovertemplate: '%{customdata}<extra></extra>'
       }
     };
-  }, [data, nodeLabels]);
+  }, [data]);
 
   return (
     <PrimaryCard>
