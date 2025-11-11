@@ -1,10 +1,8 @@
 import ChartRenderer from './ChartRenderer';
-import { getChartData } from '@/lib/charts';
 import { fetchAllSites } from '@/lib/api';
 import { calculateBaselineHU, processSiteHabitatData } from '@/lib/habitat';
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+export const revalidate = 21600; // 6 hours
 
 const chartConfig = {
     

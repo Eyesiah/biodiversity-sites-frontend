@@ -4,8 +4,8 @@ import { getHabitatSankeyGraph, isIndividualTree } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+export const revalidate = 21600; // 6 hours
+
 
 export async function generateStaticParams() {
 

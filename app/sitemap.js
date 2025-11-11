@@ -1,8 +1,7 @@
 
 import { fetchAllSites } from '@/lib/api';
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+export const revalidate = 21600; // 6 hours
 
 const URL = 'https://bgs.bristoltrees.space';
 

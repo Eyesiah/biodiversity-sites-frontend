@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { slugify } from '@/lib/format';
 
-export const revalidate = 3600; // Re-generate page at most once per hour
+export const revalidate = 21600; // 6 hours
 
 export async function generateStaticParams() {
   const allSites = await fetchAllSites();

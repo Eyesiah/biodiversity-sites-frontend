@@ -5,7 +5,7 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
-export const revalidate = 3600; // Re-generate page at most once per hour
+export const revalidate = 21600; // 6 hours
 
 export async function generateStaticParams() {
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
