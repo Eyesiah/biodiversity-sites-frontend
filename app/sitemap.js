@@ -1,5 +1,5 @@
 
-import { fetchAllSites } from '@/lib/api';
+import { fetchAllRefNos } from '@/lib/api';
 
 export const revalidate = 21600; // 6 hours
 
@@ -28,9 +28,9 @@ export default async function sitemap() {
   }));
 
   // Generate dynamic routes for individual sites
-  const sites = await fetchAllSites();
-  const siteRoutes = sites.map((site) => ({
-    url: `${URL}/sites/${site.referenceNumber}`,
+  const sites = await fetchAllRefNos();
+  const siteRoutes = sites.map((referenceNumber) => ({
+    url: `${URL}/sites/${referenceNumber}`,
     lastModified: new Date().toISOString(),
   }));
 
