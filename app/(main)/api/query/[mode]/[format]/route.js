@@ -40,6 +40,7 @@ export async function GET(_, { params }) {
     data = allSites.map(s => ({
       'reference-number': s.referenceNumber,
       'responsible-body': s.responsibleBodies.join(', '),
+      'startDate': s.startDate,
       'latitude': formatNumber(s.latitude, 6),
       'longitude': formatNumber(s.longitude, 6),
       'easting': s.easting,
