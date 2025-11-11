@@ -37,7 +37,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, column
     // Special handling for referenceNumber - render as link
     if (column === 'referenceNumber') {
       return (
-        <Link href={`/sites/${site.referenceNumber}`}>
+        <Link href={`/sites/${site.referenceNumber}`} onClick={(e) => e.stopPropagation()}>
           {value}{site.name && <><br /><b>{site.name}</b></>}
         </Link>
       );
