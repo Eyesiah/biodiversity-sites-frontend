@@ -1,5 +1,5 @@
-import { fetchSite, fetchAllSites } from '@/lib/api';
-import { collateAllHabitats, getDistinctivenessScore, getHabitatGroup, getConditionScore } from '@/lib/habitat';
+import { fetchSite, fetchAllRefNos } from '@/lib/api';
+import { collateAllHabitats } from '@/lib/habitat';
 import { getHabitatSankeyGraph, isIndividualTree } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
@@ -9,9 +9,9 @@ export const revalidate = 21600; // 6 hours
 
 export async function generateStaticParams() {
 
-  const sites = await fetchAllSites();
-  const paths = sites.map(site => {
-    return { referenceNumber: site.referenceNumber };
+  const sites = await fetchAllRefNos();
+  const paths = sites.map(referenceNumber => {
+    return { referenceNumber: referenceNumber };
   });
 
   return paths;
