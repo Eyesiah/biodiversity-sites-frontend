@@ -13,7 +13,7 @@ export const revalidate = 21600; // 6 hours
 
 
 export default async function SiteListPage() {
-  const allSites = await fetchAllSites(true);
+  const allSites = await fetchAllSites(true, false, true);
   const { processedSites } = processSiteDataForIndex(allSites);
   const lastUpdated = Date.now();
 

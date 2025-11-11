@@ -20,7 +20,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
 
   const { referenceNumber } = await params;
-  const site = await fetchSite(referenceNumber);
+  const site = await fetchSite(referenceNumber, false, false, true);
 
   return {
     title: site.name ? `${site.name} | ${site.referenceNumber}` : `Site Details: ${site.referenceNumber}`,
@@ -33,7 +33,7 @@ export default async function SitePage({ params }) {
   const { referenceNumber } = await params;
   const lastUpdated = Date.now();
 
-  const site = await fetchSite(referenceNumber, true, true)
+  const site = await fetchSite(referenceNumber, true, true, true)
   if (!site) {
     return <p>Site not found</p>
   }
