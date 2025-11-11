@@ -6,8 +6,7 @@ import { fetchAllSites } from '@/lib/api';
 import clientPromise from '@/lib/mongodb.js';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 export const metadata = {
   title: 'Admin Panel',

@@ -1,8 +1,7 @@
 
 import { fetchAllSites } from '@/lib/api';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 const URL = 'https://bgs.bristoltrees.space';
 

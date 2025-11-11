@@ -4,8 +4,7 @@ import Footer from '@/components/core/Footer';
 import { collateAllHabitats } from '@/lib/habitat';
 import { processSitesForListView} from '@/lib/sites';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 
 export const metadata = {

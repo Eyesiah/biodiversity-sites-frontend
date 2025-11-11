@@ -2,8 +2,7 @@ import { NextResponse } from 'next/server';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { slugify } from '@/lib/format';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 export async function generateStaticParams() {
   const allSites = await fetchAllSites();

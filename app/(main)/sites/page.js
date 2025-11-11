@@ -9,8 +9,7 @@ export const metadata = {
   description: 'All sites on the BGS Register are shown on this page. Hover over any entry on the table to highlight the site on the map. Clicking on any row will focus the map on that site. Clicking on the BGS Reference link will open that site.'
 };
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 
 export default async function SiteListPage() {

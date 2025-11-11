@@ -5,8 +5,7 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 export async function generateStaticParams() {
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');

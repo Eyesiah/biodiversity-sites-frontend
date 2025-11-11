@@ -7,8 +7,7 @@ import { processSiteForListView } from '@/lib/sites';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import Footer from '@/components/core/Footer';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 
 export const metadata = {

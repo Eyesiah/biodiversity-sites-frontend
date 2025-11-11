@@ -2,8 +2,7 @@ import ChartRenderer from './ChartRenderer';
 import { fetchAllSites } from '@/lib/api';
 import { calculateBaselineHU, processSiteHabitatData } from '@/lib/habitat';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 const chartConfig = {
     

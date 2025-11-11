@@ -9,8 +9,7 @@ export const metadata = {
   description: 'View which baseline habitats exist in the register, which will be improved and which have been allocated.'
 };
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 export default async function HabitatAnalysis() {
   const allSites = await fetchAllSites();

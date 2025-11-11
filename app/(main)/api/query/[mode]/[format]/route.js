@@ -5,8 +5,7 @@ import { formatNumber } from '@/lib/format'
 import { NextResponse } from 'next/server';
 import Papa from 'papaparse';
 
-import {ISR_REVALIDATE_TIME} from '@/config'
-export const revalidate = ISR_REVALIDATE_TIME;
+export const revalidate = 21600; // 6 hours
 
 export function generateStaticParams() {
   return [
