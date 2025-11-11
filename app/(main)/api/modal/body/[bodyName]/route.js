@@ -5,7 +5,8 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites } from '@/lib/api';
 import { NextResponse } from 'next/server';
 
-export const revalidate = 3600; // Re-generate page at most once per hour
+import {ISR_REVALIDATE_TIME} from '@/config'
+export const revalidate = ISR_REVALIDATE_TIME;
 
 export async function generateStaticParams() {
   const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');

@@ -8,9 +8,6 @@ import PrimaryTable from '@/components/styles/PrimaryTable';
 import { Heading } from "@chakra-ui/react"
 import { ContentLayout } from '@/components/styles/ContentLayout';
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
-
 const CommaSeperatedSiteLink = ({site, index, count}) => {
   return (
   <>    

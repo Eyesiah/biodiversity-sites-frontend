@@ -9,8 +9,8 @@ export const metadata = {
   description: 'View which baseline habitats exist in the register, which will be improved and which have been allocated.'
 };
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+import {ISR_REVALIDATE_TIME} from '@/config'
+export const revalidate = ISR_REVALIDATE_TIME;
 
 export default async function HabitatAnalysis() {
   const allSites = await fetchAllSites();

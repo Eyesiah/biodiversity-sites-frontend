@@ -5,7 +5,8 @@ import { formatNumber } from '@/lib/format'
 import { NextResponse } from 'next/server';
 import Papa from 'papaparse';
 
-export const revalidate = 3600; // Re-generate page at most once per hour
+import {ISR_REVALIDATE_TIME} from '@/config'
+export const revalidate = ISR_REVALIDATE_TIME;
 
 export function generateStaticParams() {
   return [

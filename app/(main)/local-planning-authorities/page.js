@@ -8,8 +8,9 @@ export const metadata = {
   description: 'View all the LPA bodies and which sites are present in each one. Click on any record for a dropdown of adjacent LPAs.'
 };
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+import {ISR_REVALIDATE_TIME} from '@/config'
+export const revalidate = ISR_REVALIDATE_TIME;
+
 
 export default async function LocalPlanningAuthoritiesPage() {
 

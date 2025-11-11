@@ -9,8 +9,9 @@ export const metadata = {
   description: 'All sites on the BGS Register are shown on this page. Hover over any entry on the table to highlight the site on the map. Clicking on any row will focus the map on that site. Clicking on the BGS Reference link will open that site.'
 };
 
-// Revalidate this page at most once every hour (3600 seconds)
-export const revalidate = 3600;
+import {ISR_REVALIDATE_TIME} from '@/config'
+export const revalidate = ISR_REVALIDATE_TIME;
+
 
 export default async function SiteListPage() {
   const allSites = await fetchAllSites(true);
