@@ -6,6 +6,8 @@ import { ARCGIS_LNRS_URL } from '@/config';
 import LNRSContent from './LNRSContent';
 import Footer from '@/components/core/Footer';
 
+export const revalidate = 21600; // 6 hours
+
 export const metadata = {
   title: 'Local Nature Recovery Strategy Sites',
   description: 'View all the LNRS bodies and which sites are present in each one. Click on any record for a dropdown of adjacent LNRS sites.'
@@ -18,7 +20,7 @@ async function getLnrsData() {
     const rawLnrs = JSON.parse(jsonData);
     const allSites = await fetchAllSites(true);
 
-    const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`, {next: { revalidate: 3600 } });
+    const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`, {next: { revalidate: revalidate } });
     const lnrsArcGISData = await lnrsArcGISRes.json();
 
     const siteCountsByLnrs = allSites.reduce((acc, site) => {

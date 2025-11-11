@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function HabitatSummaryPage() {
   const lastUpdated = Date.now();
-  const allSites = await fetchAllSites({ next: { revalidate: 3600 } });
+  const allSites = await fetchAllSites({ next: { revalidate: revalidate } });
 
   const allHabitats = {
     areas: [],

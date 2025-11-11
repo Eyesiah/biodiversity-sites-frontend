@@ -1,7 +1,6 @@
 import clientPromise from '@/lib/mongodb';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
-import { revalidatePath } from 'next/cache'
 
 async function handler(req, res) {
   // Protect the endpoint with a secret
@@ -44,7 +43,7 @@ async function handler(req, res) {
       newSites
     });
 
-    revalidatePath('/statistics');
+    res.revalidate('/statistics');
 
     res.status(200).json({
       message: 'Statistics updated successfully.',
