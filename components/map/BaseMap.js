@@ -25,7 +25,7 @@ const highlightedSiteIcon = new L.Icon({
 export async function getPolys(geoJsonUrl, queryField, value) {
   const encodedValue = encodeURIComponent(value.replace(/'/g, "''"));
   const url = `${geoJsonUrl}?where=${queryField}='${encodedValue}'&outFields=*&returnGeometry=true&f=geojson`;
-  const res = await fetch(url, {next: { revalidate: 3600 } })
+  const res = await fetch(url, {next: { revalidate: 21600 } })
   return await res.json();
 }
 
