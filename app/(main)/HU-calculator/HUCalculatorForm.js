@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom';
 import { calcHU } from './actions';
 import { useActionState, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
+import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code, Slider } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
@@ -13,9 +13,10 @@ const initialState = {
   size: 0,
   habitat: '',
   condition: '',
-  improvementType: 'none',
+  improvementType: 'baseline',
   strategicSignificance: '1',
   spatialRisk: '1',
+  timeToTargetOffset: 0,
   result: null,
 };
 
@@ -57,12 +58,11 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             </Box>
           </HStack>
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Improvement Type</Text>
+            <Text flex="1" fontWeight="bold">Habitat Type</Text>
             <NativeSelect.Root flex="2" size="sm">
               <NativeSelect.Field name="improvementType" value={formData.improvementType} onChange={(e) => setFormData({...formData, improvementType: e.target.value})} key={JSON.stringify(state.result)}>
-                <option value="none">None</option>
-                <option value="creation">Creation</option>
-                <option value="enhanced">Improvement</option>
+                <option value="baseline">Baseline</option>
+                <option value="creation">Creation</option>                
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
@@ -89,6 +89,34 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
+          {formData.improvementType !== 'baseline' && (
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
+              <Box flex="2">
+                <Slider.Root
+                  min={-10}
+                  max={10}
+                  step={1}
+                  value={[formData.timeToTargetOffset]}
+                  onValueChange={(value) => setFormData({...formData, timeToTargetOffset: value[0]})}
+                >
+                  <Slider.Control>
+                    <Slider.Track>
+                      <Slider.Range />
+                    </Slider.Track>
+                    <Slider.Thumb index={0} />
+                  </Slider.Control>
+                  <Slider.MarkerGroup>
+                    <Slider.Marker value={-10}>-10</Slider.Marker>
+                    <Slider.Marker value={0}>0</Slider.Marker>
+                    <Slider.Marker value={10}>10</Slider.Marker>
+                  </Slider.MarkerGroup>
+                </Slider.Root>
+                <Text mt={2} textAlign="center">{formData.timeToTargetOffset} years</Text>
+              </Box>
+            </HStack>
+          )}
+          <input type="hidden" name="timeToTargetOffset" value={String(formData.timeToTargetOffset)} />
           <HStack spacing={4}>
             <SubmitButton />
             <Button onClick={() => setFormData(initialState)} colorScheme="gray">

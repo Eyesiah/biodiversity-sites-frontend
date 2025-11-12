@@ -1,6 +1,6 @@
 "use server"
 
-import { calcDifficultyFactor, calcTemporalRisk, getTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
+import { calcDifficultyFactor, calcTemporalRisk, getTimeToTarget, getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness, calcSpatialRiskCategory } from "@/lib/habitat";
 
 export async function calcHU(prevState, formData) {
     const size = formData.get("size");
@@ -9,20 +9,23 @@ export async function calcHU(prevState, formData) {
     const improvementType = formData.get("improvementType");
     const strategicSignificance = formData.get("strategicSignificance");
     const spatialRisk = formData.get("spatialRisk");
+    const timeToTargetOffset = Number(formData.get("timeToTargetOffset") || 0);
 
     const isBaseline = improvementType == "none" || improvementType == null || improvementType == '';
 
     let result = {
-      hu: isBaseline ? calculateBaselineHU(Number(size), habitat, condition) : calculateImprovementHU(Number(size), habitat, condition, improvementType),        
+      hu: isBaseline ? calculateBaselineHU(Number(size), habitat, condition) : calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset),
       distinctiveness: getHabitatDistinctiveness(habitat),
       distinctivenessScore: getDistinctivenessScore(habitat),
       conditionScore: getConditionScore(condition),
     }
-    
+
     if (!isBaseline) {
       result.getTimeToTarget = getTimeToTarget(habitat, condition);
-      result.temporalRisk= calcTemporalRisk(habitat, condition);
+      result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
+      result.temporalRisk= calcTemporalRisk(habitat, condition, timeToTargetOffset);
       result.difficultyFactor = calcDifficultyFactor(habitat);
+      result.spatialRisk = calcSpatialRiskCategory(spatialRisk);
     }
 
     const newState = {
@@ -32,6 +35,7 @@ export async function calcHU(prevState, formData) {
         improvementType: improvementType,
         strategicSignificance: strategicSignificance,
         spatialRisk: spatialRisk,
+        timeToTargetOffset: timeToTargetOffset,
         result: result
     };
 
