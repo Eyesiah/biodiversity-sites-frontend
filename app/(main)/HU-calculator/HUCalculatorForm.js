@@ -78,17 +78,19 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
-          <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Spatial Risk</Text>
-            <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
-                <option value={1}>Within</option>
-                <option value={0.75}>Neighbouring</option>
-                <option value={0.5}>Outside</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-          </HStack>
+          {formData.improvementType === 'creation' && (
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Spatial Risk</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
+                  <option value={1}>Within</option>
+                  <option value={0.75}>Neighbouring</option>
+                  <option value={0.5}>Outside</option>
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </HStack>
+          )}
           {formData.improvementType !== 'baseline' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
@@ -122,10 +124,10 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             <Button onClick={() => setFormData(initialState)} colorScheme="gray">
               Reset
             </Button>
-            {state.result && (
+            {formData.result && (
               <Box flex="2" p={4} bg="gray.50" borderRadius="md">
                 <Code display="block" whiteSpace="pre-wrap">
-                  {JSON.stringify(state.result, null, 2)}
+                  {JSON.stringify(formData.result, null, 2)}
                 </Code>
               </Box>
             )}
