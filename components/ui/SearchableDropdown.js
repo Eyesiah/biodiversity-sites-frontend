@@ -2,9 +2,9 @@
 
 import Select from "react-select";
 
-export default function SearchableDropdown({ name, options, defaultValue, onChange }) {
+export default function SearchableDropdown({ name, options, value, onChange }) {
   const selectOptions = options.map(o => ({ value: o, label: o }));
-  const defaultOption = defaultValue ? { value: defaultValue, label: defaultValue } : null;
+  const selectedOption = value ? { value: value, label: value } : null;
 
   const customStyles = {
     container: (provided) => ({
@@ -32,7 +32,7 @@ export default function SearchableDropdown({ name, options, defaultValue, onChan
     <Select
       name={name}
       options={selectOptions}
-      value={defaultOption}
+      value={selectedOption}
       onChange={handleChange}
       styles={customStyles}
       menuPortalTarget={typeof document !== 'undefined' ? document.body : null}

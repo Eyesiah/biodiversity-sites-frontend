@@ -7,6 +7,8 @@ export async function calcHU(prevState, formData) {
     const habitat = formData.get("habitat");
     const condition = formData.get("condition");
     const improvementType = formData.get("improvementType");
+    const strategicSignificance = formData.get("strategicSignificance");
+    const spatialRisk = formData.get("spatialRisk");
 
     const isBaseline = improvementType == "none" || improvementType == null || improvementType == '';
 
@@ -28,6 +30,8 @@ export async function calcHU(prevState, formData) {
         habitat: habitat,
         condition: condition,
         improvementType: improvementType,
+        strategicSignificance: strategicSignificance,
+        spatialRisk: spatialRisk,
         result: result
     };
 
