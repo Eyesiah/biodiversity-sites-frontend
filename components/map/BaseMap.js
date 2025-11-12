@@ -35,17 +35,17 @@ export const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity
 export const lpaStyle = { color: '#282c34', weight: 2, opacity: 0.8, fillColor: '#282c34', fillOpacity: 0.3 };
 export const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOpacity: 0.5 }; // Pink
 
-export const BaseMap = ({ children, ...props }) => {
+export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
   return (
     <MapContainer center={[52.9522, -2.0153]} zoom={6.75} zoomSnap={0.05} {...props}>
       <LayersControl position="topright">
-        <LayersControl.BaseLayer checked name="OpenStreetMap">
+        <LayersControl.BaseLayer checked={defaultBaseLayer === 'OpenStreetMap' || !defaultBaseLayer} name="OpenStreetMap">
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
         </LayersControl.BaseLayer>
-        <LayersControl.BaseLayer name="Satellite">
+        <LayersControl.BaseLayer checked={defaultBaseLayer === 'Satellite'} name="Satellite">
           <TileLayer
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'

@@ -176,7 +176,7 @@ export default function SitePageContent({ site, sankeyData }) {
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={[site]} selectedSite={site} />
+        <SiteMap sites={[site]} selectedSite={site} isForSitePage={true} />
       }
       content={(
 

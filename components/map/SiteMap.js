@@ -1,6 +1,6 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { GeoJSON, useMap, Tooltip } from 'react-leaflet';
+import { GeoJSON, useMap, Tooltip, Circle } from 'react-leaflet';
 import { Polyline } from 'react-leaflet/Polyline'
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -9,9 +9,14 @@ import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPo
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD, MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
 
-function MapController({ lsoa, lnrs, nca, lpa }) {
+function MapController({ lsoa, lnrs, nca, lpa, circleBounds }) {
   const map = useMap();
   useEffect(() => {
+    if (circleBounds) {
+      map.fitBounds(circleBounds, {padding: [150, 150]});
+      return;
+    }
+
     const bounds = L.latLngBounds([]);
     [lsoa, lnrs, nca, lpa].forEach((geo) => {
       if (geo) {
@@ -25,7 +30,7 @@ function MapController({ lsoa, lnrs, nca, lpa }) {
     if (bounds.isValid()) {
       map.fitBounds(bounds);
     }
-  }, [lsoa, lnrs, nca, lpa, map]);
+  }, [lsoa, lnrs, nca, lpa, circleBounds, map]);
   return null;
 }
 
@@ -39,8 +44,9 @@ function PolylinePane() {
 }
 
 // --- SiteMap Component ---
-const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
+const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
+  const [activeCircle, setActiveCircle] = useState(null);
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
 
@@ -117,16 +123,24 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
 
   useEffect(() => {
     if (selectedSite) {
-      fetchAndDisplayPolygons(selectedSite);
-      const marker = markerRefs.current[selectedSite.referenceNumber];
-      if (marker) {
-        marker.openPopup();
+      if (isForSitePage) {
+        const radius = Math.sqrt((selectedSite.siteSize * 10000) / Math.PI);
+        setActiveCircle(radius);
+        setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
+      } else {
+        fetchAndDisplayPolygons(selectedSite);
+        setActiveCircle(null);
+        const marker = markerRefs.current[selectedSite.referenceNumber];
+        if (marker) {
+          marker.openPopup();
+        }
       }
     }
     else {
       setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
+      setActiveCircle(null);
     }
-  }, [selectedSite]);
+  }, [selectedSite, isForSitePage]);
 
 
   const handlePopupClose = () => {
@@ -137,10 +151,12 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
   const displayKey = onSiteSelect == null;
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
+  const circleBounds = activeCircle ? L.latLng(selectedSite.position).toBounds(activeCircle) : null;
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <BaseMap style={{ height: mapHeight }}>
-        <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} />
+      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage ? 'Satellite' : undefined}>
+        <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} circleBounds={circleBounds} />
         <PolylinePane />
 
         {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
@@ -148,13 +164,15 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
         {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
         {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
 
+        {activeCircle && <Circle center={selectedSite.position} radius={activeCircle} pathOptions={{ color: 'white', weight: 2, fill: false, dashArray: '5, 5' }} />}
+
         {sites.map(site =>
           site.position != null && (
             <SiteMapMarker key={site.referenceNumber} site={site} isHovered={site.referenceNumber == hoveredSite?.referenceNumber} withColorKeys={true} handlePopupClose={handlePopupClose} markerRefs={markerRefs} onSiteSelect={onSiteSelect} />
           )
         )}
 
-        {selectedSite && selectedSite.allocations &&
+        {selectedSite && selectedSite.allocations && !isForSitePage &&
           selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
             return (
               <Polyline
