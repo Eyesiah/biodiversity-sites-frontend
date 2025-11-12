@@ -14,8 +14,8 @@ const initialState = {
   habitat: '',
   condition: '',
   improvementType: 'baseline',
-  strategicSignificance: '1',
-  spatialRisk: '1',
+  strategicSignificance: 1,
+  spatialRisk: 1,
   timeToTargetOffset: 0,
   result: null,
 };
@@ -71,9 +71,9 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             <Text flex="1" fontWeight="bold">Strategic Significance</Text>
             <NativeSelect.Root flex="2" size="sm">
               <NativeSelect.Field name="strategicSignificance" value={formData.strategicSignificance} onChange={(e) => setFormData({...formData, strategicSignificance: e.target.value})} key={JSON.stringify(state.result)}>
-                <option value="1">Low</option>
-                <option value="1.1">Medium</option>
-                <option value="1.5">High</option>
+                <option value={1}>Low</option>
+                <option value={1.1}>Medium</option>
+                <option value={1.5}>High</option>
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
@@ -82,9 +82,9 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             <Text flex="1" fontWeight="bold">Spatial Risk</Text>
             <NativeSelect.Root flex="2" size="sm">
               <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
-                <option value="1">Within</option>
-                <option value="0.75">Neighbouring</option>
-                <option value="0.5">Outside</option>
+                <option value={1}>Within</option>
+                <option value={0.75}>Neighbouring</option>
+                <option value={0.5}>Outside</option>
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
