@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom';
 import { calcHU } from './actions';
 import { useActionState, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code, Slider } from '@chakra-ui/react';
+import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
@@ -94,31 +94,23 @@ export default function HUCalculatorForm({ habitats, conditions }) {
           {formData.improvementType !== 'baseline' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
-              <Box flex="2">
-                <Slider.Root
-                  min={-10}
-                  max={10}
-                  step={1}
-                  value={[formData.timeToTargetOffset]}
-                  onValueChange={(value) => setFormData({...formData, timeToTargetOffset: value[0]})}
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field
+                  name="timeToTargetOffset"
+                  value={formData.timeToTargetOffset}
+                  onChange={(e) => setFormData({...formData, timeToTargetOffset: Number(e.target.value)})}
                 >
-                  <Slider.Control>
-                    <Slider.Track>
-                      <Slider.Range />
-                    </Slider.Track>
-                    <Slider.Thumb index={0} />
-                  </Slider.Control>
-                  <Slider.MarkerGroup>
-                    <Slider.Marker value={-10}>-10</Slider.Marker>
-                    <Slider.Marker value={0}>0</Slider.Marker>
-                    <Slider.Marker value={10}>10</Slider.Marker>
-                  </Slider.MarkerGroup>
-                </Slider.Root>
-                <Text mt={2} textAlign="center">{formData.timeToTargetOffset} years</Text>
-              </Box>
+                  {Array.from({ length: 21 }, (_, i) => i - 10).map(offset => (
+                    <option key={offset} value={offset}>
+                      {offset > 0 ? `+${offset}` : offset} years
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
             </HStack>
           )}
-          <input type="hidden" name="timeToTargetOffset" value={String(formData.timeToTargetOffset)} />
+
           <HStack spacing={4}>
             <SubmitButton />
             <Button onClick={() => setFormData(initialState)} colorScheme="gray">
