@@ -36,6 +36,10 @@ export async function calcHU(prevState, formData) {
       result.conditionScore = 0;
     }
 
+    if (result.hu > 0) {
+      result.hu = Number(result.hu.toFixed(4));
+    }
+
     const newState = {
         size: size,
         habitat: habitat,
