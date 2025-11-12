@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import { calcHU } from './actions';
-import { useActionState } from 'react';
+import { useActionState, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -13,7 +13,10 @@ const initialState = {
   size: 0,
   habitat: '',
   condition: '',
-  improvementType: 'none',
+  improvementType: 'baseline',
+  strategicSignificance: 1,
+  spatialRisk: 1,
+  timeToTargetOffset: 0,
   result: null,
 };
 
@@ -26,46 +29,97 @@ function SubmitButton() {
   );
 }
 export default function HUCalculatorForm({ habitats, conditions }) {
-  
+
   const [state, formAction] = useActionState(calcHU, initialState);
+  const [formData, setFormData] = useState(initialState);
+
+  useEffect(() => {
+    setFormData(state);
+  }, [state]);
 
   return (
     <form action={formAction}>
       <PrimaryCard maxWidth="1000px" margin="20px">
         <VStack spacing={4} align="stretch">
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Size</Text>
-            <Input name="size" defaultValue={state.size} flex="2" />
+            <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
+            <Input name="size" value={formData.size} onChange={(e) => setFormData({...formData, size: e.target.value})} flex="2" />
           </HStack>
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Habitat</Text>
             <Box flex="2">
-              <SearchableDropdown name="habitat" options={habitats} defaultValue={state.habitat} />
+              <SearchableDropdown name="habitat" options={habitats} value={formData.habitat} onChange={(value) => setFormData({...formData, habitat: value})} />
             </Box>
           </HStack>
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Condition</Text>
             <Box flex="2">
-              <SearchableDropdown name="condition" options={conditions} defaultValue={state.condition} />
+              <SearchableDropdown name="condition" options={conditions} value={formData.condition} onChange={(value) => setFormData({...formData, condition: value})} />
             </Box>
           </HStack>
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Improvement Type</Text>
+            <Text flex="1" fontWeight="bold">Habitat Type</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field name="improvementType" defaultValue={state.improvementType} key={JSON.stringify(state.result)}>
-                <option value="none">None</option>
-                <option value="creation">Creation</option>
-                <option value="enhanced">Improvement</option>
+              <NativeSelect.Field name="improvementType" value={formData.improvementType} onChange={(e) => setFormData({...formData, improvementType: e.target.value})} key={JSON.stringify(state.result)}>
+                <option value="baseline">Baseline</option>
+                <option value="creation">Creation</option>                
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
           <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Strategic Significance</Text>
+            <NativeSelect.Root flex="2" size="sm">
+              <NativeSelect.Field name="strategicSignificance" value={formData.strategicSignificance} onChange={(e) => setFormData({...formData, strategicSignificance: e.target.value})} key={JSON.stringify(state.result)}>
+                <option value={1}>Low</option>
+                <option value={1.1}>Medium</option>
+                <option value={1.5}>High</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </HStack>
+          {formData.improvementType === 'creation' && (
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Spatial Risk</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
+                  <option value={1}>Within</option>
+                  <option value={0.75}>Neighbouring</option>
+                  <option value={0.5}>Outside</option>
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </HStack>
+          )}
+          {formData.improvementType !== 'baseline' && (
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field
+                  name="timeToTargetOffset"
+                  value={formData.timeToTargetOffset}
+                  onChange={(e) => setFormData({...formData, timeToTargetOffset: Number(e.target.value)})}
+                >
+                  {Array.from({ length: 21 }, (_, i) => i - 10).map(offset => (
+                    <option key={offset} value={offset}>
+                      {offset > 0 ? `+${offset}` : offset} years
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </HStack>
+          )}
+
+          <HStack spacing={4}>
             <SubmitButton />
-            {state.result && (
+            <Button onClick={() => setFormData(initialState)} colorScheme="gray">
+              Reset
+            </Button>
+            {formData.result && (
               <Box flex="2" p={4} bg="gray.50" borderRadius="md">
                 <Code display="block" whiteSpace="pre-wrap">
-                  {JSON.stringify(state.result, null, 2)}
+                  {JSON.stringify(formData.result, null, 2)}
                 </Code>
               </Box>
             )}
