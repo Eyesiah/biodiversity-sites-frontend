@@ -30,6 +30,12 @@ export async function calcHU(prevState, formData) {
       result.timeToTargetOffset = timeToTargetOffset;
     }
 
+    if (result.distinctiveness && result.distinctiveness.toLowerCase() === 'v.low') {
+      result.hu = 0;
+      result.distinctivenessScore = 0;
+      result.conditionScore = 0;
+    }
+
     const newState = {
         size: size,
         habitat: habitat,
