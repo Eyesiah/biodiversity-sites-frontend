@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom';
 import { calcHU } from './actions';
 import { useActionState, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code, Slider } from '@chakra-ui/react';
+import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
@@ -78,54 +78,48 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
-          <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Spatial Risk</Text>
-            <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
-                <option value={1}>Within</option>
-                <option value={0.75}>Neighbouring</option>
-                <option value={0.5}>Outside</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-          </HStack>
+          {formData.improvementType === 'creation' && (
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Spatial Risk</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
+                  <option value={1}>Within</option>
+                  <option value={0.75}>Neighbouring</option>
+                  <option value={0.5}>Outside</option>
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </HStack>
+          )}
           {formData.improvementType !== 'baseline' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
-              <Box flex="2">
-                <Slider.Root
-                  min={-10}
-                  max={10}
-                  step={1}
-                  value={[formData.timeToTargetOffset]}
-                  onValueChange={(value) => setFormData({...formData, timeToTargetOffset: value[0]})}
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field
+                  name="timeToTargetOffset"
+                  value={formData.timeToTargetOffset}
+                  onChange={(e) => setFormData({...formData, timeToTargetOffset: Number(e.target.value)})}
                 >
-                  <Slider.Control>
-                    <Slider.Track>
-                      <Slider.Range />
-                    </Slider.Track>
-                    <Slider.Thumb index={0} />
-                  </Slider.Control>
-                  <Slider.MarkerGroup>
-                    <Slider.Marker value={-10}>-10</Slider.Marker>
-                    <Slider.Marker value={0}>0</Slider.Marker>
-                    <Slider.Marker value={10}>10</Slider.Marker>
-                  </Slider.MarkerGroup>
-                </Slider.Root>
-                <Text mt={2} textAlign="center">{formData.timeToTargetOffset} years</Text>
-              </Box>
+                  {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
+                    <option key={offset} value={offset}>
+                      {offset > 0 ? `+${offset}` : offset} years
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
             </HStack>
           )}
-          <input type="hidden" name="timeToTargetOffset" value={String(formData.timeToTargetOffset)} />
+
           <HStack spacing={4}>
             <SubmitButton />
             <Button onClick={() => setFormData(initialState)} colorScheme="gray">
               Reset
             </Button>
-            {state.result && (
+            {formData.result && (
               <Box flex="2" p={4} bg="gray.50" borderRadius="md">
                 <Code display="block" whiteSpace="pre-wrap">
-                  {JSON.stringify(state.result, null, 2)}
+                  {JSON.stringify(formData.result, null, 2)}
                 </Code>
               </Box>
             )}
