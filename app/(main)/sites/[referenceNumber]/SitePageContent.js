@@ -48,15 +48,6 @@ export default function SitePageContent({ site, sankeyData }) {
   const [shouldRenderAllocationLayer, setShouldRenderAllocationLayer] = useState(false);
   const contentRef = useRef(null);
 
-
-  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
-  const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(site.improvements.trees, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(site.improvements.watercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(site.habitats.areas, { key: 'type', direction: 'ascending' });
-  const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(site.habitats.trees, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
   const tabs = useMemo(() => [
     {
       title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
@@ -65,28 +56,20 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.areas}
           habitatType="Area Habitats"
           units={UNITS.HECTARES}
-          improvementHabitats={sortedImprovementAreas}
-          improvementSortConfig={sortConfigImprovementAreas}
-          improvementRequestSort={requestSortImprovementAreas}
-          baselineHabitats={sortedBaselineAreas}
-          baselineSortConfig={sortConfigBaselineAreas}
-          baselineRequestSort={requestSortBaselineAreas}
+          improvements={site.improvements.areas}
+          baseline={site.habitats.areas}
         />
       )
     },
     {
-      title: `Individual Trees&nbsp;(${Math.max(sortedIndividualTreesBaseline.length, sortedIndividualTreesImprovements.length)})`,
+      title: `Individual Trees&nbsp;(${Math.max(site.improvements.trees.length, site.habitats.trees.length)})`,
       content: () => (
         <HabitatTabContent
           sankeyData={sankeyData.trees}
           habitatType="Individual Trees"
           units={UNITS.HECTARES}
-          improvementHabitats={sortedIndividualTreesImprovements}
-          improvementSortConfig={sortConfigIndividualTreesImprovements}
-          improvementRequestSort={requestSortIndividualTreesImprovements}
-          baselineHabitats={sortedIndividualTreesBaseline}
-          baselineSortConfig={sortConfigIndividualTreesBaseline}
-          baselineRequestSort={requestSortIndividualTreesBaseline}
+          improvements={site.improvements.trees}
+          baseline={site.habitats.trees}
         />
       ),
       shouldRender: () => site.improvements.trees.length > 0 || site.habitats.trees.length > 0
@@ -98,12 +81,8 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.hedgerows}
           habitatType="Hedgerows"
           units={UNITS.KILOMETRES}
-          improvementHabitats={sortedImprovementHedgerows}
-          improvementSortConfig={sortConfigImprovementHedgerows}
-          improvementRequestSort={requestSortImprovementHedgerows}
-          baselineHabitats={sortedBaselineHedgerows}
-          baselineSortConfig={sortConfigBaselineHedgerows}
-          baselineRequestSort={requestSortBaselineHedgerows}
+          improvements={site.improvements.hedgerows}
+          baseline={site.habitats.hedgerows}
         />
       ),
       shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
@@ -115,12 +94,8 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.watercourses}
           habitatType="Watercourses"
           units={UNITS.KILOMETRES}
-          improvementHabitats={sortedImprovementWatercourses}
-          improvementSortConfig={sortConfigImprovementWatercourses}
-          improvementRequestSort={requestSortImprovementWatercourses}
-          baselineHabitats={sortedBaselineWatercourses}
-          baselineSortConfig={sortConfigBaselineWatercourses}
-          baselineRequestSort={requestSortBaselineWatercourses}
+          improvements={site.improvements.watercourses}
+          baseline={site.habitats.watercourses}
         />
       ),
       shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
