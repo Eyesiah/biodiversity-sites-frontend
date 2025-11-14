@@ -1,147 +1,66 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { GeoJSON, useMap, Tooltip, Circle } from 'react-leaflet';
+import { useMap, Tooltip, Circle } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
-import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD, MAP_KEY_HEIGHT } from '@/config'
+import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from '@/components/map/BaseMap';
+import { MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
 import AllocationMapLayer from '@/components/map/AllocationMapLayer';
+import BodyMapLayer from '@/components/map/BodyMapLayer';
 
-function MapController({ lsoa, lnrs, nca, lpa, circleBounds }) {
+function MapController({ circleBounds }) {
   const map = useMap();
   useEffect(() => {
     if (circleBounds) {
       map.fitBounds(circleBounds, {padding: [150, 150]});
-      return;
     }
-
-    const bounds = L.latLngBounds([]);
-    [lsoa, lnrs, nca, lpa].forEach((geo) => {
-      if (geo) {
-        const layer = L.geoJSON(geo);
-        if (layer.getBounds().isValid()) {
-          bounds.extend(layer.getBounds());
-        }
-      }
-    });
-
-    if (bounds.isValid()) {
-      map.fitBounds(bounds);
-    }
-  }, [lsoa, lnrs, nca, lpa, circleBounds, map]);
+  }, [circleBounds, map]);
   return null;
 }
 
 
 
 // --- SiteMap Component ---
-const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage, shouldRenderAllocationLayer }) => {
-  const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
+const SiteMap = ({
+  sites,
+  hoveredSite,
+  selectedSite,
+  onSiteSelect,
+  isForSitePage,
+  shouldRenderAllocationLayer = false,
+  showLPA = false,
+  showNCA = false,
+  showLNRS = false,
+  showLSOA = false,
+  displayKey = false
+}) => {
   const [activeCircle, setActiveCircle] = useState(null);
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
-
-  const fetchAndDisplayPolygons = async (site) => {
-    setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-
-    if (!site) {
-      return;
-    }
-
-    const lsoaName = site.lsoaName ?? site.lsoa.name;
-
-    const lsoaFromCache = polygonCache.current.lsoa[lsoaName];
-    const lnrsFromCache = polygonCache.current.lnrs[site.lnrsName];
-    const ncaFromCache = polygonCache.current.nca[site.ncaName];
-    const lpaFromCache = polygonCache.current.lpa[site.lpaName];
-
-    const fetchPromises = [];
-
-    if (lsoaFromCache) {
-      fetchPromises.push(Promise.resolve(lsoaFromCache));
-    } else {
-      if (lsoaName && lsoaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, ARCGIS_LSOA_NAME_FIELD, lsoaName));
-      } else {
-        fetchPromises.push(Promise.resolve(null)); // Push null if no LSOA name
-      }
-    }
-
-    if (lnrsFromCache) {
-      fetchPromises.push(Promise.resolve(lnrsFromCache));
-    } else {
-      if (site.lnrsName && site.lnrsName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LNRS_URL, 'Name', site.lnrsName));
-      } else {
-        fetchPromises.push(Promise.resolve(null));
-      }
-    }
-
-    if (ncaFromCache) {
-      fetchPromises.push(Promise.resolve(ncaFromCache));
-    } else {
-      if (site.ncaName && site.ncaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_NCA_URL, 'NCA_Name', site.ncaName));
-      } else {
-        fetchPromises.push(Promise.resolve(null));
-      }
-    }
-
-    if (lpaFromCache) {
-      fetchPromises.push(Promise.resolve(lpaFromCache));
-    } else {
-      if (site.lpaName && site.lpaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LPA_URL, 'LPA23NM', site.lpaName));
-      } else {
-        fetchPromises.push(Promise.resolve(null));
-      }
-    }
-
-    try {
-      const [lsoaGeoJson, lnrsGeoJson, ncaGeoJson, lpaGeoJson] = await Promise.all(fetchPromises);
-
-      if (!lsoaFromCache && site.lsoaName) polygonCache.current.lsoa[site.lsoaName] = lsoaGeoJson;
-      if (!lnrsFromCache && site.lnrsName) polygonCache.current.lnrs[site.lnrsName] = lnrsGeoJson;
-      if (!ncaFromCache && site.ncaName) polygonCache.current.nca[site.ncaName] = ncaGeoJson;
-      if (!lpaFromCache && site.lpaName) polygonCache.current.lpa[site.lpaName] = lpaGeoJson;
-
-      setActivePolygons({ lsoa: lsoaGeoJson, lnrs: lnrsGeoJson, nca: ncaGeoJson, lpa: lpaGeoJson });
-    } catch (error) {
-      console.error("Failed to fetch polygon data:", error);
-      setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-    }
-  };
 
   useEffect(() => {
     if (selectedSite) {
       if (isForSitePage) {
         const radius = Math.sqrt((selectedSite.siteSize * 10000) / Math.PI);
         setActiveCircle(radius);
-        setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
       } else {
-        fetchAndDisplayPolygons(selectedSite);
         setActiveCircle(null);
         const marker = markerRefs.current[selectedSite.referenceNumber];
         if (marker) {
           marker.openPopup();
         }
       }
-    }
-    else {
-      setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
+    } else {
       setActiveCircle(null);
     }
   }, [selectedSite, isForSitePage]);
 
-
   const handlePopupClose = () => {
-    setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
     if (onSiteSelect) { onSiteSelect(null) };
   };
 
-  const displayKey = onSiteSelect == null;
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
   const circleBounds = activeCircle ? L.latLng(selectedSite.position).toBounds(activeCircle) : null;
@@ -149,12 +68,43 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage ? 'Satellite' : undefined}>
-        <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} circleBounds={circleBounds} />
+        <MapController circleBounds={circleBounds} />
 
-        {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
-        {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
-        {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
-        {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
+        {selectedSite && showLPA && (
+          <BodyMapLayer
+            bodyType="lpa"
+            bodyName={selectedSite.lpaName}
+            enabled={true}
+            polygonCache={polygonCache}
+          />
+        )}
+
+        {selectedSite && showNCA && (
+          <BodyMapLayer
+            bodyType="nca"
+            bodyName={selectedSite.ncaName}
+            enabled={true}
+            polygonCache={polygonCache}
+          />
+        )}
+
+        {selectedSite && showLNRS && (
+          <BodyMapLayer
+            bodyType="lnrs"
+            bodyName={selectedSite.lnrsName}
+            enabled={true}
+            polygonCache={polygonCache}
+          />
+        )}
+
+        {selectedSite && showLSOA && (
+          <BodyMapLayer
+            bodyType="lsoa"
+            bodyName={selectedSite.lsoaName}
+            enabled={true}
+            polygonCache={polygonCache}
+          />
+        )}
 
         {activeCircle && <Circle center={selectedSite.position} radius={activeCircle} pathOptions={{ color: 'white', weight: 2, fill: false, dashArray: '5, 5' }} />}
 
