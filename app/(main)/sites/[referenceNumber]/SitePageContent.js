@@ -10,10 +10,9 @@ import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
-import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 // Units constants
 const UNITS = {
@@ -46,25 +45,9 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({ site, sankeyData }) {
-  const [contentWidth, setContentWidth] = useState(600); // Default fallback
+  const [shouldRenderAllocationLayer, setShouldRenderAllocationLayer] = useState(false);
   const contentRef = useRef(null);
 
-  // Measure the content area width
-  useEffect(() => {
-    const updateWidth = () => {
-      if (contentRef.current) {
-        const width = contentRef.current.offsetWidth;
-        setContentWidth(width);
-      }
-    };
-
-    // Measure initially
-    updateWidth();
-
-    // Update on window resize
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
 
   const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
   const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(site.improvements.trees, { key: 'type', direction: 'ascending' });
@@ -74,8 +57,7 @@ export default function SitePageContent({ site, sankeyData }) {
   const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(site.habitats.trees, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
   const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
-
-  const tabs = [
+  const tabs = useMemo(() => [
     {
       title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
       content: () => (
@@ -150,7 +132,11 @@ export default function SitePageContent({ site, sankeyData }) {
           title="Allocations"
           allocations={site.allocations}
         />
-      )
+      ),
+      onIsActiveTabChanged: (isActive) => {
+        console.log(`setShouldRenderAllocationLayer: ${isActive}`);
+        setShouldRenderAllocationLayer(isActive);
+      }
     },
     {
       title: 'IMD Score<br>Transfers Chart',
@@ -170,13 +156,34 @@ export default function SitePageContent({ site, sankeyData }) {
         </Flex>
       )
     }
-  ];
+  ], [
+    site,
+    sankeyData
+  ]);
 
+  const handleTabChange = useCallback((newTabIndex) => {
+    // Call onIsActiveTabChanged callbacks for all tabs
+    tabs.forEach((tab, index) => {
+      if (tab.onIsActiveTabChanged) {
+        tab.onIsActiveTabChanged(index === newTabIndex.value);
+      }
+    });
+  }, [tabs]);
+
+  // Initialize the active tab callback on mount
+  useEffect(() => {
+    handleTabChange(0); // Default to first tab
+  }, [handleTabChange]);
 
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={[site]} selectedSite={site} isForSitePage={true} />
+        <SiteMap
+          sites={[site]}
+          selectedSite={site}
+          isForSitePage={true}
+          shouldRenderAllocationLayer={shouldRenderAllocationLayer}
+        />
       }
       content={(
 
@@ -184,7 +191,7 @@ export default function SitePageContent({ site, sankeyData }) {
 
           <SiteDetailsCard site={site} />
 
-          <Tabs.Root lazyMount defaultValue={0} width="100%">
+          <Tabs.Root lazyMount defaultValue={0} onValueChange={handleTabChange} width="100%">
             <Tabs.List>
               {tabs.map((tab, index) => (
                 (tab.shouldRender == null || tab.shouldRender()) && (

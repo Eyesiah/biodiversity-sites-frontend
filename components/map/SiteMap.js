@@ -1,13 +1,13 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
 import { GeoJSON, useMap, Tooltip, Circle } from 'react-leaflet';
-import { Polyline } from 'react-leaflet/Polyline'
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD, MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
+import AllocationMapLayer from '@/components/map/AllocationMapLayer';
 
 function MapController({ lsoa, lnrs, nca, lpa, circleBounds }) {
   const map = useMap();
@@ -34,17 +34,10 @@ function MapController({ lsoa, lnrs, nca, lpa, circleBounds }) {
   return null;
 }
 
-function PolylinePane() {
-  const map = useMap();
-  useEffect(() => {
-    const pane = map.createPane('polyline-pane');
-    pane.style.zIndex = 450;
-  }, [map]);
-  return null;
-}
+
 
 // --- SiteMap Component ---
-const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage }) => {
+const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage, shouldRenderAllocationLayer }) => {
   const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
   const [activeCircle, setActiveCircle] = useState(null);
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
@@ -157,7 +150,6 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage ? 'Satellite' : undefined}>
         <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} circleBounds={circleBounds} />
-        <PolylinePane />
 
         {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
         {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
@@ -172,28 +164,12 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect, isForSitePage
           )
         )}
 
-        {selectedSite && selectedSite.allocations && !isForSitePage &&
-          selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
-            return (
-              <Polyline
-                key={index}
-                pane="polyline-pane"
-                positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
-                pathOptions={{ color: '#0d6efd', weight: 3 }}
-                eventHandlers={{
-                  mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),
-                  mouseout: (e) => e.target.setStyle({ color: '#0d6efd', weight: 3 }),
-                }}
-              >
-                <Tooltip>
-                  <div><strong>{alloc.projectName || 'N/A'}</strong></div>
-                  <div>Planning Ref: {alloc.planningReference}</div>
-                  <div>LPA: {alloc.localPlanningAuthority}</div>
-                  <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km (${`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`})` : 'N/A'}</div>
-                </Tooltip>
-              </Polyline>
-            );
-          })}
+        {selectedSite && shouldRenderAllocationLayer && (
+          <AllocationMapLayer
+            allocations={selectedSite.allocations}
+            sitePosition={selectedSite.position}
+          />
+        )}
       </BaseMap>
       {displayKey && <MapKey keys={[
         { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
