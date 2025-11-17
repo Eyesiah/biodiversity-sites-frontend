@@ -90,6 +90,7 @@ export default function SiteListPageContent({ sites }) {
               const lowercasedTerm = term.toLowerCase();
               return (
                 (item.referenceNumber?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.name?.toLowerCase() || '').includes(lowercasedTerm) ||
                 (item.responsibleBodies?.join(', ').toLowerCase() || '').includes(lowercasedTerm) ||
                 (item.lpaName?.toLowerCase() || '').includes(lowercasedTerm) ||
                 (item.ncaName?.toLowerCase() || '').includes(lowercasedTerm) ||
@@ -98,7 +99,7 @@ export default function SiteListPageContent({ sites }) {
               );
             }}
             initialSortConfig={{ key: 'referenceNumber', direction: 'descending' }}
-            placeholder="Search by BGS reference, Responsible Body, LPA or NCA."
+            placeholder="Search by BGS reference, site name, Responsible Body, LPA or NCA."
             exportConfig={{
               onExportCsv: handleExport
             }}
