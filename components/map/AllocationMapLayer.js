@@ -8,9 +8,11 @@ function AllocationMapLayer({ allocations, sitePosition }) {
   const [paneReady, setPaneReady] = useState(false);
 
   useEffect(() => {
-    if (map && !map.getPane('polyline-pane')) {
-      const pane = map.createPane('polyline-pane');
-      pane.style.zIndex = 450;
+    if (map) {
+      if (!map.getPane('polyline-pane')) {
+        const pane = map.createPane('polyline-pane');
+        pane.style.zIndex = 450;
+      }
       setPaneReady(true);
     }
   }, [map]);
