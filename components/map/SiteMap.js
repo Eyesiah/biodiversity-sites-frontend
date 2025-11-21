@@ -1,6 +1,6 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { useMap, Tooltip, Circle } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -9,6 +9,7 @@ import { MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
 import AllocationMapLayer from '@/components/map/AllocationMapLayer';
 import BodyMapLayer from '@/components/map/BodyMapLayer';
+import SiteAreaMapLayer from '@/components/map/SiteAreaMapLayer';
 
 function MapController({ circleBounds }) {
   const map = useMap();
@@ -106,7 +107,7 @@ const SiteMap = ({
           />
         )}
 
-        {activeCircle && <Circle center={selectedSite.position} radius={activeCircle} pathOptions={{ color: 'white', weight: 2, fill: false, dashArray: '5, 5' }} />}
+        <SiteAreaMapLayer center={selectedSite?.position} radius={activeCircle} />
 
         {sites.map(site =>
           site.position != null && (
