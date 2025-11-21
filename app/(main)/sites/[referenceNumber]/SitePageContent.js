@@ -46,6 +46,12 @@ const handleExportJSON = (site) => {
 
 export default function SitePageContent({ site, sankeyData }) {
   const [shouldRenderAllocationLayer, setShouldRenderAllocationLayer] = useState(false);
+  const [bodyLayers, setBodyLayers] = useState({
+    lpa: false,
+    nca: false,
+    lnrs: false,
+    lsoa: false
+  });
   const contentRef = useRef(null);
 
   const tabs = useMemo(() => [
@@ -145,6 +151,10 @@ export default function SitePageContent({ site, sankeyData }) {
     });
   }, [tabs]);
 
+  const handleBodyLayerChange = useCallback((newBodyLayers) => {
+    setBodyLayers(newBodyLayers);
+  }, []);
+
   // Initialize the active tab callback on mount
   useEffect(() => {
     handleTabChange(0); // Default to first tab
@@ -158,6 +168,10 @@ export default function SitePageContent({ site, sankeyData }) {
           selectedSite={site}
           isForSitePage={true}
           shouldRenderAllocationLayer={shouldRenderAllocationLayer}
+          showLPA={bodyLayers.lpa}
+          showNCA={bodyLayers.nca}
+          showLNRS={bodyLayers.lnrs}
+          showLSOA={bodyLayers.lsoa}
           displaySiteArea={true}
         />
       }
@@ -165,7 +179,7 @@ export default function SitePageContent({ site, sankeyData }) {
 
         <ContentStack ref={contentRef}>
 
-          <SiteDetailsCard site={site} />
+          <SiteDetailsCard site={site} onBodyLayerChange={handleBodyLayerChange} />
 
           <Tabs.Root lazyMount defaultValue={0} onValueChange={handleTabChange} width="100%">
             <Tabs.List>
