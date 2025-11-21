@@ -1,5 +1,5 @@
 
-import { Marker, Popup, MapContainer, TileLayer, LayersControl } from 'react-leaflet';
+import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl } from 'react-leaflet';
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
@@ -52,6 +52,7 @@ export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
           />
         </LayersControl.BaseLayer>
       </LayersControl>
+      <ScaleControl position="topleft" imperial={false} />
       {children}
     </MapContainer>
   );
