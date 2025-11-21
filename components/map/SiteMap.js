@@ -1,6 +1,5 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { useMap } from 'react-leaflet';
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -10,18 +9,6 @@ import MapKey from '@/components/map/MapKey';
 import AllocationMapLayer from '@/components/map/AllocationMapLayer';
 import BodyMapLayer from '@/components/map/BodyMapLayer';
 import SiteAreaMapLayer from '@/components/map/SiteAreaMapLayer';
-
-function MapController({ circleBounds }) {
-  const map = useMap();
-  useEffect(() => {
-    if (circleBounds) {
-      map.fitBounds(circleBounds, {padding: [150, 150]});
-    }
-  }, [circleBounds, map]);
-  return null;
-}
-
-
 
 // --- SiteMap Component ---
 const SiteMap = ({
@@ -35,26 +22,20 @@ const SiteMap = ({
   showNCA = false,
   showLNRS = false,
   showLSOA = false,
-  displayKey = false
+  displayKey = false,
+  displaySiteArea = false,
 }) => {
-  const [activeCircle, setActiveCircle] = useState(null);
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
 
   useEffect(() => {
     if (selectedSite) {
-      if (isForSitePage) {
-        const radius = Math.sqrt((selectedSite.siteSize * 10000) / Math.PI);
-        setActiveCircle(radius);
-      } else {
-        setActiveCircle(null);
+      if (!isForSitePage) {
         const marker = markerRefs.current[selectedSite.referenceNumber];
         if (marker) {
           marker.openPopup();
         }
       }
-    } else {
-      setActiveCircle(null);
     }
   }, [selectedSite, isForSitePage]);
 
@@ -64,12 +45,9 @@ const SiteMap = ({
 
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
-  const circleBounds = activeCircle ? L.latLng(selectedSite.position).toBounds(activeCircle) : null;
-
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage ? 'Satellite' : undefined}>
-        <MapController circleBounds={circleBounds} />
 
         {selectedSite && showLPA && (
           <BodyMapLayer
@@ -107,7 +85,7 @@ const SiteMap = ({
           />
         )}
 
-        <SiteAreaMapLayer center={selectedSite?.position} radius={activeCircle} />
+        {displaySiteArea && <SiteAreaMapLayer site={selectedSite} />}
 
         {sites.map(site =>
           site.position != null && (

@@ -158,6 +158,7 @@ export default function SitePageContent({ site, sankeyData }) {
           selectedSite={site}
           isForSitePage={true}
           shouldRenderAllocationLayer={shouldRenderAllocationLayer}
+          displaySiteArea={true}
         />
       }
       content={(
