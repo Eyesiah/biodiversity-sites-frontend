@@ -9,10 +9,6 @@ const DEGREES_TO_RADIANS = Math.PI / 180;
 const PIXEL_PADDING = 50;
 const PIXEL_PADDING_DIVISOR = 10;
 
-// Constants for zoom constraints
-const MAX_ZOOM_LEVEL = 200;
-const MIN_ZOOM_LEVEL = 1;
-
 function SiteAreaMapLayer({ site }) {
   const map = useMap();
 
@@ -47,8 +43,6 @@ function SiteAreaMapLayer({ site }) {
     if (bounds.isValid()) {
       map.fitBounds(bounds, { 
         padding: [paddingPixels, paddingPixels],
-        maxZoom: MAX_ZOOM_LEVEL,
-        minZoom: MIN_ZOOM_LEVEL
       });
     }
   }, [map, siteAreaCircle]);
