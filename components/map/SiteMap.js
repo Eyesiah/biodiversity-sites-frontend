@@ -3,7 +3,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle } from '@/components/map/BaseMap';
+import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
+import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 import { MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
 import AllocationMapLayer from '@/components/map/AllocationMapLayer';

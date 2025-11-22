@@ -9,7 +9,7 @@ import { InfoModal } from '@/components/ui/InfoModal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
-import { lpaStyle, ncaStyle, lnrsStyle, lsoaStyle } from '@/components/map/BaseMap';
+import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
 export const SiteDetailsCard = ({ site, onBodyLayerChange }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });

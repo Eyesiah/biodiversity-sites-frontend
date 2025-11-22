@@ -3,6 +3,7 @@ import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl } f
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
+import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
 const defaultSiteIcon = new L.Icon({
     iconUrl: '/icons/greenMarker.svg',
@@ -28,12 +29,6 @@ export async function getPolys(geoJsonUrl, queryField, value) {
   const res = await fetch(url, {next: { revalidate: 21600 } })
   return await res.json();
 }
-
-export const lsoaStyle = { color: '#f1c40f', weight: 3, opacity: 1, fillColor: '#f1c40f', fillOpacity: 0.2 };
-export const lnrsStyle = { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
-export const ncaStyle = { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 };
-export const lpaStyle = { color: '#282c34', weight: 2, opacity: 0.8, fillColor: '#282c34', fillOpacity: 0.3 };
-export const adjacentStyle = { color: '#FFC0CB', weight: 1, opacity: 0.7, fillOpacity: 0.5 }; // Pink
 
 export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
   return (
