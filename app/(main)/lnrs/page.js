@@ -5,6 +5,7 @@ import { processSitesForListView} from '@/lib/sites';
 import { ARCGIS_LNRS_URL } from '@/config';
 import LNRSContent from './LNRSContent';
 import Footer from '@/components/core/Footer';
+import Papa from 'papaparse';
 
 export const revalidate = 21600; // 6 hours
 
@@ -23,6 +24,10 @@ async function getLnrsData() {
     const lnrsArcGISRes = await fetch(`${ARCGIS_LNRS_URL}?where=1%3D1&outFields=*&returnGeometry=false&f=json`, {next: { revalidate: revalidate } });
     const lnrsArcGISData = await lnrsArcGISRes.json();
 
+    const csvPath = path.join(process.cwd(), 'data', 'LNRS-Strategies.csv');
+    const csvData = fs.readFileSync(csvPath, 'utf-8');
+    const parsedData = Papa.parse(csvData, { header: true, skipEmptyLines: true });
+
     const siteCountsByLnrs = allSites.reduce((acc, site) => {
       if (site.lnrsName) {
         acc[site.lnrsName] = (acc[site.lnrsName] || 0) + 1;
@@ -36,13 +41,22 @@ async function getLnrsData() {
       lnrs.siteCount = siteCountsByLnrs[lnrs.name] || 0;
       // Ensure adjacents exist before processing
       (lnrs.adjacents || []).forEach(adj => adj.size = adj.size / 10000);
-      // add link to published from argisData
 
+      // add link to published from argisData
       const arcGISLNRS = lnrsArcGISData.features.find(f => f.attributes.Name == lnrs.name);
       if (arcGISLNRS) {
         lnrs.publicationStatus = arcGISLNRS.attributes.Status || 'N/A';
         if (arcGISLNRS.attributes.Link_to_published) {
           lnrs.link = arcGISLNRS.attributes.Link_to_published;
+        }
+      }
+
+      if (lnrs.link == null) {
+        // fall back to data in csv
+        const csvLnrs = parsedData.data.find(item => item['LNRS ID'] === lnrs.id);
+        if (csvLnrs && csvLnrs['URL']) {
+          lnrs.link = csvLnrs['URL'];
+          lnrs.publicationStatus = 'Published';
         }
       }
     });
