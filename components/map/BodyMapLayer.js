@@ -2,52 +2,29 @@ import { GeoJSON } from 'react-leaflet';
 import React, { useEffect, useState } from 'react';
 import { getPolys } from '@/components/map/BaseMap';
 import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD } from '@/config';
+import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
 // Body type configurations
 const BODY_CONFIGS = {
   lpa: {
     url: ARCGIS_LPA_URL,
     field: 'LPA23NM',
-    style: {
-      color: '#3388ff',
-      weight: 2,
-      opacity: 1,
-      fillColor: '#3388ff',
-      fillOpacity: 0.1
-    }
+    style: lpaStyle
   },
   nca: {
     url: ARCGIS_NCA_URL,
     field: 'NCA_Name',
-    style: {
-      color: '#ff6b35',
-      weight: 2,
-      opacity: 1,
-      fillColor: '#ff6b35',
-      fillOpacity: 0.1
-    }
+    style: ncaStyle
   },
   lnrs: {
     url: ARCGIS_LNRS_URL,
     field: 'Name',
-    style: {
-      color: '#4CAF50',
-      weight: 2,
-      opacity: 1,
-      fillColor: '#4CAF50',
-      fillOpacity: 0.1
-    }
+    style: lnrsStyle
   },
   lsoa: {
     url: ARCGIS_LSOA_URL,
     field: ARCGIS_LSOA_NAME_FIELD,
-    style: {
-      color: '#9C27B0',
-      weight: 2,
-      opacity: 1,
-      fillColor: '#9C27B0',
-      fillOpacity: 0.1
-    }
+    style: lsoaStyle
   }
 };
 

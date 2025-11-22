@@ -11,14 +11,69 @@ import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
-export const SiteDetailsCard = ({ site, onBodyLayerChange }) => {
+const bodyDetailTypes = {
+  'lpa': {
+    style: lpaStyle,
+    label: 'LPA'
+  },
+  'lnrs': {
+    style: lnrsStyle,
+    label: 'LNRS'
+  },
+  'lsoa': {
+    style: lsoaStyle,
+    label: 'LSOA'
+  },
+  'nca': {
+    style: ncaStyle,
+    label: 'NCA'
+  }
+}
+
+const BodyDetailRow = ({ bodyType, children, hasData, isChecked, setIsChecked }) => {
+
+  const bodyInfo = bodyDetailTypes[bodyType];
+  if (bodyInfo == null) {
+    return <p>{`Unknown body type ${bodyType}`}</p>
+  }
+
+  return (
+    <DetailRow
+      label={bodyInfo.label}
+      value={
+        <Box textAlign="right">
+          {children}
+          {hasData && setIsChecked && (
+            <Checkbox.Root
+              checked={isChecked}
+              onCheckedChange={() => setIsChecked(!isChecked)}
+              size="sm"
+              marginLeft={2}
+            >
+              <Checkbox.HiddenInput />
+              <Checkbox.Control />
+              <Checkbox.Label>
+                <Flex align="center" gap={1}>
+                  <Text fontSize="sm">Show</Text>
+                  <Box
+                    w="12px"
+                    h="12px"
+                    bg={bodyInfo.style.color}
+                    border="1px solid #555"
+                    borderRadius="2px"
+                  />
+                </Flex>
+              </Checkbox.Label>
+            </Checkbox.Root>
+          )}
+        </Box>
+      }
+    />
+  );
+}
+
+export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
-  const [bodyLayers, setBodyLayers] = useState({
-    lpa: false,
-    nca: false,
-    lnrs: false,
-    lsoa: false
-  });
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -31,49 +86,6 @@ export const SiteDetailsCard = ({ site, onBodyLayerChange }) => {
   const showModal = (type, name, title, data, size = 'md') => {
     setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, size: size });
   };
-
-  const handleBodyLayerChange = (bodyType, checked) => {
-    const newBodyLayers = { ...bodyLayers, [bodyType]: checked };
-    setBodyLayers(newBodyLayers);
-    if (onBodyLayerChange) {
-      onBodyLayerChange(newBodyLayers);
-    }
-  };
-
-  const renderBodyRow = (label, value, bodyType, style, hasData) => (
-    <DetailRow
-      label={label}
-      value={
-        <Flex align="center" gap={3}>
-          {hasData && (
-            <Checkbox.Root
-              checked={bodyLayers[bodyType]}
-              onCheckedChange={(checked) => handleBodyLayerChange(bodyType, checked)}
-              size="sm"
-            >
-              <Checkbox.HiddenInput />
-              <Checkbox.Control />
-              <Checkbox.Label>
-                <Flex align="center" gap={1}>
-                  <Text fontSize="sm">Show</Text>
-                  <Box
-                    w="12px"
-                    h="12px"
-                    bg={style.color}
-                    border="1px solid #555"
-                    borderRadius="2px"
-                  />
-                </Flex>
-              </Checkbox.Label>
-            </Checkbox.Root>
-          )}
-          <Box flex="1" textAlign="right">
-            {value}
-          </Box>
-        </Flex>
-      }
-    />
-  );
 
   return (
     <VStack>
@@ -107,35 +119,28 @@ export const SiteDetailsCard = ({ site, onBodyLayerChange }) => {
 
         <PrimaryCard>
           <Box>
-            {renderBodyRow("NCA", site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A', 'nca', ncaStyle, !!site.ncaName)}
-            {renderBodyRow("LNRS", site.lnrsName ? site.lnrsName : 'N/A', 'lnrs', lnrsStyle, !!site.lnrsName)}
-            {renderBodyRow(
-              "LPA",
-              site.lpaName ? (
+            <BodyDetailRow bodyType='nca' hasData={site.ncaName != null} isChecked={bodyLayerStates?.showNCA} setIsChecked={bodyLayerStates?.setShowNCA} >
+              {site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'}
+            </BodyDetailRow>
+            <BodyDetailRow bodyType='lnrs' hasData={site.lnrsName != null} isChecked={bodyLayerStates?.showLNRS} setIsChecked={bodyLayerStates?.setShowLNRS} >
+              {site.lnrsName ? site.lnrsName : 'N/A'}
+            </BodyDetailRow>
+            <BodyDetailRow bodyType='lpa' hasData={site.lpaName != null} isChecked={bodyLayerStates?.showLPA} setIsChecked={bodyLayerStates?.setShowLPA} >
+              {site.lpaName ? (
                 <InfoButton onClick={() => showModal('lpa', site.lpaName, site.lpaName)}>
                   <Text>{site.lpaName}</Text>
                 </InfoButton>
-              ) : 'N/A',
-              'lpa',
-              lpaStyle,
-              !!site.lpaName
-            )}
-            {renderBodyRow(
-              "LSOA",
-              site.lsoa?.name ? (
-                <Box display="flex" justifyContent="flex-end" alignItems="center" gap={2}>
-                  <InfoButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
-                    <Text>{site.lsoa.name}</Text>
-                  </InfoButton>
-                </Box>
-              ) : 'N/A',
-              'lsoa',
-              lsoaStyle,
-              !!site.lsoa?.name
-            )}
+              ) : 'N/A'}
+            </BodyDetailRow>
+            <BodyDetailRow bodyType='lsoa' hasData={site.lsoa?.name != null} isChecked={bodyLayerStates?.showLSOA} setIsChecked={bodyLayerStates?.setShowLSOA} >
+              {site.lsoa?.name ? (
+                <InfoButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
+                  <Text>{site.lsoa.name}</Text>
+                </InfoButton>
+              ) : 'N/A'}
+            </BodyDetailRow>
             <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
             {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
-
           </Box>
         </PrimaryCard>
         <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />

@@ -80,7 +80,7 @@ const SiteMap = ({
         {selectedSite && showLSOA && (
           <BodyMapLayer
             bodyType="lsoa"
-            bodyName={selectedSite.lsoaName}
+            bodyName={selectedSite.lsoa.name}
             enabled={true}
             polygonCache={polygonCache}
           />
