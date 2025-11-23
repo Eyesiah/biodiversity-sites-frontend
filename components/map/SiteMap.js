@@ -1,15 +1,84 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
 import React, { useState, useRef, useEffect } from 'react';
+import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 import { MAP_KEY_HEIGHT } from '@/config'
 import MapKey from '@/components/map/MapKey';
-import AllocationMapLayer from '@/components/map/AllocationMapLayer';
+import { AllocationMapLayer, CalcAllocationMapLayerBounds } from '@/components/map/AllocationMapLayer';
 import BodyMapLayer from '@/components/map/BodyMapLayer';
-import SiteAreaMapLayer from '@/components/map/SiteAreaMapLayer';
+import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
+import { CalcBodyMapLayerBounds } from '@/components/map/BodyMapLayer';
+
+function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const bounds = []
+    
+    // Site area bounds
+    if (showSiteArea) {
+      bounds.push(CalcSiteAreaMapLayerBounds(selectedSite));
+    }
+    
+    // Allocation bounds
+    if (showAllocations) {
+      bounds.push(CalcAllocationMapLayerBounds(selectedSite.allocations))
+    }
+    
+    // Body layer bounds - access cached GeoJSON data
+    if (showLPA && selectedSite?.lpaName) {
+      const lpaData = polygonCache.current.lpa?.[selectedSite.lpaName];
+      if (lpaData) {
+        bounds.push(CalcBodyMapLayerBounds(lpaData));
+      }
+    }
+    
+    if (showNCA && selectedSite?.ncaName) {
+      const ncaData = polygonCache.current.nca?.[selectedSite.ncaName];
+      if (ncaData) {
+        bounds.push(CalcBodyMapLayerBounds(ncaData));
+      }
+    }
+    
+    if (showLNRS && selectedSite?.lnrsName) {
+      const lnrsData = polygonCache.current.lnrs?.[selectedSite.lnrsName];
+      if (lnrsData) {
+        bounds.push(CalcBodyMapLayerBounds(lnrsData));
+      }
+    }
+    
+    if (showLSOA && selectedSite?.lsoa?.name) {
+      const lsoaData = polygonCache.current.lsoa?.[selectedSite.lsoa.name];
+      if (lsoaData) {
+        bounds.push(CalcBodyMapLayerBounds(lsoaData));
+      }
+    }
+
+    if (bounds.length > 0) {
+      let concatenatedBounds = L.latLngBounds([]);
+      for (let i = 0; i < bounds.length; i++) {
+        if (bounds[i]) {
+          concatenatedBounds.extend(bounds[i]);
+        }
+      }
+
+      const PIXEL_PADDING = 50;
+      if (concatenatedBounds.isValid()) {
+        map.fitBounds(concatenatedBounds, {
+          padding: [PIXEL_PADDING, PIXEL_PADDING],
+        });
+      }
+    }
+
+  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache]);
+
+  return null;
+}
+
 
 // --- SiteMap Component ---
 const SiteMap = ({
@@ -18,13 +87,13 @@ const SiteMap = ({
   selectedSite,
   onSiteSelect,
   isForSitePage,
-  shouldRenderAllocationLayer = false,
+  showAllocations = false,
   showLPA = false,
   showNCA = false,
   showLNRS = false,
   showLSOA = false,
   displayKey = false,
-  displaySiteArea = false,
+  showSiteArea = false,
 }) => {
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
   const markerRefs = useRef({});
@@ -48,45 +117,55 @@ const SiteMap = ({
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage ? 'Satellite' : undefined}>
+      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage && !showAllocations ? 'Satellite' : undefined}>
+        <MapController 
+          showAllocations={showAllocations} 
+          showLPA={showLPA} 
+          showNCA={showNCA} 
+          showLNRS={showLNRS} 
+          showLSOA={showLSOA} 
+          showSiteArea={showSiteArea} 
+          selectedSite={selectedSite}
+          polygonCache={polygonCache}
+        />
 
-        {selectedSite && showLPA && (
+        {selectedSite && (
           <BodyMapLayer
             bodyType="lpa"
             bodyName={selectedSite.lpaName}
-            enabled={true}
+            enabled={showLPA}
             polygonCache={polygonCache}
           />
         )}
 
-        {selectedSite && showNCA && (
+        {selectedSite && (
           <BodyMapLayer
             bodyType="nca"
             bodyName={selectedSite.ncaName}
-            enabled={true}
+            enabled={showNCA}
             polygonCache={polygonCache}
           />
         )}
 
-        {selectedSite && showLNRS && (
+        {selectedSite && (
           <BodyMapLayer
             bodyType="lnrs"
             bodyName={selectedSite.lnrsName}
-            enabled={true}
+            enabled={showLNRS}
             polygonCache={polygonCache}
           />
         )}
 
-        {selectedSite && showLSOA && (
+        {selectedSite && (
           <BodyMapLayer
             bodyType="lsoa"
             bodyName={selectedSite.lsoa.name}
-            enabled={true}
+            enabled={showLSOA}
             polygonCache={polygonCache}
           />
         )}
 
-        {displaySiteArea && <SiteAreaMapLayer site={selectedSite} />}
+        {showSiteArea && <SiteAreaMapLayer site={selectedSite} />}
 
         {sites.map(site =>
           site.position != null && (
@@ -94,7 +173,7 @@ const SiteMap = ({
           )
         )}
 
-        {selectedSite && shouldRenderAllocationLayer && (
+        {selectedSite && showAllocations && (
           <AllocationMapLayer
             allocations={selectedSite.allocations}
             sitePosition={selectedSite.position}

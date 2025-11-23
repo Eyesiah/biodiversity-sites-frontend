@@ -45,7 +45,7 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({ site, sankeyData }) {
-  const [shouldRenderAllocationLayer, setShouldRenderAllocationLayer] = useState(false);
+  const [showAllocations, setshowAllocations] = useState(false);
   const [showLPA, setShowLPA] = useState(false);
   const [showNCA, setShowNCA] = useState(false);
   const [showLNRS, setShowLNRS] = useState(false);
@@ -113,8 +113,8 @@ export default function SitePageContent({ site, sankeyData }) {
         />
       ),
       onIsActiveTabChanged: (isActive) => {
-        console.log(`setShouldRenderAllocationLayer: ${isActive}`);
-        setShouldRenderAllocationLayer(isActive);
+        console.log(`setshowAllocations: ${isActive}`);
+        setshowAllocations(isActive);
       }
     },
     {
@@ -161,12 +161,12 @@ export default function SitePageContent({ site, sankeyData }) {
           sites={[site]}
           selectedSite={site}
           isForSitePage={true}
-          shouldRenderAllocationLayer={shouldRenderAllocationLayer}
+          showAllocations={showAllocations}
           showLPA={showLPA}
           showNCA={showNCA}
           showLNRS={showLNRS}
           showLSOA={showLSOA}
-          displaySiteArea={true}
+          showSiteArea={true}
         />
       }
       content={(

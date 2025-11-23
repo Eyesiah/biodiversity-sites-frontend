@@ -2,8 +2,19 @@ import { Polyline } from 'react-leaflet/Polyline';
 import { Tooltip } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
+import L from 'leaflet';
 
-function AllocationMapLayer({ allocations, sitePosition }) {
+export function CalcAllocationMapLayerBounds(allocations) {
+  if (allocations.length > 0) {
+    return L.latLngBounds(allocations.filter(alloc => alloc.coords).map(alloc => {
+      return [alloc.coords.latitude, alloc.coords.longitude]
+    }))
+  } else { 
+    return null;
+  }
+}
+
+export function AllocationMapLayer({ allocations, sitePosition }) {
   const map = useMap();
   const [paneReady, setPaneReady] = useState(false);
 
@@ -45,5 +56,3 @@ function AllocationMapLayer({ allocations, sitePosition }) {
         </Polyline>
       )));
 }
-
-export default AllocationMapLayer;
