@@ -115,9 +115,18 @@ const SiteMap = ({
 
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
+  // display satellite if on site page and not showing allocs
+  let mapLayer = undefined;
+  if (isForSitePage) {
+    mapLayer = 'Satellite';
+    if (showAllocations && selectedSite && selectedSite.allocations.length > 0) { 
+      mapLayer = undefined;
+    }
+  }
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={isForSitePage && !showAllocations ? 'Satellite' : undefined}>
+      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={mapLayer}>
         <MapController 
           showAllocations={showAllocations} 
           showLPA={showLPA} 
