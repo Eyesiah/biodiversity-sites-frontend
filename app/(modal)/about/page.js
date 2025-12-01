@@ -61,6 +61,7 @@ export default function About() {
 
         <Heading as="h3" size="md">2. Improvements</Heading>
         <Text>Created parcels - HU = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (of parcel – low, 1) x Temporal Risk (of Habitat and Condition) x Difficulty factor (of the Habitat) x Spatial Risk (Low, 1)</Text>
+        <Text>We are unable to deduct the value of baseline habitats from the value of those being created because this level of detail is not provided.</Text>
         <Text>Enhanced parcels - HU is not computed because no connection can be made back to the baseline habitat parcel&apos;s value.</Text>
 
         <Heading as="h2" size="lg">Refreshing the data</Heading>
