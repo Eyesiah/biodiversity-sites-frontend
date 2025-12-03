@@ -32,17 +32,21 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             <DataTable.ColumnHeader>Condition</DataTable.ColumnHeader>
             <DataTable.ColumnHeader># parcels</DataTable.ColumnHeader>
             <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
+            {isImprovement && <DataTable.ColumnHeader>Time to Target</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader>Temporal Multiplier</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
           {habitat.subRows.map((subRow, index) => (
             <DataTable.Row key={index}>
-              {isImprovement && <DataTable.Cell>{subRow.interventionType}</DataTable.Cell>}
-              <DataTable.Cell>{subRow.condition}</DataTable.Cell>
-              <DataTable.NumericCell>{subRow.parcels}</DataTable.NumericCell>
-              <DataTable.NumericCell>{formatNumber(subRow.area)}</DataTable.NumericCell>
-              <DataTable.NumericCell>{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
+              {isImprovement && <DataTable.Cell textAlign="center">{subRow.interventionType}</DataTable.Cell>}
+              <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
+              <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
+              <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
+              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || 'N/A'}</DataTable.Cell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalMultiplier && subRow.temporalMultiplier > 0 ? formatNumber(subRow.temporalMultiplier, 3) : ''}</DataTable.NumericCell>}
+              <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
             </DataTable.Row>
           ))}
         </DataTable.Body>
