@@ -144,9 +144,9 @@ Native hedgerow,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,12,,5,,1,1,1
 Line of trees,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
 Line of trees - associated with bank or ditch,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
 Non-native and ornamental hedgerow,Hedgerow,V.Low,1,Low,1,Low,1,3,,2,,1,Not Possible,,Not Possible,,1,1,1
-Priority habitat,Watercourses,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
-Other rivers and streams,Watercourses,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
-Ditches,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
-Canals,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
+Priority habitat,Watercourses,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Other rivers and streams,Watercourses,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Ditches,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Canals,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,8,5,2,1,1,1
 Culvert,Watercourses,Low,2,Medium,0.67,N/A,1,Not Possible,Not Possible,Not Possible,Not Possible,1,,,,,,1,1
 undefined,,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0,0
