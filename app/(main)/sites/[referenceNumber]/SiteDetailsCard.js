@@ -9,6 +9,7 @@ import { InfoModal } from '@/components/ui/InfoModal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
+import Tooltip from '@/components/ui/Tooltip';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
 const bodyDetailTypes = {
@@ -112,7 +113,11 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
             <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
             {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
 
-            <DetailRow label="Site Area" value={`${formatNumber(site.siteSize || 0)} ha`} />
+            <DetailRow label="Site Area" value={(
+              <Tooltip text="The circle displayed on the map represents the site area. For a more accurate map of exactly where the site is, see the Boundary Map (if available).">
+                {`${formatNumber(site.siteSize || 0)} ha`}
+              </Tooltip>
+            )} />
 
           </Box>
         </PrimaryCard>
