@@ -44,7 +44,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
               <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
-              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || 'N/A'}</DataTable.Cell>}
+              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || ''}</DataTable.Cell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalMultiplier && subRow.temporalMultiplier > 0 ? formatNumber(subRow.temporalMultiplier, 3) : ''}</DataTable.NumericCell>}
               <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
             </DataTable.Row>
