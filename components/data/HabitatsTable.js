@@ -32,7 +32,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             <DataTable.ColumnHeader>Condition</DataTable.ColumnHeader>
             <DataTable.ColumnHeader># parcels</DataTable.ColumnHeader>
             <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
-            {isImprovement && <DataTable.ColumnHeader>Time to Target</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader>Time to Target (years)</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Temporal Multiplier</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
           </DataTable.Row>
