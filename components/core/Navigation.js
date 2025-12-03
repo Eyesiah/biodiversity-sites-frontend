@@ -56,6 +56,7 @@ const PageTitle = ({ children, ...props }) => (
     fontSize="2rem"
     fontWeight="500"
     margin="0"
+    whiteSpace="nowrap"
     {...props}
   >
     {children}
