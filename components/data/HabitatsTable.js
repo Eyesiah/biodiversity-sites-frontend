@@ -34,6 +34,8 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
             {isImprovement && <DataTable.ColumnHeader>Time to Target (years)</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Temporal Multiplier</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
@@ -46,6 +48,14 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || ''}</DataTable.Cell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalMultiplier && subRow.temporalMultiplier > 0 ? formatNumber(subRow.temporalMultiplier, 3) : ''}</DataTable.NumericCell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
+                const factor = parseFloat(subRow.difficultyFactor || 0);
+                return factor && factor > 0 ? formatNumber(factor, 2) : '';
+              })()}</DataTable.NumericCell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
+                const risk = parseFloat(subRow.spatialRisk || 0);
+                return risk && risk > 0 ? formatNumber(risk, 2) : '';
+              })()}</DataTable.NumericCell>}
               <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
             </DataTable.Row>
           ))}
@@ -69,8 +79,9 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
   );
 };
 
-export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites, units }) => {
-  
+export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites, units }) => { 
+
+
   if (!habitats || habitats.length == 0)
   {
     return (
