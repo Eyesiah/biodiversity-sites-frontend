@@ -66,7 +66,7 @@ const BODY_CONFIGS = {
   }
 };
 
-function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache }) {
+function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache, updatePolygonCache }) {
   const [geoJson, setGeoJson] = useState(null);
 
   const config = BODY_CONFIGS[bodyType];
@@ -81,7 +81,7 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache }) {
       const cacheKey = bodyName;
 
       // Check cache first
-      const cached = polygonCache.current[bodyType]?.[cacheKey];
+      const cached = polygonCache[bodyType]?.[cacheKey];
       if (cached) {
         setGeoJson(cached);
         return;
@@ -91,11 +91,8 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache }) {
       try {
         const data = await getPolys(config.url, config.field, bodyName);
         if (data) {
-          // Update cache
-          if (!polygonCache.current[bodyType]) {
-            polygonCache.current[bodyType] = {};
-          }
-          polygonCache.current[bodyType][cacheKey] = data;
+          // Update cache using the provided function
+          updatePolygonCache(bodyType, cacheKey, data);
           setGeoJson(data);
         }
       } catch (error) {
@@ -105,7 +102,7 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache }) {
     };
 
     fetchPolygon();
-  }, [bodyName, bodyType, config, polygonCache]);
+  }, [bodyName, bodyType, config, polygonCache, updatePolygonCache]);
 
   if (!enabled || !geoJson) {
     return null;

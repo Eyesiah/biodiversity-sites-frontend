@@ -13,43 +13,43 @@ import BodyMapLayer from '@/components/map/BodyMapLayer';
 import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
 import { CalcBodyMapLayerBounds } from '@/components/map/BodyMapLayer';
 
-function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache }) {
+function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion }) {
   const map = useMap();
 
   useEffect(() => {
     const bounds = []
-        
+
     // Allocation bounds
     if (showAllocations) {
       bounds.push(CalcAllocationMapLayerBounds(selectedSite.allocations))
     }
-    
+
     // Body layer bounds - access cached GeoJSON data
     if (showLPA && selectedSite?.lpaName) {
-      const lpaData = polygonCache.current.lpa?.[selectedSite.lpaName];
+      const lpaData = polygonCache.lpa?.[selectedSite.lpaName];
       if (lpaData) {
         bounds.push(CalcBodyMapLayerBounds(lpaData));
       }
     }
-    
+
     if (showNCA && selectedSite?.ncaName) {
-      const ncaData = polygonCache.current.nca?.[selectedSite.ncaName];
+      const ncaData = polygonCache.nca?.[selectedSite.ncaName];
       if (ncaData) {
         bounds.push(CalcBodyMapLayerBounds(ncaData));
       }
     }
-    
+
     if (showLNRS && selectedSite?.lnrsName) {
-      const lnrsData = polygonCache.current.lnrs?.[selectedSite.lnrsName];
+      const lnrsData = polygonCache.lnrs?.[selectedSite.lnrsName];
       if (lnrsData) {
         bounds.push(CalcBodyMapLayerBounds(lnrsData));
       }
     }
-    
+
     // depending on context, lsoa can be just the name or the full lsoa object
     const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
     if (showLSOA && lsoaName) {
-      const lsoaData = polygonCache.current.lsoa?.[lsoaName];
+      const lsoaData = polygonCache.lsoa?.[lsoaName];
       if (lsoaData) {
         bounds.push(CalcBodyMapLayerBounds(lsoaData));
       }
@@ -77,7 +77,7 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
       }
     }
 
-  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache]);
+  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion]);
 
   return null;
 }
@@ -98,8 +98,20 @@ const SiteMap = ({
   displayKey = false,
   showSiteArea = false,
 }) => {
-  const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
+  const [polygonCache, setPolygonCache] = useState({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
+  const [cacheVersion, setCacheVersion] = useState(0);
   const markerRefs = useRef({});
+
+  // Cache updater function to be passed to child components
+  const updatePolygonCache = (bodyType, cacheKey, data) => {
+    setPolygonCache(prev => {
+      const newCache = {...prev};
+      if (!newCache[bodyType]) newCache[bodyType] = {};
+      newCache[bodyType][cacheKey] = data;
+      return newCache;
+    });
+    setCacheVersion(v => v + 1);
+  };
 
   useEffect(() => {
     if (selectedSite) {
@@ -133,15 +145,16 @@ const SiteMap = ({
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }} defaultBaseLayer={mapLayer}>
-        <MapController 
-          showAllocations={showAllocations} 
-          showLPA={showLPA} 
-          showNCA={showNCA} 
-          showLNRS={showLNRS} 
-          showLSOA={showLSOA} 
-          showSiteArea={showSiteArea} 
+        <MapController
+          showAllocations={showAllocations}
+          showLPA={showLPA}
+          showNCA={showNCA}
+          showLNRS={showLNRS}
+          showLSOA={showLSOA}
+          showSiteArea={showSiteArea}
           selectedSite={selectedSite}
           polygonCache={polygonCache}
+          cacheVersion={cacheVersion}
         />
 
         {selectedSite && selectedSite.lpaName &&(
@@ -150,6 +163,7 @@ const SiteMap = ({
             bodyName={selectedSite.lpaName}
             enabled={showLPA}
             polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
           />
         )}
 
@@ -159,6 +173,7 @@ const SiteMap = ({
             bodyName={selectedSite.ncaName}
             enabled={showNCA}
             polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
           />
         )}
 
@@ -168,6 +183,7 @@ const SiteMap = ({
             bodyName={selectedSite.lnrsName}
             enabled={showLNRS}
             polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
           />
         )}
 
@@ -177,6 +193,7 @@ const SiteMap = ({
             bodyName={lsoaName}
             enabled={showLSOA}
             polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
           />
         )}
 
