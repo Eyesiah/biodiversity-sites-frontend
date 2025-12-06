@@ -138,7 +138,7 @@ const SiteMap = ({
           polygonCache={polygonCache}
         />
 
-        {selectedSite && (
+        {selectedSite && selectedSite.lpaName &&(
           <BodyMapLayer
             bodyType="lpa"
             bodyName={selectedSite.lpaName}
@@ -147,7 +147,7 @@ const SiteMap = ({
           />
         )}
 
-        {selectedSite && (
+        {selectedSite && selectedSite.ncaName && (
           <BodyMapLayer
             bodyType="nca"
             bodyName={selectedSite.ncaName}
@@ -156,7 +156,7 @@ const SiteMap = ({
           />
         )}
 
-        {selectedSite && (
+        {selectedSite && selectedSite.lnrsName && (
           <BodyMapLayer
             bodyType="lnrs"
             bodyName={selectedSite.lnrsName}
@@ -165,7 +165,7 @@ const SiteMap = ({
           />
         )}
 
-        {selectedSite && (
+        {selectedSite && selectedSite.lsoa && (
           <BodyMapLayer
             bodyType="lsoa"
             bodyName={selectedSite.lsoa.name}
