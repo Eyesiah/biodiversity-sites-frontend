@@ -51,8 +51,10 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
       }
     }
     
-    if (showLSOA && selectedSite?.lsoa?.name) {
-      const lsoaData = polygonCache.current.lsoa?.[selectedSite.lsoa.name];
+    // depending on context, lsoa can be just the name or the full lsoa object
+    const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
+    if (showLSOA && lsoaName) {
+      const lsoaData = polygonCache.current.lsoa?.[lsoaName];
       if (lsoaData) {
         bounds.push(CalcBodyMapLayerBounds(lsoaData));
       }
@@ -124,6 +126,9 @@ const SiteMap = ({
     }
   }
 
+  // depending on context, lsoa can be just the name or the full lsoa object
+  const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: mapHeight }} defaultBaseLayer={mapLayer}>
@@ -165,10 +170,10 @@ const SiteMap = ({
           />
         )}
 
-        {selectedSite && selectedSite.lsoa && (
+        {selectedSite && lsoaName && (
           <BodyMapLayer
             bodyType="lsoa"
-            bodyName={selectedSite.lsoa.name}
+            bodyName={lsoaName}
             enabled={showLSOA}
             polygonCache={polygonCache}
           />
