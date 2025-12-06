@@ -1,6 +1,6 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -17,6 +17,15 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
   const map = useMap();
 
   useEffect(() => {
+    // Early return if no site selected
+    if (!selectedSite) {
+      return;
+    }
+
+    if (polygonCache.current.promises && Object.keys(polygonCache.current.promises).length > 0) {
+      return;
+    }
+
     const bounds = []
 
     // Allocation bounds
@@ -26,32 +35,44 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
 
     // Body layer bounds - access cached GeoJSON data
     if (showLPA && selectedSite?.lpaName) {
-      const lpaData = polygonCache.lpa?.[selectedSite.lpaName];
+      const lpaData = polygonCache.current.lpa?.[selectedSite.lpaName];
       if (lpaData) {
         bounds.push(CalcBodyMapLayerBounds(lpaData));
+      } else {
+        // wait
+        return;
       }
     }
 
     if (showNCA && selectedSite?.ncaName) {
-      const ncaData = polygonCache.nca?.[selectedSite.ncaName];
+      const ncaData = polygonCache.current.nca?.[selectedSite.ncaName];
       if (ncaData) {
         bounds.push(CalcBodyMapLayerBounds(ncaData));
+      } else {
+        // wait
+        return;
       }
     }
 
     if (showLNRS && selectedSite?.lnrsName) {
-      const lnrsData = polygonCache.lnrs?.[selectedSite.lnrsName];
+      const lnrsData = polygonCache.current.lnrs?.[selectedSite.lnrsName];
       if (lnrsData) {
         bounds.push(CalcBodyMapLayerBounds(lnrsData));
+      } else {
+        // wait
+        return;
       }
     }
 
     // depending on context, lsoa can be just the name or the full lsoa object
     const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
     if (showLSOA && lsoaName) {
-      const lsoaData = polygonCache.lsoa?.[lsoaName];
+      const lsoaData = polygonCache.current.lsoa?.[lsoaName];
       if (lsoaData) {
         bounds.push(CalcBodyMapLayerBounds(lsoaData));
+      } else {
+        // wait
+        return;
       }
     }
 
@@ -98,18 +119,14 @@ const SiteMap = ({
   displayKey = false,
   showSiteArea = false,
 }) => {
-  const [polygonCache, setPolygonCache] = useState({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
+  const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
   const [cacheVersion, setCacheVersion] = useState(0);
   const markerRefs = useRef({});
 
   // Cache updater function to be passed to child components
   const updatePolygonCache = (bodyType, cacheKey, data) => {
-    setPolygonCache(prev => {
-      const newCache = {...prev};
-      if (!newCache[bodyType]) newCache[bodyType] = {};
-      newCache[bodyType][cacheKey] = data;
-      return newCache;
-    });
+    if (!polygonCache.current[bodyType]) polygonCache.current[bodyType] = {};
+    polygonCache.current[bodyType][cacheKey] = data;
     setCacheVersion(v => v + 1);
   };
 
@@ -131,13 +148,15 @@ const SiteMap = ({
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
 
   // display satellite if on site page and not showing allocs
-  let mapLayer = undefined;
-  if (isForSitePage) {
-    mapLayer = 'Satellite';
-    if (showAllocations && selectedSite && selectedSite.allocations.length > 0) { 
-      mapLayer = undefined;
+  const mapLayer = useMemo(() => {
+    if (isForSitePage) {
+      if (showAllocations && selectedSite && selectedSite.allocations.length > 0) {
+        return 'OpenStreetMap';
+      }
+      return 'Satellite';
     }
-  }
+    return 'OpenStreetMap';
+  }, [isForSitePage, showAllocations, selectedSite]);
 
   // depending on context, lsoa can be just the name or the full lsoa object
   const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
@@ -157,8 +176,9 @@ const SiteMap = ({
           cacheVersion={cacheVersion}
         />
 
-        {selectedSite && selectedSite.lpaName &&(
+        {selectedSite && selectedSite.lpaName && (
           <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lpa`}
             bodyType="lpa"
             bodyName={selectedSite.lpaName}
             enabled={showLPA}
@@ -169,6 +189,7 @@ const SiteMap = ({
 
         {selectedSite && selectedSite.ncaName && (
           <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-nca`}
             bodyType="nca"
             bodyName={selectedSite.ncaName}
             enabled={showNCA}
@@ -179,6 +200,7 @@ const SiteMap = ({
 
         {selectedSite && selectedSite.lnrsName && (
           <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lnrs`}
             bodyType="lnrs"
             bodyName={selectedSite.lnrsName}
             enabled={showLNRS}
@@ -189,6 +211,7 @@ const SiteMap = ({
 
         {selectedSite && lsoaName && (
           <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lsoa`}
             bodyType="lsoa"
             bodyName={lsoaName}
             enabled={showLSOA}

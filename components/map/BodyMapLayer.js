@@ -12,12 +12,12 @@ export function CalcBodyMapLayerBounds(geoJson) {
   }
 
   const bounds = L.latLngBounds([]);
-  
+
   // Iterate through all features and their coordinates
   geoJson.features.forEach(feature => {
     if (feature.geometry && feature.geometry.coordinates) {
       const coordinates = feature.geometry.coordinates;
-      
+
       // Handle different geometry types
       if (feature.geometry.type === 'Polygon') {
         // For polygons, coordinates is an array of linear rings
@@ -72,8 +72,11 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache, updatePolygon
   const config = BODY_CONFIGS[bodyType];
 
   useEffect(() => {
+    let isMounted = true;
+    const fetchKey = `${bodyType}:${bodyName}`;
+
     if (!bodyName || !config) {
-      setGeoJson(null);
+      if (isMounted) setGeoJson(null);
       return;
     }
 
@@ -81,27 +84,42 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache, updatePolygon
       const cacheKey = bodyName;
 
       // Check cache first
-      const cached = polygonCache[bodyType]?.[cacheKey];
+      const cached = polygonCache.current[bodyType]?.[cacheKey];
       if (cached) {
-        setGeoJson(cached);
+        if (isMounted) setGeoJson(cached);
         return;
       }
 
       // Fetch if not cached
       try {
-        const data = await getPolys(config.url, config.field, bodyName);
-        if (data) {
+        // use the existing fetch if there's one already in progress
+        let fetchPromise = polygonCache.current[bodyTypePromiseKey]?.[cacheKey];
+        if (fetchPromise == null) {
+          fetchPromise = getPolys(config.url, config.field, bodyName);
+          polygonCache.current.promises[fetchKey] = fetchPromise;
+        }
+        const data = await fetchPromise;
+        if (data && isMounted) {
           // Update cache using the provided function
           updatePolygonCache(bodyType, cacheKey, data);
           setGeoJson(data);
         }
       } catch (error) {
         console.error(`Failed to fetch ${bodyType} polygon data:`, error);
-        setGeoJson(null);
+        if (isMounted) setGeoJson(null);
+      } finally {
+        // Mark fetch as completed
+        if (polygonCache.current.promises[fetchKey]) {
+          delete polygonCache.current.promises[fetchKey];
+        }
       }
     };
 
     fetchPolygon();
+
+    return () => {
+      isMounted = false;
+    };
   }, [bodyName, bodyType, config, polygonCache, updatePolygonCache]);
 
   if (!enabled || !geoJson) {
