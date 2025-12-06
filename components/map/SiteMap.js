@@ -124,8 +124,8 @@ const SiteMap = ({
     }
   }, [selectedSite, isForSitePage]);
 
-  const handlePopupClose = () => {
-    if (onSiteSelect) { onSiteSelect(null) };
+  const handlePopupClose = (site) => {
+    if (onSiteSelect && site?.referenceNumber == selectedSite?.referenceNumber) { onSiteSelect(null) };
   };
 
   const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'

@@ -82,7 +82,7 @@ export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, 
       ref={el => { if (markerRefs) markerRefs.current[site.referenceNumber] = el }}
       eventHandlers={{
         click: () => { if (onSiteSelect) onSiteSelect(site) },
-        popupclose: handlePopupClose,
+        popupclose: () => { if (handlePopupClose) handlePopupClose(site) },
       }}
     >
       <Popup>
