@@ -18,12 +18,7 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
 
   useEffect(() => {
     const bounds = []
-    
-    // Site area bounds
-    if (showSiteArea) {
-      bounds.push(CalcSiteAreaMapLayerBounds(selectedSite));
-    }
-    
+        
     // Allocation bounds
     if (showAllocations) {
       bounds.push(CalcAllocationMapLayerBounds(selectedSite.allocations))
@@ -58,6 +53,12 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
       if (lsoaData) {
         bounds.push(CalcBodyMapLayerBounds(lsoaData));
       }
+    }
+
+    // Site area bounds
+    if (showSiteArea || bounds.length == 0) {
+      // if nothing is shown, just frame the site's area even though we dont render the circle
+      bounds.push(CalcSiteAreaMapLayerBounds(selectedSite));
     }
 
     if (bounds.length > 0) {
