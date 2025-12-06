@@ -80,11 +80,7 @@ export default function SiteListPageContent({ sites }) {
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect}
-          showLPA={true}
-          showNCA={true}
-          showLNRS={true}
-          showLSOA={true} />
+        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
       }
       content={
         <ContentStack>

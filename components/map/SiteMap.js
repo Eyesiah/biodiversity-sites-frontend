@@ -5,9 +5,6 @@ import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
-import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
-import { MAP_KEY_HEIGHT } from '@/config'
-import MapKey from '@/components/map/MapKey';
 import { AllocationMapLayer, CalcAllocationMapLayerBounds } from '@/components/map/AllocationMapLayer';
 import BodyMapLayer from '@/components/map/BodyMapLayer';
 import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
@@ -112,11 +109,10 @@ const SiteMap = ({
   onSiteSelect,
   isForSitePage,
   showAllocations = false,
-  showLPA = false,
-  showNCA = false,
-  showLNRS = false,
-  showLSOA = false,
-  displayKey = false,
+  showLPA = true,
+  showNCA = true,
+  showLNRS = true,
+  showLSOA = true,
   showSiteArea = false,
 }) => {
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
@@ -145,7 +141,7 @@ const SiteMap = ({
     if (onSiteSelect && site?.referenceNumber == selectedSite?.referenceNumber) { onSiteSelect(null) };
   };
 
-  const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
+  const mapHeight = '100%'
 
   // display satellite if on site page and not showing allocs
   const mapLayer = useMemo(() => {
@@ -235,12 +231,6 @@ const SiteMap = ({
           />
         )}
       </BaseMap>
-      {displayKey && <MapKey keys={[
-        { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
-        { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
-        { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },
-        { color: lsoaStyle.color, label: 'LSOA', fillOpacity: lsoaStyle.fillOpacity },
-      ]} />}
     </div>
   );
 };
