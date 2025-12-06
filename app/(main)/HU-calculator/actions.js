@@ -24,7 +24,7 @@ export async function calcHU(prevState, formData) {
     if (!isBaseline) {
       result.getTimeToTarget = getTimeToTarget(habitat, condition);
       result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
-      result.temporalRisk= calcTemporalRisk(habitat, condition, timeToTargetOffset);
+      result.temporalMultiplier= calcTemporalRisk(habitat, condition, timeToTargetOffset);
       result.difficultyFactor = calcDifficultyFactor(habitat);
       result.spatialRisk = spatialRisk;
       result.timeToTargetOffset = timeToTargetOffset;
