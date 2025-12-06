@@ -93,7 +93,7 @@ function BodyMapLayer({ bodyType, bodyName, enabled, polygonCache, updatePolygon
       // Fetch if not cached
       try {
         // use the existing fetch if there's one already in progress
-        let fetchPromise = polygonCache.current[bodyTypePromiseKey]?.[cacheKey];
+        let fetchPromise = polygonCache.current.promises[cacheKey];
         if (fetchPromise == null) {
           fetchPromise = getPolys(config.url, config.field, bodyName);
           polygonCache.current.promises[fetchKey] = fetchPromise;
