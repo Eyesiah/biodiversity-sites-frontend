@@ -1,152 +1,222 @@
 // --- SiteMap Component ---
 // This component renders the actual map.
-import { GeoJSON, useMap, Tooltip } from 'react-leaflet';
-import { Polyline } from 'react-leaflet/Polyline'
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lpaStyle, lsoaStyle, lnrsStyle, ncaStyle, getPolys } from '@/components/map/BaseMap';
-import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD, MAP_KEY_HEIGHT } from '@/config'
-import MapKey from '@/components/map/MapKey';
+import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
+import { AllocationMapLayer, CalcAllocationMapLayerBounds } from '@/components/map/AllocationMapLayer';
+import BodyMapLayer from '@/components/map/BodyMapLayer';
+import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
+import { CalcBodyMapLayerBounds } from '@/components/map/BodyMapLayer';
 
-function MapController({ lsoa, lnrs, nca, lpa }) {
+function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion }) {
   const map = useMap();
+
   useEffect(() => {
-    const bounds = L.latLngBounds([]);
-    [lsoa, lnrs, nca, lpa].forEach((geo) => {
-      if (geo) {
-        const layer = L.geoJSON(geo);
-        if (layer.getBounds().isValid()) {
-          bounds.extend(layer.getBounds());
-        }
-      }
-    });
-
-    if (bounds.isValid()) {
-      map.fitBounds(bounds);
-    }
-  }, [lsoa, lnrs, nca, lpa, map]);
-  return null;
-}
-
-function PolylinePane() {
-  const map = useMap();
-  useEffect(() => {
-    const pane = map.createPane('polyline-pane');
-    pane.style.zIndex = 450;
-  }, [map]);
-  return null;
-}
-
-// --- SiteMap Component ---
-const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
-  const [activePolygons, setActivePolygons] = useState({ lsoa: null, lnrs: null, nca: null, lpa: null });
-  const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {} });
-  const markerRefs = useRef({});
-
-  const fetchAndDisplayPolygons = async (site) => {
-    setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-
-    if (!site) {
+    // Early return if no site selected
+    if (!selectedSite) {
       return;
     }
 
-    const lsoaName = site.lsoaName ?? site.lsoa.name;
+    if (polygonCache.current.promises && Object.keys(polygonCache.current.promises).length > 0) {
+      return;
+    }
 
-    const lsoaFromCache = polygonCache.current.lsoa[lsoaName];
-    const lnrsFromCache = polygonCache.current.lnrs[site.lnrsName];
-    const ncaFromCache = polygonCache.current.nca[site.ncaName];
-    const lpaFromCache = polygonCache.current.lpa[site.lpaName];
+    const bounds = []
 
-    const fetchPromises = [];
+    // Allocation bounds
+    if (showAllocations) {
+      bounds.push(CalcAllocationMapLayerBounds(selectedSite.allocations))
+    }
 
-    if (lsoaFromCache) {
-      fetchPromises.push(Promise.resolve(lsoaFromCache));
-    } else {
-      if (lsoaName && lsoaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LSOA_URL, ARCGIS_LSOA_NAME_FIELD, lsoaName));
+    // Body layer bounds - access cached GeoJSON data
+    if (showLPA && selectedSite?.lpaName) {
+      const lpaData = polygonCache.current.lpa?.[selectedSite.lpaName];
+      if (lpaData) {
+        bounds.push(CalcBodyMapLayerBounds(lpaData));
       } else {
-        fetchPromises.push(Promise.resolve(null)); // Push null if no LSOA name
+        // wait
+        return;
       }
     }
 
-    if (lnrsFromCache) {
-      fetchPromises.push(Promise.resolve(lnrsFromCache));
-    } else {
-      if (site.lnrsName && site.lnrsName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LNRS_URL, 'Name', site.lnrsName));
+    if (showNCA && selectedSite?.ncaName) {
+      const ncaData = polygonCache.current.nca?.[selectedSite.ncaName];
+      if (ncaData) {
+        bounds.push(CalcBodyMapLayerBounds(ncaData));
       } else {
-        fetchPromises.push(Promise.resolve(null));
+        // wait
+        return;
       }
     }
 
-    if (ncaFromCache) {
-      fetchPromises.push(Promise.resolve(ncaFromCache));
-    } else {
-      if (site.ncaName && site.ncaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_NCA_URL, 'NCA_Name', site.ncaName));
+    if (showLNRS && selectedSite?.lnrsName) {
+      const lnrsData = polygonCache.current.lnrs?.[selectedSite.lnrsName];
+      if (lnrsData) {
+        bounds.push(CalcBodyMapLayerBounds(lnrsData));
       } else {
-        fetchPromises.push(Promise.resolve(null));
+        // wait
+        return;
       }
     }
 
-    if (lpaFromCache) {
-      fetchPromises.push(Promise.resolve(lpaFromCache));
-    } else {
-      if (site.lpaName && site.lpaName !== 'N/A') {
-        fetchPromises.push(getPolys(ARCGIS_LPA_URL, 'LPA23NM', site.lpaName));
+    // depending on context, lsoa can be just the name or the full lsoa object
+    const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
+    if (showLSOA && lsoaName) {
+      const lsoaData = polygonCache.current.lsoa?.[lsoaName];
+      if (lsoaData) {
+        bounds.push(CalcBodyMapLayerBounds(lsoaData));
       } else {
-        fetchPromises.push(Promise.resolve(null));
+        // wait
+        return;
       }
     }
 
-    try {
-      const [lsoaGeoJson, lnrsGeoJson, ncaGeoJson, lpaGeoJson] = await Promise.all(fetchPromises);
-
-      if (!lsoaFromCache && site.lsoaName) polygonCache.current.lsoa[site.lsoaName] = lsoaGeoJson;
-      if (!lnrsFromCache && site.lnrsName) polygonCache.current.lnrs[site.lnrsName] = lnrsGeoJson;
-      if (!ncaFromCache && site.ncaName) polygonCache.current.nca[site.ncaName] = ncaGeoJson;
-      if (!lpaFromCache && site.lpaName) polygonCache.current.lpa[site.lpaName] = lpaGeoJson;
-
-      setActivePolygons({ lsoa: lsoaGeoJson, lnrs: lnrsGeoJson, nca: ncaGeoJson, lpa: lpaGeoJson });
-    } catch (error) {
-      console.error("Failed to fetch polygon data:", error);
-      setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
+    // Site area bounds
+    if (showSiteArea || bounds.length == 0) {
+      // if nothing is shown, just frame the site's area even though we dont render the circle
+      bounds.push(CalcSiteAreaMapLayerBounds(selectedSite));
     }
+
+    if (bounds.length > 0) {
+      let concatenatedBounds = L.latLngBounds([]);
+      for (let i = 0; i < bounds.length; i++) {
+        if (bounds[i]) {
+          concatenatedBounds.extend(bounds[i]);
+        }
+      }
+
+      const PIXEL_PADDING = 50;
+      if (concatenatedBounds.isValid()) {
+        map.fitBounds(concatenatedBounds, {
+          padding: [PIXEL_PADDING, PIXEL_PADDING],
+        });
+      }
+    }
+
+  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion]);
+
+  return null;
+}
+
+
+// --- SiteMap Component ---
+const SiteMap = ({
+  sites,
+  hoveredSite,
+  selectedSite,
+  onSiteSelect,
+  isForSitePage,
+  showAllocations = false,
+  showLPA = true,
+  showNCA = true,
+  showLNRS = true,
+  showLSOA = true,
+  showSiteArea = false,
+}) => {
+  const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
+  const [cacheVersion, setCacheVersion] = useState(0);
+  const markerRefs = useRef({});
+
+  // Cache updater function to be passed to child components
+  const updatePolygonCache = (bodyType, cacheKey, data) => {
+    if (!polygonCache.current[bodyType]) polygonCache.current[bodyType] = {};
+    polygonCache.current[bodyType][cacheKey] = data;
+    setCacheVersion(v => v + 1);
   };
 
   useEffect(() => {
     if (selectedSite) {
-      fetchAndDisplayPolygons(selectedSite);
-      const marker = markerRefs.current[selectedSite.referenceNumber];
-      if (marker) {
-        marker.openPopup();
+      if (!isForSitePage) {
+        const marker = markerRefs.current[selectedSite.referenceNumber];
+        if (marker) {
+          marker.openPopup();
+        }
       }
     }
-    else {
-      setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-    }
-  }, [selectedSite]);
+  }, [selectedSite, isForSitePage]);
 
-
-  const handlePopupClose = () => {
-    setActivePolygons({ lsoa: null, lnrs: null, nca: null, lpa: null });
-    if (onSiteSelect) { onSiteSelect(null) };
+  const handlePopupClose = (site) => {
+    if (onSiteSelect && site?.referenceNumber == selectedSite?.referenceNumber) { onSiteSelect(null) };
   };
 
-  const displayKey = onSiteSelect == null;
-  const mapHeight = displayKey ? `calc(100% - ${MAP_KEY_HEIGHT})` : '100%'
+  const mapHeight = '100%'
+
+  // display satellite if on site page and not showing allocs
+  const mapLayer = useMemo(() => {
+    if (isForSitePage) {
+      if (showAllocations && selectedSite && selectedSite.allocations.length > 0) {
+        return 'OpenStreetMap';
+      }
+      return 'Satellite';
+    }
+    return 'OpenStreetMap';
+  }, [isForSitePage, showAllocations, selectedSite]);
+
+  // depending on context, lsoa can be just the name or the full lsoa object
+  const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <BaseMap style={{ height: mapHeight }}>
-        <MapController lsoa={activePolygons.lsoa} lnrs={activePolygons.lnrs} lpa={activePolygons.lpa} nca={activePolygons.nca} />
-        <PolylinePane />
+      <BaseMap style={{ height: mapHeight }} defaultBaseLayer={mapLayer}>
+        <MapController
+          showAllocations={showAllocations}
+          showLPA={showLPA}
+          showNCA={showNCA}
+          showLNRS={showLNRS}
+          showLSOA={showLSOA}
+          showSiteArea={showSiteArea}
+          selectedSite={selectedSite}
+          polygonCache={polygonCache}
+          cacheVersion={cacheVersion}
+        />
 
-        {activePolygons.lpa && <GeoJSON data={activePolygons.lpa} style={lpaStyle} />}
-        {activePolygons.nca && <GeoJSON data={activePolygons.nca} style={ncaStyle} />}
-        {activePolygons.lnrs && <GeoJSON data={activePolygons.lnrs} style={lnrsStyle} />}
-        {activePolygons.lsoa && <GeoJSON data={activePolygons.lsoa} style={lsoaStyle} />}
+        {selectedSite && selectedSite.lpaName && (
+          <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lpa`}
+            bodyType="lpa"
+            bodyName={selectedSite.lpaName}
+            enabled={showLPA}
+            polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
+          />
+        )}
+
+        {selectedSite && selectedSite.ncaName && (
+          <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-nca`}
+            bodyType="nca"
+            bodyName={selectedSite.ncaName}
+            enabled={showNCA}
+            polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
+          />
+        )}
+
+        {selectedSite && selectedSite.lnrsName && (
+          <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lnrs`}
+            bodyType="lnrs"
+            bodyName={selectedSite.lnrsName}
+            enabled={showLNRS}
+            polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
+          />
+        )}
+
+        {selectedSite && lsoaName && (
+          <BodyMapLayer
+            key={`${selectedSite.referenceNumber}-lsoa`}
+            bodyType="lsoa"
+            bodyName={lsoaName}
+            enabled={showLSOA}
+            polygonCache={polygonCache}
+            updatePolygonCache={updatePolygonCache}
+          />
+        )}
+
+        {showSiteArea && <SiteAreaMapLayer site={selectedSite} />}
 
         {sites.map(site =>
           site.position != null && (
@@ -154,35 +224,13 @@ const SiteMap = ({ sites, hoveredSite, selectedSite, onSiteSelect }) => {
           )
         )}
 
-        {selectedSite && selectedSite.allocations &&
-          selectedSite.allocations.filter(a => a.coords).map((alloc, index) => {
-            return (
-              <Polyline
-                key={index}
-                pane="polyline-pane"
-                positions={[selectedSite.position, [alloc.coords.latitude, alloc.coords.longitude]]}
-                pathOptions={{ color: '#0d6efd', weight: 3 }}
-                eventHandlers={{
-                  mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),
-                  mouseout: (e) => e.target.setStyle({ color: '#0d6efd', weight: 3 }),
-                }}
-              >
-                <Tooltip>
-                  <div><strong>{alloc.projectName || 'N/A'}</strong></div>
-                  <div>Planning Ref: {alloc.planningReference}</div>
-                  <div>LPA: {alloc.localPlanningAuthority}</div>
-                  <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km (${`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`})` : 'N/A'}</div>
-                </Tooltip>
-              </Polyline>
-            );
-          })}
+        {selectedSite && showAllocations && (
+          <AllocationMapLayer
+            allocations={selectedSite.allocations}
+            sitePosition={selectedSite.position}
+          />
+        )}
       </BaseMap>
-      {displayKey && <MapKey keys={[
-        { color: lpaStyle.color, label: 'LPA', fillOpacity: lpaStyle.fillOpacity },
-        { color: ncaStyle.color, label: 'NCA', fillOpacity: ncaStyle.fillOpacity },
-        { color: lnrsStyle.color, label: 'LNRS', fillOpacity: lnrsStyle.fillOpacity },
-        { color: lsoaStyle.color, label: 'LSOA', fillOpacity: lsoaStyle.fillOpacity },
-      ]} />}
     </div>
   );
 };

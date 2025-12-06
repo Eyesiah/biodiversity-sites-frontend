@@ -2,7 +2,8 @@ import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, lnrsStyle, adjacentStyle, getPolys } from '@/components/map/BaseMap';
+import { BaseMap, SiteMapMarker, getPolys } from '@/components/map/BaseMap';
+import { lnrsStyle, adjacentStyle } from '@/components/map/MapStyles'
 
 function MapController({ geoJson }) {
   const map = useMap();

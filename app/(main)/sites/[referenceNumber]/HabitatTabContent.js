@@ -6,20 +6,20 @@ import { PrimaryCard, CardTitle } from '@/components/styles/PrimaryCard'
 import { Collapsible, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import SiteHabitatSankeyChart from "@/components/charts/SiteHabitatSankeyChart";
+import { useSortableData } from '@/lib/hooks';
 
 export default function HabitatTabContent({
   sankeyData,
   habitatType,
   units,
-  improvementHabitats,
-  improvementSortConfig,
-  improvementRequestSort,
-  baselineHabitats,
-  baselineSortConfig,
-  baselineRequestSort
+  improvements,
+  baseline,
 }) {
   const [improvementOpen, setImprovementOpen] = useState(true);
   const [baselineOpen, setBaselineOpen] = useState(true);
+
+  const { items: improvementItems, requestSort: improvementRequestSort, sortConfig: improvementSortConfig } = useSortableData(improvements || [], { key: 'type', direction: 'ascending' });
+  const { items: baselineItems, requestSort: baselineRequestSort, sortConfig: baselineSortConfig } = useSortableData(baseline || [], { key: 'type', direction: 'ascending' });
 
   return (
     <ContentStack>
@@ -31,7 +31,7 @@ export default function HabitatTabContent({
         <Collapsible.Root open={improvementOpen} onOpenChange={setImprovementOpen}>
           <Collapsible.Content>
             <HabitatTable
-              habitats={improvementHabitats}
+              habitats={improvementItems}
               sortConfig={improvementSortConfig}
               isImprovement={true}
               requestSort={improvementRequestSort}
@@ -47,7 +47,7 @@ export default function HabitatTabContent({
         <Collapsible.Root open={baselineOpen} onOpenChange={setBaselineOpen}>
           <Collapsible.Content>
             <HabitatTable
-              habitats={baselineHabitats}
+              habitats={baselineItems}
               sortConfig={baselineSortConfig}
               isBaseline={true}
               requestSort={baselineRequestSort}

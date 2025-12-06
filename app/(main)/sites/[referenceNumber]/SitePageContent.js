@@ -10,10 +10,9 @@ import { triggerDownload } from '@/lib/utils';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
-import { useSortableData } from '@/lib/hooks';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 // Units constants
 const UNITS = {
@@ -46,36 +45,14 @@ const handleExportJSON = (site) => {
 };
 
 export default function SitePageContent({ site, sankeyData }) {
-  const [contentWidth, setContentWidth] = useState(600); // Default fallback
+  const [showAllocations, setshowAllocations] = useState(false);
+  const [showLPA, setShowLPA] = useState(false);
+  const [showNCA, setShowNCA] = useState(false);
+  const [showLNRS, setShowLNRS] = useState(false);
+  const [showLSOA, setShowLSOA] = useState(false);
   const contentRef = useRef(null);
 
-  // Measure the content area width
-  useEffect(() => {
-    const updateWidth = () => {
-      if (contentRef.current) {
-        const width = contentRef.current.offsetWidth;
-        setContentWidth(width);
-      }
-    };
-
-    // Measure initially
-    updateWidth();
-
-    // Update on window resize
-    window.addEventListener('resize', updateWidth);
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
-
-  const { items: sortedImprovementAreas, requestSort: requestSortImprovementAreas, sortConfig: sortConfigImprovementAreas } = useSortableData(site.improvements.areas, { key: 'type', direction: 'ascending' });
-  const { items: sortedIndividualTreesImprovements, requestSort: requestSortIndividualTreesImprovements, sortConfig: sortConfigIndividualTreesImprovements } = useSortableData(site.improvements.trees, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementHedgerows, requestSort: requestSortImprovementHedgerows, sortConfig: sortConfigImprovementHedgerows } = useSortableData(site.improvements.hedgerows, { key: 'type', direction: 'ascending' });
-  const { items: sortedImprovementWatercourses, requestSort: requestSortImprovementWatercourses, sortConfig: sortConfigImprovementWatercourses } = useSortableData(site.improvements.watercourses, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineAreas, requestSort: requestSortBaselineAreas, sortConfig: sortConfigBaselineAreas } = useSortableData(site.habitats.areas, { key: 'type', direction: 'ascending' });
-  const { items: sortedIndividualTreesBaseline, requestSort: requestSortIndividualTreesBaseline, sortConfig: sortConfigIndividualTreesBaseline } = useSortableData(site.habitats.trees, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineHedgerows, requestSort: requestSortBaselineHedgerows, sortConfig: sortConfigBaselineHedgerows } = useSortableData(site.habitats.hedgerows, { key: 'type', direction: 'ascending' });
-  const { items: sortedBaselineWatercourses, requestSort: requestSortBaselineWatercourses, sortConfig: sortConfigBaselineWatercourses } = useSortableData(site.habitats.watercourses, { key: 'type', direction: 'ascending' });
-
-  const tabs = [
+  const tabs = useMemo(() => [
     {
       title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
       content: () => (
@@ -83,28 +60,20 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.areas}
           habitatType="Area Habitats"
           units={UNITS.HECTARES}
-          improvementHabitats={sortedImprovementAreas}
-          improvementSortConfig={sortConfigImprovementAreas}
-          improvementRequestSort={requestSortImprovementAreas}
-          baselineHabitats={sortedBaselineAreas}
-          baselineSortConfig={sortConfigBaselineAreas}
-          baselineRequestSort={requestSortBaselineAreas}
+          improvements={site.improvements.areas}
+          baseline={site.habitats.areas}
         />
       )
     },
     {
-      title: `Individual Trees&nbsp;(${Math.max(sortedIndividualTreesBaseline.length, sortedIndividualTreesImprovements.length)})`,
+      title: `Individual Trees&nbsp;(${Math.max(site.improvements.trees.length, site.habitats.trees.length)})`,
       content: () => (
         <HabitatTabContent
           sankeyData={sankeyData.trees}
           habitatType="Individual Trees"
           units={UNITS.HECTARES}
-          improvementHabitats={sortedIndividualTreesImprovements}
-          improvementSortConfig={sortConfigIndividualTreesImprovements}
-          improvementRequestSort={requestSortIndividualTreesImprovements}
-          baselineHabitats={sortedIndividualTreesBaseline}
-          baselineSortConfig={sortConfigIndividualTreesBaseline}
-          baselineRequestSort={requestSortIndividualTreesBaseline}
+          improvements={site.improvements.trees}
+          baseline={site.habitats.trees}
         />
       ),
       shouldRender: () => site.improvements.trees.length > 0 || site.habitats.trees.length > 0
@@ -116,12 +85,8 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.hedgerows}
           habitatType="Hedgerows"
           units={UNITS.KILOMETRES}
-          improvementHabitats={sortedImprovementHedgerows}
-          improvementSortConfig={sortConfigImprovementHedgerows}
-          improvementRequestSort={requestSortImprovementHedgerows}
-          baselineHabitats={sortedBaselineHedgerows}
-          baselineSortConfig={sortConfigBaselineHedgerows}
-          baselineRequestSort={requestSortBaselineHedgerows}
+          improvements={site.improvements.hedgerows}
+          baseline={site.habitats.hedgerows}
         />
       ),
       shouldRender: () => site.habitats.hedgerows.length > 0 || site.improvements.hedgerows.length > 0
@@ -133,12 +98,8 @@ export default function SitePageContent({ site, sankeyData }) {
           sankeyData={sankeyData.watercourses}
           habitatType="Watercourses"
           units={UNITS.KILOMETRES}
-          improvementHabitats={sortedImprovementWatercourses}
-          improvementSortConfig={sortConfigImprovementWatercourses}
-          improvementRequestSort={requestSortImprovementWatercourses}
-          baselineHabitats={sortedBaselineWatercourses}
-          baselineSortConfig={sortConfigBaselineWatercourses}
-          baselineRequestSort={requestSortBaselineWatercourses}
+          improvements={site.improvements.watercourses}
+          baseline={site.habitats.watercourses}
         />
       ),
       shouldRender: () => site.habitats.watercourses.length > 0 || site.improvements.watercourses.length > 0
@@ -150,7 +111,11 @@ export default function SitePageContent({ site, sankeyData }) {
           title="Allocations"
           allocations={site.allocations}
         />
-      )
+      ),
+      onIsActiveTabChanged: (isActive) => {
+        console.log(`setshowAllocations: ${isActive}`);
+        setshowAllocations(isActive);
+      }
     },
     {
       title: 'IMD Score<br>Transfers Chart',
@@ -170,21 +135,47 @@ export default function SitePageContent({ site, sankeyData }) {
         </Flex>
       )
     }
-  ];
+  ], [
+    site,
+    sankeyData
+  ]);
 
+  const handleTabChange = useCallback((newTabIndex) => {
+    // Call onIsActiveTabChanged callbacks for all tabs
+    tabs.forEach((tab, index) => {
+      if (tab.onIsActiveTabChanged) {
+        tab.onIsActiveTabChanged(index === newTabIndex.value);
+      }
+    });
+  }, [tabs]);
+
+  // Initialize the active tab callback on mount
+  useEffect(() => {
+    handleTabChange(0); // Default to first tab
+  }, [handleTabChange]);
 
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={[site]} selectedSite={site} />
+        <SiteMap
+          sites={[site]}
+          selectedSite={site}
+          isForSitePage={true}
+          showAllocations={showAllocations}
+          showLPA={showLPA}
+          showNCA={showNCA}
+          showLNRS={showLNRS}
+          showLSOA={showLSOA}
+          showSiteArea={true}
+        />
       }
       content={(
 
         <ContentStack ref={contentRef}>
 
-          <SiteDetailsCard site={site} />
+          <SiteDetailsCard site={site} bodyLayerStates={{showLPA, setShowLPA, showNCA, setShowNCA, showLNRS, setShowLNRS, showLSOA, setShowLSOA}} />
 
-          <Tabs.Root lazyMount defaultValue={0} width="100%">
+          <Tabs.Root lazyMount defaultValue={0} onValueChange={handleTabChange} width="100%">
             <Tabs.List>
               {tabs.map((tab, index) => (
                 (tab.shouldRender == null || tab.shouldRender()) && (
