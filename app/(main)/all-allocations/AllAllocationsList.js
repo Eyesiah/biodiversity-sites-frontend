@@ -113,7 +113,7 @@ export default function AllAllocationsList({ sortedItems, requestSort, sortConfi
             <PrimaryTable.NumericCell sx={{ border: '3px solid #ddd' }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
           </PrimaryTable.Row>
           {sortedItems.map((alloc) => (
-            <AllocationRow key={`${alloc.srn}-${alloc.pr}`} alloc={alloc} />
+            <AllocationRow key={`${alloc.srn}-${alloc.pr}-${alloc.dr}`} alloc={alloc} />
           ))}
         </PrimaryTable.Body>
       </PrimaryTable.Root>
