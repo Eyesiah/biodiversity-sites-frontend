@@ -124,7 +124,7 @@ export const AllocationsTable = ({allocations}) => {
               </DataTable.Header>
               <DataTable.Body>
                 {sortedAllocations.map((alloc) => (
-                  <AllocationRow key={alloc.planningReference} alloc={alloc} />
+                  <AllocationRow key={`${alloc.planningReference}-${alloc.developerReference}`} alloc={alloc} />
                 ))}
               </DataTable.Body>
             </DataTable.Root>
