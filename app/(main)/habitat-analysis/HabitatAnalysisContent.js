@@ -10,8 +10,8 @@ import { TableContainer } from '@/components/styles/PrimaryCard';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
 
-const processDataWithProportions = (data, module) => {
-  // Calculate totals
+const calculateTotals = (data, module) => {
+  // Calculate totals for the specified module
   let totalBaseline = 0;
   let totalImprovement = 0;
   let totalAllocation = 0;
@@ -32,19 +32,9 @@ const processDataWithProportions = (data, module) => {
     totalImprovementSites += h.improvementSites;
   });
 
-  // Process data with calculated percentages (create new objects to avoid mutation)
-  const processedData = moduleData.map(h => ({
-    ...h,
-    baselineShare: totalBaseline > 0 ? (h.baseline / totalBaseline) * 100 : 0,
-    improvementShare: totalImprovement > 0 ? (h.improvement / totalImprovement) * 100 : 0,
-    allocationShare: totalAllocation > 0 ? (h.allocation / totalAllocation) * 100 : 0,
-    improvementAllocation: h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0,
-  }));
-
   const totalImprovementAllocation = totalImprovement > 0 ? (totalAllocation / totalImprovement) * 100 : 0;
 
   return {
-    processedData,
     totals: {
       totalBaseline,
       totalImprovement,
@@ -65,7 +55,9 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
 
   // Memoize all calculations to prevent unnecessary re-computation
   const { processedData, totals } = useMemo(() => {
-    return processDataWithProportions(data, module);
+    const { totals } = calculateTotals(data, module);
+    const processedData = module != null ? data.filter(h => h.module == module) : data;
+    return { processedData, totals };
   }, [data, module]);
 
   return (
@@ -136,10 +128,8 @@ export default function HabitatAnalysisContent({ habitats }) {
 
   const handleExport = (allData) => {
 
-    // Process data with calculated percentages (create new objects to avoid mutation)
-    const savedData = processDataWithProportions(allData).processedData;
-
-    const csvData = savedData.map(row => ({
+    // Data already has calculated percentages
+    const csvData = allData.map(row => ({
       'Module': row.module,
       'Habitat': row.habitat,
       'Distinctiveness': row.distinctiveness,

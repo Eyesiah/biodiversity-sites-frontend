@@ -1,152 +1,152 @@
 Habitat Type,Habitat Group,Distinctiveness Category,Distinctiveness Score,Technical Difficulty Creation,Technical Difficulty Creation Multiplier,Technical Difficulty Enhancement,Technical Difficulty Enhancement Multiplier,Good Condition Score,Fairly Good Condition Score,Moderate Condition Score,Fairly Poor Condition Score,Poor Condition Score,Good Time To Target,Fairly Good Time To Target,Moderate Time To Target,Fairly Poor Time To Target,Poor Time To Target,Condition Assessment N/A Time To Target,N/A - Other Time To Target
-Arable field margins cultivated annually,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Arable field margins game bird mix,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Arable field margins pollen and nectar,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Arable field margins tussocky,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Cereal crops,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Winter stubble,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Horticulture,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Intensive orchards,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Non-cereal crops,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Temporary grass and clover leys,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Traditional orchards,Grassland,High,6,Low,1,Medium,0.67,3,2.5,2,1.5,1,30,25,20,10,5,1,1
-Bracken,Grassland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Floodplain wetland mosaic and CFGM,Grassland,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,15,10,8,5,1,1
-Lowland calcareous grassland,Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,8,5,1,1
-Lowland dry acid grassland,Grassland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,25,20,15,10,1,1
-Lowland meadows,Grassland,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,12,10,8,5,1,1
-Modified grassland,Grassland,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,7,5,4,2,1,1,1
-Other lowland acid grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,15,12,10,5,1,1,1
-Other neutral grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,2,1,1
-Tall herb communities (H6430),Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,1,1
-Upland acid grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,15,12,10,5,1,1,1
-Upland calcareous grassland,Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,25,20,15,12,10,1,1
-Upland hay meadows,Grassland,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,18,15,12,10,1,1
-Blackthorn scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Bramble scrub,Heathland and shrub,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Gorse scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Hawthorn scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Hazel scrub,Heathland and shrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,15,12,10,7,5,1,1
-Lowland heathland,Heathland and shrub,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,12,10,7,5,1,1
-Mixed scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Mountain heaths and willow scrub,Heathland and shrub,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,25,23,15,1,1
-Rhododendron scrub,Heathland and shrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Dunes with sea buckthorn (H2160),Heathland and shrub,High,6,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Other sea buckthorn scrub,Heathland and shrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Willow scrub,Heathland and shrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Upland heathland,Heathland and shrub,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30,25,20,15,10,1,1
-Aquifer fed naturally fluctuating water bodies,Lakes,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30,20,15,10,1,1,1
-Ornamental lake or pond,Lakes,Low,2,Low,1,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-High alkalinity lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-Low alkalinity lakes,Lakes,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-Marl lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-Moderate alkalinity lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,1,1
-Peat lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ponds (priority habitat),Lakes,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ponds (non-priority habitat),Lakes,Medium,4,Low,1,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,1,1,1
-Reservoirs,Lakes,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Temporary lakes ponds and pools (H3170),Lakes,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,2,1,1
-Calaminarian grasslands,Sparsely vegetated land,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Coastal sand dunes,Sparsely vegetated land,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Coastal vegetated shingle,Sparsely vegetated land,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ruderal/Ephemeral,Sparsely vegetated land,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Tall forbs,Sparsely vegetated land,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,30+,25,20,15,10,1,1
-Inland rock outcrop and scree habitats,Sparsely vegetated land,High,6,High,0.33,Low,1,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Limestone pavement,Sparsely vegetated land,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Maritime cliff and slopes,Sparsely vegetated land,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,1,1
-Other inland rock and scree,Sparsely vegetated land,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,1,1,1,1,1,1,1
-Allotments,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-"Artificial unvegetated, unsealed surface",Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,0
-Bioswale,Urban,Low,2,Medium,0.67,Low,1,3,2.5,2,1.5,1,3,2,1,1,1,1,1
-Intensive green roof,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Built linear features,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,0
-Cemeteries and churchyards,Urban,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,20,17,15,12,10,1,1
-Developed land; sealed surface,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,0
-Other green roof,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Facade-bound green wall,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ground based green wall,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Ground level planters,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Biodiverse green roof,Urban,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,8,5,3,1,1,1
-Introduced shrub,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Open mosaic habitats on previously developed land,Urban,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,4,2,0,1,1
-Rain garden,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Actively worked sand pit quarry or open cast mine,Urban,Low,2,Medium,0.67,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Sustainable drainage system,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Unvegetated garden,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Vacant or derelict land,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,0
-Bare ground,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Vegetated garden,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Urban tree,Individual trees,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,27,19,10,1,1
-Rural tree,Individual trees,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,27,19,10,1,1
-Blanket bog,Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Depressions on peat substrates (H7150),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,25,15,1,1
-Fens (upland and lowland),Wetland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,1,1
-Lowland raised bog,Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,20,15,1,1
-Oceanic valley mire[1] (D2.1),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,20,15,1,1
-Purple moor grass and rush pastures,Wetland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,1,1
-Reedbeds,Wetland,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,12,10,7,5,3,1,1
-Transition mires and quaking bogs (H7140),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,25,15,1,1
-Felled,Woodland and forest,High,6,High,0.33,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,30+,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Lowland beech and yew woodland,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Lowland mixed deciduous woodland,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Native pine woodlands,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Other coniferous woodland,Woodland and forest,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,30,10,5,1,1
-Other Scot's pine woodland,Woodland and forest,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Other woodland; broadleaved,Woodland and forest,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,25,15,7,5,1,1
-Other woodland; mixed,Woodland and forest,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,30,10,5,1,1
-Upland birchwoods,Woodland and forest,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30,25,20,10,1,1
-Upland mixed ashwoods,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Upland oakwood,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Wet woodland,Woodland and forest,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30,15,10,5,1,1
-Wood-pasture and parkland,Woodland and forest,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,1,1
-Coastal lagoons,Coastal lagoons,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,8,5,3,1,1,1
-High energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,7,4,2,1,1,1
-"High energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Moderate energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,1
-"Moderate energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Low energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,1,1,1,1
-"Low energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Features of littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,1
-"Features of littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Saltmarshes and saline reedbeds,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,3,2,1,1,1,1,1
-Artificial saltmarshes and saline reedbeds,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,6,4,3,2,1,1,1
-Littoral coarse sediment,Intertidal sediment,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Littoral mud,Coastal saltmarsh,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,7,3,1,1,1
-Littoral mixed sediments,Coastal saltmarsh,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,7,3,1,1,1
-Littoral seagrass,Intertidal sediment,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,5,2,1,1
-"Littoral seagrass on peat, clay or chalk",Intertidal sediment,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,1,1
-Littoral biogenic reefs - Mussels,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,1,1
-Littoral biogenic reefs - Sabellaria,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,1,1
-Features of littoral sediment,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,3,1,1
-Artificial littoral coarse sediment,Intertidal sediment,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,3,2,1,1,1,1,1
-Artificial littoral mud,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,6,4,3,2,1,1,1
-Artificial littoral sand,Intertidal sediment,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,4,2,1,1,1,1,1
-Artificial littoral muddy sand,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Artificial littoral mixed sediments,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Artificial littoral seagrass,Intertidal sediment,Low,2,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,5,2,1,1
-Artificial littoral biogenic reefs,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,1,1
-Littoral sand,Intertidal sediment,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,4,2,1,1,1,1,1
-Littoral muddy sand,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,1,1
-Artificial hard structures,Intertidal hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,15,10,5,2,1,1,1
-Artificial features of hard structures,Intertidal hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,1
-Artificial hard structures with integrated greening of grey infrastructure (IGGI),Intertidal hard structures,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,1,0
-Watercourse footprint,Watercourse footprint,V.low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,1
-Species-rich native hedgerow with trees - associated with bank or ditch,Hedgerow,V.High,8,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
-Species-rich native hedgerow with trees,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
-Species-rich native hedgerow - associated with bank or ditch,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
-Native hedgerow with trees - associated with bank or ditch,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
-Species-rich native hedgerow,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
-Native hedgerow - associated with bank or ditch,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
-Native hedgerow with trees,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,1,,10,,20,1,1
-Ecologically valuable line of trees,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
-Ecologically valuable line of trees - associated with bank or ditch,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
-Native hedgerow,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,1,,5,,12,1,1
-Line of trees,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
-Line of trees - associated with bank or ditch,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,5,,20,,30+,1,1
-Non-native and ornamental hedgerow,Hedgerow,V.Low,1,Low,1,Low,1,3,,2,,1,1,,Not possible,,Not possible,1,1
-Priority habitat,Watercourses,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
-Other rivers and streams,Watercourses,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,,,,,,1,1
-Ditches,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
-Canals,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,,,,,,1,1
-Culvert,Watercourses,Low,2,Medium,0.67,N/A,1,Not Possible,Not Possible,Not Possible,Not Possible,1,,,,,,1,1
+Arable field margins cultivated annually,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Arable field margins game bird mix,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Arable field margins pollen and nectar,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Arable field margins tussocky,Cropland,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Cereal crops,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Winter stubble,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Horticulture,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Intensive orchards,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Non-cereal crops,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Temporary grass and clover leys,Cropland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Traditional orchards,Grassland,High,6,Low,1,Medium,0.67,3,2.5,2,1.5,1,30,25,20,10,5,Not Possible,Not Possible
+Bracken,Grassland,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Floodplain wetland mosaic and CFGM,Grassland,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,15,10,8,5,Not Possible,Not Possible
+Lowland calcareous grassland,Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,8,5,Not Possible,Not Possible
+Lowland dry acid grassland,Grassland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,25,20,15,10,Not Possible,Not Possible
+Lowland meadows,Grassland,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,12,10,8,5,Not Possible,Not Possible
+Modified grassland,Grassland,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,7,5,4,2,1,Not Possible,Not Possible
+Other lowland acid grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,15,12,10,5,1,Not Possible,Not Possible
+Other neutral grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,2,Not Possible,Not Possible
+Tall herb communities (H6430),Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,Not Possible,Not Possible
+Upland acid grassland,Grassland,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,15,12,10,5,1,Not Possible,Not Possible
+Upland calcareous grassland,Grassland,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,25,20,15,12,10,Not Possible,Not Possible
+Upland hay meadows,Grassland,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,18,15,12,10,Not Possible,Not Possible
+Blackthorn scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Bramble scrub,Heathland and shrub,Medium,4,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Gorse scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Hawthorn scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Hazel scrub,Heathland and shrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,15,12,10,7,5,Not Possible,Not Possible
+Willow scrub,Heathland and shrub,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,15,12,10,7,5,Not Possible,Not Possible
+Lowland heathland,Heathland and shrub,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,30+,25,20,15,10,Not Possible,Not Possible
+Mixed scrub,Heathland and shrub,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Mountain heaths and willow scrub,Heathland and shrub,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,25,23,15,Not Possible,Not Possible
+Rhododendron scrub,Heathland and shrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Dunes with sea buckthorn (H2160),Heathland and shrub,High,6,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Other sea buckthorn scrub,Heathland and shrub,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Upland heathland,Heathland and shrub,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30,25,20,15,10,Not Possible,Not Possible
+Aquifer fed naturally fluctuating water bodies,Lakes,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30,20,15,10,1,Not Possible,Not Possible
+Ornamental lake or pond,Lakes,Low,2,Low,1,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,Not Possible,Not Possible
+High alkalinity lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,Not Possible,Not Possible
+Low alkalinity lakes,Lakes,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,30,20,10,7,5,Not Possible,Not Possible
+Marl lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,Not Possible,Not Possible
+Moderate alkalinity lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30,20,10,7,5,Not Possible,Not Possible
+Peat lakes,Lakes,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Ponds (priority habitat),Lakes,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Ponds (non-priority habitat),Lakes,Medium,4,Low,1,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,1,Not Possible,Not Possible
+Reservoirs,Lakes,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Temporary lakes ponds and pools (H3170),Lakes,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,2,Not Possible,Not Possible
+Calaminarian grasslands,Sparsely vegetated land,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,Not Possible,Not Possible
+Coastal sand dunes,Sparsely vegetated land,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,Not Possible,Not Possible
+Coastal vegetated shingle,Sparsely vegetated land,High,6,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Ruderal/Ephemeral,Sparsely vegetated land,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Tall forbs,Sparsely vegetated land,Low,2,Low,1,Medium,0.67,3,2.5,2,1.5,1,30+,25,20,15,10,Not Possible,Not Possible
+Inland rock outcrop and scree habitats,Sparsely vegetated land,High,6,High,0.33,Low,1,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Limestone pavement,Sparsely vegetated land,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,Not Possible,Not Possible
+Maritime cliff and slopes,Sparsely vegetated land,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,20,15,10,7,5,Not Possible,Not Possible
+Other inland rock and scree,Sparsely vegetated land,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,1,1,1,1,1,Not Possible,Not Possible
+Allotments,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+"Artificial unvegetated, unsealed surface",Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0
+Bioswale,Urban,Low,2,Medium,0.67,Low,1,3,2.5,2,1.5,1,3,2,1,1,1,Not Possible,Not Possible
+Intensive green roof,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Built linear features,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0
+Cemeteries and churchyards,Urban,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,20,17,15,12,10,Not Possible,Not Possible
+Developed land; sealed surface,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0
+Other green roof,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Facade-bound green wall,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Ground based green wall,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Ground level planters,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Biodiverse green roof,Urban,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,8,5,3,1,Not Possible,Not Possible
+Introduced shrub,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Open mosaic habitats on previously developed land,Urban,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,7,4,2,0,Not Possible,Not Possible
+Rain garden,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Actively worked sand pit quarry or open cast mine,Urban,Low,2,Medium,0.67,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Urban tree,Individual trees,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,27,19,10,Not Possible,Not Possible
+Sustainable drainage system,Urban,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Unvegetated garden,Urban,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0
+Vacant or derelict land,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Bare ground,Urban,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Vegetated garden,Urban,Low,2,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible
+Blanket bog,Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Depressions on peat substrates (H7150),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,25,15,Not Possible,Not Possible
+Fens (upland and lowland),Wetland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,Not Possible,Not Possible
+Lowland raised bog,Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,20,15,Not Possible,Not Possible
+Oceanic valley mire[1] (D2.1),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,20,15,Not Possible,Not Possible
+Purple moor grass and rush pastures,Wetland,V.High,8,High,0.33,High,0.33,3,2.5,2,1.5,1,30,25,20,15,10,Not Possible,Not Possible
+Reedbeds,Wetland,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,12,10,7,5,3,Not Possible,Not Possible
+Transition mires and quaking bogs (H7140),Wetland,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30,25,15,Not Possible,Not Possible
+Felled,Woodland and forest,High,6,High,0.33,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,30+,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible
+Lowland beech and yew woodland,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Lowland mixed deciduous woodland,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Native pine woodlands,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Other coniferous woodland,Woodland and forest,Low,2,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,30,10,5,Not Possible,Not Possible
+Other Scot's pine woodland,Woodland and forest,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Other woodland; broadleaved,Woodland and forest,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,25,15,7,5,Not Possible,Not Possible
+Other woodland; mixed,Woodland and forest,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,30,10,5,Not Possible,Not Possible
+Upland birchwoods,Woodland and forest,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30,25,20,10,Not Possible,Not Possible
+Upland mixed ashwoods,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Upland oakwood,Woodland and forest,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Wet woodland,Woodland and forest,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,30+,30,15,10,5,Not Possible,Not Possible
+Wood-pasture and parkland,Woodland and forest,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,25,10,Not Possible,Not Possible
+Coastal lagoons,Coastal lagoons,High,6,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,10,8,5,3,1,Not Possible,Not Possible
+High energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,7,4,2,1,Not Possible,Not Possible
+"High energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Moderate energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,Not Possible,Not Possible
+"Moderate energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Low energy littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,1,1,Not Possible,Not Possible
+"Low energy littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Features of littoral rock,Rocky shore,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,Not Possible,Not Possible
+"Features of littoral rock - on peat, clay or chalk",Rocky shore,V.High,8,Very High,0.1,Medium,0.67,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Saltmarshes and saline reedbeds,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,3,2,1,1,1,Not Possible,Not Possible
+Artificial saltmarshes and saline reedbeds,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,6,4,3,2,1,Not Possible,Not Possible
+Littoral coarse sediment,Intertidal sediment,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Littoral mud,Coastal saltmarsh,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,7,3,1,Not Possible,Not Possible
+Littoral mixed sediments,Coastal saltmarsh,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,7,3,1,Not Possible,Not Possible
+Littoral seagrass,Intertidal sediment,High,6,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,5,2,Not Possible,Not Possible
+"Littoral seagrass on peat, clay or chalk",Intertidal sediment,V.High,8,Very High,0.1,High,0.33,3,2.5,2,1.5,1,30+,30+,30+,30+,30+,Not Possible,Not Possible
+Littoral biogenic reefs - Mussels,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,Not Possible,Not Possible
+Littoral biogenic reefs - Sabellaria,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,Not Possible,Not Possible
+Features of littoral sediment,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,7,5,3,3,Not Possible,Not Possible
+Artificial littoral coarse sediment,Intertidal sediment,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,3,2,1,1,1,Not Possible,Not Possible
+Artificial littoral mud,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,6,4,3,2,1,Not Possible,Not Possible
+Artificial littoral sand,Intertidal sediment,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,4,2,1,1,1,Not Possible,Not Possible
+Artificial littoral muddy sand,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Artificial littoral mixed sediments,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Artificial littoral seagrass,Intertidal sediment,Low,2,High,0.33,High,0.33,3,2.5,2,1.5,1,20,15,10,5,2,Not Possible,Not Possible
+Artificial littoral biogenic reefs,Intertidal sediment,Low,2,High,0.33,Medium,0.67,3,2.5,2,1.5,1,15,10,5,3,3,Not Possible,Not Possible
+Littoral sand,Intertidal sediment,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,4,2,1,1,1,Not Possible,Not Possible
+Littoral muddy sand,Intertidal sediment,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,5,4,3,2,1,Not Possible,Not Possible
+Artificial hard structures,Intertidal hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,15,10,5,2,1,Not Possible,Not Possible
+Artificial features of hard structures,Intertidal hard structures,Low,2,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,Not Possible,Not Possible
+Artificial hard structures with integrated greening of grey infrastructure (IGGI),Intertidal hard structures,Medium,4,Medium,0.67,Medium,0.67,3,2.5,2,1.5,1,13,8,4,2,1,Not Possible,Not Possible
+Watercourse footprint,Watercourse footprint,V.low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0
+Rural tree,Individual trees,Medium,4,Low,1,Low,1,3,2.5,2,1.5,1,30+,30+,27,19,10,Not Possible,Not Possible
+Species-rich native hedgerow with trees - associated with bank or ditch,Hedgerow,V.High,8,Low,1,Low,1,3,,2,,1,20,,10,,1,1,1
+Species-rich native hedgerow with trees,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,20,,10,,1,1,1
+Species-rich native hedgerow - associated with bank or ditch,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,12,,5,,1,1,1
+Native hedgerow with trees - associated with bank or ditch,Hedgerow,High,6,Low,1,Low,1,3,,2,,1,20,,10,,1,1,1
+Species-rich native hedgerow,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,12,,5,,1,1,1
+Native hedgerow - associated with bank or ditch,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,12,,5,,1,1,1
+Native hedgerow with trees,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,20,,10,,1,1,1
+Ecologically valuable line of trees,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
+Ecologically valuable line of trees - associated with bank or ditch,Hedgerow,Medium,4,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
+Native hedgerow,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,12,,5,,1,1,1
+Line of trees,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
+Line of trees - associated with bank or ditch,Hedgerow,Low,2,Low,1,Low,1,3,,2,,1,30+,,20,,5,1,1
+Non-native and ornamental hedgerow,Hedgerow,V.Low,1,Low,1,Low,1,3,,2,,1,Not Possible,,Not Possible,,1,1,1
+Priority habitat,Watercourses,V.High,8,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Other rivers and streams,Watercourses,High,6,High,0.33,Medium,0.67,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Ditches,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Canals,Watercourses,Medium,4,Medium,0.67,Low,1,3,2.5,2,1.5,1,10,8,5,2,1,1,1
+Culvert,Watercourses,Low,2,Medium,0.67,N/A,1,Not Possible,Not Possible,Not Possible,Not Possible,1,Not Possible,Not Possible,Not Possible,Not Possible,1,1,1
 undefined,,V.Low,0,Low,1,Low,1,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,0,0

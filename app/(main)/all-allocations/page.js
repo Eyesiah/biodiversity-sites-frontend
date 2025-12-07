@@ -19,6 +19,7 @@ export default async function AllocationsPage() {
 
       return {
         pr: alloc.planningReference,
+        dr: alloc.developerReference,
         lpa: alloc.localPlanningAuthority,
         nca: alloc.nca,
         pn: alloc.projectName,

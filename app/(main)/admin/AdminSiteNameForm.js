@@ -127,7 +127,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
                 <SearchableDropdown
                   name="referenceNumber"
                   options={dropdownOptions}
-                  defaultValue={selectedReference || state.referenceNumber}
+                  value={selectedReference || state.referenceNumber}
                   onChange={handleReferenceChange}
                   placeholder="Select reference number"
                 />

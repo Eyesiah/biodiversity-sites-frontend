@@ -82,12 +82,64 @@ export default async function HabitatAnalysis() {
     processCategory('watercourses');
   });
 
+  // Calculate totals per module for percentage calculations
+  const moduleTotals = {};
+
+  // Process each site to calculate totals
+  allSites.forEach(site => {
+
+    const calculateTotals = (module) => {
+      if (!moduleTotals[module]) {
+        moduleTotals[module] = {
+          totalBaseline: 0,
+          totalImprovement: 0,
+          totalAllocation: 0,
+        };
+      }
+
+      // Baseline
+      if (site.habitats && site.habitats[module]) {
+        site.habitats[module].forEach(h => {
+          moduleTotals[module].totalBaseline += h.size;
+        });
+      }
+
+      // Improvements
+      if (site.improvements && site.improvements[module]) {
+        site.improvements[module].forEach(h => {
+          moduleTotals[module].totalImprovement += h.size;
+        });
+      }
+
+      // Allocations
+      if (site.allocations) {
+        site.allocations.forEach(alloc => {
+          if (alloc.habitats && alloc.habitats[module]) {
+            alloc.habitats[module].forEach(h => {
+              moduleTotals[module].totalAllocation += h.size;
+            });
+          }
+        });
+      }
+    };
+
+    calculateTotals('areas');
+    calculateTotals('hedgerows');
+    calculateTotals('watercourses');
+  });
+
   const lastUpdated = Date.now();
 
+  // Process data with pre-calculated percentages
   const processedData = Object.values(analysis).map(h => {
+    const totals = moduleTotals[h.module];
     return {
       ...h,
       improvementSites: h.improvementSites.size,
+      baselineShare: totals.totalBaseline > 0 ? (h.baseline / totals.totalBaseline) * 100 : 0,
+      improvementShare: totals.totalImprovement > 0 ? (h.improvement / totals.totalImprovement) * 100 : 0,
+      allocationShare: totals.totalAllocation > 0 ? (h.allocation / totals.totalAllocation) * 100 : 0,
+      improvementAllocation: h.improvement > 0 ? (h.allocation / h.improvement) * 100 : 0,
     };
   });
 

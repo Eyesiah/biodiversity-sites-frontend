@@ -100,7 +100,7 @@ export default function HUCalculatorForm({ habitats, conditions }) {
                   value={formData.timeToTargetOffset}
                   onChange={(e) => setFormData({...formData, timeToTargetOffset: Number(e.target.value)})}
                 >
-                  {Array.from({ length: 21 }, (_, i) => i - 10).map(offset => (
+                  {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
                     <option key={offset} value={offset}>
                       {offset > 0 ? `+${offset}` : offset} years
                     </option>
