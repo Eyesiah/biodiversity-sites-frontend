@@ -33,7 +33,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             <DataTable.ColumnHeader># parcels</DataTable.ColumnHeader>
             <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
             {isImprovement && <DataTable.ColumnHeader>Time to Target (years)</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Temporal Multiplier</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader>Temporal Risk</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
@@ -47,7 +47,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
               <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || ''}</DataTable.Cell>}
-              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalMultiplier && subRow.temporalMultiplier > 0 ? formatNumber(subRow.temporalMultiplier, 3) : ''}</DataTable.NumericCell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
                 const factor = parseFloat(subRow.difficultyFactor || 0);
                 return factor && factor > 0 ? formatNumber(factor, 2) : '';

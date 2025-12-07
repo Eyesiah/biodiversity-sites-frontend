@@ -13,31 +13,33 @@ export async function calcHU(prevState, formData) {
 
     const isBaseline = improvementType == "baseline" || improvementType == "none" || improvementType == null || improvementType == '';
 
-    let result = {
-      hu: isBaseline ? calculateBaselineHU(Number(size), habitat, condition, strategicSignificance) : calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk),
+    const result = {
       distinctiveness: getHabitatDistinctiveness(habitat),
       distinctivenessScore: getDistinctivenessScore(habitat),
       conditionScore: getConditionScore(condition),
       strategicSignificance: strategicSignificance
     }
 
-    if (!isBaseline) {
-      result.getTimeToTarget = getTimeToTarget(habitat, condition);
+    if (isBaseline) {
+      // just get the base HUs
+      result.HUs = calculateBaselineHU(Number(size), habitat, condition, strategicSignificance);
+    } else {      
+      // these aren't used/included in the calculateImprovementHU result so add them too
       result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
-      result.temporalMultiplier= calcTemporalRisk(habitat, condition, timeToTargetOffset);
-      result.difficultyFactor = calcDifficultyFactor(habitat);
-      result.spatialRisk = spatialRisk;
       result.timeToTargetOffset = timeToTargetOffset;
+
+      // the calculateImprovementHU returns also the values used for the final calculation, so use those
+      Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk));
     }
 
     if (result.distinctiveness && result.distinctiveness.toLowerCase() === 'v.low') {
-      result.hu = 0;
+      result.HUs = 0;
       result.distinctivenessScore = 0;
       result.conditionScore = 0;
     }
 
-    if (result.hu > 0) {
-      result.hu = Number(result.hu.toFixed(4));
+    if (result.HUs > 0) {
+      result.HUs = Number(result.HUs.toFixed(4));
     }
 
     const newState = {
