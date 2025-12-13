@@ -65,7 +65,7 @@ export default function About() {
         <Text>Enhanced parcels - HU is not computed because no connection can be made back to the baseline habitat parcel&apos;s value.</Text>
 
         <Heading as="h2" size="lg">Refreshing the data</Heading>
-        <Text>We refresh Defra&apos;s BGS data hourly.</Text>
+        <Text>We refresh Defra&apos;s BGS data every 6 hours.</Text>
 
         <Heading as="h2" size="lg">Acknowledgements</Heading>
         <Text>Digital boundaries and reference maps:</Text>
