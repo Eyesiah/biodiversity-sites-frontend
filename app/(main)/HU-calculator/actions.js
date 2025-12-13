@@ -37,7 +37,7 @@ export async function calcHU(prevState, formData) {
       }
 
       // the calculateImprovementHU returns also the values used for the final calculation, so use those
-      Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk, baselineHabitat, baselineCondition));
+      Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, baselineHabitat, baselineCondition, timeToTargetOffset, strategicSignificance, spatialRisk));
     }
 
     if (result.distinctiveness && result.distinctiveness.toLowerCase() === 'v.low') {

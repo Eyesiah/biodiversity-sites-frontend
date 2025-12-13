@@ -10,9 +10,9 @@ export const HabitatSummaryTable = ({ site }) => {
 
   // Filter out Urban tree and Rural tree from Areas calculations since they're now in Individual Trees row
   const areasHabitats = (habitats.areas || []).filter(h => h.type !== 'Urban tree' && h.type !== 'Rural tree');
-  const baselineArea = areasHabitats.reduce((acc, h) => acc + h.area, 0);
-  const baselineHedgerow = (habitats.hedgerows || []).reduce((acc, h) => acc + h.area, 0);
-  const baselineWatercourse = (habitats.watercourses || []).reduce((acc, h) => acc + h.area, 0);
+  const baselineArea = areasHabitats.reduce((acc, h) => acc + h.size, 0);
+  const baselineHedgerow = (habitats.hedgerows || []).reduce((acc, h) => acc + h.size, 0);
+  const baselineWatercourse = (habitats.watercourses || []).reduce((acc, h) => acc + h.size, 0);
 
   const baselineAreaParcels = areasHabitats.reduce((acc, h) => acc + (h.parcels || 1), 0);
   const baselineHedgerowParcels = (habitats.hedgerows || []).reduce((acc, h) => acc + (h.parcels || 1), 0);
@@ -24,19 +24,19 @@ export const HabitatSummaryTable = ({ site }) => {
 
   // Calculate Individual Trees (Urban tree + Rural tree) data
   const individualTreesHabitats = habitats.trees || (habitats.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
-  const baselineIndividualTrees = individualTreesHabitats.reduce((acc, h) => acc + h.area, 0);
+  const baselineIndividualTrees = individualTreesHabitats.reduce((acc, h) => acc + h.size, 0);
   const baselineIndividualTreesParcels = individualTreesHabitats.reduce((acc, h) => acc + (h.parcels || 1), 0);
   const baselineIndividualTreesHUs = individualTreesHabitats.reduce((acc, h) => acc + h.HUs, 0);
 
   // Filter out Urban tree and Rural tree from Areas improvements since they're now in Individual Trees row
   const areasImprovements = (improvements.areas || []).filter(h => h.type !== 'Urban tree' && h.type !== 'Rural tree');
-  const improvementArea = areasImprovements.reduce((acc, h) => acc + h.area, 0);
-  const improvementHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + h.area, 0);
-  const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.area, 0);
+  const improvementArea = areasImprovements.reduce((acc, h) => acc + h.size, 0);
+  const improvementHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + h.size, 0);
+  const improvementWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + h.size, 0);
 
   // Calculate Individual Trees improvements
   const individualTreesImprovements = improvements.trees || (improvements.areas || []).filter(h => h.type === 'Urban tree' || h.type === 'Rural tree');
-  const improvementIndividualTrees = individualTreesImprovements.reduce((acc, h) => acc + h.area, 0);
+  const improvementIndividualTrees = individualTreesImprovements.reduce((acc, h) => acc + h.size, 0);
 
   let allocationArea = 0;
   let allocationHedgerow = 0;
@@ -60,7 +60,7 @@ export const HabitatSummaryTable = ({ site }) => {
       return acc + (a.habitats?.areas?.filter(ha => ha.type === 'Urban tree' || ha.type === 'Rural tree').reduce((acc, ha) => acc + ha.size, 0) || 0);
     }, 0);
 
-    allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
+    allocationAreaHUs = allocations.reduce((acc, a) => acc + a.sizeUnits, 0);
     allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
     allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
   } else {
