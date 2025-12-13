@@ -46,7 +46,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
               <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
-              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || ''}</DataTable.Cell>}
+              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timeToTarget || ''}</DataTable.Cell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
                 const factor = parseFloat(subRow.difficultyFactor || 0);

@@ -1,6 +1,6 @@
 "use server"
 
-import { calcDifficultyFactor, calcTemporalRisk, getTimeToTarget, getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness, calcSpatialRiskCategory } from "@/lib/habitat";
+import { getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
 
 export async function calcHU(prevState, formData) {
     const size = formData.get("size");
@@ -10,6 +10,8 @@ export async function calcHU(prevState, formData) {
     const strategicSignificance = Number(formData.get("strategicSignificance"));
     const spatialRisk = Number(formData.get("spatialRisk"));
     const timeToTargetOffset = Number(formData.get("timeToTargetOffset") || 0);
+    const baselineHabitat = formData.get("baselineHabitat");
+    const baselineCondition = formData.get("baselineCondition");
 
     const isBaseline = improvementType == "baseline" || improvementType == "none" || improvementType == null || improvementType == '';
 
@@ -23,13 +25,15 @@ export async function calcHU(prevState, formData) {
     if (isBaseline) {
       // just get the base HUs
       result.HUs = calculateBaselineHU(Number(size), habitat, condition, strategicSignificance);
-    } else {      
-      // these aren't used/included in the calculateImprovementHU result so add them too
-      result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
-      result.timeToTargetOffset = timeToTargetOffset;
+    } else {
+      if (improvementType == 'creation') {
+        // these aren't used/included in the calculateImprovementHU result so add them too
+        result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
+        result.timeToTargetOffset = timeToTargetOffset;
+        }
 
       // the calculateImprovementHU returns also the values used for the final calculation, so use those
-      Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk));
+      Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk, baselineHabitat, baselineCondition));
     }
 
     if (result.distinctiveness && result.distinctiveness.toLowerCase() === 'v.low') {
@@ -50,6 +54,8 @@ export async function calcHU(prevState, formData) {
         strategicSignificance: strategicSignificance,
         spatialRisk: spatialRisk,
         timeToTargetOffset: timeToTargetOffset,
+        baselineHabitat: baselineHabitat,
+        baselineCondition: baselineCondition,
         result: result
     };
 
