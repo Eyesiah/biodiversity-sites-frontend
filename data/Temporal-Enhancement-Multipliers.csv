@@ -131,19 +131,19 @@ Intertidal hard structures,Artificial features of hard structures,Low,Not Possib
 Intertidal hard structures,Artificial hard structures with integrated greening of grey infrastructure (IGGI),Medium,Not Possible,Not Possible,1,2,4,8,13,Not Possible,Not Possible,Not Possible,Not Possible,2,4,6,11,2,4,9,2,7,5,Not Possible,,,,,,,,,,,,,
 Watercourse footprint,Watercourse footprint,V.low,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,,,,,,,,,,,,,
 Individual trees,Rural tree,Medium,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,8,16,24,30+,8,16,24,8,16,8,Not Possible,,,,,,,,,,,,,
-Hedgerows,Species-rich native hedgerow with trees - associated with bank or ditch,V.High,,,,,,,,,,,,,6,,10,,,,,4,,,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Species-rich native hedgerow with trees,High,,,,,,,,,,,,,6,,10,,,,,4,,,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Species-rich native hedgerow - associated with bank or ditch,High,,,,,,,,,,,,,3,,5,,,,,2,,,10,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Native hedgerow with trees - associated with bank or ditch,High,,,,,,,,,,,,,6,,10,,,,,4,,,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Species-rich native hedgerow,Medium,,,,,,,,,,,,,3,,5,,,,,2,,,10,10,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Native hedgerow - associated with bank or ditch,Medium,,,,,,,,,,,,,3,,5,,,,,2,,,10,Error,5,10,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Native hedgerow with trees,Medium,,,,,,,,,,,,,6,,10,,,,,4,,,5,5,5,5,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Ecologically valuable line of trees,Medium,,,,,,,,,,,,,20,,30,,,,,10,,,12,12,Error,12,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Ecologically valuable line of trees - associated with bank or ditch,Medium,,,,,,,,,,,,,20,,30,,,,,10,,,12,Error,Error,12,Error,Error,Error,Error,Error,Error,Error,Error,Error
-Hedgerows,Native hedgerow,Low,,,,,,,,,,,,,3,,5,,,,,2,,,10,10,5,10,5,6,10,Error,Error,Error,Error,Error,Error
-Hedgerows,Line of trees,Low,,,,,,,,,,,,,20,,30,,,,,10,,,12,12,Error,12,Error,Error,12,Error,Error,Error,Error,Error,Error
-Hedgerows,Line of trees - associated with bank or ditch,Low,,,,,,,,,,,,,20,,30,,,,,10,,,12,Error,Error,12,Error,Error,12,Error,Error,Error,Error,Error,Error
-Hedgerows,Non-native and ornamental hedgerow,V.Low,,,,,,,,,,,,,Not Possible,,Not Possible,,,,,Not possible,,,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Species-rich native hedgerow with trees - associated with bank or ditch,V.High,,,,,,,,,,,,,6,,10,,,,,4,,,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Species-rich native hedgerow with trees,High,,,,,,,,,,,,,6,,10,,,,,4,,,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Species-rich native hedgerow - associated with bank or ditch,High,,,,,,,,,,,,,3,,5,,,,,2,,,10,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Native hedgerow with trees - associated with bank or ditch,High,,,,,,,,,,,,,6,,10,,,,,4,,,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Species-rich native hedgerow,Medium,,,,,,,,,,,,,3,,5,,,,,2,,,10,10,5,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Native hedgerow - associated with bank or ditch,Medium,,,,,,,,,,,,,3,,5,,,,,2,,,10,Error,5,10,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Native hedgerow with trees,Medium,,,,,,,,,,,,,6,,10,,,,,4,,,5,5,5,5,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Ecologically valuable line of trees,Medium,,,,,,,,,,,,,20,,30,,,,,10,,,12,12,Error,12,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Ecologically valuable line of trees - associated with bank or ditch,Medium,,,,,,,,,,,,,20,,30,,,,,10,,,12,Error,Error,12,Error,Error,Error,Error,Error,Error,Error,Error,Error
+Hedgerow,Native hedgerow,Low,,,,,,,,,,,,,3,,5,,,,,2,,,10,10,5,10,5,6,10,Error,Error,Error,Error,Error,Error
+Hedgerow,Line of trees,Low,,,,,,,,,,,,,20,,30,,,,,10,,,12,12,Error,12,Error,Error,12,Error,Error,Error,Error,Error,Error
+Hedgerow,Line of trees - associated with bank or ditch,Low,,,,,,,,,,,,,20,,30,,,,,10,,,12,Error,Error,12,Error,Error,12,Error,Error,Error,Error,Error,Error
+Hedgerow,Non-native and ornamental hedgerow,V.Low,,,,,,,,,,,,,Not Possible,,Not Possible,,,,,Not possible,,,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error,Error
 Watercourses,Priority habitat,V.High,10,10,10,10,10,10,10,10,10,10,10,2,4,6,8,2,4,6,2,4,2,1,,,,,,,,,,,,,
 Watercourses,Other rivers and streams,High,10,10,10,10,10,10,10,10,10,10,10,2,4,6,8,2,4,6,2,4,2,1,,,,,,,,,,,,,
 Watercourses,Ditches,Medium,10,10,10,10,10,10,10,10,10,10,10,2,4,6,8,2,4,6,2,4,2,1,,,,,,,,,,,,,
