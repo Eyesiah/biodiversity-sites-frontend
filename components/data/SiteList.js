@@ -18,6 +18,8 @@ const ALL_SITE_COLUMNS = {
   'ncaName': {label: 'National Character Area (NCA)', textAlign: 'left' },
   'lnrsName': {label: 'Local Nature Recovery Strategy (LNRS)', textAlign: 'left' },
   'imdDecile': {label: 'IMD Decile', textAlign: 'center', fontFamily: 'mono' },
+  'huGain': {label: 'HU Gain', textAlign: 'right', fontFamily: 'mono', format: (val) => formatNumber(val) },
+  'huGainPerHa': {label: 'HU Gain per ha', textAlign: 'right', fontFamily: 'mono', format: (val) => formatNumber(val) },
 }
 
 const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight=false, columns = DEFAULT_COLUMNS }) => {

@@ -55,7 +55,7 @@ const IMDSiteDecileChart = ({sites}) => {
 
 
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
-const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
+const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile', 'huGain', 'huGainPerHa'];
 
 export default function SiteListPageContent({ sites }) {
   const [hoveredSite, setHoveredSite] = useState(null);
@@ -113,7 +113,7 @@ export default function SiteListPageContent({ sites }) {
               return (
                 <Text fontSize="1.2rem">
                   This list of <Text as="strong">{formatNumber(filteredCount, 0)}</Text> sites covers <Text as="strong">{formatNumber(filteredArea, 0)}</Text> hectares.
-                  They comprise <Text as="strong">{formatNumber(filteredBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(filteredCreatedHUs, 0)}</Text> improvement habitat units.
+                  They comprise <Text as="strong">{formatNumber(filteredBaselineHUs, 0)}</Text> baseline and <Text as="strong">{formatNumber(filteredCreatedHUs, 0)}</Text> improvement habitat units (Total HU Gain <Text as="strong">{formatNumber(filteredCreatedHUs - filteredBaselineHUs, 0)}</Text>).
                 </Text>
               );
             }}
