@@ -20,6 +20,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       <DataTable.NumericCell>{formatNumber(habitat.size)}</DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
       <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
+      {isImprovement && <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs - habitat.baselineHUs) : ''}</DataTable.NumericCell>}
     </>
   );
 
@@ -37,6 +38,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
+            {isImprovement && <DataTable.ColumnHeader>HU Gain</DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
@@ -57,6 +59,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
                 return risk && risk > 0 ? formatNumber(risk, 2) : '';
               })()}</DataTable.NumericCell>}
               <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
+              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs - (subRow.baselineHUs || 0)) : ''}</DataTable.NumericCell>}
             </DataTable.Row>
           ))}
         </DataTable.Body>
@@ -131,6 +134,11 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
                 HUs{getSortIndicator('HUs')}
               </DataTable.ColumnHeader>
+              {isImprovement && (
+                <DataTable.ColumnHeader onClick={() => requestSort('HUs - baselineHUs')}>
+                  HU Gain{getSortIndicator('HUs - baselineHUs')}
+                </DataTable.ColumnHeader>
+              )}
             </DataTable.Row>
           </DataTable.Header>
           <DataTable.Body>
