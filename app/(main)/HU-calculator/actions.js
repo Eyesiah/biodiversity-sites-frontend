@@ -30,7 +30,11 @@ export async function calcHU(prevState, formData) {
         // these aren't used/included in the calculateImprovementHU result so add them too
         result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
         result.timeToTargetOffset = timeToTargetOffset;
-        }
+      } else {
+        result.baselineDistinctiveness = getHabitatDistinctiveness(baselineHabitat);
+        result.baselineDistinctivenessScore = getDistinctivenessScore(baselineHabitat);
+        result.baselineConditionScore = getConditionScore(baselineCondition);
+      }
 
       // the calculateImprovementHU returns also the values used for the final calculation, so use those
       Object.assign(result, calculateImprovementHU(Number(size), habitat, condition, improvementType, timeToTargetOffset, strategicSignificance, spatialRisk, baselineHabitat, baselineCondition));
