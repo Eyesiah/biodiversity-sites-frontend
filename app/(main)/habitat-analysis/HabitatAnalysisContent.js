@@ -160,6 +160,12 @@ export default function HabitatAnalysisContent({ habitats }) {
       )
     },
     {
+      title: 'Tree<br>Habitats List',
+      content: ({ sortedItems, requestSort, sortConfig }) => (
+        <AnalysisTable data={sortedItems} module="trees" requestSort={requestSort} sortConfig={sortConfig} />
+      )
+    },
+    {
       title: 'Hedgerow<br>Habitats List',
       content: ({ sortedItems, requestSort, sortConfig }) => (
         <AnalysisTable data={sortedItems} module="hedgerows" requestSort={requestSort} sortConfig={sortConfig} />
@@ -176,6 +182,10 @@ export default function HabitatAnalysisContent({ habitats }) {
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Baseline Area' sizeParam='baseline' />
     },
     {
+      title: 'Baseline Tree<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='trees' name='Baseline Trees' sizeParam='baseline' />
+    },
+    {
       title: 'Baseline Hedgerow<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='hedgerows' name='Baseline Hedgerow' sizeParam='baseline' />
     },
@@ -186,6 +196,10 @@ export default function HabitatAnalysisContent({ habitats }) {
     {
       title: 'Improvement Area<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='areas' name='Area Improvement' sizeParam='improvement' />
+    },
+    {
+      title: 'Improvement Tree<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredBaselinePieChart allHabitats={sortedItems} module='trees' name='Tree Improvement' sizeParam='improvement' />
     },
     {
       title: 'Improvement Hedgerow<br>Habitats Chart',
