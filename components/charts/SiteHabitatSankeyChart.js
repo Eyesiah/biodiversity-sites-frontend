@@ -160,7 +160,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       }
       const condition = node.condition ? `<br>Condition: ${node.condition}` : '';
       const distinctiveness = `<br>Distinctiveness: ${reverseDistinctivenessLookup[node.distinctivenessScore]}`;
-      const area = `<br>Area: ${formatNumber(node.value || 0, 2)} ${node.unit === 'areas' || node.unit === 'trees' ? 'ha' : 'km'}`;
+      const area = `<br>Area: ${formatNumber(node.value || 0, 4)} ${node.unit === 'areas' || node.unit === 'trees' ? 'ha' : 'km'}`;
       const broadHab = `<br>Broad Habitat: ${node.habGroup}`;
       return `<b>${node.name}</b>${broadHab}${condition}${distinctiveness}${area}`;
     });
@@ -173,10 +173,10 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
 
       // Special handling for CREATED nodes
       if (sourceNode.name === '[CREATION]') {
-        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
+        return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 4)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       } else {
         // Regular link tooltip
-        return `<b>${link.enhancement.toUpperCase()}</b><br><b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 2)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
+        return `<b>${link.enhancement.toUpperCase()}</b><br><b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 4)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       }
     });
 
@@ -246,7 +246,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='lg'>
         <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
         <br />
-        <Text>This Sankey chart shows what these improvements might plausibly be. Higher distinctiveness habitats are higher up on the chart, so you can follow the flow of the bars to see how improvements were made. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
+        <Text>This Sankey chart shows what these improvements might plausibly be. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
         <br />
         <List.Root as="ol" ml="6">
           <List.Item>First, habitats that have been enhanced (i.e. where the condition score is better) are assigned to their new condition.</List.Item>

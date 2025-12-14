@@ -17,15 +17,16 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       <DataTable.Cell textAlign="center">{habitat.distinctiveness}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
       <DataTable.CenteredNumericCell>{habitat.parcels}</DataTable.CenteredNumericCell>
-      <DataTable.NumericCell>{formatNumber(habitat.area)}</DataTable.NumericCell>
+      <DataTable.NumericCell>{formatNumber(habitat.size, 4)}</DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
       <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
+      {isImprovement && <DataTable.NumericCell>{habitat.HUGain && habitat.HUGain > 0 ? formatNumber(habitat.HUGain) : ''}</DataTable.NumericCell>}
     </>
   );
 
   const collapsibleContent = (
     <Box display="flex" flexDirection="column" gap="1rem" alignItems="center">
-      <DataTable.Root width="auto" margin="0">
+      {habitat.subRows && <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>
             {isImprovement && <DataTable.ColumnHeader>Intervention</DataTable.ColumnHeader>}
@@ -37,6 +38,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
+            {isImprovement && <DataTable.ColumnHeader>HU Gain</DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
@@ -45,9 +47,9 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.interventionType}</DataTable.Cell>}
               <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
-              <DataTable.NumericCell textAlign="center">{formatNumber(subRow.area)}</DataTable.NumericCell>
-              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timetotarget || ''}</DataTable.Cell>}
-              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
+              <DataTable.NumericCell textAlign="center">{formatNumber(subRow.size, 4)}</DataTable.NumericCell>
+              {isImprovement && <DataTable.Cell textAlign="center">{subRow.timeToTarget || ''}</DataTable.Cell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{typeof subRow.temporalRisk === 'string' ? subRow.temporalRisk : subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
                 const factor = parseFloat(subRow.difficultyFactor || 0);
                 return factor && factor > 0 ? formatNumber(factor, 2) : '';
@@ -57,10 +59,11 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
                 return risk && risk > 0 ? formatNumber(risk, 2) : '';
               })()}</DataTable.NumericCell>}
               <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
+              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs - (subRow.baselineHUs || 0)) : ''}</DataTable.NumericCell>}
             </DataTable.Row>
           ))}
         </DataTable.Body>
-      </DataTable.Root>
+      </DataTable.Root>}
       {hasSites &&
         <SiteList sites={sites} minimalHeight={true} columns={['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'allocatedHabitatArea', 'lpaName', 'ncaName']} />
       }
@@ -100,6 +103,10 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
     return sortConfig.direction === 'ascending' ? ' ▲' : ' ▼';
   };
 
+  if (isImprovement) {
+    habitats.forEach(h => h.HUGain = h.HUs - h.baselineHUs);
+  }
+
   return (
     <PrimaryCard>
       <TableContainer>
@@ -131,6 +138,11 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
                 HUs{getSortIndicator('HUs')}
               </DataTable.ColumnHeader>
+              {isImprovement && (
+                <DataTable.ColumnHeader onClick={() => requestSort('HUGain')}>
+                  HU Gain{getSortIndicator('HUGain')}
+                </DataTable.ColumnHeader>
+              )}
             </DataTable.Row>
           </DataTable.Header>
           <DataTable.Body>

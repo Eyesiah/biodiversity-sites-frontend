@@ -42,8 +42,8 @@ export const viewport = {
 export default function RootLayout({ children }) {
   const umamiWebsiteId =
     process.env.NODE_ENV === 'production'
-      ? '4b0b86b1-e0ca-46d3-9439-936cdad532a5'
-      : 'b718ac79-8ca2-494a-a398-47adf5e8188a';
+      ? '77b8317a-bdc9-4897-9a57-acbeac2793a1'
+      : '012534dc-c940-4587-bf4b-b1e7fc8b9d42';
 
   return (
     <html lang="en" suppressHydrationWarning>

@@ -12,6 +12,7 @@ const ALL_SITE_COLUMNS = {
   'referenceNumber': {label: 'BGS Reference', textAlign: 'left' },
   'responsibleBodies': {label: 'Responsible Body', textAlign: 'left' },
   'siteSize': {label: 'Size (ha)', textAlign: 'right', fontFamily: 'mono', format: (val) => formatNumber(val) },
+  'huGain': {label: 'HU Gain', textAlign: 'right', fontFamily: 'mono', format: (val) => formatNumber(val) },
   'allocationsCount': {label: '# Allocations', textAlign: 'center', fontFamily: 'mono' },
   'allocatedHabitatArea': {label: '% Allocated', textAlign: 'center', fontFamily: 'mono', format: (val, site) => val && val > 0 ? `${formatNumber((val / site.siteSize) * 100)}%` : '' },
   'lpaName': {label: 'Local Planning Authority (LPA)', textAlign: 'left' },

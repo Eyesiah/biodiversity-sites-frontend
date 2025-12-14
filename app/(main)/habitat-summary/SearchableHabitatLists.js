@@ -88,11 +88,13 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
           areas: habitats.filter(h => h.module == "Area"),
           hedgerows: habitats.filter(h => h.module == "Hedgerow"),
           watercourses: habitats.filter(h => h.module == "Watercourses"),
+          trees: habitats.filter(h => h.module == "Tree"),
         },
         improvements: {
           areas: improvements.filter(h => h.module == "Area"),
           hedgerows: improvements.filter(h => h.module == "Hedgerow"),
           watercourses: improvements.filter(h => h.module == "Watercourses"),
+          trees: improvements.filter(h => h.module == "Tree"),
         }
       }
     }, [sortedItems]);
@@ -129,37 +131,49 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
   };
   const tabs = [
     {
-      title: 'Improvement Areas',
+      title: 'Improvement<br/>Areas',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={true} module="Area" sites={sites} />
       )
     },
     {
-      title: 'Baseline Areas',
+      title: 'Baseline<br/>Areas',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={false} module="Area" sites={sites} />
       )
     },
     {
-      title: 'Improvement Hedgerows',
+      title: 'Improvement<br/>Trees',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={true} module="Tree" sites={sites} />
+      )
+    },
+    {
+      title: 'Baseline<br/>Trees',
+      content: (props) => (
+        <HabitatTabContent {...props} isImprovement={false} module="Tree" sites={sites} />
+      )
+    },
+    {
+      title: 'Improvement<br/>Hedgerows',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={true} module="Hedgerow" sites={sites} />
       )
     },      
     {
-      title: 'Baseline Hedgerows',
+      title: 'Baseline<br/>Hedgerows',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={false} module="Hedgerow" sites={sites} />
       )
     },
     {
-      title: 'Improvement Watercourses',
+      title: 'Improvement<br/>Watercourses',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={true} module="Watercourses" sites={sites} />
       )
     },
     {
-      title: 'Baseline Watercourses',
+      title: 'Baseline<br/>Watercourses',
       content: (props) => (
         <HabitatTabContent {...props} isImprovement={false} module="Watercourses" sites={sites} />
       )

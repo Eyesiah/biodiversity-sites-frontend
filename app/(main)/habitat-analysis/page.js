@@ -1,5 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
-import { getHabitatDistinctiveness } from '@/lib/habitat';
+import { getHabitatDistinctiveness, HABITAT_UNIT_TYPES } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 import { slugify } from '@/lib/format'
@@ -77,9 +77,10 @@ export default async function HabitatAnalysis() {
       }
     };
 
-    processCategory('areas');
-    processCategory('hedgerows');
-    processCategory('watercourses');
+    
+    for (const unit of HABITAT_UNIT_TYPES) {
+      processCategory(unit);
+    }
   });
 
   // Calculate totals per module for percentage calculations
@@ -123,9 +124,9 @@ export default async function HabitatAnalysis() {
       }
     };
 
-    calculateTotals('areas');
-    calculateTotals('hedgerows');
-    calculateTotals('watercourses');
+    for (const unit of HABITAT_UNIT_TYPES) {
+      calculateTotals(unit);
+    }
   });
 
   const lastUpdated = Date.now();

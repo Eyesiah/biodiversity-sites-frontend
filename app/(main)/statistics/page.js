@@ -135,9 +135,9 @@ export default async function StatisticsPage() {
             <ChartRow>
               <ChartItem>
                 <StatsChart stats={stats}
-                  dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalAllocationHUs']}
-                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
-                  names={['Total baseline habitat units', 'Total created habitat units', 'Total allocated habitat units']}
+                  dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalEnhancedHUs', 'totalHUGain', 'totalAllocationHUs']}
+                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2','#ffc658','#8884d8']}
+                  names={['Total baseline HUs', 'Total created HUs', 'Total Enhanced HUs', 'Total HU gain', 'Total allocated HUs']}
                   title={'Habitat units'}
                 />
               </ChartItem>

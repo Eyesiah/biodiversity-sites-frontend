@@ -17,6 +17,8 @@ const initialState = {
   strategicSignificance: 1,
   spatialRisk: 1,
   timeToTargetOffset: 0,
+  baselineHabitat: '',
+  baselineCondition: '',
   result: null,
 };
 
@@ -42,35 +44,52 @@ export default function HUCalculatorForm({ habitats, conditions }) {
       <PrimaryCard maxWidth="1000px" margin="20px">
         <VStack spacing={4} align="stretch">
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
-            <Input name="size" value={formData.size} onChange={(e) => setFormData({...formData, size: e.target.value})} flex="2" />
-          </HStack>
-          <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Habitat</Text>
-            <Box flex="2">
-              <SearchableDropdown name="habitat" options={habitats} value={formData.habitat} onChange={(value) => setFormData({...formData, habitat: value})} />
-            </Box>
-          </HStack>
-          <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Condition</Text>
-            <Box flex="2">
-              <SearchableDropdown name="condition" options={conditions} value={formData.condition} onChange={(value) => setFormData({...formData, condition: value})} />
-            </Box>
-          </HStack>
-          <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Habitat Type</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field name="improvementType" value={formData.improvementType} onChange={(e) => setFormData({...formData, improvementType: e.target.value})} key={JSON.stringify(state.result)}>
+              <NativeSelect.Field name="improvementType" value={formData.improvementType} onChange={(e) => setFormData({ ...formData, improvementType: e.target.value })} key={JSON.stringify(state.result)}>
                 <option value="baseline">Baseline</option>
-                <option value="creation">Creation</option>                
+                <option value="creation">Creation</option>
+                <option value="enhanced">Enhanced</option>
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
           <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
+            <Input name="size" value={formData.size} onChange={(e) => setFormData({ ...formData, size: e.target.value })} flex="2" />
+          </HStack>
+          {formData.improvementType === 'enhanced' && (
+            <>
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Baseline Habitat</Text>
+                <Box flex="2">
+                  <SearchableDropdown name="baselineHabitat" options={habitats} value={formData.baselineHabitat} onChange={(value) => setFormData({ ...formData, baselineHabitat: value })} />
+                </Box>
+              </HStack>
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Baseline Condition</Text>
+                <Box flex="2">
+                  <SearchableDropdown name="baselineCondition" options={conditions} value={formData.baselineCondition} onChange={(value) => setFormData({ ...formData, baselineCondition: value })} />
+                </Box>
+              </HStack>
+            </>
+          )}
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Habitat</Text>
+            <Box flex="2">
+              <SearchableDropdown name="habitat" options={habitats} value={formData.habitat} onChange={(value) => setFormData({ ...formData, habitat: value })} />
+            </Box>
+          </HStack>
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Condition</Text>
+            <Box flex="2">
+              <SearchableDropdown name="condition" options={conditions} value={formData.condition} onChange={(value) => setFormData({ ...formData, condition: value })} />
+            </Box>
+          </HStack>
+          <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Strategic Significance</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field name="strategicSignificance" value={formData.strategicSignificance} onChange={(e) => setFormData({...formData, strategicSignificance: e.target.value})} key={JSON.stringify(state.result)}>
+              <NativeSelect.Field name="strategicSignificance" value={formData.strategicSignificance} onChange={(e) => setFormData({ ...formData, strategicSignificance: e.target.value })} key={JSON.stringify(state.result)}>
                 <option value={1}>Low</option>
                 <option value={1.1}>Medium</option>
                 <option value={1.5}>High</option>
@@ -78,11 +97,11 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
-          {formData.improvementType === 'creation' && (
+          {formData.improvementType !== 'baseline' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Spatial Risk</Text>
               <NativeSelect.Root flex="2" size="sm">
-                <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({...formData, spatialRisk: e.target.value})} key={JSON.stringify(state.result)}>
+                <NativeSelect.Field name="spatialRisk" value={formData.spatialRisk} onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })} key={JSON.stringify(state.result)}>
                   <option value={1}>Within</option>
                   <option value={0.75}>Neighbouring</option>
                   <option value={0.5}>Outside</option>
@@ -91,14 +110,14 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               </NativeSelect.Root>
             </HStack>
           )}
-          {formData.improvementType !== 'baseline' && (
+          {formData.improvementType === 'creation' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
               <NativeSelect.Root flex="2" size="sm">
                 <NativeSelect.Field
                   name="timeToTargetOffset"
                   value={formData.timeToTargetOffset}
-                  onChange={(e) => setFormData({...formData, timeToTargetOffset: Number(e.target.value)})}
+                  onChange={(e) => setFormData({ ...formData, timeToTargetOffset: Number(e.target.value) })}
                 >
                   {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
                     <option key={offset} value={offset}>
