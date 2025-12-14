@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0 - Enhacement HU calculations
+- Enhanced Improvements now have their HUs calculated, using the baseline habitat as displayed in the Sankey chart for the site
+- Improvements & Sites also now have their "HU Gain" calculated, also using the baseline habitat from the Sankey chart
+- Trees are split into their own tabs and charts throughout the app
+- Register statistics include Enhanced HUs & HU Gain over time
+
 ## 0.4.0 - New site map
 - The site page now shows the site area by default. Bodies and allocations can be enabled as needed.
 - Bodies are displayed on maps with dotted lines instead of filled areas
