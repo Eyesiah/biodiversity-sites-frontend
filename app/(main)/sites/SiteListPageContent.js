@@ -55,7 +55,7 @@ const IMDSiteDecileChart = ({sites}) => {
 
 
 // Column configuration for the main sites list page (includes LNRS and IMD Decile)
-const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile', 'huGain', 'huGainPerHa'];
+const FULL_SITE_COLUMNS = ['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'huGain', 'huGainPerHa', 'lpaName', 'ncaName', 'lnrsName', 'imdDecile'];
 
 export default function SiteListPageContent({ sites }) {
   const [hoveredSite, setHoveredSite] = useState(null);
