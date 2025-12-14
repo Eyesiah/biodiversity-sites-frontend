@@ -59,7 +59,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
                 return risk && risk > 0 ? formatNumber(risk, 2) : '';
               })()}</DataTable.NumericCell>}
               <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs) : ''}</DataTable.NumericCell>
-              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.HUGain && subRow.HUGain > 0 ? formatNumber(subRow.HUGain) : ''}</DataTable.NumericCell>}
+              {isImprovement && <DataTable.NumericCell textAlign="center">{subRow.HUs && subRow.HUs > 0 ? formatNumber(subRow.HUs - (subRow.baselineHUs || 0)) : ''}</DataTable.NumericCell>}
             </DataTable.Row>
           ))}
         </DataTable.Body>
