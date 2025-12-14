@@ -1,6 +1,6 @@
 // pages/api/umami.js
 export default async function handler(req, res) {
-  const umamiScriptUrl = 'http://bgs-umami.eu-west-2.elasticbeanstalk.com/script.js';
+  const umamiScriptUrl = 'https://cloud.umami.is/script.js';
 
   try {
     const scriptResponse = await fetch(umamiScriptUrl, { next: { revalidate: 86400 } });
