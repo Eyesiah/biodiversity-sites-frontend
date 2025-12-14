@@ -108,7 +108,7 @@ export default function SiteListPageContent({ sites }) {
               const filteredArea = sortedItems.reduce((sum, site) => sum + (site.siteSize || 0), 0);
 
               const filteredBaselineHUs = sortedItems.reduce((sum, site) => sum + (site.baselineHUs || 0), 0);
-              const filteredCreatedHUs = sortedItems.reduce((sum, site) => sum + (site.improvementHUs || 0), 0);
+              const filteredCreatedHUs = sortedItems.reduce((sum, site) => sum + (site.createdHUs || 0) + (site.enhancedHUs || 0), 0);
               const filteredHUGain = sortedItems.reduce((sum, site) => sum + (site.huGain || 0), 0);
 
               return (
