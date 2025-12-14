@@ -60,7 +60,7 @@ export const HabitatSummaryTable = ({ site }) => {
       return acc + (a.habitats?.areas?.filter(ha => ha.type === 'Urban tree' || ha.type === 'Rural tree').reduce((acc, ha) => acc + ha.size, 0) || 0);
     }, 0);
 
-    allocationAreaHUs = allocations.reduce((acc, a) => acc + a.sizeUnits, 0);
+    allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
     allocationHedgerowHUs = allocations.reduce((acc, a) => acc + a.hedgerowUnits, 0);
     allocationWatercourseHUs = allocations.reduce((acc, a) => acc + a.watercoursesUnits, 0);
   } else {
