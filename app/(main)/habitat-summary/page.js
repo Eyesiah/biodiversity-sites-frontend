@@ -1,8 +1,8 @@
 import { fetchAllSites } from '@/lib/api';
 import SearchableHabitatLists from './SearchableHabitatLists';
 import Footer from '@/components/core/Footer';
-import { collateAllHabitats } from '@/lib/habitat';
-import { processSitesForListView} from '@/lib/sites';
+import { collateAllHabitats, HABITAT_UNIT_TYPES } from '@/lib/habitat';
+import { processSitesForListView } from '@/lib/sites';
 
 export const revalidate = 21600; // 6 hours
 
@@ -17,19 +17,15 @@ export default async function HabitatSummaryPage() {
   const lastUpdated = Date.now();
   const allSites = await fetchAllSites({ next: { revalidate: revalidate } });
 
-  const allHabitats = {
-    areas: [],
-    hedgerows: [],
-    watercourses: []
-  }
-  const allImprovements = {
-    areas: [],
-    hedgerows: [],
-    watercourses: []
+  const allHabitats = {};
+  const allImprovements = {};
+  for (const unit of HABITAT_UNIT_TYPES) {
+    allHabitats[unit] = []
+    allImprovements[unit] = []
   }
 
   const processHabitats = (habitats, site, isImprovement, target) => {
-    
+
     habitats.forEach(h => {
       if (isImprovement) {
         h.site = {
@@ -53,25 +49,17 @@ export default async function HabitatSummaryPage() {
     totalSize += site.siteSize;
 
     if (site.habitats) {
-      if (site.habitats.areas) {
-        processHabitats(site.habitats.areas, site, false, allHabitats.areas);
-      }
-      if (site.habitats.hedgerows) {
-        processHabitats(site.habitats.hedgerows, site, false, allHabitats.hedgerows);
-      }
-      if (site.habitats.watercourses) {
-        processHabitats(site.habitats.watercourses, site, false, allHabitats.watercourses);
+      for (const unit of HABITAT_UNIT_TYPES) {
+        if (site.habitats[unit]) {
+          processHabitats(site.habitats[unit], site, false, allHabitats[unit]);
+        }
       }
     }
     if (site.improvements) {
-      if (site.improvements.areas) {
-        processHabitats(site.improvements.areas, site, true, allImprovements.areas);
-      }
-      if (site.improvements.hedgerows) {
-        processHabitats(site.improvements.hedgerows, site, true, allImprovements.hedgerows);
-      }
-      if (site.improvements.watercourses) {
-        processHabitats(site.improvements.watercourses, site, true, allImprovements.watercourses);
+      for (const unit of HABITAT_UNIT_TYPES) {
+        if (site.habitats[unit]) {
+          processHabitats(site.improvements[unit], site, true, allImprovements[unit]);
+        }
       }
     }
   });
