@@ -71,6 +71,8 @@ export default async function HabitatSummaryPage() {
   const improvementHabitats = Object.values(collatedImprovements).flat().map(h => ({ ...h, isImprovement: true }));
   const habitats = [...baselineHabitats, ...improvementHabitats];
 
+  habitats.forEach(h => delete h.subRows);
+
   const processedSites = processSitesForListView(allSites);
   const sitesMap = processedSites.reduce((acc, site) => {
     acc[site.referenceNumber] = site;

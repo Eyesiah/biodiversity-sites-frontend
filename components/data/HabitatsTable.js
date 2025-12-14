@@ -26,7 +26,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
 
   const collapsibleContent = (
     <Box display="flex" flexDirection="column" gap="1rem" alignItems="center">
-      <DataTable.Root width="auto" margin="0">
+      {habitat.subRows && <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>
             {isImprovement && <DataTable.ColumnHeader>Intervention</DataTable.ColumnHeader>}
@@ -63,7 +63,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             </DataTable.Row>
           ))}
         </DataTable.Body>
-      </DataTable.Root>
+      </DataTable.Root>}
       {hasSites &&
         <SiteList sites={sites} minimalHeight={true} columns={['referenceNumber', 'responsibleBodies', 'siteSize', 'allocationsCount', 'allocatedHabitatArea', 'lpaName', 'ncaName']} />
       }
