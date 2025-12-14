@@ -60,10 +60,10 @@ export default function About() {
         <Text>Baseline parcels are as per the standard formula – Habitat Unit (HU) = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (where SS is set to Low, 1).</Text>
 
         <Heading as="h3" size="md">2. Improvements</Heading>
-        <Text>Created parcels - HU = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (of parcel – low, 1) x Temporal Risk (of Habitat and Condition) x Difficulty factor (of the Habitat) x Spatial Risk (Low, 1)</Text>
-        <Text>We are unable to deduct the value of baseline habitats from the value of those being created because this level of detail is not provided.</Text>
-        <Text>Enhanced parcels - HU is not computed because no connection can be made back to the baseline habitat parcel&apos;s value.</Text>
-
+        <Text>Created habitat parcels - HU = Habitat area/length (of parcel) x Distinctiveness (of Habitat) x Condition (of parcel) x Strategic Significance (of parcel – low, 1) x Temporal Risk (of Habitat and Condition) x Difficulty factor (of the Habitat) x Spatial Risk (Low, 1)</Text>
+        <Text>Enhanced habitat parcels - HU = ((((Enhanced Size x Enhanced Distinctiveness x Enhanced condition)-(Enhanced Size x Baseline Distinctiveness x Baseline Condition)x(Time to Target Multiplier x Difficultly Multiplier)+(Enhanced Size x Baseline Distinctiveness x Baseline condition))x Enhanced Strategic significance multiplier.</Text>
+        <Text>Habitat Unit gain is calculated by subtracting the baseline parcel&apos;s HU from the improved parcel&apos;s HU.</Text>
+        
         <Heading as="h2" size="lg">Refreshing the data</Heading>
         <Text>We refresh Defra&apos;s BGS data every 6 hours.</Text>
 
