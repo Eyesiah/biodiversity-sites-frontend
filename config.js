@@ -12,3 +12,5 @@ export const NAV_HEIGHT = '4rem';
 export const MAP_KEY_HEIGHT = '3rem';
 
 export const MONGODB_DATABASE_NAME = 'biodiversity-sites-frontend';
+
+export const HABITAT_UNIT_TYPES = ['areas', 'trees', 'hedgerows', 'watercourses'];

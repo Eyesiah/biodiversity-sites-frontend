@@ -23,7 +23,7 @@ export default function About() {
         <Heading as="h3" size="md">1. The BGS Register</Heading>
         <Text><ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain">Biodiversity Gain Site (BGS) Register</ExternalLink></Text>
         <Text><ExternalLink href="https://environment.data.gov.uk/biodiversity-net-gain/search">BGS Register Search</ExternalLink> This is the source of the base data. Until the data is provided publicly in computer-readable form, the data is extracted from the json files used to render the HTML website.</Text>
-
+        <Text><ExternalLink href="https://www.legislation.gov.uk/uksi/2024/45/contents/made">The Biodiversity Gain Site Register Regulations 2024</ExternalLink> These are the regulations which govern the establishment and management of Biodiversity Gain Sites. The register operator must ensure that the information in the biodiversity gain site register is accessible to members of the public.</Text>
         <Heading as="h3" size="md">2. Responsible Bodies</Heading>
         <Text>Details of the responsible bodies are taken from the .GOV list <ExternalLink href="https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies">Conservation covenants: list of designated responsible bodies</ExternalLink>.</Text>
 

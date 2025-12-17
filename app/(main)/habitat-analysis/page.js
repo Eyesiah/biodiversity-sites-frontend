@@ -1,8 +1,9 @@
 import { fetchAllSites } from '@/lib/api';
-import { getHabitatDistinctiveness, HABITAT_UNIT_TYPES } from '@/lib/habitat';
+import { getHabitatDistinctiveness } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 import { slugify } from '@/lib/format'
+import { HABITAT_UNIT_TYPES } from '@/config'
 
 export const metadata = {
   title: 'BGS Habitat Analysis',

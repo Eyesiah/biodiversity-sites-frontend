@@ -4,40 +4,8 @@ import { DataFetchingCollapsibleRow } from '@/components/data/DataFetchingCollap
 import Tooltip from '@/components/ui/Tooltip';
 import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
-import { Text } from '@chakra-ui/react';
 import { TableContainer } from '@/components/styles/PrimaryCard';
-
-const AllocationHabitats = ({ habitats }) => {
-
-  if (habitats.length === 0) {
-    return <Text>No habitat details for this allocation.</Text>;
-  }
-
-  return (
-    <PrimaryTable.Root>
-      <PrimaryTable.Header>
-        <PrimaryTable.Row>
-          <PrimaryTable.ColumnHeader>Module</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader>Habitat</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader>Distinctiveness</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader>Condition</PrimaryTable.ColumnHeader>
-          <PrimaryTable.ColumnHeader>Size</PrimaryTable.ColumnHeader>
-        </PrimaryTable.Row>
-      </PrimaryTable.Header>
-      <PrimaryTable.Body>
-        {habitats.map((habitat, index) => (
-          <PrimaryTable.Row key={index}>
-            <PrimaryTable.Cell>{habitat.module}</PrimaryTable.Cell>
-            <PrimaryTable.Cell>{habitat.type}</PrimaryTable.Cell>
-            <PrimaryTable.Cell>{habitat.distinctiveness}</PrimaryTable.Cell>
-            <PrimaryTable.Cell>{habitat.condition}</PrimaryTable.Cell>
-            <PrimaryTable.NumericCell>{formatNumber(habitat.size)}</PrimaryTable.NumericCell>
-          </PrimaryTable.Row>
-        ))}
-      </PrimaryTable.Body>
-    </PrimaryTable.Root>
-  );
-};
+import { AllocationHabitats } from '@/components/data/AllocationHabitats';
 
 const AllocationRow = ({ alloc }) => {
   const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;

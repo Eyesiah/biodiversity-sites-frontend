@@ -1,8 +1,9 @@
 import { fetchAllSites } from '@/lib/api';
 import SearchableHabitatLists from './SearchableHabitatLists';
 import Footer from '@/components/core/Footer';
-import { collateAllHabitats, HABITAT_UNIT_TYPES } from '@/lib/habitat';
+import { collateAllHabitats } from '@/lib/habitat';
 import { processSitesForListView } from '@/lib/sites';
+import { HABITAT_UNIT_TYPES } from '@/config'
 
 export const revalidate = 21600; // 6 hours
 

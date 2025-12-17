@@ -214,6 +214,10 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='areas' name='Area' />
     },
     {
+      title: 'Tree<br>Habitats Chart',
+      content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='trees' name='Individual Tree' />
+    },
+    {
       title: 'Hedgerow<br>Habitats Chart',
       content: ({ sortedItems }) => <FilteredAllocationsPieChart allocs={sortedItems} module='hedgerows' name='Hedgerow' />
     },
