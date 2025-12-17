@@ -38,7 +38,7 @@ const AllocationHabitats = ({ habitats }) => {
             <DataTable.Cell>{habitat.type}</DataTable.Cell>
             <DataTable.Cell>{habitat.distinctiveness}</DataTable.Cell>
             <DataTable.Cell>{habitat.condition}</DataTable.Cell>
-            <DataTable.NumericCell>{formatNumber(habitat.size)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(habitat.size, 4)}</DataTable.NumericCell>
           </DataTable.Row>
         ))}
       </DataTable.Body>
