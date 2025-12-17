@@ -52,7 +52,7 @@ export default async function StatisticsPage() {
   });
   let siteAdditions = [];
   for (const [date, list] of Object.entries(siteAdditionsMap)) {
-    siteAdditions.push({
+    siteAdditions.splice(0, 0, {
       date: date,
       sites: list
     });
