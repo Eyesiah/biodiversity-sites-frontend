@@ -22,7 +22,7 @@ export async function GET(request, { params }) {
   try {
     const site = await fetchSite(siteReferenceNumber);
     if (!site) {
-        return new NextResponse('Site not found', { status: 404 });
+      return new NextResponse('Site not found', { status: 404 });
     }
 
     const matchingAllocations = (site.allocations || []).filter(
@@ -40,11 +40,11 @@ export async function GET(request, { params }) {
     }));
 
     for (const allocation of matchingAllocations) {
-      flattenedHabitats.push(...[
-        ...(mapHabitats(allocation.habitats?.areas)),
-        ...(mapHabitats(allocation.habitats?.hedgerows)),
-        ...(mapHabitats(allocation.habitats?.watercourses)),
-      ]);
+      for (const unit of HABITAT_UNIT_TYPES) {
+        if (allocation.habitats[unit]) {
+          flattenedHabitats.push(...mapHabitats(allocation.habitats[unit]));
+        }
+      }
     }
 
     return NextResponse.json(flattenedHabitats);
