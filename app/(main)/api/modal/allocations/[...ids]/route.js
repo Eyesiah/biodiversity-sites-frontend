@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchSite, fetchAllSites } from '@/lib/api';
 import { slugify } from '@/lib/format';
+import { HABITAT_UNIT_TYPES } from '@/config'
 
 export const revalidate = 21600; // 6 hours
 
