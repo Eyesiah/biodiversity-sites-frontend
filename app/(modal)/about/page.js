@@ -67,7 +67,7 @@ export default function About() {
         <Text>Despite the limitations of the source data, we think this way of viewing the data gives you a good overview of how a site has become a biodiversity gain site.</Text>
         
         <Heading as="h2" size="lg">Refreshing the data</Heading>
-        <Text>We refresh Defra&apos;s BGS data every 6 hours.</Text>
+        <Text>We refresh Defra&apos;s BGS data every 12 hours.</Text>
 
         <Heading as="h2" size="lg">Acknowledgements</Heading>
         <Text>Digital boundaries and reference maps:</Text>

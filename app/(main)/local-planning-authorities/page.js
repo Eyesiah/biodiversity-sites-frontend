@@ -8,7 +8,7 @@ export const metadata = {
   description: 'View all the LPA bodies and which sites are present in each one. Click on any record for a dropdown of adjacent LPAs.'
 };
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 43200; // 12 hours
 
 
 export default async function LocalPlanningAuthoritiesPage() {

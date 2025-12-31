@@ -3,7 +3,7 @@ import { getHabitatSankeyGraph } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 43200; // 12 hours
 
 
 export async function generateStaticParams() {
