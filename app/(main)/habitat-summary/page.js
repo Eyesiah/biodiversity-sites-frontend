@@ -5,7 +5,7 @@ import { collateAllHabitats } from '@/lib/habitat';
 import { processSitesForListView } from '@/lib/sites';
 import { HABITAT_UNIT_TYPES } from '@/config'
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 43200; // 12 hours
 
 
 export const metadata = {

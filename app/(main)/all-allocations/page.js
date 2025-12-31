@@ -2,7 +2,7 @@ import { fetchAllSites } from '@/lib/api';
 import AllAllocationsContent from './AllAllocationsContent';
 import Footer from '@/components/core/Footer';
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 43200; // 12 hours
 
 export const metadata = {
   title: 'BGS allocations',

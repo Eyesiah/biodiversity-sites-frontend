@@ -3,7 +3,7 @@ import { fetchSite, fetchAllSites } from '@/lib/api';
 import { slugify } from '@/lib/format';
 import { HABITAT_UNIT_TYPES } from '@/config'
 
-export const revalidate = 21600; // 6 hours
+export const revalidate = 43200; // 12 hours
 
 export async function generateStaticParams() {
   const allSites = await fetchAllSites();

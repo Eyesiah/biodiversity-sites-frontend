@@ -8,6 +8,8 @@ import PrimaryTable from '@/components/styles/PrimaryTable';
 import { Heading } from "@chakra-ui/react"
 import { ContentLayout } from '@/components/styles/ContentLayout';
 
+export const revalidate = 43200; // 12 hours
+
 const CommaSeperatedSiteLink = ({site, index, count}) => {
   return (
   <>    
