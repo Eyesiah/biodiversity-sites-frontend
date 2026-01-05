@@ -48,7 +48,6 @@ export default function RootLayout({ children }) {
 
   // Load glossary server-side
   const glossaryData = loadGlossary();
-  const glossaryJson = JSON.stringify(Object.fromEntries(glossaryData));
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -63,7 +62,7 @@ export default function RootLayout({ children }) {
             id="glossary-data"
             strategy="beforeInteractive"
             dangerouslySetInnerHTML={{
-              __html: `window.glossaryData = ${glossaryJson};`
+              __html: `window.glossaryData = ${JSON.stringify(glossaryData)};`
             }}
           />
           <Box minHeight="100vh" display="flex" flexDirection="column">

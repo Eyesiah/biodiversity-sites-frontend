@@ -1,3 +1,5 @@
+'use client'
+
 import Tooltip from '@/components/ui/Tooltip'
 
 const getGlossaryDefinition = (key) => {
