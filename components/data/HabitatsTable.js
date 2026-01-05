@@ -122,7 +122,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               </DataTable.ColumnHeader>
               {hasSites && (
                 <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
-                  # BGS Sites{getSortIndicator('sites.length')}
+                  <GlossaryTooltip term='BGS Sites'># BGS Sites</GlossaryTooltip>{getSortIndicator('sites.length')}
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
