@@ -49,7 +49,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     )
   
     const collapsibleContent = (
-      <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} />
+      <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} minimalHeight={true} />
     )
   
     return (
