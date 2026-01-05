@@ -5,17 +5,17 @@ import Footer from '@/components/core/Footer';
 import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
 import PrimaryTable from '@/components/styles/PrimaryTable';
-import { Heading } from "@chakra-ui/react"
+import { Heading, Box } from "@chakra-ui/react"
 import { ContentLayout } from '@/components/styles/ContentLayout';
 
 export const revalidate = 43200; // 12 hours
 
-const CommaSeperatedSiteLink = ({site, index, count}) => {
+const CommaSeperatedSiteLink = ({ site, index, count }) => {
   return (
-  <>    
-    <Link href={`/sites/${site}`}>{site}</Link>
-    {index < count - 1 && ', '}
-  </>
+    <>
+      <Link href={`/sites/${site}`}>{site}</Link>
+      {index < count - 1 && ', '}
+    </>
   );
 };
 
@@ -82,10 +82,10 @@ export default async function StatisticsPage() {
       allocationsPerSite,
     };
   });
-  
+
   return (
     <>
-      <ContentLayout footer={<Footer lastUpdated={Date.now()}/>}>
+      <ContentLayout footer={<Footer lastUpdated={Date.now()} />}>
         {stats.length > 0 ? (
           <>
             <ChartRow marginTop={5}>
@@ -133,12 +133,12 @@ export default async function StatisticsPage() {
                 />
               </ChartItem>
             </ChartRow>
-            
+
             <ChartRow>
               <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalEnhancedHUs', 'totalHUGain', 'totalAllocationHUs']}
-                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2','#ffc658','#8884d8']}
+                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2', '#ffc658', '#8884d8']}
                   names={['Total baseline HUs', 'Total created HUs', 'Total Enhanced HUs', 'Total HU gain', 'Total allocated HUs']}
                   title={'Habitat units'}
                 />
@@ -153,31 +153,35 @@ export default async function StatisticsPage() {
               </ChartItem>
             </ChartRow>
 
-            <ChartRow>              
+            <ChartRow>
 
-              { siteAdditions && siteAdditions.length > 0 && <ChartItem>
-                <Heading as="h2" size="lg" textAlign="center">Site Register Addition Date</Heading>
-                <PrimaryTable.Root maxWidth='700px'>
-                  <PrimaryTable.Header>
-                    <PrimaryTable.Row>
-                      <PrimaryTable.ColumnHeader>Date</PrimaryTable.ColumnHeader>
-                      <PrimaryTable.ColumnHeader>Sites</PrimaryTable.ColumnHeader>
-                    </PrimaryTable.Row>
-                  </PrimaryTable.Header>
-                  <PrimaryTable.Body>
-                    {siteAdditions.map((addition) => (
-                      <PrimaryTable.Row key={addition.date}>
-                        <PrimaryTable.Cell>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell>
-                          {addition.sites.map((site, index) => (
-                            <CommaSeperatedSiteLink key={index} site={site} index={index} count={addition.sites.length} />
-                          ))}
-                        </PrimaryTable.Cell>
-                      </PrimaryTable.Row>
-                    ))}
-                  </PrimaryTable.Body>
-                </PrimaryTable.Root>
-              </ChartItem> }
+              {siteAdditions && siteAdditions.length > 0 && (
+                <ChartItem>
+                  <Heading as="h2" size="lg" textAlign="center">Site Register Addition Date</Heading>
+                  <Box maxHeight="500px" overflowY="auto" maxWidth='700px' margin="0 auto">
+                    <PrimaryTable.Root>
+                      <PrimaryTable.Header>
+                        <PrimaryTable.Row>
+                          <PrimaryTable.ColumnHeader>Date</PrimaryTable.ColumnHeader>
+                          <PrimaryTable.ColumnHeader>Sites</PrimaryTable.ColumnHeader>
+                        </PrimaryTable.Row>
+                      </PrimaryTable.Header>
+                      <PrimaryTable.Body>
+                        {siteAdditions.map((addition) => (
+                          <PrimaryTable.Row key={addition.date}>
+                            <PrimaryTable.Cell>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</PrimaryTable.Cell>
+                            <PrimaryTable.Cell>
+                              {addition.sites.map((site, index) => (
+                                <CommaSeperatedSiteLink key={index} site={site} index={index} count={addition.sites.length} />
+                              ))}
+                            </PrimaryTable.Cell>
+                          </PrimaryTable.Row>
+                        ))}
+                      </PrimaryTable.Body>
+                    </PrimaryTable.Root>
+                  </Box>
+                </ChartItem>
+              )}
             </ChartRow>
           </>
         ) : (
