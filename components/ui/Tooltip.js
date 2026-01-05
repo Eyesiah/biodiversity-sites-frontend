@@ -76,8 +76,8 @@ const Tooltip = ({ children, text }) => {
       sx={{
         visibility: isVisible && position.top !== 0 ? 'visible' : 'hidden'
       }}
+      dangerouslySetInnerHTML={{ __html: text }}
     >
-      {text}
     </Box>
   );
 
