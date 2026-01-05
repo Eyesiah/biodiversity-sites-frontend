@@ -33,11 +33,11 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Intervention'>Intervention</GlossaryTooltip></DataTable.ColumnHeader>}
             <DataTable.ColumnHeader><GlossaryTooltip term='Condition'>Condition</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader># <GlossaryTooltip term='Parcel'>parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader><GlossaryTooltip term='Parcel'>Size</GlossaryTooltip> ({units})</DataTable.ColumnHeader>
-            {isImprovement && <DataTable.ColumnHeader>Time to Target (years)</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Temporal Risk</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
+            <DataTable.ColumnHeader><GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Time to Target'>Time to Target (years)</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Temporal Risk'>Temporal Risk</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Difficulty Factor'>Difficulty Factor</GlossaryTooltip></DataTable.ColumnHeader>            
+            <DataTable.ColumnHeader><GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> Gain</DataTable.ColumnHeader>}
           </DataTable.Row>
@@ -129,7 +129,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
                 # <GlossaryTooltip term='Parcel'>parcels</GlossaryTooltip>{getSortIndicator('parcels')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('area')}>
-                <GlossaryTooltip term='Parcel'>Size</GlossaryTooltip> ({units}){getSortIndicator('area')}
+                <GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units}){getSortIndicator('area')}
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
