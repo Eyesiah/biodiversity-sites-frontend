@@ -160,7 +160,7 @@ const DropdownMenuItem = ({ children, href, onClick, ...props }) => (
     href={href}
     onClick={onClick}
     color="clouds"
-    fontSize="1.3rem"
+    fontSize="1.1rem"
     fontWeight="500"
     padding="12px 16px"
     display="block"
@@ -189,7 +189,7 @@ const MobileMenuButton = ({ isOpen, onToggle, ...props }) => (
     display={{ base: "block", md: "none" }}
     variant="ghost"
     color="clouds"
-    fontSize="1.8rem"
+    fontSize="1.3rem"
     onClick={onToggle}
     aria-label="Toggle menu"
     aria-expanded={isOpen}
