@@ -2,18 +2,18 @@
 
 import Tooltip from '@/components/ui/Tooltip'
 
-const getGlossaryDefinition = (key) => {
+const getGlossaryDefinition = (term) => {
   if (window?.glossaryData) {
-    return window.glossaryData[key] ?? '<glossary entry not found>';
+    return window.glossaryData[term] ?? '<glossary entry not found>';
   }
   else {
     return '<glossary data missing>';
   }
 }
 
-const GlossaryTooltip = ({children, glossaryKey}) => {
+const GlossaryTooltip = ({children, term}) => {
 
-  const tooltipText = `<b>${glossaryKey}</b>: ${getGlossaryDefinition(glossaryKey)}`;
+  const tooltipText = `<b>${term}</b>: ${getGlossaryDefinition(term)}`;
   return <Tooltip text={tooltipText}>{children}</Tooltip>
 }
 
