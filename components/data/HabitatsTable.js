@@ -32,7 +32,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
           <DataTable.Row>
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Intervention'>Intervention</GlossaryTooltip></DataTable.ColumnHeader>}
             <DataTable.ColumnHeader><GlossaryTooltip term='Condition'>Condition</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader># <GlossaryTooltip term='Parcel'>parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader><GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units})</DataTable.ColumnHeader>
             <DataTable.ColumnHeader><GlossaryTooltip term='Time to Target'>Time to Target (years)</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader><GlossaryTooltip term='Temporal Risk'>Temporal Risk</GlossaryTooltip></DataTable.ColumnHeader>
@@ -118,7 +118,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
                 <GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip>{getSortIndicator('type')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')}>
-                Distinctiveness{getSortIndicator('distinctiveness')}
+                <GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip>{getSortIndicator('distinctiveness')}
               </DataTable.ColumnHeader>
               {hasSites && (
                 <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
@@ -126,7 +126,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
-                # <GlossaryTooltip term='Parcel'>parcels</GlossaryTooltip>{getSortIndicator('parcels')}
+                # <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip>{getSortIndicator('parcels')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('area')}>
                 <GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units}){getSortIndicator('area')}
