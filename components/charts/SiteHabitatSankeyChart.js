@@ -6,6 +6,7 @@ import InfoButton from '@/components/styles/InfoButton'
 import Modal from '@/components/ui/Modal';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { PrimaryCard, TableContainer, CardTitle } from '@/components/styles/PrimaryCard';
+import GlossaryTooltip from '../ui/GlossaryTooltip';
 
 // Dynamically import Plot to avoid SSR issues
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
@@ -246,7 +247,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
       <Modal show={modalState} onClose={() => setModalState(false)} title='About this chart' size='lg'>
         <Text>The BGS Register contains information about a site&apos;s habitat before and after improvement works. Habitats are improved by being either created or enhanced, but the Register does not specify the way in which a particular habitat has been created.</Text>
         <br />
-        <Text>This Sankey chart shows what these improvements might plausibly be. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
+        <Text>This <GlossaryTooltip term='Sankey diagram'>Sankey chart</GlossaryTooltip> shows what these improvements might plausibly be. The data is processed using a heuristic (i.e. an informed guess based on the BNG trading rules) that we have developed as follows:</Text>
         <br />
         <List.Root as="ol" ml="6">
           <List.Item>First, habitats that have been enhanced (i.e. where the condition score is better) are assigned to their new condition.</List.Item>
