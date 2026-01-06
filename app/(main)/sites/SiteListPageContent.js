@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, PieChart, Pie, Cell, Legend } from 'recharts';
 import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -51,6 +51,84 @@ const IMDSiteDecileChart = ({sites}) => {
       </ResponsiveContainer>
     </Box>
   )
+}
+
+const SiteSizeDistributionChart = ({sites}) => {
+  const chartData = useMemo(() => {
+    if (!sites || sites.length === 0) return [];
+
+    const sizeCounts = sites.reduce((acc, site) => {
+      const size = site.siteSize || 0;
+      let interval;
+      if (size <= 10) {
+        interval = '0-10 ha';
+      } else if (size <= 20) {
+        interval = '10-20 ha';
+      } else if (size <= 30) {
+        interval = '20-30 ha';
+      } else if (size <= 40) {
+        interval = '30-40 ha';
+      } else if (size <= 50) {
+        interval = '40-50 ha';
+      } else if (size <= 60) {
+        interval = '50-60 ha';
+      } else if (size <= 70) {
+        interval = '60-70 ha';
+      } else if (size <= 80) {
+        interval = '70-80 ha';
+      } else if (size <= 90) {
+        interval = '80-90 ha';
+      } else if (size <= 100) {
+        interval = '90-100 ha';
+      } else {
+        interval = '>100 ha';
+      }
+      acc[interval] = (acc[interval] || 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.entries(sizeCounts)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / sites.length) * 100).toFixed(1)
+      }))
+      .sort((a, b) => {
+        const order = ['0-10 ha', '10-20 ha', '20-30 ha', '30-40 ha', '40-50 ha', '50-60 ha', '60-70 ha', '70-80 ha', '80-90 ha', '90-100 ha', '>100 ha'];
+        return order.indexOf(a.name) - order.indexOf(b.name);
+      });
+  }, [sites]);
+
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
+          <Text fontWeight="bold" color="black" mb="5px">{label}</Text>
+          <Text color="#36454F">
+            {data.count} sites ({data.percentage}%)
+          </Text>
+        </Box>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={chartData} margin={{ top: 50, right: 30, left: 20, bottom: 15 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" label={{ value: 'Site Size Intervals', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+          <YAxis label={{ value: 'Number of Sites', angle: -90, position: 'insideLeft', fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar dataKey="count" fill="#4CAF50">
+            <LabelList />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </Box>
+  );
 }
 
 
@@ -137,11 +215,15 @@ export default function SiteListPageContent({ sites }) {
                 content: ({ sortedItems }) => <IMDSiteDecileChart sites={sortedItems} />
               },
               {
-                title: ({ sortedItems }) => `BGS Site Use Chart (${sortedItems.length})`,
+                title: "BGS Site Use Chart",
                 content: ({ sortedItems }) => {
                   return <SitesAreaCompositionChart sites={sortedItems} />;
                 }
               },
+              {
+                title:"BGS Size Distribution",
+                content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
+              }
 
             ]}
           />
