@@ -84,7 +84,7 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}><GlossaryTooltip term='Allocation'>Allocation ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}><GlossaryTooltip term='Percentage allocated'>% Allocated</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}><GlossaryTooltip term='All improved percentage'>% all Improvements</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}><GlossaryTooltip term='Percentage all improved'>% Improvement allocated</GlossaryTooltip></DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
