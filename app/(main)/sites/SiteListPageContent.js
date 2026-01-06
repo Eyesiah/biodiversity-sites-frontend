@@ -54,63 +54,59 @@ const IMDSiteDecileChart = ({sites}) => {
 }
 
 const SiteSizeDistributionChart = ({sites}) => {
-  const { chartData, totalSites, totalArea } = useMemo(() => {
-    if (!sites || sites.length === 0) return { chartData: [], totalSites: 0, totalArea: 0 };
+  const chartData = useMemo(() => {
+    if (!sites || sites.length === 0) return [];
 
-    const totalSites = sites.length;
-    const totalArea = sites.reduce((sum, site) => sum + (site.siteSize || 0), 0);
-
-    // Process sites and group those under 2% into "Other"
-    const sitesWithArea = sites.filter(site => site.siteSize && site.siteSize > 0);
-    const majorSites = [];
-    const minorSites = [];
-    let otherArea = 0;
-    let otherCount = 0;
-
-    sitesWithArea.forEach(site => {
-      const percentage = (site.siteSize / totalArea) * 100;
-      if (site.siteSize >= 50) {
-        majorSites.push({
-          name: site.referenceNumber || site.name || `Site ${site.id}`,
-          value: site.siteSize,
-          percentage: percentage.toFixed(1),
-          siteSize: site.siteSize
-        });
+    const sizeCounts = sites.reduce((acc, site) => {
+      const size = site.siteSize || 0;
+      let interval;
+      if (size <= 10) {
+        interval = '0-10 ha';
+      } else if (size <= 20) {
+        interval = '10-20 ha';
+      } else if (size <= 30) {
+        interval = '20-30 ha';
+      } else if (size <= 40) {
+        interval = '30-40 ha';
+      } else if (size <= 50) {
+        interval = '40-50 ha';
+      } else if (size <= 60) {
+        interval = '50-60 ha';
+      } else if (size <= 70) {
+        interval = '60-70 ha';
+      } else if (size <= 80) {
+        interval = '70-80 ha';
+      } else if (size <= 90) {
+        interval = '80-90 ha';
+      } else if (size <= 100) {
+        interval = '90-100 ha';
       } else {
-        minorSites.push(site);
-        otherArea += site.siteSize;
-        otherCount += 1;
+        interval = '>100 ha';
       }
-    });
+      acc[interval] = (acc[interval] || 0) + 1;
+      return acc;
+    }, {});
 
-    // Sort major sites by size descending
-    majorSites.sort((a, b) => b.value - a.value);
-
-    // Add "Other" segment if there are minor sites
-    const chartData = [...majorSites];
-    if (otherArea > 0) {
-      chartData.push({
-        name: `<50 ha (${otherCount} sites)`,
-        value: otherArea,
-        percentage: ((otherArea / totalArea) * 100).toFixed(1),
-        siteSize: otherArea
+    return Object.entries(sizeCounts)
+      .map(([name, count]) => ({
+        name,
+        count,
+        percentage: ((count / sites.length) * 100).toFixed(1)
+      }))
+      .sort((a, b) => {
+        const order = ['0-10 ha', '10-20 ha', '20-30 ha', '30-40 ha', '40-50 ha', '50-60 ha', '60-70 ha', '70-80 ha', '80-90 ha', '90-100 ha', '>100 ha'];
+        return order.indexOf(a.name) - order.indexOf(b.name);
       });
-    }
-
-    return { chartData, totalSites, totalArea };
   }, [sites]);
 
-  // Color scheme for different size intervals
-  const COLORS = ['#FF9800', '#4CAF50', '#2196F3', '#9C27B0', '#FF5722'];
-
-  const CustomTooltip = ({ active, payload }) => {
+  const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
         <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
-          <Text fontWeight="bold" color="black" mb="5px">{data.name}</Text>
+          <Text fontWeight="bold" color="black" mb="5px">{label}</Text>
           <Text color="#36454F">
-            {formatNumber(data.siteSize, 1)} ha ({data.percentage}%)
+            {data.count} sites ({data.percentage}%)
           </Text>
         </Box>
       );
@@ -118,57 +114,18 @@ const SiteSizeDistributionChart = ({sites}) => {
     return null;
   };
 
-  if (!chartData || chartData.length === 0) {
-    return <Text>No site data available to display.</Text>;
-  }
-
-  const RADIAN = Math.PI / 180;
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
-    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-    // Get the data for this segment
-    const data = chartData[index];
-    const count = data.value;
-    const percentage = data.percentage;
-
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="#333"
-        textAnchor="middle"
-        dominantBaseline="central"
-        style={{ fontWeight: 'bold', fontSize: '12px' }}
-      >
-        {`${count} (${percentage}%)`}
-      </text>
-    );
-  };
-
   return (
-    <Box bg="bg" p="1rem">
-      <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
-        Distribution of BGS sites by size (Total sites: {totalSites})
-      </Text>
-      <ResponsiveContainer width="100%" height={500}>
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            outerRadius="80%"
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
-          >
-            {chartData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
+    <Box display="flex" flexDirection="row" width="100%" height="500px" marginBottom="5">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={chartData} margin={{ top: 50, right: 30, left: 20, bottom: 15 }}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" label={{ value: 'Site Size Intervals', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
+          <YAxis label={{ value: 'Number of Sites', angle: -90, position: 'insideLeft', fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
           <Tooltip content={<CustomTooltip />} />
-        </PieChart>
+          <Bar dataKey="count" fill="#4CAF50">
+            <LabelList />
+          </Bar>
+        </BarChart>
       </ResponsiveContainer>
     </Box>
   );
