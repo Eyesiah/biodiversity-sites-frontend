@@ -85,7 +85,7 @@ const Tooltip = ({ children, text }) => {
     <>
       <span
         ref={targetRef}
-        style={{ textDecoration: 'underline dotted', cursor: 'help' }}
+        style={{ borderBottom: '1px dotted', cursor: 'help' }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
