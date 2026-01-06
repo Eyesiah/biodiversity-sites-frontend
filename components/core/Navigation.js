@@ -53,10 +53,9 @@ const PageTitle = ({ children, ...props }) => (
   <Text
     as="h1"
     color="clouds"
-    fontSize="2rem"
+    fontSize="1.6rem"
     fontWeight="500"
     margin="0"
-    whiteSpace="nowrap"
     {...props}
   >
     {children}
@@ -85,9 +84,9 @@ const NavLink = ({ children, href, onClick, ...props }) => (
     onClick={onClick}
     variant="ghost"
     color="clouds"
-    fontSize="1.3rem"
+    fontSize="1.2rem"
     fontWeight="500"
-    padding="1rem"
+    padding="0.25rem"
     _hover={{
       color: "brand.emphasis",
       bg: "transparent"
@@ -116,9 +115,9 @@ const DropdownMenu = ({ category, children, ...props }) => {
       <Button
         variant="ghost"
         color="clouds"
-        fontSize="1.3rem"
+        fontSize="1.2rem"
         fontWeight="500"
-        padding="1rem"
+        padding="0.25rem"
         width={isMobile ? "100%" : "auto"}
         textAlign={isMobile ? "center" : "left"}
         _hover={{
@@ -129,7 +128,7 @@ const DropdownMenu = ({ category, children, ...props }) => {
           bg: "charcoal"
         }}
       >
-        {category} <Text as="span" fontSize="0.8em" marginLeft="0.5rem">▼</Text>
+        {category} <Text as="span" fontSize="0.8em">▼</Text>
       </Button>
       {isOpen && (
         <Box
@@ -161,7 +160,7 @@ const DropdownMenuItem = ({ children, href, onClick, ...props }) => (
     href={href}
     onClick={onClick}
     color="clouds"
-    fontSize="1.3rem"
+    fontSize="1.1rem"
     fontWeight="500"
     padding="12px 16px"
     display="block"
@@ -190,7 +189,7 @@ const MobileMenuButton = ({ isOpen, onToggle, ...props }) => (
     display={{ base: "block", md: "none" }}
     variant="ghost"
     color="clouds"
-    fontSize="1.8rem"
+    fontSize="1.3rem"
     onClick={onToggle}
     aria-label="Toggle menu"
     aria-expanded={isOpen}

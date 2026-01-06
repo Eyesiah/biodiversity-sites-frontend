@@ -76,8 +76,8 @@ const Tooltip = ({ children, text }) => {
       sx={{
         visibility: isVisible && position.top !== 0 ? 'visible' : 'hidden'
       }}
+      dangerouslySetInnerHTML={{ __html: text }}
     >
-      {text}
     </Box>
   );
 
@@ -85,7 +85,7 @@ const Tooltip = ({ children, text }) => {
     <>
       <span
         ref={targetRef}
-        style={{ borderBottom: '1px dotted', cursor: 'help' }}
+        style={{ textDecoration: 'underline dotted', cursor: 'help' }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

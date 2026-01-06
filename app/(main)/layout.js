@@ -3,6 +3,7 @@ import 'styles/globals.css';
 import Script from 'next/script';
 import { Provider } from "@/components/styles/provider"
 import { Box } from '@chakra-ui/react';
+import { loadGlossary } from "@/lib/glossary"
 
 export const metadata = {
   metadataBase: new URL('https://bgs.bristoltrees.space'),
@@ -45,6 +46,9 @@ export default function RootLayout({ children }) {
       ? '77b8317a-bdc9-4897-9a57-acbeac2793a1'
       : '012534dc-c940-4587-bf4b-b1e7fc8b9d42';
 
+  // Load glossary server-side
+  const glossaryData = loadGlossary();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
@@ -53,6 +57,13 @@ export default function RootLayout({ children }) {
             strategy="afterInteractive"
             src="/api/umami/script"
             data-website-id={umamiWebsiteId}
+          />
+          <Script
+            id="glossary-data"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `window.glossaryData = ${JSON.stringify(glossaryData)};`
+            }}
           />
           <Box minHeight="100vh" display="flex" flexDirection="column">
             <Box position="sticky" top="0" zIndex="1000">

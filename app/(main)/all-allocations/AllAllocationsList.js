@@ -6,6 +6,7 @@ import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { TableContainer } from '@/components/styles/PrimaryCard';
 import { AllocationHabitats } from '@/components/data/AllocationHabitats';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const AllocationRow = ({ alloc }) => {
   const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
@@ -45,22 +46,16 @@ export default function AllAllocationsList({ sortedItems, requestSort, sortConfi
             <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
-            <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}>LPA</PrimaryTable.ColumnHeader>
-            <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}>NCA</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}><GlossaryTooltip term='Local Planning Authority (LPA)'>LPA</GlossaryTooltip></PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}><GlossaryTooltip term='National Character Area (NCA)'>NCA</GlossaryTooltip></PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
-              <Tooltip text="The Spatial Risk Category - whether the BGS offset site is within, neighbouring or outside the development site LPA or NCA.">
-                Spatial Risk
-              </Tooltip>
+              <GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
-              <Tooltip text="The IMD transfer values shows the decile score moving from the development site to the BGS site.">
-                IMD transfer
-              </Tooltip>
+              <GlossaryTooltip term='IMD Transfer'>IMD Transfer</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} {...getSortProps('d', sortConfig)}>
-              <Tooltip text="The distance from the development site to the BGS offset site.">
-                Distance (km)
-              </Tooltip>
+              <GlossaryTooltip term='Distance'>Distance (km)</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} {...getSortProps('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} {...getSortProps('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>

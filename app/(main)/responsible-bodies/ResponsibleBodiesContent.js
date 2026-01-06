@@ -12,6 +12,7 @@ import ExternalLink from '@/components/ui/ExternalLink';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Box, Text, Heading, Link } from '@chakra-ui/react';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -49,7 +50,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     )
   
     const collapsibleContent = (
-      <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} />
+      <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} minimalHeight={true} />
     )
   
     return (
@@ -134,7 +135,7 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                         <Text>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</Text>
                         ) : (
                         <Text fontSize="1.2rem" fontWeight="normal">
-                          These <strong>{numDesignated}</strong> responsible bodies may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
+                          These <strong>{numDesignated}</strong> <GlossaryTooltip term='Responsible Body'>responsible bodies</GlossaryTooltip> may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
                           {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
                         </Text>
                     )}

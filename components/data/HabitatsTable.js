@@ -6,6 +6,7 @@ import SiteList from '@/components/data/SiteList';
 import { DataTable } from '@/components/styles/DataTable';
 import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
@@ -29,16 +30,16 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       {habitat.subRows && <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>
-            {isImprovement && <DataTable.ColumnHeader>Intervention</DataTable.ColumnHeader>}
-            <DataTable.ColumnHeader>Condition</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader># parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader>Size ({units})</DataTable.ColumnHeader>
-            {isImprovement && <DataTable.ColumnHeader>Time to Target (years)</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Temporal Risk</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Difficulty Factor</DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader>Spatial Risk</DataTable.ColumnHeader>}
-            <DataTable.ColumnHeader>HUs</DataTable.ColumnHeader>
-            {isImprovement && <DataTable.ColumnHeader>HU Gain</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Intervention'>Intervention</GlossaryTooltip></DataTable.ColumnHeader>}
+            <DataTable.ColumnHeader><GlossaryTooltip term='Condition'>Condition</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Time to Target'>Time to Target (years)</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Temporal Risk'>Temporal Risk</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Difficulty Factor'>Difficulty Factor</GlossaryTooltip></DataTable.ColumnHeader>            
+            <DataTable.ColumnHeader><GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>
+            {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip></DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
@@ -114,33 +115,33 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
           <DataTable.Header>
             <DataTable.Row>
               <DataTable.ColumnHeader onClick={() => requestSort('type')}>
-                Habitat{getSortIndicator('type')}
+                <GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip>{getSortIndicator('type')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')}>
-                Distinctiveness{getSortIndicator('distinctiveness')}
+                <GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip>{getSortIndicator('distinctiveness')}
               </DataTable.ColumnHeader>
               {hasSites && (
                 <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
-                  # BGS Sites{getSortIndicator('sites.length')}
+                  <GlossaryTooltip term='BGS Sites'># BGS Sites</GlossaryTooltip>{getSortIndicator('sites.length')}
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
-                # Parcels{getSortIndicator('parcels')}
+                # <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip>{getSortIndicator('parcels')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('area')}>
-                Size ({units}){getSortIndicator('area')}
+                <GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units}){getSortIndicator('area')}
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
-                  % Allocated{getSortIndicator('allocated')}
+                  % <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip>{getSortIndicator('allocated')}
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
-                HUs{getSortIndicator('HUs')}
+                <GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip>{getSortIndicator('HUs')}
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('HUGain')}>
-                  HU Gain{getSortIndicator('HUGain')}
+                  <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip>{getSortIndicator('HUGain')}
                 </DataTable.ColumnHeader>
               )}
             </DataTable.Row>

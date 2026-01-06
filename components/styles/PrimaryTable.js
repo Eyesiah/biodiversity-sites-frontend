@@ -5,8 +5,7 @@ export const PrimaryTable = {
     <Table.Root 
       size="sm" 
       variant="outline"
-      width="auto"
-      margin="1rem auto"
+      width="auto"      
       borderCollapse="collapse"
       bg="tableBg"
       borderRadius="md"
@@ -43,7 +42,7 @@ export const PrimaryTable = {
   ),
   Cell: (props) => (
     <Table.Cell 
-      padding="1rem"
+      padding="0.5rem"
       borderBottom="1px solid"
       borderColor="subtleBorder"
       verticalAlign="top"

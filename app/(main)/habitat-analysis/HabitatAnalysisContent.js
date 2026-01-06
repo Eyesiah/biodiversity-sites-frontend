@@ -9,6 +9,8 @@ import { DataTable } from '@/components/styles/DataTable';
 import { TableContainer } from '@/components/styles/PrimaryCard';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import Tooltip from '@/components/ui/Tooltip';
 
 const calculateTotals = (data, module) => {
   // Calculate totals for the specified module
@@ -71,19 +73,19 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#f0e0e0'>Allocations</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
-            <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}>Habitat</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} textAlign="center">Distinctiveness</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} {...getSortProps('baselineParcels', sortConfig)} textAlign="center"># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}>Baseline size ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)}>% Share</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} {...getSortProps('improvementSites', sortConfig)} textAlign="center">Improvement # Sites</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} {...getSortProps('improvementParcels', sortConfig)} textAlign="center"># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}>Improvement size ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)}>% Share</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} textAlign="center"># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}>Allocation ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}>% Share</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}>% of Improvements</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} textAlign="center"><GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} {...getSortProps('baselineParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}><GlossaryTooltip term='Baseline size'>Baseline size</GlossaryTooltip> ({unit})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)}><Tooltip text="The percentage share of the total baseline habitats.">% Baseline</Tooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} {...getSortProps('improvementSites', sortConfig)} textAlign="center"><GlossaryTooltip term='Improvement Sites'># Improvement Sites</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} {...getSortProps('improvementParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}><GlossaryTooltip term='Improvement size'>Improvement size ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)}><Tooltip text="The percentage share of the total improved habitats.">% Improved</Tooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}><GlossaryTooltip term='Allocation'>Allocation ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}><Tooltip text="The percentage share of the total allocated habitat parcels.">% allocated</Tooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}><Tooltip text="The percentage share allocated of this improved habitat.">% Improvement allocated</Tooltip></DataTable.ColumnHeader>
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
