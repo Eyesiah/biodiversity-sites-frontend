@@ -12,6 +12,7 @@ import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -125,7 +126,7 @@ export default function LPAContent({ lpas, sites }) {
               }}
               summary={(filteredCount, totalCount) => (
                 <Text fontSize="1.2rem">
-                  Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> LPAs.
+                  Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='Local Planning Authority (LPA)'>LPAs</GlossaryTooltip>.
                 </Text>
               )}
             >

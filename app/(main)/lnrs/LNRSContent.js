@@ -12,6 +12,7 @@ import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text, Button } from '@chakra-ui/react';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
@@ -66,7 +67,7 @@ export default function LNRSContent({ lnrs, sites, error }) {
             }}
             summary={(filteredCount, totalCount) => (
                 <Text fontSize="1.2rem">
-                    Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> LNRS areas, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+                    Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='Local Nature Recovery Strategy (LNRS) site'>LNRS</GlossaryTooltip> areas, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
                 </Text>
             )}
           >
