@@ -215,13 +215,13 @@ export default function SiteListPageContent({ sites }) {
                 content: ({ sortedItems }) => <IMDSiteDecileChart sites={sortedItems} />
               },
               {
-                title: ({ sortedItems }) => `BGS Site Use Chart (${sortedItems.length})`,
+                title: "BGS Site Use Chart",
                 content: ({ sortedItems }) => {
                   return <SitesAreaCompositionChart sites={sortedItems} />;
                 }
               },
               {
-                title: ({ sortedItems }) => `BGS Size Distribution (${sortedItems.length})`,
+                title:"BGS Size Distribution",
                 content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
               }
 
