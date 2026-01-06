@@ -39,7 +39,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             <DataTable.ColumnHeader><GlossaryTooltip term='Difficulty Factor'>Difficulty Factor</GlossaryTooltip></DataTable.ColumnHeader>            
             <DataTable.ColumnHeader><GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>
-            {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> Gain</DataTable.ColumnHeader>}
+            {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip></DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
@@ -141,7 +141,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('HUGain')}>
-                  <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> Gain{getSortIndicator('HUGain')}
+                  <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip>{getSortIndicator('HUGain')}
                 </DataTable.ColumnHeader>
               )}
             </DataTable.Row>

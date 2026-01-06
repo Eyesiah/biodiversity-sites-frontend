@@ -1,6 +1,7 @@
 import { formatNumber } from '@/lib/format';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
+import GlossaryTooltip from '../ui/GlossaryTooltip';
 
 export const HabitatSummaryTable = ({ site }) => {
 
@@ -85,17 +86,17 @@ export const HabitatSummaryTable = ({ site }) => {
       <DataTable.Root width="auto" margin="0">
         <DataTable.Header>
           <DataTable.Row>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Habitat</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}># Parcels</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Baseline<br />Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Baseline<br />HUs</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Retained<br />Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Improvements<br />Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Improvements<br />HUs</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize}>Improvements<br />HU Gain</DataTable.ColumnHeader>
-            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>Allocations<br />Size</DataTable.ColumnHeader>}
-            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% Allocated</DataTable.ColumnHeader>}
-            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}>Allocations<br />HUs</DataTable.ColumnHeader>}
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip><br /><GlossaryTooltip term='Size'>Size</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip><br /><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Retained habitat'>Retained</GlossaryTooltip><br /><GlossaryTooltip term='Size'>Size</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improvements</GlossaryTooltip><br /><GlossaryTooltip term='Size'>Size</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improvements</GlossaryTooltip><br /><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improvements</GlossaryTooltip><br /><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip></DataTable.ColumnHeader>
+            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocation'>Allocations</GlossaryTooltip><br /><GlossaryTooltip term='Size'>Size</GlossaryTooltip></DataTable.ColumnHeader>}
+            {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
+            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocation'>Allocations</GlossaryTooltip><br /><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>
