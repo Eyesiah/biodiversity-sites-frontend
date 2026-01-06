@@ -31,7 +31,7 @@ const bodyDetailTypes = {
   }
 }
 
-const BodyDetailRow = ({ bodyType, children, hasData, isChecked, setIsChecked }) => {
+const BodyDetailRow = ({ bodyType, children, hasData, isChecked, setIsChecked, glossaryTerm }) => {
 
   const bodyInfo = bodyDetailTypes[bodyType];
   if (bodyInfo == null) {
@@ -41,6 +41,7 @@ const BodyDetailRow = ({ bodyType, children, hasData, isChecked, setIsChecked })
   return (
     <DetailRow
       label={bodyInfo.label}
+      glossaryTerm={glossaryTerm}
       value={
         <Box textAlign="right">
           {children}
@@ -93,9 +94,10 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
       <Stack direction={['column', 'row']} width='100%'>
         <PrimaryCard>
           <Box>
-            <DetailRow label="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
+            <DetailRow label="BGS Reference" glossaryTerm="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
             <DetailRow
               label="Responsible Body"
+              glossaryTerm="Responsible Body"
               value={
                 (site.responsibleBodies && site.responsibleBodies.length > 0) ? (
                   site.responsibleBodies.map((bodyName, index) => (
@@ -113,7 +115,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
             <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
             {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
 
-            <DetailRow label="Site Area" value={(
+            <DetailRow label="Site Area" glossaryTerm="Size (ha)" value={(
               <Tooltip text="The circle displayed on the map represents the site area. For a more accurate map of exactly where the site is, see the Boundary Map (if available).">
                 {`${formatNumber(site.siteSize || 0)} ha`}
               </Tooltip>
@@ -124,27 +126,27 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
 
         <PrimaryCard>
           <Box>
-            <BodyDetailRow bodyType='nca' hasData={site.ncaName != null} isChecked={bodyLayerStates?.showNCA} setIsChecked={bodyLayerStates?.setShowNCA} >
+            <BodyDetailRow bodyType='nca' glossaryTerm='National Character Area (NCA)' hasData={site.ncaName != null} isChecked={bodyLayerStates?.showNCA} setIsChecked={bodyLayerStates?.setShowNCA} >
               {site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'}
             </BodyDetailRow>
-            <BodyDetailRow bodyType='lnrs' hasData={site.lnrsName != null} isChecked={bodyLayerStates?.showLNRS} setIsChecked={bodyLayerStates?.setShowLNRS} >
+            <BodyDetailRow bodyType='lnrs' glossaryTerm='Local Nature Recovery Strategy (LNRS) site' hasData={site.lnrsName != null} isChecked={bodyLayerStates?.showLNRS} setIsChecked={bodyLayerStates?.setShowLNRS} >
               {site.lnrsName ? site.lnrsName : 'N/A'}
             </BodyDetailRow>
-            <BodyDetailRow bodyType='lpa' hasData={site.lpaName != null} isChecked={bodyLayerStates?.showLPA} setIsChecked={bodyLayerStates?.setShowLPA} >
+            <BodyDetailRow bodyType='lpa' glossaryTerm='Local Planning Authority (LPA)' hasData={site.lpaName != null} isChecked={bodyLayerStates?.showLPA} setIsChecked={bodyLayerStates?.setShowLPA} >
               {site.lpaName ? (
                 <InfoButton onClick={() => showModal('lpa', site.lpaName, site.lpaName)}>
                   <Text>{site.lpaName}</Text>
                 </InfoButton>
               ) : 'N/A'}
             </BodyDetailRow>
-            <BodyDetailRow bodyType='lsoa' hasData={site.lsoa?.name != null} isChecked={bodyLayerStates?.showLSOA} setIsChecked={bodyLayerStates?.setShowLSOA} >
+            <BodyDetailRow bodyType='lsoa' glossaryTerm='Lower Layer Super Output Area (LSOA)' hasData={site.lsoa?.name != null} isChecked={bodyLayerStates?.showLSOA} setIsChecked={bodyLayerStates?.setShowLSOA} >
               {site.lsoa?.name ? (
                 <InfoButton onClick={() => showModal('lsoa', site.lsoa.name, site.lsoa.name, site.lsoa)}>
                   <Text>{site.lsoa.name}</Text>
                 </InfoButton>
               ) : 'N/A'}
             </BodyDetailRow>
-            <DetailRow label="# Allocations" value={site.allocations?.length || 0} />
+            <DetailRow label="# Allocations" glossaryTerm='Allocation' value={site.allocations?.length || 0} />
             {medianAllocationDistance !== null && <DetailRow label="Median allocation distance" value={`${formatNumber(Math.round(medianAllocationDistance), 0)} km`} />}
           </Box>
         </PrimaryCard>
