@@ -42,7 +42,7 @@ export const PrimaryTable = {
   ),
   Cell: (props) => (
     <Table.Cell 
-      padding="1rem"
+      padding="0.5rem"
       borderBottom="1px solid"
       borderColor="subtleBorder"
       verticalAlign="top"
