@@ -5,8 +5,7 @@ export const PrimaryTable = {
     <Table.Root 
       size="sm" 
       variant="outline"
-      width="auto"
-      margin="1rem auto"
+      width="auto"      
       borderCollapse="collapse"
       bg="tableBg"
       borderRadius="md"
