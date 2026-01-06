@@ -3,7 +3,7 @@
 import Tooltip from '@/components/ui/Tooltip'
 
 const getGlossaryDefinition = (term) => {
-  if (window?.glossaryData) {
+  if (typeof window !== 'undefined' && window != null && window.glossaryData != null) {
     return window.glossaryData[term] ?? '<glossary entry not found>';
   }
   else {
