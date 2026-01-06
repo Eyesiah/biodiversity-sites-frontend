@@ -30,5 +30,5 @@ export default function Glossary() {
     glossaryData.push({term, definition, link, linkText});
   });
 
-  return <GlossaryProse glossaryData={glossaryData}/>;
+  return <GlossaryProse glossaryData={glossaryData.sort((a, b) => a.term.localeCompare(b.term))}/>;
 }
