@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, PieChart, Pie, Cell, Legend } from 'recharts';
 import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -51,6 +51,127 @@ const IMDSiteDecileChart = ({sites}) => {
       </ResponsiveContainer>
     </Box>
   )
+}
+
+const SiteSizeDistributionChart = ({sites}) => {
+  const { chartData, totalSites, totalArea } = useMemo(() => {
+    if (!sites || sites.length === 0) return { chartData: [], totalSites: 0, totalArea: 0 };
+
+    const totalSites = sites.length;
+    const totalArea = sites.reduce((sum, site) => sum + (site.siteSize || 0), 0);
+
+    // Process sites and group those under 2% into "Other"
+    const sitesWithArea = sites.filter(site => site.siteSize && site.siteSize > 0);
+    const majorSites = [];
+    const minorSites = [];
+    let otherArea = 0;
+    let otherCount = 0;
+
+    sitesWithArea.forEach(site => {
+      const percentage = (site.siteSize / totalArea) * 100;
+      if (site.siteSize >= 50) {
+        majorSites.push({
+          name: site.referenceNumber || site.name || `Site ${site.id}`,
+          value: site.siteSize,
+          percentage: percentage.toFixed(1),
+          siteSize: site.siteSize
+        });
+      } else {
+        minorSites.push(site);
+        otherArea += site.siteSize;
+        otherCount += 1;
+      }
+    });
+
+    // Sort major sites by size descending
+    majorSites.sort((a, b) => b.value - a.value);
+
+    // Add "Other" segment if there are minor sites
+    const chartData = [...majorSites];
+    if (otherArea > 0) {
+      chartData.push({
+        name: `<50 ha (${otherCount} sites)`,
+        value: otherArea,
+        percentage: ((otherArea / totalArea) * 100).toFixed(1),
+        siteSize: otherArea
+      });
+    }
+
+    return { chartData, totalSites, totalArea };
+  }, [sites]);
+
+  // Color scheme for different size intervals
+  const COLORS = ['#FF9800', '#4CAF50', '#2196F3', '#9C27B0', '#FF5722'];
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
+          <Text fontWeight="bold" color="black" mb="5px">{data.name}</Text>
+          <Text color="#36454F">
+            {formatNumber(data.siteSize, 1)} ha ({data.percentage}%)
+          </Text>
+        </Box>
+      );
+    }
+    return null;
+  };
+
+  if (!chartData || chartData.length === 0) {
+    return <Text>No site data available to display.</Text>;
+  }
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    // Get the data for this segment
+    const data = chartData[index];
+    const count = data.value;
+    const percentage = data.percentage;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#333"
+        textAnchor="middle"
+        dominantBaseline="central"
+        style={{ fontWeight: 'bold', fontSize: '12px' }}
+      >
+        {`${count} (${percentage}%)`}
+      </text>
+    );
+  };
+
+  return (
+    <Box bg="bg" p="1rem">
+      <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
+        Distribution of BGS sites by size (Total sites: {totalSites})
+      </Text>
+      <ResponsiveContainer width="100%" height={500}>
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            outerRadius="80%"
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+          >
+            {chartData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+        </PieChart>
+      </ResponsiveContainer>
+    </Box>
+  );
 }
 
 
@@ -142,6 +263,10 @@ export default function SiteListPageContent({ sites }) {
                   return <SitesAreaCompositionChart sites={sortedItems} />;
                 }
               },
+              {
+                title: ({ sortedItems }) => `BGS Size Distribution (${sortedItems.length})`,
+                content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
+              }
 
             ]}
           />
