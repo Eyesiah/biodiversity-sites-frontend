@@ -211,13 +211,13 @@ const HUGainVsBaselineScatterChart = ({sites}) => {
   };
 
   if (!scatterData || scatterData.length === 0) {
-    return <Text>No data available for HU Gain vs Baseline Area chart.</Text>;
+    return <Text>No data available for HU Gain vs Baseline Habitat Area chart.</Text>;
   }
 
   return (
     <Box bg="bg" p="1rem">
       <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
-        HU Gain vs Baseline Area
+        HU Gain vs Baseline Habitat Area Chart
       </Text>
       <ResponsiveContainer width="100%" height={500}>
         <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 80 }}>
@@ -552,15 +552,15 @@ export default function SiteListPageContent({ sites }) {
                 }
               },
               {
-                title:"BGS Size Distribution",
+                title:"BGS Size Distribution Chart",
                 content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
               },
               {
-                title:"HU Gain Analysis",
+                title:"HU Gain Analysis Chart",
                 content: ({ sortedItems }) => <HUGainVsBaselineScatterChart sites={sortedItems} />
               },
               {
-                title: "HU Gain per Hectare",
+                title: "HU Gain per Hectare Chart",
                 content: ({ sortedItems }) => <HUGainPerHectareScatterChart sites={sortedItems} />
               },
               {
