@@ -45,7 +45,7 @@ const IMDSiteDecileChart = ({sites}) => {
           <XAxis dataKey="name" name="BGS IMD Score" label={{ value: 'BGS IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
           <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
           <Tooltip />
-          <Bar dataKey="count" fill="#dcab1bff">
+          <Bar dataKey="count" fill="#afcd81ff">
             <LabelList />
           </Bar>
         </BarChart>
@@ -123,7 +123,7 @@ const SiteSizeDistributionChart = ({sites}) => {
           <XAxis dataKey="name" label={{ value: 'Site Size Intervals', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
           <YAxis label={{ value: 'Number of Sites', angle: -90, position: 'insideLeft', fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="count" fill="#9fd08eff">
+          <Bar dataKey="count" fill="#afcd81ff">
             <LabelList />
           </Bar>
         </BarChart>

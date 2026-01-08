@@ -242,7 +242,7 @@ export default function AllAllocationsContent({ allocations }) {
                   <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                   <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                   <Tooltip content={<CustomIMDTooltip />} />
-                  <Bar dataKey="count" fill="#dcab1bff">
+                  <Bar dataKey="count" fill="#afcd81ff">
                     <LabelList />
                   </Bar>
                 </BarChart>
