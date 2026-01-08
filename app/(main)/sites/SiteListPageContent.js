@@ -239,7 +239,7 @@ const HUGainVsBaselineScatterChart = ({sites}) => {
             axisLine={{ stroke: 'black' }}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Scatter data={scatterData} fill="#4CAF50" />
+          <Scatter data={scatterData} fill="#afcd81ff" />
           {trendLineData.length > 0 && (
             <Line
               data={trendLineData}
@@ -407,7 +407,7 @@ const HUGainPerHectareScatterChart = ({sites}) => {
             axisLine={{ stroke: 'black' }}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Scatter data={scatterData} fill="#4CAF50" />
+          <Scatter data={scatterData} fill="#afcd81ff" />
           {trendLineData.length > 0 && (
             <Line
               data={trendLineData}
