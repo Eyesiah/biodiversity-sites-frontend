@@ -67,9 +67,9 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
       <DataTable.Root>
         <DataTable.Header>
           <DataTable.Row>
-            <DataTable.ColumnHeader colSpan="2" color="fg" backgroundColor='bg'>Intervention Groups</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader colSpan="3" color="black" backgroundColor='#e0e8f0'>Baseline</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#dcf0e7'>Improvements</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="2" color="black" backgroundColor='bg' borderRight="4px solid #666">Intervention Groups</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="3" color="black" backgroundColor='#e0e8f0' borderRight="4px solid #666">Baseline</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#dcf0e7' borderRight="4px solid #666">Improvements</DataTable.ColumnHeader>
             <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#f0e0e0'>Allocations</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
@@ -90,14 +90,14 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
         </DataTable.Header>
         <DataTable.Body>
           <DataTable.Row fontWeight='bold' backgroundColor='tableTotalsBg'>
-            <DataTable.Cell colSpan="2" textAlign="right">Totals:</DataTable.Cell>
+            <DataTable.Cell colSpan="2" textAlign="right" borderRight="4px solid #666">Totals:</DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>{formatNumber(totals.totalBaseline)}</DataTable.NumericCell>
             <DataTable.Cell></DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>{formatNumber(totals.totalImprovement)}</DataTable.NumericCell>
-            <DataTable.Cell></DataTable.Cell>
+            <DataTable.Cell borderRight="4px solid #666"></DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalAllocationParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>{formatNumber(totals.totalAllocation)}</DataTable.NumericCell>
             <DataTable.Cell></DataTable.Cell>
@@ -106,14 +106,14 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
           {processedData.map(row => (
             <DataTable.Row key={row.habitat}>
               <DataTable.Cell>{row.habitat}</DataTable.Cell>
-              <DataTable.Cell textAlign='center'>{row.distinctiveness}</DataTable.Cell>
+              <DataTable.Cell textAlign='center' borderRight="4px solid #666">{row.distinctiveness}</DataTable.Cell>
               <DataTable.CenteredNumericCell>{formatNumber(row.baselineParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>{formatNumber(row.baseline)}</DataTable.NumericCell>
-              <DataTable.NumericCell>{formatNumber(row.baselineShare, 2)}%</DataTable.NumericCell>
+              <DataTable.NumericCell borderRight="4px solid #666">{formatNumber(row.baselineShare, 2)}%</DataTable.NumericCell>
               <DataTable.Cell textAlign='center'>{row.improvementSites || 0}</DataTable.Cell>
               <DataTable.CenteredNumericCell>{formatNumber(row.improvementParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>{formatNumber(row.improvement)}</DataTable.NumericCell>
-              <DataTable.NumericCell>{formatNumber(row.improvementShare, 2)}%</DataTable.NumericCell>
+              <DataTable.NumericCell borderRight="4px solid #666">{formatNumber(row.improvementShare, 2)}%</DataTable.NumericCell>
               <DataTable.CenteredNumericCell>{formatNumber(row.allocationParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>{formatNumber(row.allocation)}</DataTable.NumericCell>
               <DataTable.NumericCell>{formatNumber(row.allocationShare, 2)}%</DataTable.NumericCell>
