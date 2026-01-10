@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function AllocationsPage() {
 
-  const allSites = await fetchAllSites(true, true);
+  const allSites = await fetchAllSites(true, true, true);
   
   const allocationPromises = allSites.flatMap(site => {
     if (!site.allocations) return [];
@@ -27,6 +27,7 @@ export default async function AllocationsPage() {
         hu: alloc.hedgerowUnits,
         wu: alloc.watercoursesUnits,
         srn: site.referenceNumber,
+        siteName: site.name,
         d: alloc.distance,
         sr: alloc.sr,
         imd: alloc.lsoa?.IMDDecile || 'N/A',
