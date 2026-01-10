@@ -49,6 +49,7 @@ const filterPredicate = (alloc, searchTerm) => {
   const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
   return (
     (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+    (alloc.siteName?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
@@ -298,7 +299,7 @@ export default function AllAllocationsContent({ allocations }) {
       initialItems={allocations}
       filterPredicate={filterPredicate}
       initialSortConfig={{ key: 'srn', direction: 'ascending' }}
-      placeholder="Filter by BGS Ref, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
+      placeholder="Filter by BGS Ref, Site Name, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
       exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
       summary={(filteredCount, totalCount) => (
         <Box textAlign='center'>
