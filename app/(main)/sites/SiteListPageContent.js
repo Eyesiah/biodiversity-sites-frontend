@@ -556,11 +556,11 @@ export default function SiteListPageContent({ sites }) {
                 content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
               },
               {
-                title:"HU Gain Analysis Chart",
+                title:"HU Gain Analysis Scattergram",
                 content: ({ sortedItems }) => <HUGainVsBaselineScatterChart sites={sortedItems} />
               },
               {
-                title: "HU Gain per Hectare Chart",
+                title: "HU Gain per Hectare Scattergram",
                 content: ({ sortedItems }) => <HUGainPerHectareScatterChart sites={sortedItems} />
               },
               {

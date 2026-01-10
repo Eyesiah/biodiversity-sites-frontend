@@ -231,7 +231,7 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
     },
     {
-      title: 'IMD Score Transfers',
+      title: 'IMD Score Transfers Histogram',
       content: ({ sortedItems }) => {
         const { chartData, stats } = calcIMDHistogramData(sortedItems, binWidth);
         return (
