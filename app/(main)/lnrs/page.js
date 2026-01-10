@@ -42,21 +42,19 @@ async function getLnrsData() {
       // Ensure adjacents exist before processing
       (lnrs.adjacents || []).forEach(adj => adj.size = adj.size / 10000);
 
-      // add link to published from argisData
-      const arcGISLNRS = lnrsArcGISData.features.find(f => f.attributes.Name == lnrs.name);
-      if (arcGISLNRS) {
-        lnrs.publicationStatus = arcGISLNRS.attributes.Status || 'N/A';
-        if (arcGISLNRS.attributes.Link_to_published) {
-          lnrs.link = arcGISLNRS.attributes.Link_to_published;
-        }
-      }
-
-      if (lnrs.link == null) {
-        // fall back to data in csv
-        const csvLnrs = parsedData.data.find(item => item['LNRS ID'] === lnrs.id);
-        if (csvLnrs && csvLnrs['URL']) {
-          lnrs.link = csvLnrs['URL'];
-          lnrs.publicationStatus = 'Published';
+      // First, try to get link from CSV (primary source)
+      const csvLnrs = parsedData.data.find(item => parseInt(item['LNRS ID']) === parseInt(lnrs.id));
+      if (csvLnrs && csvLnrs['URL']) {
+        lnrs.link = csvLnrs['URL'];
+        lnrs.publicationStatus = 'Published (final)';
+      } else {
+        // Fall back to ArcGIS data only if CSV has no URL
+        const arcGISLNRS = lnrsArcGISData.features.find(f => f.attributes.Name == lnrs.name);
+        if (arcGISLNRS) {
+          lnrs.publicationStatus = arcGISLNRS.attributes.Status || 'N/A';
+          if (arcGISLNRS.attributes.Link_to_published) {
+            lnrs.link = arcGISLNRS.attributes.Link_to_published;
+          }
         }
       }
     });
