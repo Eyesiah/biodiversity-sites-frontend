@@ -74,14 +74,14 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} textAlign="center"><GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} textAlign="center" borderRight="4px solid #666"><GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} {...getSortProps('baselineParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}><GlossaryTooltip term='Baseline size'>Baseline size</GlossaryTooltip> ({unit})</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)}><Tooltip text="The percentage share of the total baseline habitats.">% Baseline</Tooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)} borderRight="4px solid #666"><Tooltip text="The percentage share of the total baseline habitats.">% Baseline</Tooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} {...getSortProps('improvementSites', sortConfig)} textAlign="center"><GlossaryTooltip term='Improvement Sites'># Improvement Sites</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} {...getSortProps('improvementParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}><GlossaryTooltip term='Improvement size'>Improvement size ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)}><Tooltip text="The percentage share of the total improved habitats.">% Improved</Tooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)} borderRight="4px solid #666"><Tooltip text="The percentage share of the total improved habitats.">% Improved</Tooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}><GlossaryTooltip term='Allocation'>Allocation ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}><Tooltip text="The percentage share of the total allocated habitat parcels.">% allocated</Tooltip></DataTable.ColumnHeader>
@@ -93,7 +93,7 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.Cell colSpan="2" textAlign="right" borderRight="4px solid #666">Totals:</DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>{formatNumber(totals.totalBaseline)}</DataTable.NumericCell>
-            <DataTable.Cell></DataTable.Cell>
+            <DataTable.Cell borderRight="4px solid #666"></DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>{formatNumber(totals.totalImprovement)}</DataTable.NumericCell>
