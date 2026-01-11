@@ -37,7 +37,14 @@ export async function GET(_, { params }) {
     });
 
     // create the data array to return
-    data = allSites.map(s => ({
+    data = allSites.map(s => {
+      // Calculate HU Gain (improvement HUs - baseline HUs)
+      const huGain = (s.improvements?.areas?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0) +
+      (s.improvements.trees?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0) +  
+      (s.improvements?.hedgerows?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0) +
+      (s.improvements?.watercourses?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0);
+
+      return {
       'reference-number': s.referenceNumber,
       'responsible-body': s.responsibleBodies.join(', '),
       'startDate': s.startDate,
@@ -48,6 +55,7 @@ export async function GET(_, { params }) {
       'LPA': s.lpaName,
       'NCA': s.ncaName,
       'area-ha': s.siteSize,
+      'hu-gain': formatNumber(huGain, 4),
       'baseline-area-ha': formatNumber(s.habitats?.areas?.reduce((acc, hab) => acc + hab.size, 0) || 0, 4),
       'baseline-hedgerow-km': formatNumber(s.habitats?.hedgerows?.reduce((acc, hab) => acc + hab.size, 0) || 0, 4),
       'baseline-watercourse-km': formatNumber(s.habitats?.watercourses?.reduce((acc, hab) => acc + hab.size, 0) || 0, 4),
@@ -61,7 +69,8 @@ export async function GET(_, { params }) {
       'allocation-area-ha': formatNumber(s.allocations?.reduce((acc, alloc) => acc + alloc.habitats?.areas?.reduce((acc, hab) => acc + hab.size, 0), 0) || 0, 4),
       'allocation-hedgerow-km': formatNumber(s.allocations?.reduce((acc, alloc) => acc + alloc.habitats?.hedgerows?.reduce((acc, hab) => acc + hab.size, 0), 0) || 0, 4),
       'allocation-watercourse-km': formatNumber(s.allocations?.reduce((acc, alloc) => acc + alloc.habitats?.watercourses?.reduce((acc, hab) => acc + hab.size, 0), 0) || 0, 4),
-    }));
+      };
+    });
 
     rootElementName = 'sites';
     dataElementName = 'site';
@@ -112,4 +121,3 @@ export async function GET(_, { params }) {
     return new NextResponse(`Unknown format: ${format}`, { status: 400 });
   }
 }
-

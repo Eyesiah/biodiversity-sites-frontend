@@ -13,7 +13,11 @@ const AllocationRow = ({ alloc }) => {
   return (<DataFetchingCollapsibleRow
     mainRow={(
       <>
-        <PrimaryTable.Cell><Link href={`/sites/${alloc.srn}`}>{alloc.srn}</Link></PrimaryTable.Cell>
+        <PrimaryTable.Cell>
+          <Link href={`/sites/${alloc.srn}`} onClick={(e) => e.stopPropagation()}>
+            {alloc.srn}{alloc.siteName && <><br /><b>{alloc.siteName}</b></>}
+          </Link>
+        </PrimaryTable.Cell>
         <PrimaryTable.Cell>{alloc.pr}</PrimaryTable.Cell>
         <PrimaryTable.Cell>{alloc.pn}</PrimaryTable.Cell>
         <PrimaryTable.Cell>{alloc.lpa}</PrimaryTable.Cell>
@@ -43,7 +47,7 @@ export default function AllAllocationsList({ sortedItems, requestSort, sortConfi
       <PrimaryTable.Root>
         <PrimaryTable.Header>
           <PrimaryTable.Row>
-            <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS ref.</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS Reference</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}><GlossaryTooltip term='Local Planning Authority (LPA)'>LPA</GlossaryTooltip></PrimaryTable.ColumnHeader>

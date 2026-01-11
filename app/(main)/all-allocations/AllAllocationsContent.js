@@ -49,6 +49,7 @@ const filterPredicate = (alloc, searchTerm) => {
   const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
   return (
     (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
+    (alloc.siteName?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
@@ -230,7 +231,7 @@ export default function AllAllocationsContent({ allocations }) {
       content: ({ sortedItems }) => <AllocationAnalysis allocations={sortedItems} />
     },
     {
-      title: 'IMD Score Transfers',
+      title: 'IMD Score Transfers Histogram',
       content: ({ sortedItems }) => {
         const { chartData, stats } = calcIMDHistogramData(sortedItems, binWidth);
         return (
@@ -242,7 +243,7 @@ export default function AllAllocationsContent({ allocations }) {
                   <XAxis dataKey="name" name="IMD Difference" label={{ value: 'Site IMD Score - Allocation IMD Score', position: 'insideBottom', offset: -10, fill: '#36454F', fontWeight: 'bold', fontSize: '1.1rem' }} tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                   <YAxis tick={{ fill: '#36454F' }} axisLine={{ stroke: 'black' }} />
                   <Tooltip content={<CustomIMDTooltip />} />
-                  <Bar dataKey="count" fill="#dcab1bff">
+                  <Bar dataKey="count" fill="#afcd81ff">
                     <LabelList />
                   </Bar>
                 </BarChart>
@@ -298,7 +299,7 @@ export default function AllAllocationsContent({ allocations }) {
       initialItems={allocations}
       filterPredicate={filterPredicate}
       initialSortConfig={{ key: 'srn', direction: 'ascending' }}
-      placeholder="Filter by BGS Ref, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
+      placeholder="Filter by BGS Ref, Site Name, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
       exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
       summary={(filteredCount, totalCount) => (
         <Box textAlign='center'>
