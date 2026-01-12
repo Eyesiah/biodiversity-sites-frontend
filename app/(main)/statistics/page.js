@@ -112,7 +112,7 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['totalArea', 'baselineAreaSize', 'improvementsAreaSize']}
                   strokeColors={['#ffc658', '#ff7300', '#ffb870']}
-                  names={['Total site area (ha)', 'Baseline area (ha)', 'Improvement area (ha)']}
+                  names={['Total Site Area (ha)', 'Baseline Area (ha)', 'Improvement Area (ha)']}
                   title={'Site Area (ha): Total, Baseline & Improvement'}
                 />
               </ChartItem>
@@ -120,15 +120,15 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['baselineHedgerowSize', 'improvementsHedgerowSize']}
                   strokeColors={['#00C49F', '#70d9c4']}
-                  names={['Baseline hedgerow (km)', 'Improvement hedgerow (km)']}
+                  names={['Baseline Hedgerow (km)', 'Improvement Hedgerow (km)']}
                   title={'Hedgerow (km): Baseline vs. Improvement sizes'}
                 />
               </ChartItem>
               <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['baselineWatercourseSize', 'improvementsWatercourseSize']}
-                  strokeColors={['#d4a6f2', '#e9d3f9']}
-                  names={['Baseline watercourse (km)', 'Improvement watercourse (km)']}
+                  strokeColors={['#919ddc', '#96e5ec']}
+                  names={['Baseline Watercourse (km)', 'Improvement Watercourse (km)']}
                   title={'Watercourse (km): Baseline vs. Improvement sizes'}
                 />
               </ChartItem>
@@ -138,8 +138,8 @@ export default async function StatisticsPage() {
               <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalEnhancedHUs', 'totalHUGain', 'totalAllocationHUs']}
-                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2', '#ffc658', '#8884d8']}
-                  names={['Total baseline HUs', 'Total created HUs', 'Total Enhanced HUs', 'Total HU gain', 'Total allocated HUs']}
+                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2', '#0a10b8', '#8884d8']}
+                  names={['Total Baseline HUs', 'Total Created HUs', 'Total Enhanced HUs', 'Total HU Gain', 'Total Allocated HUs']}
                   title={'Habitat units'}
                 />
               </ChartItem>
@@ -147,7 +147,7 @@ export default async function StatisticsPage() {
                 <StatsChart stats={stats}
                   dataKeys={['baselineParcels', 'improvementsParcels', 'allocatedParcels']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
-                  names={['Baseline parcels', 'Improved parcels', 'Allocated parcels']}
+                  names={['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels']}
                   title={'Parcels count'}
                 />
               </ChartItem>
