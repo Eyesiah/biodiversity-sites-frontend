@@ -49,7 +49,6 @@ export default function HabitatTabContent({
             <HabitatTable
               habitats={baselineItems}
               sortConfig={baselineSortConfig}
-              isBaseline={true}
               requestSort={baselineRequestSort}
               units={units}
             />
