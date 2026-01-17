@@ -38,7 +38,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Temporal Risk'>Temporal Risk</GlossaryTooltip></DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Difficulty Factor'>Difficulty Factor</GlossaryTooltip></DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip></DataTable.ColumnHeader>}
-            {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>}
+            {<DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip></DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip></DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
