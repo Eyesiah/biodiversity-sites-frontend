@@ -136,17 +136,13 @@ const ChartDataExporter = ({ stats, chartConfigs }) => {
             styles={customSelectStyles}
           />
         </Box>
-        <Tooltip
-          text={`Download CSV files for the selected chart${selectedCharts.length !== 1 ? 's' : ''}. Each chart will be saved as a separate file with date-sorted data.`}
-        >
-          <Button
+         <Button
             onClick={handleExport}
             disabled={selectedCharts.length === 0}
-            alignSelf="flex-start"
-          >
+            alignSelf="flex-start">
             Export CSV ({selectedCharts.length} chart{selectedCharts.length !== 1 ? 's' : ''} selected)
-          </Button>
-        </Tooltip>
+         </Button>
+        
       </VStack>
     </Box>
   );
