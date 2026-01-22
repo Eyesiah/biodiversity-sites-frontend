@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react';
-import { Box, Button, Text, VStack } from '@chakra-ui/react';
+import { Box, Text, VStack } from '@chakra-ui/react';
+import Tooltip from '@/components/ui/Tooltip';
 import Select from 'react-select';
 import Papa from 'papaparse';
 import { toaster } from '@/components/ui/toaster';
+import Button from '@/components/styles/Button';
 
 const ChartDataExporter = ({ stats, chartConfigs }) => {
   const [selectedCharts, setSelectedCharts] = useState([]);
@@ -134,14 +136,17 @@ const ChartDataExporter = ({ stats, chartConfigs }) => {
             styles={customSelectStyles}
           />
         </Box>
-        <Button
-          colorScheme="blue"
-          onClick={handleExport}
-          isDisabled={selectedCharts.length === 0}
-          alignSelf="flex-start"
+        <Tooltip
+          text={`Download CSV files for the selected chart${selectedCharts.length !== 1 ? 's' : ''}. Each chart will be saved as a separate file with date-sorted data.`}
         >
-          Export CSV ({selectedCharts.length} chart{selectedCharts.length !== 1 ? 's' : ''} selected)
-        </Button>
+          <Button
+            onClick={handleExport}
+            disabled={selectedCharts.length === 0}
+            alignSelf="flex-start"
+          >
+            Export CSV ({selectedCharts.length} chart{selectedCharts.length !== 1 ? 's' : ''} selected)
+          </Button>
+        </Tooltip>
       </VStack>
     </Box>
   );
