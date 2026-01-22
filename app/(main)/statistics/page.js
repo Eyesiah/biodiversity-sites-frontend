@@ -7,6 +7,7 @@ import ChartItem from '@/components/styles/ChartItem';
 import PrimaryTable from '@/components/styles/PrimaryTable';
 import { Heading, Box } from "@chakra-ui/react"
 import { ContentLayout } from '@/components/styles/ContentLayout';
+import ChartDataExporter from '@/components/charts/ChartDataExporter';
 
 export const revalidate = 43200; // 12 hours
 
@@ -83,11 +84,51 @@ export default async function StatisticsPage() {
     };
   });
 
+  // Define chart configurations for the exporter
+  const chartConfigs = [
+    {
+      title: 'Sites & Allocations',
+      dataKeys: ['totalSites', 'numAllocations'],
+      names: ['Total Sites', 'Total Allocations']
+    },
+    {
+      title: 'Allocations per site',
+      dataKeys: ['allocationsPerSite'],
+      names: ['Allocations per site']
+    },
+    {
+      title: 'Site Area (ha): Total, Baseline & Improvement',
+      dataKeys: ['totalArea', 'baselineAreaSize', 'improvementsAreaSize'],
+      names: ['Total Site Area (ha)', 'Baseline Area (ha)', 'Improvement Area (ha)']
+    },
+    {
+      title: 'Hedgerow (km): Baseline vs. Improvement sizes',
+      dataKeys: ['baselineHedgerowSize', 'improvementsHedgerowSize'],
+      names: ['Baseline Hedgerow (km)', 'Improvement Hedgerow (km)']
+    },
+    {
+      title: 'Watercourse (km): Baseline vs. Improvement sizes',
+      dataKeys: ['baselineWatercourseSize', 'improvementsWatercourseSize'],
+      names: ['Baseline Watercourse (km)', 'Improvement Watercourse (km)']
+    },
+    {
+      title: 'Habitat units',
+      dataKeys: ['totalBaselineHUs', 'totalCreatedHUs', 'totalEnhancedHUs', 'totalHUGain', 'totalAllocationHUs'],
+      names: ['Total Baseline HUs', 'Total Created HUs', 'Total Enhanced HUs', 'Total HU Gain', 'Total Allocated HUs']
+    },
+    {
+      title: 'Parcels count',
+      dataKeys: ['baselineParcels', 'improvementsParcels', 'allocatedParcels'],
+      names: ['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels']
+    }
+  ];
+
   return (
     <>
       <ContentLayout footer={<Footer lastUpdated={Date.now()} />}>
         {stats.length > 0 ? (
           <>
+            <ChartDataExporter stats={stats} chartConfigs={chartConfigs} />
             <ChartRow marginTop={5}>
               <ChartItem>
                 <StatsChart stats={stats}

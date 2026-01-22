@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { Provider } from "@/components/styles/provider"
 import { Box } from '@chakra-ui/react';
 import { loadGlossary } from "@/lib/glossary"
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata = {
   metadataBase: new URL('https://bgs.bristoltrees.space'),
@@ -75,6 +76,7 @@ export default function RootLayout({ children }) {
               </Box>
             </Box>
           </Box>
+          <Toaster />
         </Provider>
       </body>
     </html>
