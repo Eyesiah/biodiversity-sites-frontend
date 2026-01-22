@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Box, Text, VStack, HStack } from '@chakra-ui/react';
 import Tooltip from '@/components/ui/Tooltip';
 import Select from 'react-select';
 import Papa from 'papaparse';
@@ -116,34 +116,35 @@ const ChartDataExporter = ({ stats, chartConfigs }) => {
       bg="gray.50"
       mb={6}
     >
-      <VStack spacing={4} align="stretch">
-        <Text fontSize="lg" fontWeight="bold">
-          Export Chart Data as CSV
+      <HStack spacing={4} align="center" justify="space-between" wrap="wrap">
+        <Text fontSize="lg" fontWeight="bold" flexShrink={0}>
+          Export Chart Data:
         </Text>
-        <Text fontSize="sm" color="gray.600">
-          Select one or more charts to export their data as a CSV file. The exported file will contain all time series data for your selected charts.
-        </Text>
-        <Box>
-          <Text mb={2} fontWeight="medium">Select Charts:</Text>
-          <Select
-            isMulti
-            options={chartOptions}
-            value={selectedCharts.map(index => chartOptions[index])}
-            onChange={(selectedOptions) => {
-              setSelectedCharts(selectedOptions ? selectedOptions.map(option => option.value) : []);
-            }}
-            placeholder="Choose charts to export..."
-            styles={customSelectStyles}
-          />
-        </Box>
-         <Button
+        <Box flex="1">
+          <Tooltip
+            text="Select one or more charts to export their data as a CSV file. Each chart will be saved as a separate file with date-sorted data."
+          >
+            <Box>
+              <Select
+                isMulti
+                options={chartOptions}
+                value={selectedCharts.map(index => chartOptions[index])}
+                onChange={(selectedOptions) => {
+                  setSelectedCharts(selectedOptions ? selectedOptions.map(option => option.value) : []);
+                }}
+                placeholder="Select charts to export..."
+                styles={customSelectStyles}
+              />
+            </Box>
+          </Tooltip>
+        </Box>        
+          <Button
             onClick={handleExport}
             disabled={selectedCharts.length === 0}
-            alignSelf="flex-start">
+          >
             Export CSV ({selectedCharts.length} chart{selectedCharts.length !== 1 ? 's' : ''} selected)
-         </Button>
-        
-      </VStack>
+          </Button>
+      </HStack>
     </Box>
   );
 };
