@@ -47,7 +47,7 @@ const SiteRegisterAdditionTable = ({ siteAdditions }) => {
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>Site Register Addition Date</Heading>
         <Button onClick={() => exportSiteAdditionsToCSV(siteAdditions)}>
-          Export to CSV
+          Export daily count to a CSV
         </Button>
       </Box>
       <Box maxHeight="500px" overflowY="auto" maxWidth='700px' margin="0 auto">
