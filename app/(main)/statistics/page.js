@@ -1,24 +1,13 @@
 import clientPromise from '@/lib/mongodb';
-import Link from 'next/link';
 import { StatsChart } from './StatisticsChart'
 import Footer from '@/components/core/Footer';
 import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
-import PrimaryTable from '@/components/styles/PrimaryTable';
-import { Heading, Box } from "@chakra-ui/react"
 import { ContentLayout } from '@/components/styles/ContentLayout';
 import ChartDataExporter from '@/components/charts/ChartDataExporter';
+import SiteRegisterAdditionTable from './SiteRegisterAdditionTable';
 
 export const revalidate = 43200; // 12 hours
-
-const CommaSeperatedSiteLink = ({ site, index, count }) => {
-  return (
-    <>
-      <Link href={`/sites/${site}`}>{site}</Link>
-      {index < count - 1 && ', '}
-    </>
-  );
-};
 
 export const metadata = {
   title: 'BGS Register Statistics',
@@ -195,32 +184,9 @@ export default async function StatisticsPage() {
             </ChartRow>
 
             <ChartRow>
-
               {siteAdditions && siteAdditions.length > 0 && (
                 <ChartItem>
-                  <Heading as="h2" size="lg" textAlign="center">Site Register Addition Date</Heading>
-                  <Box maxHeight="500px" overflowY="auto" maxWidth='700px' margin="0 auto">
-                    <PrimaryTable.Root>
-                      <PrimaryTable.Header>
-                        <PrimaryTable.Row>
-                          <PrimaryTable.ColumnHeader>Date</PrimaryTable.ColumnHeader>
-                          <PrimaryTable.ColumnHeader>Sites</PrimaryTable.ColumnHeader>
-                        </PrimaryTable.Row>
-                      </PrimaryTable.Header>
-                      <PrimaryTable.Body>
-                        {siteAdditions.map((addition) => (
-                          <PrimaryTable.Row key={addition.date}>
-                            <PrimaryTable.Cell>{new Date(Number(addition.date)).toLocaleDateString('en-GB', { timeZone: 'UTC' })}</PrimaryTable.Cell>
-                            <PrimaryTable.Cell>
-                              {addition.sites.map((site, index) => (
-                                <CommaSeperatedSiteLink key={index} site={site} index={index} count={addition.sites.length} />
-                              ))}
-                            </PrimaryTable.Cell>
-                          </PrimaryTable.Row>
-                        ))}
-                      </PrimaryTable.Body>
-                    </PrimaryTable.Root>
-                  </Box>
+                  <SiteRegisterAdditionTable siteAdditions={siteAdditions} />
                 </ChartItem>
               )}
             </ChartRow>
