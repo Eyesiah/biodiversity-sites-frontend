@@ -99,7 +99,7 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
     <Box>
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>{title}</Heading>
-        <Button padding="0.1rem 0.1rem" onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
+        <Button padding="0.08rem 0.08rem" onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
           <GrDocumentCsv />
         </Button>
       </Box>

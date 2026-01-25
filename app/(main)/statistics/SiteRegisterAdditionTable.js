@@ -4,6 +4,7 @@ import { Heading, Box } from "@chakra-ui/react";
 import Link from 'next/link';
 import PrimaryTable from '@/components/styles/PrimaryTable';
 import Button from '@/components/styles/Button';
+import { GrDocumentCsv } from "react-icons/gr";
 
 const CommaSeperatedSiteLink = ({ site, index, count }) => {
   return (
@@ -46,8 +47,8 @@ const SiteRegisterAdditionTable = ({ siteAdditions }) => {
     <Box>
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>Site Register Addition Date</Heading>
-        <Button onClick={() => exportSiteAdditionsToCSV(siteAdditions)}>
-          Export daily count to a CSV
+        <Button padding="0.08rem 0.08rem" onClick={() => exportSiteAdditionsToCSV(siteAdditions)}>
+          <GrDocumentCsv />
         </Button>
       </Box>
       <Box maxHeight="500px" overflowY="auto" maxWidth='700px' margin="0 auto">
