@@ -53,7 +53,7 @@ const calculateTotals = (data, module) => {
 const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
 
   // Determine unit based on module type
-  const unit = module === 'areas' ? 'ha' : 'km';
+  const unit = (module === 'areas' || module === 'trees') ? 'ha' : 'km';
 
   // Memoize all calculations to prevent unnecessary re-computation
   const { processedData, totals } = useMemo(() => {

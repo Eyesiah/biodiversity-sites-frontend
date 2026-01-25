@@ -7,6 +7,7 @@ import { DataTable } from '@/components/styles/DataTable';
 import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import Tooltip from '@/components/ui/Tooltip';
 
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites }) => {
 
@@ -133,7 +134,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
-                  % <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip>{getSortIndicator('allocated')}
+                  <Tooltip text="The percentage of the Improved habitat allocated.">% Allocated</Tooltip>{getSortIndicator('allocated')}
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('HUs')}>
