@@ -73,12 +73,6 @@ const ChartDataExporter = ({ stats, chartConfigs }) => {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     });
-
-    toaster.create({
-      title: 'Export successful',
-      description: `Downloaded ${selectedCharts.length} CSV file${selectedCharts.length > 1 ? 's' : ''}.`,
-      type: 'success',
-    });
   };
 
   const customSelectStyles = {

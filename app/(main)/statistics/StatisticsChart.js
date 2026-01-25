@@ -4,7 +4,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Heading, Box, Text } from "@chakra-ui/react";
 import Button from '@/components/styles/Button';
 import Papa from 'papaparse';
-import { toaster } from '@/components/ui/toaster';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -66,12 +65,6 @@ const exportChartDataToCSV = (stats, dataKeys, names, title) => {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
-
-  toaster.create({
-    title: 'Export successful',
-    description: `Chart data exported to ${filename}`,
-    type: 'success',
-  });
 };
 
 export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
