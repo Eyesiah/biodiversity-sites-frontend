@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { Heading, Box, Text } from "@chakra-ui/react";
 import Button from '@/components/styles/Button';
 import Papa from 'papaparse';
+import { GrDocumentCsv } from "react-icons/gr";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -88,9 +89,6 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
       <Box>
         <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
           <Heading as="h2" size="lg" mr={4}>{title}</Heading>
-          <Button onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
-            Export to CSV
-          </Button>
         </Box>
         <Text textAlign="center" height="400px">No data available for this chart.</Text>
       </Box>
@@ -101,8 +99,8 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
     <Box>
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>{title}</Heading>
-        <Button onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
-          Export to CSV
+        <Button padding="0.1rem 0.1rem" onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
+          <GrDocumentCsv />
         </Button>
       </Box>
       <ResponsiveContainer width="100%" height={400}>
