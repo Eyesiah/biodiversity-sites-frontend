@@ -1,7 +1,10 @@
 'use client'
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Heading, Box, Text } from "@chakra-ui/react"
+import { Heading, Box, Text } from "@chakra-ui/react";
+import Button from '@/components/styles/Button';
+import Papa from 'papaparse';
+import { toaster } from '@/components/ui/toaster';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -19,6 +22,57 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const exportChartDataToCSV = (stats, dataKeys, names, title) => {
+  const filteredData = stats.filter(stat =>
+    dataKeys.some(key => stat[key] != null && stat[key] !== 0)
+  );
+
+  // Prepare CSV data - Date as first column, metrics as other columns
+  const csvData = filteredData.map(stat => {
+    const row = {
+      Date: new Date(stat.timestamp).toLocaleDateString('en-GB')
+    };
+
+    dataKeys.forEach((key, keyIndex) => {
+      const value = stat[key];
+      row[names[keyIndex]] = value != null ? Number(value).toFixed(4) : '';
+    });
+
+    return row;
+  });
+
+  // Sort by date
+  csvData.sort((a, b) => {
+    return new Date(a.Date.split('/').reverse().join('-')) - new Date(b.Date.split('/').reverse().join('-'));
+  });
+
+  // Generate CSV
+  const csv = Papa.unparse(csvData);
+
+  // Create filename from chart title (sanitize for filename)
+  const filename = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') + '.csv';
+
+  // Create and trigger download
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+
+  toaster.create({
+    title: 'Export successful',
+    description: `Chart data exported to ${filename}`,
+    type: 'success',
+  });
+};
 
 export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
   const filteredData = stats.filter(stat =>
@@ -39,7 +93,12 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
   if (chartData.length === 0) {
     return (
       <Box>
-        <Heading as="h2" size="lg" textAlign="center">{title}</Heading>
+        <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+          <Heading as="h2" size="lg" mr={4}>{title}</Heading>
+          <Button onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
+            Export to CSV
+          </Button>
+        </Box>
         <Text textAlign="center" height="400px">No data available for this chart.</Text>
       </Box>
     );
@@ -47,7 +106,12 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
 
   return (
     <Box>
-      <Heading as="h2" size="lg" textAlign="center">{title}</Heading>
+      <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
+        <Heading as="h2" size="lg" mr={4}>{title}</Heading>
+        <Button onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
+          Export to CSV
+        </Button>
+      </Box>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={chartData}
