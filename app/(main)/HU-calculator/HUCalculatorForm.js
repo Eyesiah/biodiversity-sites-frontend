@@ -4,8 +4,12 @@ import { useFormStatus } from 'react-dom';
 import { calcHU } from './actions';
 import { useActionState, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Button, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
+import { Box, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
+import Button from '@/components/styles/Button';
+import { IconFileTypeXml as TbFileTypeXml } from '@tabler/icons-react';
+import { exportToXml } from '@/lib/utils';
+import Tooltip from '@/components/ui/Tooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
@@ -25,8 +29,8 @@ const initialState = {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" isLoading={pending} loadingText="Calculating..." colorScheme="teal">
-      Calculate
+    <Button type="submit" disabled={pending}>
+      {pending ? "Calculating..." : "Calculate"}
     </Button>
   );
 }
@@ -132,15 +136,27 @@ export default function HUCalculatorForm({ habitats, conditions }) {
 
           <HStack spacing={4}>
             <SubmitButton />
-            <Button onClick={() => setFormData(initialState)} colorScheme="gray">
+            <Button onClick={() => setFormData(initialState)}>
               Reset
             </Button>
             {formData.result && (
-              <Box flex="2" p={4} bg="gray.50" borderRadius="md">
-                <Code display="block" whiteSpace="pre-wrap">
-                  {JSON.stringify(formData.result, null, 2)}
-                </Code>
-              </Box>
+              <>
+                <Tooltip text="Click to download data as a .XML file">
+                  <Button
+                    padding="4px"
+                    border="0px solid"
+                    size={15}
+                    onClick={() => exportToXml(formData.result, 'HabitatUnitCalculation', 'result', 'hu-calculation.xml')}
+                  >
+                    <TbFileTypeXml size={25} padding={0} />
+                  </Button>
+                </Tooltip>
+                <Box flex="2" p={4} bg="gray.50" borderRadius="md">
+                  <Code display="block" whiteSpace="pre-wrap">
+                    {JSON.stringify(formData.result, null, 2)}
+                  </Code>
+                </Box>
+              </>
             )}
           </HStack>
         </VStack>
