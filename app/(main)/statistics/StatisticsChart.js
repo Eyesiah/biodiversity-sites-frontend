@@ -100,7 +100,7 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>{title}</Heading>
         <Button padding="4px" border="0px solid" size={15} onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
-          <GrDocumentCsv size={15} padding={0} />
+          <GrDocumentCsv size={20} padding={0} />
         </Button>
       </Box>
       <ResponsiveContainer width="100%" height={400}>
