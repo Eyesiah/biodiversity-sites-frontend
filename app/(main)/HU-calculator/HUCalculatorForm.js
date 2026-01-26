@@ -146,7 +146,36 @@ export default function HUCalculatorForm({ habitats, conditions }) {
                     padding="4px"
                     border="0px solid"
                     size={15}
-                    onClick={() => exportToXml(formData.result, 'HabitatUnitCalculation', 'result', 'hu-calculation.xml')}
+                    onClick={() => {
+                      const strategicSignificanceMap = {
+                        1: 'Low',
+                        1.1: 'Medium',
+                        1.5: 'High'
+                      };
+
+                      const inputData = {
+                        improvementType: formData.improvementType,
+                        size: formData.size,
+                        habitat: formData.habitat,
+                        condition: formData.condition,
+                        strategicSignificance: strategicSignificanceMap[formData.strategicSignificance] || formData.strategicSignificance,
+                        ...(formData.improvementType === 'enhanced' && {
+                          baselineHabitat: formData.baselineHabitat,
+                          baselineCondition: formData.baselineCondition,
+                        }),
+                        ...(formData.improvementType !== 'baseline' && {
+                          spatialRisk: formData.spatialRisk,
+                        }),
+                        ...(formData.improvementType === 'creation' && {
+                          timeToTargetOffset: formData.timeToTargetOffset,
+                        }),
+                      };
+                      const exportData = {
+                        inputs: inputData,
+                        result: formData.result,
+                      };
+                      exportToXml(exportData, 'HabitatUnitCalculation', 'calculation', 'hu-calculation.xml');
+                    }}
                   >
                     <TbFileTypeXml size={25} padding={0} />
                   </Button>
