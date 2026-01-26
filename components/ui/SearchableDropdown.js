@@ -7,11 +7,14 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
   const selectOptions = options.map(o => ({ value: o, label: o }));
   const selectedOption = value ? { value: value, label: value } : null;
 
-  // Theme-aware colors
+  // Theme-aware colors - all hooks called at component level
   const bgColor = useColorModeValue("#ffffff", "#2a2a2a"); // cardBg
   const textColor = useColorModeValue("#000000", "#f0f0f0"); // fg
   const borderColor = useColorModeValue("#bdc3c7", "#ecf0f1"); // border
   const hoverBgColor = useColorModeValue("#ecf0f1", "#3a3a3a"); // subtle background variation
+  const placeholderColor = useColorModeValue("#666", "#ccc");
+  const selectedBgColor = useColorModeValue("#2ecc71", "#27ae60"); // brand colors
+  const selectedActiveBgColor = useColorModeValue("#27ae60", "#1f8c4e");
 
   const customStyles = {
     container: (provided) => ({
@@ -37,7 +40,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
     }),
     placeholder: (provided) => ({
       ...provided,
-      color: useColorModeValue("#666", "#ccc"),
+      color: placeholderColor,
     }),
     singleValue: (provided) => ({
       ...provided,
@@ -58,7 +61,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? useColorModeValue("#2ecc71", "#27ae60") // brand colors
+        ? selectedBgColor
         : state.isFocused
         ? hoverBgColor
         : bgColor,
@@ -67,7 +70,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
         : textColor,
       cursor: 'pointer',
       '&:active': {
-        backgroundColor: useColorModeValue("#27ae60", "#1f8c4e"),
+        backgroundColor: selectedActiveBgColor,
       },
     }),
     indicatorSeparator: (provided) => ({
