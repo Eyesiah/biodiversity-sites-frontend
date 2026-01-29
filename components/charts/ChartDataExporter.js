@@ -7,6 +7,7 @@ import Select from 'react-select';
 import Papa from 'papaparse';
 import { toaster } from '@/components/ui/toaster';
 import Button from '@/components/styles/Button';
+import { GrDocumentCsv } from "react-icons/gr";
 
 const ChartDataExporter = ({ stats, chartConfigs }) => {
   const [selectedCharts, setSelectedCharts] = useState([]);
@@ -131,13 +132,18 @@ const ChartDataExporter = ({ stats, chartConfigs }) => {
               />
             </Box>
           </Tooltip>
-        </Box>        
+        </Box>
+        <Tooltip text="Click to download data">
           <Button
+            padding="4px"
+            border="0px solid"
+            size={15}
             onClick={handleExport}
             disabled={selectedCharts.length === 0}
           >
-            Export CSV ({selectedCharts.length} chart{selectedCharts.length !== 1 ? 's' : ''} selected)
+            <GrDocumentCsv size={20} padding={0} />
           </Button>
+        </Tooltip>
       </HStack>
     </Box>
   );

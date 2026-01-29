@@ -5,6 +5,10 @@ import { useSearchAndSort } from '@/lib/hooks';
 import { Box, InputGroup, Input, Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
 import { Tabs } from '@/components/styles/Tabs';
+import { GrDocumentCsv } from "react-icons/gr";
+import { BsFiletypeJson } from "react-icons/bs";
+import { TbFileTypeXml, TbJson } from "react-icons/tb";
+import Tooltip from '@/components/ui/Tooltip';
 
 // A flexible component for handling different export buttons
 const ExportButtons = ({ exportConfig, items }) => {
@@ -12,9 +16,9 @@ const ExportButtons = ({ exportConfig, items }) => {
 
   return (
     <Flex gap="0.5rem">
-      {exportConfig.onExportXml && <Button onClick={() => exportConfig.onExportXml(items)}>Export to XML</Button>}
-      {exportConfig.onExportJson && <Button onClick={() => exportConfig.onExportJson(items)}>Export to JSON</Button>}
-      {exportConfig.onExportCsv && <Button onClick={() => exportConfig.onExportCsv(items)}>Export to CSV</Button>}
+      {exportConfig.onExportXml && <Tooltip text="Click to download data as a .XML file"><Button padding="4px" border="0px solid" size={15} onClick={() => exportConfig.onExportXml(items)}><TbFileTypeXml size={25} padding={0} /></Button></Tooltip>}
+      {exportConfig.onExportJson && <Tooltip text="Click to download data as a .JSON file"><Button padding="4px" border="0px solid" size={15} onClick={() => exportConfig.onExportJson(items)}><TbJson size={25} padding={0} /></Button></Tooltip>}
+      {exportConfig.onExportCsv && <Tooltip text="Click to download data as a .CSV file"><Button padding="4px" border="0px solid" size={15} onClick={() => exportConfig.onExportCsv(items)}><GrDocumentCsv size={25} padding={0} /></Button></Tooltip>}
     </Flex>
   );
 };

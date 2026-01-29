@@ -11,7 +11,7 @@ import { ARCGIS_LNRS_URL } from '@/config';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
-import { Box, Text, Button } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {

@@ -48,7 +48,7 @@ const SiteRegisterAdditionTable = ({ siteAdditions }) => {
       <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
         <Heading as="h2" size="lg" mr={4}>Site Register Addition Date</Heading>
         <Button padding="4px" border="0px solid" size={15} onClick={() => exportSiteAdditionsToCSV(siteAdditions)}>
-          <GrDocumentCsv size={15} padding={0} />
+          <GrDocumentCsv size={20} padding={0} />
         </Button>
       </Box>
       <Box maxHeight="500px" overflowY="auto" maxWidth='700px' margin="0 auto">

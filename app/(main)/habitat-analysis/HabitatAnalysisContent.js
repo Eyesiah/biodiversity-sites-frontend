@@ -68,9 +68,9 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
         <DataTable.Header>
           <DataTable.Row>
             <DataTable.ColumnHeader colSpan="2" color="black" backgroundColor='bg' borderRight="4px solid #666">Intervention Groups</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader colSpan="3" color="black" backgroundColor='#e0e8f0' borderRight="4px solid #666">Baseline</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#dcf0e7' borderRight="4px solid #666">Improvements</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='#f0e0e0'>Allocations</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="3" color="black" backgroundColor='tableSection.baselineBg' borderRight="4px solid #666">Baseline</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='tableSection.improvementsBg' borderRight="4px solid #666">Improvements</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader colSpan="4" color="black" backgroundColor='tableSection.allocationsBg'>Allocations</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
             <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>

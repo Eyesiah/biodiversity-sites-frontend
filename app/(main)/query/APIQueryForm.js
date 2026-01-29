@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { triggerDownload } from '@/lib/utils';
-import { VStack, HStack, Text, NativeSelect, Button, Code } from '@chakra-ui/react';
+import { VStack, HStack, Text, NativeSelect, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
+import Button from '@/components/styles/Button';
 
 export default function APIQueryForm({ }) {
   const [query, setQuery] = useState('sites');
@@ -61,8 +62,8 @@ export default function APIQueryForm({ }) {
             </NativeSelect.Root>
           </HStack>
           <HStack spacing={4}>
-            <Button type="submit" isLoading={isLoading} loadingText="Downloading..." colorScheme="teal">
-              Download
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Downloading..." : "Download"}
             </Button>
           </HStack>
           <Text>API URL: <Link href={fullUrl} target="_blank"><Code>{fullUrl}</Code></Link></Text>
