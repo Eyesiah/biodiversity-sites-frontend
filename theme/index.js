@@ -23,6 +23,16 @@ export const system = createSystem(defaultConfig, {
         sky: { value: "#87ceeb" },
         // Status
         alizarin: { value: "#e74c3c" },
+        // Table section colors
+        lightBlue: { value: "#e0e8f0" },
+        lightGreen: { value: "#dcf0e7" },
+        lightRed: { value: "#f0e0e0" },
+        // Chart colors
+        charcoalText: { value: "#36454F" },
+        mediumGray: { value: "#666" },
+        chartGreen: { value: "#afcd81ff" },
+        skyBlue: { value: "#87CEEB" },
+        lightBlueBorder: { value: "#e2e8f0" },
         // Brand scale (uses greens by default)
         brand: {
           50: { value: "#e8f7ef" },
@@ -79,6 +89,20 @@ export const system = createSystem(defaultConfig, {
         cardBg: { value: { _light: "{colors.white}", _dark: "#2a2a2a" } },
         subtleBorder: { value: { _light: "{colors.clouds}", _dark: "#404040" } },
         error: { value: { _light: "{colors.alizarin}", _dark: "{colors.alizarin}" } },
+        // Table section backgrounds
+        tableSection: {
+          baselineBg: { value: { _light: "{colors.lightBlue}", _dark: "{colors.lightBlue}" } },
+          improvementsBg: { value: { _light: "{colors.lightGreen}", _dark: "{colors.lightGreen}" } },
+          allocationsBg: { value: { _light: "{colors.lightRed}", _dark: "{colors.lightRed}" } },
+        },
+        // Chart colors
+        chart: {
+          text: { value: { _light: "{colors.charcoalText}", _dark: "{colors.charcoalText}" } },
+          secondaryText: { value: { _light: "{colors.mediumGray}", _dark: "{colors.mediumGray}" } },
+          primaryFill: { value: { _light: "{colors.chartGreen}", _dark: "{colors.chartGreen}" } },
+          trendLine: { value: { _light: "{colors.skyBlue}", _dark: "{colors.skyBlue}" } },
+          border: { value: { _light: "{colors.lightBlueBorder}", _dark: "{colors.lightBlueBorder}" } },
+        },
       },
     },
     globalCss: {
