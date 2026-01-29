@@ -7,7 +7,7 @@ import { Button } from '@/components/styles/Button';
 import { Tabs } from '@/components/styles/Tabs';
 import { GrDocumentCsv } from "react-icons/gr";
 import { BsFiletypeJson } from "react-icons/bs";
-import { IconFileTypeXml as TbFileTypeXml, IconJson as TbJson } from "@tabler/icons-react";
+import { TbFileTypeXml, TbJson } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 
 // A flexible component for handling different export buttons

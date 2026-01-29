@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { Box, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
-import { IconFileTypeXml as TbFileTypeXml } from '@tabler/icons-react';
+import { TbFileTypeXml } from "react-icons/tb";
 import { exportToXml } from '@/lib/utils';
 import Tooltip from '@/components/ui/Tooltip';
 
