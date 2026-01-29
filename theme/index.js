@@ -30,6 +30,7 @@ export const system = createSystem(defaultConfig, {
         // Chart colors
         charcoalText: { value: "#36454F" },
         mediumGray: { value: "#666" },
+        darkGray: { value: "#333" },
         chartGreen: { value: "#afcd81ff" },
         skyBlue: { value: "#87CEEB" },
         lightBlueBorder: { value: "#e2e8f0" },
@@ -94,6 +95,7 @@ export const system = createSystem(defaultConfig, {
           baselineBg: { value: { _light: "{colors.lightBlue}", _dark: "{colors.lightBlue}" } },
           improvementsBg: { value: { _light: "{colors.lightGreen}", _dark: "{colors.lightGreen}" } },
           allocationsBg: { value: { _light: "{colors.lightRed}", _dark: "{colors.lightRed}" } },
+          border: { value: { _light: "{colors.mediumGray}", _dark: "{colors.mediumGray}" } },
         },
         // Chart colors
         chart: {
