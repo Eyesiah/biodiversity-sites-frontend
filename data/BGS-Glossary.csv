@@ -28,6 +28,7 @@ Responsible Body,"An organisation designated by Defra to hold and administer con
 Sankey diagram,"Sankey diagrams are a data visualisation technique or flow diagram that emphasises flow/movement/change from one state to another or one time to another, in which the width of the arrows is proportional to the flow rate of the depicted transformation."
 Size,"The size of the habitat parcel to be retained, enhanced, created, or lost. Size is measured in hectares for area habitat or in kilometres for linear habitat."
 Size (ha),"The total area, in hectares, of a Biodiversity Gain Site."
+Small tree,"Tree count is based on total Individual trees habitat area (ha), divided by the habitat areas of a small tree (0.0041 ha), rounded down."
 Spatial Risk,"The Spatial Risk multiplier (SRM) reflects the relationship between the location of onsite biodiversity loss and the location of off-site habitat compensation. It affects the number of biodiversity units provided to a project by penalising proposals where offsite habitat is located at distance from the impact site."
 Strategic Significance,"Strategic Significance is the local significance of the habitat based on its location and habitat type."
 Temporal Risk,"The Temporal Risk multiplier represents the average time lag between the start of habitat creation or enhancement works and the target outcome year."
