@@ -1,4 +1,5 @@
 import { formatNumber } from '@/lib/format';
+import { formatAreaWithTreeCount } from '@/lib/tree-utils';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
 import GlossaryTooltip from '../ui/GlossaryTooltip';
@@ -116,13 +117,13 @@ export const HabitatSummaryTable = ({ site }) => {
           {hasIndividualTrees && <DataTable.Row>
             <DataTable.Cell>Individual trees (ha)</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineIndividualTrees, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatAreaWithTreeCount(baselineIndividualTrees, 'trees')}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineIndividualTrees - improvementTrees), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementTrees, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatAreaWithTreeCount(Math.max(0, baselineIndividualTrees - improvementTrees), 'trees')}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatAreaWithTreeCount(improvementTrees, 'trees')}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationIndividualTrees, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatAreaWithTreeCount(allocationIndividualTrees, 'trees')}</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementTrees > 0 ? formatNumber((allocationIndividualTrees / improvementTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
           </DataTable.Row>}

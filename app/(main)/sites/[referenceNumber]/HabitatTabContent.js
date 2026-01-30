@@ -36,6 +36,7 @@ export default function HabitatTabContent({
               isImprovement={true}
               requestSort={improvementRequestSort}
               units={units}
+              habitatType={habitatType}
             />
           </Collapsible.Content>
         </Collapsible.Root>
@@ -51,6 +52,7 @@ export default function HabitatTabContent({
               sortConfig={baselineSortConfig}
               requestSort={baselineRequestSort}
               units={units}
+              habitatType={habitatType}
             />
           </Collapsible.Content>
         </Collapsible.Root>
