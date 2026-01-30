@@ -20,7 +20,19 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       <DataTable.Cell textAlign="center">{habitat.distinctiveness}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
       <DataTable.CenteredNumericCell>{habitat.parcels}</DataTable.CenteredNumericCell>
-      <DataTable.NumericCell>{formatAreaWithTreeCount(habitat.size, habitatType)}</DataTable.NumericCell>
+      <DataTable.NumericCell>
+        {(() => {
+          const treeData = formatAreaWithTreeCount(habitat.size, habitatType);
+          if (typeof treeData === 'object' && treeData.isTreeCount) {
+            return (
+              <>
+                {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+              </>
+            );
+          }
+          return treeData;
+        })()}
+      </DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
       <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.HUGain && habitat.HUGain > 0 ? formatNumber(habitat.HUGain) : ''}</DataTable.NumericCell>}
@@ -50,7 +62,19 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.interventionType}</DataTable.Cell>}
               <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
-              <DataTable.NumericCell textAlign="center">{formatAreaWithTreeCount(subRow.size, habitatType)}</DataTable.NumericCell>
+              <DataTable.NumericCell textAlign="center">
+                {(() => {
+                  const treeData = formatAreaWithTreeCount(subRow.size, habitatType);
+                  if (typeof treeData === 'object' && treeData.isTreeCount) {
+                    return (
+                      <>
+                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+                      </>
+                    );
+                  }
+                  return treeData;
+                })()}
+              </DataTable.NumericCell>
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.timeToTarget || ''}</DataTable.Cell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{typeof subRow.temporalRisk === 'string' ? subRow.temporalRisk : subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{(() => {
