@@ -1,5 +1,5 @@
 Term,Definition,Link,LinkText
-Allocation,"The number of habitat parcels allocated in the Biodiversity Gain Site to meet the offsite BNG requirements of specific developments."
+Allocations,"The size of habitat parcels allocated in the Biodiversity Gain Site to meet the offsite BNG requirements of specific developments."
 API,"An Application Programming Interface is a set of rules and protocols that allows different software systems to communicate and exchange data with each other in a standardized way, without users needing to know the intricate details of how each system is built."
 Baseline habitat,"The pre-existing habitat of a site before that site is developed."
 Improvement habitat,"The planned habitat after improvements are made."
@@ -28,7 +28,6 @@ Responsible Body,"An organisation designated by Defra to hold and administer con
 Sankey diagram,"Sankey diagrams are a data visualisation technique or flow diagram that emphasises flow/movement/change from one state to another or one time to another, in which the width of the arrows is proportional to the flow rate of the depicted transformation."
 Size,"The size of the habitat parcel to be retained, enhanced, created, or lost. Size is measured in hectares for area habitat or in kilometres for linear habitat."
 Size (ha),"The total area, in hectares, of a Biodiversity Gain Site."
-Small tree,"Tree count assumes that each tree is a BNG Small category tree, so is based on total Individual trees habitat area (ha), divided by the habitat area of a BNG Small category tree (habitat area 0.0041 ha) rounded to the nearest integer."
 Spatial Risk,"The Spatial Risk multiplier (SRM) reflects the relationship between the location of onsite biodiversity loss and the location of off-site habitat compensation. It affects the number of biodiversity units provided to a project by penalising proposals where offsite habitat is located at distance from the impact site."
 Strategic Significance,"Strategic Significance is the local significance of the habitat based on its location and habitat type."
 Temporal Risk,"The Temporal Risk multiplier represents the average time lag between the start of habitat creation or enhancement works and the target outcome year."

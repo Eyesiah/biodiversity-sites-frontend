@@ -3,6 +3,16 @@ import { formatAreaWithTreeCount } from '@/lib/tree-utils';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
 import GlossaryTooltip from '../ui/GlossaryTooltip';
+import Tooltip from '../ui/Tooltip';
+
+// Helper function to format tree count with tooltip
+const formatTreeCountWithTooltip = (area) => {
+  const treeCount = Math.max(1, Math.round(area / 0.0041));
+  const displayArea = formatNumber(treeCount * 0.0041, 2) + ' hectares';
+  const display = formatNumber(treeCount, 0) + (treeCount === 1 ? ' tree' : ' trees');
+  const tooltipText = `<b>Habitat area</b>: ${displayArea}. The tree count assumes that each tree is a BNG Small category tree with a habitat area of 0.0041 ha. This includes baseline trees, even though not all baseline trees may be a BNG Small category tree.`;
+  return <Tooltip text={tooltipText}>{display}</Tooltip>;
+};
 
 export const HabitatSummaryTable = ({ site }) => {
 
@@ -124,60 +134,20 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.Cell>Individual trees</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(baselineIndividualTrees, 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData + ' ha';
-              })()}
+              {formatTreeCountWithTooltip(baselineIndividualTrees)}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(Math.max(0, baselineIndividualTrees - improvementTrees), 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData + ' ha';
-              })()}
+              {formatTreeCountWithTooltip(Math.max(0, baselineIndividualTrees - improvementTrees))}
             </DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(improvementTrees, 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData + ' ha';
-              })()}
+              {formatTreeCountWithTooltip(improvementTrees)}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUGain, 2)}</DataTable.NumericCell>
             {hasAllocs && (
               <DataTable.NumericCell>
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(allocationIndividualTrees, 'trees');
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData + ' ha';
-                })()}
+                {formatTreeCountWithTooltip(allocationIndividualTrees)}
               </DataTable.NumericCell>
             )}
             {hasAllocs && <DataTable.NumericCell>{improvementTrees > 0 ? formatNumber((allocationIndividualTrees / improvementTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
