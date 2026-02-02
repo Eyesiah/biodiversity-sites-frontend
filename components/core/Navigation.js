@@ -312,13 +312,59 @@ export default function Navigation() {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Titles are often set after a small delay, so we'll wait a moment
-    setTimeout(() => {
-      setPageTitle(document.title);
-      const description =
-        document.querySelector('meta[name="description"]')?.content ?? "";
-      setPageDesc(description);
-    }, 100);
+    let retryCount = 0;
+    const maxRetries = 10;
+    const retryInterval = 50;
+
+    const updateTitleAndDesc = () => {
+      const currentTitle = document.title;
+      const currentDesc = document.querySelector('meta[name="description"]')?.content ?? "";
+
+      // Only update if we have a meaningful title (not empty and not just "Biodiversity Gain Sites Register")
+      if (currentTitle && currentTitle !== "Biodiversity Gain Sites Register") {
+        setPageTitle(currentTitle);
+        setPageDesc(currentDesc);
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(updateTitleAndDesc, retryInterval);
+      }
+    };
+
+    // Try to update immediately
+    updateTitleAndDesc();
+
+    // Set up MutationObserver to watch for title changes
+    const titleObserver = new MutationObserver(() => {
+      updateTitleAndDesc();
+    });
+
+    // Observe the title element
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+      titleObserver.observe(titleElement, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+    }
+
+    // Also observe head for meta tag changes
+    const headObserver = new MutationObserver(() => {
+      updateTitleAndDesc();
+    });
+
+    const headElement = document.querySelector('head');
+    if (headElement) {
+      headObserver.observe(headElement, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+    return () => {
+      titleObserver.disconnect();
+      headObserver.disconnect();
+    };
   }, [pathname]);
 
   const toggleMenu = () => {

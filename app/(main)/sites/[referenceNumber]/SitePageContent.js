@@ -12,6 +12,8 @@ import { Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
 import { Tabs } from '@/components/styles/Tabs';
 import { ImdScoresChart } from '@/components/charts/ImdScoresChart';
+import { TbFileTypeXml, TbJson } from "react-icons/tb";
+import Tooltip from '@/components/ui/Tooltip';
 import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 // Units constants
@@ -130,8 +132,8 @@ export default function SitePageContent({ site, sankeyData }) {
       title: 'Data Export',
       content: () => (
         <Flex gap="0.5rem" justifyContent="center">
-          <Button onClick={() => handleExportXML(site)}>Export to XML</Button>
-          <Button onClick={() => handleExportJSON(site)}>Export to JSON</Button>
+          <Tooltip text="Click to download data as a .XML file"><Button padding="4px" border="2px solid" size={15} onClick={() => handleExportXML(site)}><TbFileTypeXml size={40} padding={0} /></Button></Tooltip>
+          <Tooltip text="Click to download data as a .JSON file"><Button padding="4px" border="2px solid" size={15} onClick={() => handleExportJSON(site)}><TbJson size={40} padding={0} /></Button></Tooltip>
         </Flex>
       )
     }
