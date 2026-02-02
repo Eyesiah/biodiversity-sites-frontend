@@ -1,5 +1,5 @@
 import { formatNumber } from '@/lib/format';
-import { formatAreaWithTreeCount } from '@/lib/tree-utils';
+import { formatAreaWithTreeCount, formatTreeCountWithTooltipData } from '@/lib/tree-utils';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
 import GlossaryTooltip from '../ui/GlossaryTooltip';
@@ -7,10 +7,7 @@ import Tooltip from '../ui/Tooltip';
 
 // Helper function to format tree count with tooltip
 const formatTreeCountWithTooltip = (area) => {
-  const treeCount = Math.max(1, Math.round(area / 0.0041));
-  const displayArea = formatNumber(treeCount * 0.0041, 2) + ' hectares';
-  const display = formatNumber(treeCount, 0) + (treeCount === 1 ? ' tree' : ' trees');
-  const tooltipText = `<b>Habitat area</b>: ${displayArea}. The tree count assumes that each tree is a BNG Small category tree with a habitat area of 0.0041 ha. This includes baseline trees, even though not all baseline trees may be a BNG Small category tree.`;
+  const { display, tooltipText } = formatTreeCountWithTooltipData(area);
   return <Tooltip text={tooltipText}>{display}</Tooltip>;
 };
 
