@@ -102,9 +102,9 @@ export const HabitatSummaryTable = ({ site }) => {
         </DataTable.Header>
         <DataTable.Body>
           {hasArea && <DataTable.Row>
-            <DataTable.Cell>Areas (ha)</DataTable.Cell>
+            <DataTable.Cell>Areas</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineArea, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell color={(() => {
               const retainedArea = baselineArea - improvementArea;
@@ -112,16 +112,16 @@ export const HabitatSummaryTable = ({ site }) => {
             })() < 0 ? "red.500" : undefined}>{formatNumber((() => {
               const retainedArea = baselineArea - improvementArea;
               return Math.abs(retainedArea) < 0.005 ? 0 : retainedArea;
-            })(), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementArea, 2)}</DataTable.NumericCell>
+            })(), 2)} ha</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementAreaHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementAreaHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)} ha</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationAreaHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasIndividualTrees && <DataTable.Row>
-            <DataTable.Cell>Individual trees (ha)</DataTable.Cell>
+            <DataTable.Cell>Individual trees</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>
               {(() => {
@@ -129,11 +129,11 @@ export const HabitatSummaryTable = ({ site }) => {
                 if (typeof treeData === 'object' && treeData.isTreeCount) {
                   return (
                     <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
                     </>
                   );
                 }
-                return treeData;
+                return treeData + ' ha';
               })()}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
@@ -143,11 +143,11 @@ export const HabitatSummaryTable = ({ site }) => {
                 if (typeof treeData === 'object' && treeData.isTreeCount) {
                   return (
                     <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
                     </>
                   );
                 }
-                return treeData;
+                return treeData + ' ha';
               })()}
             </DataTable.NumericCell>
             <DataTable.NumericCell>
@@ -156,11 +156,11 @@ export const HabitatSummaryTable = ({ site }) => {
                 if (typeof treeData === 'object' && treeData.isTreeCount) {
                   return (
                     <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+                      {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
                     </>
                   );
                 }
-                return treeData;
+                return treeData + ' ha';
               })()}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
@@ -172,11 +172,11 @@ export const HabitatSummaryTable = ({ site }) => {
                   if (typeof treeData === 'object' && treeData.isTreeCount) {
                     return (
                       <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
+                        {treeData.area} ha ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
                       </>
                     );
                   }
-                  return treeData;
+                  return treeData + ' ha';
                 })()}
               </DataTable.NumericCell>
             )}
@@ -184,28 +184,28 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasHedgerow && <DataTable.Row>
-            <DataTable.Cell>Hedgerows (km)</DataTable.Cell>
+            <DataTable.Cell>Hedgerows</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowHUs)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineHedgerow - improvementHedgerow), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineHedgerow - improvementHedgerow), 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerowHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerowHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationHedgerowHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasWatercourse && <DataTable.Row>
-            <DataTable.Cell>Watercourses (km)</DataTable.Cell>
+            <DataTable.Cell>Watercourses</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseHUs)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineWatercourse - improvementWatercourse), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineWatercourse - improvementWatercourse), 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourseHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourseHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}
