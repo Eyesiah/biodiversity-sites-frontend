@@ -125,7 +125,7 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
         isHabitatOpen={isHabitatOpen}
         sites={sites}
         requestSort={requestSort}
-        units={(module == 'Area' || module == 'Tree') ? 'ha' : 'km'}
+        units={module == 'Area' ? 'ha' : module == 'Tree' ? '' : 'km'}
         habitatType={module === 'Tree' ? 'trees' : undefined}
       />
     );

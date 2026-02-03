@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
-import { formatAreaWithTreeCount } from '@/lib/tree-utils';
+import { formatAreaWithTreeCount, formatTreeCountWithTooltipData } from '@/lib/tree-utils';
 import { getSortProps } from '@/lib/hooks';
 import Papa from 'papaparse';
 import { triggerDownload } from '@/lib/utils';
@@ -12,6 +12,12 @@ import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredBaselinePieChart } from '@/components/charts/FilteredHabitatPieChart'
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import Tooltip from '@/components/ui/Tooltip';
+
+// Helper function to format tree count with tooltip
+const formatTreeCountWithTooltip = (area) => {
+  const { display, tooltipText } = formatTreeCountWithTooltipData(area);
+  return <Tooltip text={tooltipText}>{display}</Tooltip>;
+};
 
 const calculateTotals = (data, module) => {
   // Calculate totals for the specified module
@@ -54,7 +60,7 @@ const calculateTotals = (data, module) => {
 const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
 
   // Determine unit based on module type
-  const unit = (module === 'areas' || module === 'trees') ? 'ha' : 'km';
+  const unit = module === 'areas' ? 'ha' : module === 'trees' ? '' : 'km';
 
   // Memoize all calculations to prevent unnecessary re-computation
   const { processedData, totals } = useMemo(() => {
@@ -77,14 +83,14 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.ColumnHeader onClick={() => requestSort('habitat')} {...getSortProps('habitat', sortConfig)}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('distinctiveness')} {...getSortProps('distinctiveness', sortConfig)} textAlign="center" borderRight="4px solid #666"><GlossaryTooltip term='Distinctiveness'>Distinctiveness</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('baselineParcels')} {...getSortProps('baselineParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}><GlossaryTooltip term='Baseline size'>Baseline size</GlossaryTooltip> ({unit})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('baseline')} {...getSortProps('baseline', sortConfig)}><GlossaryTooltip term='Baseline size'>Baseline size</GlossaryTooltip>{unit && ` (${unit})`}</DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('baselineShare')} {...getSortProps('baselineShare', sortConfig)} borderRight="4px solid #666"><Tooltip text="The percentage share of the total baseline habitats.">% Baseline</Tooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementSites')} {...getSortProps('improvementSites', sortConfig)} textAlign="center"><GlossaryTooltip term='Improvement Sites'># Improvement Sites</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementParcels')} {...getSortProps('improvementParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}><GlossaryTooltip term='Improvement size'>Improvement size ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('improvement')} {...getSortProps('improvement', sortConfig)}><GlossaryTooltip term='Improvement size'>Improvement size{unit && ` (${unit})`}</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementShare')} {...getSortProps('improvementShare', sortConfig)} borderRight="4px solid #666"><Tooltip text="The percentage share of the total improved habitats.">% Improved</Tooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationParcels')} {...getSortProps('allocationParcels', sortConfig)} textAlign="center"><GlossaryTooltip term='Parcel'># Parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}><GlossaryTooltip term='Allocation'>Allocation ({unit})</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader onClick={() => requestSort('allocation')} {...getSortProps('allocation', sortConfig)}><GlossaryTooltip term='Allocations'>Allocations{unit && ` (${unit})`}</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('allocationShare')} {...getSortProps('allocationShare', sortConfig)}><Tooltip text="The percentage share of the total allocated habitat parcels.">% allocated</Tooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader onClick={() => requestSort('improvementAllocation')} {...getSortProps('improvementAllocation', sortConfig)}><Tooltip text="The percentage share allocated of this improved habitat.">% Improvement allocated</Tooltip></DataTable.ColumnHeader>
           </DataTable.Row>
@@ -94,48 +100,18 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
             <DataTable.Cell colSpan="2" textAlign="right" borderRight="4px solid #666">Totals:</DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalBaselineParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(totals.totalBaseline, module);
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {module === 'trees' ? formatTreeCountWithTooltip(totals.totalBaseline) : formatAreaWithTreeCount(totals.totalBaseline, module)}
             </DataTable.NumericCell>
             <DataTable.Cell borderRight="4px solid #666"></DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementSites, 0)}</DataTable.CenteredNumericCell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalImprovementParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(totals.totalImprovement, module);
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {module === 'trees' ? formatTreeCountWithTooltip(totals.totalImprovement) : formatAreaWithTreeCount(totals.totalImprovement, module)}
             </DataTable.NumericCell>
             <DataTable.Cell borderRight="4px solid #666"></DataTable.Cell>
             <DataTable.CenteredNumericCell>{formatNumber(totals.totalAllocationParcels, 0)}</DataTable.CenteredNumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(totals.totalAllocation, module);
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {module === 'trees' ? formatTreeCountWithTooltip(totals.totalAllocation) : formatAreaWithTreeCount(totals.totalAllocation, module)}
             </DataTable.NumericCell>
             <DataTable.Cell></DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(totals.totalImprovementAllocation, 2)}%</DataTable.NumericCell>
@@ -146,48 +122,18 @@ const AnalysisTable = ({ data, module, requestSort, sortConfig }) => {
               <DataTable.Cell textAlign='center' borderRight="4px solid #666">{row.distinctiveness}</DataTable.Cell>
               <DataTable.CenteredNumericCell>{formatNumber(row.baselineParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(row.baseline, module);
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData;
-                })()}
+                {module === 'trees' ? formatTreeCountWithTooltip(row.baseline) : formatAreaWithTreeCount(row.baseline, module)}
               </DataTable.NumericCell>
               <DataTable.NumericCell borderRight="4px solid #666">{formatNumber(row.baselineShare, 2)}%</DataTable.NumericCell>
               <DataTable.Cell textAlign='center'>{row.improvementSites || 0}</DataTable.Cell>
               <DataTable.CenteredNumericCell>{formatNumber(row.improvementParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(row.improvement, module);
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData;
-                })()}
+                {module === 'trees' ? formatTreeCountWithTooltip(row.improvement) : formatAreaWithTreeCount(row.improvement, module)}
               </DataTable.NumericCell>
               <DataTable.NumericCell borderRight="4px solid #666">{formatNumber(row.improvementShare, 2)}%</DataTable.NumericCell>
               <DataTable.CenteredNumericCell>{formatNumber(row.allocationParcels, 0)}</DataTable.CenteredNumericCell>
               <DataTable.NumericCell>
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(row.allocation, module);
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData;
-                })()}
+                {module === 'trees' ? formatTreeCountWithTooltip(row.allocation) : formatAreaWithTreeCount(row.allocation, module)}
               </DataTable.NumericCell>
               <DataTable.NumericCell>{formatNumber(row.allocationShare, 2)}%</DataTable.NumericCell>
               <DataTable.NumericCell>{formatNumber(row.improvementAllocation, 2)}%</DataTable.NumericCell>

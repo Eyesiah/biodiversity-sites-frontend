@@ -1,8 +1,15 @@
 import { formatNumber } from '@/lib/format';
-import { formatAreaWithTreeCount } from '@/lib/tree-utils';
+import { formatAreaWithTreeCount, formatTreeCountWithTooltipData } from '@/lib/tree-utils';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box } from '@chakra-ui/react';
 import GlossaryTooltip from '../ui/GlossaryTooltip';
+import Tooltip from '../ui/Tooltip';
+
+// Helper function to format tree count with tooltip
+const formatTreeCountWithTooltip = (area) => {
+  const { display, tooltipText } = formatTreeCountWithTooltipData(area);
+  return <Tooltip text={tooltipText}>{display}</Tooltip>;
+};
 
 export const HabitatSummaryTable = ({ site }) => {
 
@@ -102,9 +109,9 @@ export const HabitatSummaryTable = ({ site }) => {
         </DataTable.Header>
         <DataTable.Body>
           {hasArea && <DataTable.Row>
-            <DataTable.Cell>Areas (ha)</DataTable.Cell>
+            <DataTable.Cell>Areas</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineArea, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell color={(() => {
               const retainedArea = baselineArea - improvementArea;
@@ -112,100 +119,60 @@ export const HabitatSummaryTable = ({ site }) => {
             })() < 0 ? "red.500" : undefined}>{formatNumber((() => {
               const retainedArea = baselineArea - improvementArea;
               return Math.abs(retainedArea) < 0.005 ? 0 : retainedArea;
-            })(), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementArea, 2)}</DataTable.NumericCell>
+            })(), 2)} ha</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementAreaHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementAreaHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)} ha</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationAreaHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasIndividualTrees && <DataTable.Row>
-            <DataTable.Cell>Individual trees (ha)</DataTable.Cell>
+            <DataTable.Cell>Individual trees</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(baselineIndividualTrees, 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {formatTreeCountWithTooltip(baselineIndividualTrees)}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(Math.max(0, baselineIndividualTrees - improvementTrees), 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {formatTreeCountWithTooltip(Math.max(0, baselineIndividualTrees - improvementTrees))}
             </DataTable.NumericCell>
             <DataTable.NumericCell>
-              {(() => {
-                const treeData = formatAreaWithTreeCount(improvementTrees, 'trees');
-                if (typeof treeData === 'object' && treeData.isTreeCount) {
-                  return (
-                    <>
-                      {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                    </>
-                  );
-                }
-                return treeData;
-              })()}
+              {formatTreeCountWithTooltip(improvementTrees)}
             </DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUGain, 2)}</DataTable.NumericCell>
             {hasAllocs && (
               <DataTable.NumericCell>
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(allocationIndividualTrees, 'trees');
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData;
-                })()}
+                {formatTreeCountWithTooltip(allocationIndividualTrees)}
               </DataTable.NumericCell>
             )}
             {hasAllocs && <DataTable.NumericCell>{improvementTrees > 0 ? formatNumber((allocationIndividualTrees / improvementTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasHedgerow && <DataTable.Row>
-            <DataTable.Cell>Hedgerows (km)</DataTable.Cell>
+            <DataTable.Cell>Hedgerows</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowHUs)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineHedgerow - improvementHedgerow), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineHedgerow - improvementHedgerow), 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerowHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerowHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationHedgerowHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasWatercourse && <DataTable.Row>
-            <DataTable.Cell>Watercourses (km)</DataTable.Cell>
+            <DataTable.Cell>Watercourses</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(baselineWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseHUs)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineWatercourse - improvementWatercourse), 2)}</DataTable.NumericCell>
-            <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(Math.max(0, baselineWatercourse - improvementWatercourse), 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourseHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourseHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)}</DataTable.NumericCell>}
+            {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
           </DataTable.Row>}

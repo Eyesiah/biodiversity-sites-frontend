@@ -1,7 +1,7 @@
 'use client'
 
 import { formatNumber } from '@/lib/format';
-import { formatAreaWithTreeCount } from '@/lib/tree-utils';
+import { formatAreaWithTreeCount, formatTreeCountWithTooltipData } from '@/lib/tree-utils';
 import { CollapsibleRow } from "@/components/data/CollapsibleRow"
 import SiteList from '@/components/data/SiteList';
 import { DataTable } from '@/components/styles/DataTable';
@@ -9,6 +9,12 @@ import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { Box, Text } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import Tooltip from '@/components/ui/Tooltip';
+
+// Helper function to format tree count with tooltip
+const formatTreeCountWithTooltip = (area) => {
+  const { display, tooltipText } = formatTreeCountWithTooltipData(area);
+  return <Tooltip text={tooltipText}>{display}</Tooltip>;
+};
 
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites, habitatType }) => {
 
@@ -21,17 +27,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
       <DataTable.CenteredNumericCell>{habitat.parcels}</DataTable.CenteredNumericCell>
       <DataTable.NumericCell>
-        {(() => {
-          const treeData = formatAreaWithTreeCount(habitat.size, habitatType);
-          if (typeof treeData === 'object' && treeData.isTreeCount) {
-            return (
-              <>
-                {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-              </>
-            );
-          }
-          return treeData;
-        })()}
+        {habitatType === 'trees' ? formatTreeCountWithTooltip(habitat.size) : formatAreaWithTreeCount(habitat.size, habitatType)}
       </DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
       <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
@@ -47,7 +43,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Intervention'>Intervention</GlossaryTooltip></DataTable.ColumnHeader>}
             <DataTable.ColumnHeader><GlossaryTooltip term='Condition'>Condition</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader><GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units})</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader><GlossaryTooltip term='Size'>Size</GlossaryTooltip>{units && ` (${units})`}</DataTable.ColumnHeader>
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Time to Target'>Time to Target (years)</GlossaryTooltip></DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Temporal Risk'>Temporal Risk</GlossaryTooltip></DataTable.ColumnHeader>}
             {isImprovement && <DataTable.ColumnHeader><GlossaryTooltip term='Difficulty Factor'>Difficulty Factor</GlossaryTooltip></DataTable.ColumnHeader>}
@@ -63,17 +59,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
               <DataTable.Cell textAlign="center">{subRow.condition}</DataTable.Cell>
               <DataTable.NumericCell textAlign="center">{subRow.parcels}</DataTable.NumericCell>
               <DataTable.NumericCell textAlign="center">
-                {(() => {
-                  const treeData = formatAreaWithTreeCount(subRow.size, habitatType);
-                  if (typeof treeData === 'object' && treeData.isTreeCount) {
-                    return (
-                      <>
-                        {treeData.area} ({treeData.treeCount} <GlossaryTooltip term="Small tree">{treeData.treeWord}</GlossaryTooltip>)
-                      </>
-                    );
-                  }
-                  return treeData;
-                })()}
+                {habitatType === 'trees' ? formatTreeCountWithTooltip(subRow.size) : formatAreaWithTreeCount(subRow.size, habitatType)}
               </DataTable.NumericCell>
               {isImprovement && <DataTable.Cell textAlign="center">{subRow.timeToTarget || ''}</DataTable.Cell>}
               {isImprovement && <DataTable.NumericCell textAlign="center">{typeof subRow.temporalRisk === 'string' ? subRow.temporalRisk : subRow.temporalRisk && subRow.temporalRisk > 0 ? formatNumber(subRow.temporalRisk, 3) : ''}</DataTable.NumericCell>}
@@ -155,7 +141,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
                 # <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip>{getSortIndicator('parcels')}
               </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('area')}>
-                <GlossaryTooltip term='Size'>Size</GlossaryTooltip> ({units}){getSortIndicator('area')}
+                <GlossaryTooltip term='Size'>Size</GlossaryTooltip>{units && ` (${units})`}{getSortIndicator('area')}
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('allocated')}>
