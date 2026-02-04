@@ -46,7 +46,7 @@ const handleExportJSON = (site) => {
   triggerDownload(blob, `bgs-site-${site.referenceNumber}.json`);
 };
 
-export default function SitePageContent({ site, sankeyData }) {
+export default function SitePageContent({ site }) {
   const [showAllocations, setshowAllocations] = useState(false);
   const [showLPA, setShowLPA] = useState(false);
   const [showNCA, setShowNCA] = useState(false);
@@ -59,7 +59,7 @@ export default function SitePageContent({ site, sankeyData }) {
       title: `Areas&nbsp;(${Math.max(site.habitats.areas.length, site.improvements.areas.length)})`,
       content: () => (
         <HabitatTabContent
-          sankeyData={sankeyData.areas}
+          sankeyData={site.sankey.areas}
           habitatType="Area Habitats"
           units={UNITS.HECTARES}
           improvements={site.improvements.areas}
@@ -71,7 +71,7 @@ export default function SitePageContent({ site, sankeyData }) {
       title: `Individual Trees&nbsp;(${Math.max(site.improvements.trees.length, site.habitats.trees.length)})`,
       content: () => (
         <HabitatTabContent
-          sankeyData={sankeyData.trees}
+          sankeyData={site.sankey.trees}
           habitatType="Individual Trees"
           units={UNITS.HECTARES}
           improvements={site.improvements.trees}
@@ -84,7 +84,7 @@ export default function SitePageContent({ site, sankeyData }) {
       title: `Hedgerow&nbsp;(${Math.max(site.habitats.hedgerows.length, site.improvements.hedgerows.length)})`,
       content: () => (
         <HabitatTabContent
-          sankeyData={sankeyData.hedgerows}
+          sankeyData={site.sankey.hedgerows}
           habitatType="Hedgerows"
           units={UNITS.KILOMETRES}
           improvements={site.improvements.hedgerows}
@@ -97,7 +97,7 @@ export default function SitePageContent({ site, sankeyData }) {
       title: `Watercourse&nbsp;(${Math.max(site.habitats.watercourses.length, site.improvements.watercourses.length)})`,
       content: () => (
         <HabitatTabContent
-          sankeyData={sankeyData.watercourses}
+          sankeyData={site.sankey.watercourses}
           habitatType="Watercourses"
           units={UNITS.KILOMETRES}
           improvements={site.improvements.watercourses}
@@ -138,8 +138,7 @@ export default function SitePageContent({ site, sankeyData }) {
       )
     }
   ], [
-    site,
-    sankeyData
+    site
   ]);
 
   const handleTabChange = useCallback((newTabIndex) => {

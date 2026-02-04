@@ -1,5 +1,4 @@
 import { fetchSite } from '@/lib/api';
-import { getHabitatSankeyGraph } from '@/lib/sites'
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
@@ -20,7 +19,7 @@ export default async function SitePage({ params }) {
   const { referenceNumber } = await params;
   const lastUpdated = Date.now();
 
-  const site = await fetchSite(referenceNumber, true, true, true)
+  const site = await fetchSite(referenceNumber, true, true, true, true)
   if (!site) {
     return <p>Site not found</p>
   }
@@ -34,11 +33,9 @@ export default async function SitePage({ params }) {
     site.position = [site.latitude, site.longitude];
   }
 
-  const sankeyData = getHabitatSankeyGraph(site);
-
   return (
     <>
-      <SitePageContent site={site} sankeyData={sankeyData} />
+      <SitePageContent site={site} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
