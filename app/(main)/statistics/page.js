@@ -137,13 +137,24 @@ export default async function StatisticsPage() {
             <ChartRow>
               <ChartItem>
                 <StatsChart stats={stats}
+                  dataKeys={['totalBaselineHUs', 'totalCreatedHUs', 'totalEnhancedHUs', 'totalHUGain', 'totalAllocationHUs']}
+                  strokeColors={['#ff7300', '#00C49F', '#d4a6f2', '#0a10b8', '#8884d8']}
+                  names={['Total Baseline HUs', 'Total Created HUs', 'Total Enhanced HUs', 'Total HU Gain', 'Total Allocated HUs']}
+                  title={'Habitat units'}
+                />
+              </ChartItem>
+              <ChartItem>
+                <StatsChart stats={stats}
                   dataKeys={['baselineParcels', 'improvementsParcels', 'allocatedParcels']}
                   strokeColors={['#ff7300', '#00C49F', '#d4a6f2']}
                   names={['Baseline Parcels', 'Improved Parcels', 'Allocated Parcels']}
                   title={'Parcels count'}
                 />
               </ChartItem>
-              <ChartItem>
+            </ChartRow>
+
+            <ChartRow justifyContent="center">
+              <ChartItem maxW={{ base: "100%", md: "50%" }}>
                 <StatsChart stats={stats}
                   dataKeys={['baselineTreeCount', 'improvementsTreeCount', 'allocatedTreeCount']}
                   strokeColors={['#8b4513', '#228b22', '#daa520']}
