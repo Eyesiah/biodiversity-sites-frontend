@@ -89,6 +89,9 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
       <Box>
         <Box display="flex" justifyContent="center" alignItems="center" mb={4}>
           <Heading as="h2" size="lg" mr={4}>{title}</Heading>
+          <Button padding="4px" border="0px solid" size={15} onClick={() => exportChartDataToCSV(stats, dataKeys, names, title)}>
+            <GrDocumentCsv size={20} padding={0} />
+          </Button>
         </Box>
         <Text textAlign="center" height="400px">No data available for this chart.</Text>
       </Box>
