@@ -5,6 +5,7 @@ import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
 import { ContentLayout } from '@/components/styles/ContentLayout';
 import SiteRegisterAdditionTable from './SiteRegisterAdditionTable';
+import { calculateTreeCount } from '@/lib/tree-utils';
 
 export const revalidate = 43200; // 12 hours
 
@@ -63,12 +64,20 @@ export default async function StatisticsPage() {
     const numAllocations = stat.numAllocations || 0;
     const allocationsPerSite = totalSites > 0 ? numAllocations / totalSites : 0;
 
+    // Calculate tree counts from tree sizes (only if the fields exist in the stats)
+    const baselineTreeCount = stat.baselineTreesSize !== undefined ? calculateTreeCount(stat.baselineTreesSize) : null;
+    const improvementsTreeCount = stat.improvementsTreesSize !== undefined ? calculateTreeCount(stat.improvementsTreesSize) : null;
+    const allocatedTreeCount = stat.allocatedTreesSize !== undefined ? calculateTreeCount(stat.allocatedTreesSize) : null;
+
     return {
       ...stat,
       timestamp: date.getTime(),
       date: date.toLocaleDateString('en-GB'),
       _id: stat._id.toString(),
       allocationsPerSite,
+      baselineTreeCount,
+      improvementsTreeCount,
+      allocatedTreeCount,
     };
   });
 
@@ -145,6 +154,14 @@ export default async function StatisticsPage() {
             </ChartRow>
 
             <ChartRow>
+              <ChartItem>
+                <StatsChart stats={stats}
+                  dataKeys={['baselineTreeCount', 'improvementsTreeCount', 'allocatedTreeCount']}
+                  strokeColors={['#8b4513', '#228b22', '#daa520']}
+                  names={['Baseline Trees', 'Improved Trees', 'Allocated Trees']}
+                  title={'Individual Trees Count'}
+                />
+              </ChartItem>
               {siteAdditions && siteAdditions.length > 0 && (
                 <ChartItem>
                   <SiteRegisterAdditionTable siteAdditions={siteAdditions} />
