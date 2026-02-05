@@ -67,7 +67,6 @@ export default async function StatisticsPage() {
     // Calculate tree counts from tree sizes (only if the fields exist in the stats)
     const baselineTreeCount = stat.baselineTreesSize !== undefined ? calculateTreeCount(stat.baselineTreesSize) : null;
     const improvementsTreeCount = stat.improvementsTreesSize !== undefined ? calculateTreeCount(stat.improvementsTreesSize) : null;
-    const retainedTreeCount = stat.retainedTreesSize !== undefined ? calculateTreeCount(stat.retainedTreesSize) : null;
     const allocatedTreeCount = stat.allocatedTreesSize !== undefined ? calculateTreeCount(stat.allocatedTreesSize) : null;
 
     return {
@@ -78,7 +77,6 @@ export default async function StatisticsPage() {
       allocationsPerSite,
       baselineTreeCount,
       improvementsTreeCount,
-      retainedTreeCount,
       allocatedTreeCount,
     };
   });
@@ -158,9 +156,9 @@ export default async function StatisticsPage() {
             <ChartRow>
               <ChartItem>
                 <StatsChart stats={stats}
-                  dataKeys={['baselineTreeCount', 'improvementsTreeCount', 'retainedTreeCount', 'allocatedTreeCount']}
-                  strokeColors={['#8b4513', '#228b22', '#32cd32', '#daa520']}
-                  names={['Baseline Trees', 'Improved Trees', 'Retained Trees', 'Allocated Trees']}
+                  dataKeys={['baselineTreeCount', 'improvementsTreeCount', 'allocatedTreeCount']}
+                  strokeColors={['#8b4513', '#228b22', '#daa520']}
+                  names={['Baseline Trees', 'Improved Trees', 'Allocated Trees']}
                   title={'Individual Trees Count'}
                 />
               </ChartItem>
