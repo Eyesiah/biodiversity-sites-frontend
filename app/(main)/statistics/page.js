@@ -153,8 +153,8 @@ export default async function StatisticsPage() {
               </ChartItem>
             </ChartRow>
 
-            <ChartRow justifyContent="center">
-              <ChartItem maxW={{ base: "100%", md: "50%" }}>
+            <ChartRow>
+              <ChartItem>
                 <StatsChart stats={stats}
                   dataKeys={['baselineTreeCount', 'improvementsTreeCount', 'allocatedTreeCount']}
                   strokeColors={['#8b4513', '#228b22', '#daa520']}
@@ -162,9 +162,6 @@ export default async function StatisticsPage() {
                   title={'Individual Trees Count'}
                 />
               </ChartItem>
-            </ChartRow>
-
-            <ChartRow>
               {siteAdditions && siteAdditions.length > 0 && (
                 <ChartItem>
                   <SiteRegisterAdditionTable siteAdditions={siteAdditions} />
