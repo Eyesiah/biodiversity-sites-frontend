@@ -1,9 +1,18 @@
-import { fetchSite } from '@/lib/api';
+import { fetchSite, fetchAllRefNos } from '@/lib/api';
 import SitePageContent from './SitePageContent'
 import Footer from '@/components/core/Footer';
 
-// Force dynamic rendering to ensure site names are available at runtime
-export const dynamic = 'force-dynamic';
+export const revalidate = 86400; // 24 hours
+
+export async function generateStaticParams() {
+
+  const sites = await fetchAllRefNos();
+  const paths = sites.map(referenceNumber => {
+    return { referenceNumber: referenceNumber };
+  });
+
+  return paths;
+}
 
 export async function generateMetadata({ params }) {
   const { referenceNumber } = await params;
@@ -11,6 +20,7 @@ export async function generateMetadata({ params }) {
 
   return {
     title: site?.name ? `${site.name} | ${site.referenceNumber}` : `Site Details: ${site.referenceNumber}`,
+    description: `Details for Biodiversity Gain Site ${site.referenceNumber} - NOTE: site names are best guesses as the register does not contain names for sites.`,
   };
 }
 
