@@ -11,6 +11,10 @@ import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, PieChart, Pie, Cell, Legend, ScatterChart, Scatter, Line } from 'recharts';
 import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
+import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
+import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
+import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
+import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
 import { correlation, bootstrapMedianCI, scatter_sums, regression_line } from '@/lib/Stats';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -566,6 +570,22 @@ export default function SiteListPageContent({ sites }) {
               {
                 title: "IMD Decile chart",
                 content: ({ sortedItems }) => <IMDSiteDecileChart sites={sortedItems} />
+              },
+              {
+                title: "Responsible Bodies Chart",
+                content: ({ sortedItems }) => <ResponsibleBodyMetricsChart sites={sortedItems} />
+              },
+              {
+                title: "LPAs Chart",
+                content: ({ sortedItems }) => <LPAMetricsChart sites={sortedItems} />
+              },
+              {
+                title: "NCAs Chart",
+                content: ({ sortedItems }) => <NCAMetricsChart sites={sortedItems} />
+              },
+              {
+                title: "LNRSs Chart",
+                content: ({ sortedItems }) => <LNRSMetricsChart sites={sortedItems} />
               }
 
             ]}
