@@ -13,6 +13,7 @@ import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Box, Text, Heading, Link } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -112,6 +113,11 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
     const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
     
+    // Collect all sites from all responsible bodies for the chart
+    const allSites = useMemo(() => {
+      return responsibleBodies.flatMap(body => body.sites);
+    }, [responsibleBodies]);
+    
     return (
         <MapContentLayout
           map={
@@ -141,11 +147,13 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                     )}
                     </Box>
                 )}
-              >
-                {({ sortedItems, requestSort, getSortIndicator }) => (
-                    <PrimaryTable.Root>
+                tabs={[
+                  {
+                    title: "Table",
+                    content: ({ sortedItems, requestSort, getSortIndicator }) => (
+                      <PrimaryTable.Root>
                         <PrimaryTable.Header>
-                        <PrimaryTable.Row>
+                          <PrimaryTable.Row>
                             <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
                             <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
                             <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
@@ -154,23 +162,33 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                             <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
                             <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
                             <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
-                        </PrimaryTable.Row>
+                          </PrimaryTable.Row>
                         </PrimaryTable.Header>
                         <PrimaryTable.Body>
-                        {sortedItems.map((body) => (
+                          {sortedItems.map((body) => (
                             <BodyRow
-                            body={body}
-                            key={body.name}
-                            isOpen={expandedRows[body.name] || false}
-                            onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                            onSiteHover={setHoveredSite}
-                            onSiteClick={setSelectedSite}
+                              body={body}
+                              key={body.name}
+                              isOpen={expandedRows[body.name] || false}
+                              onToggle={(isOpen) => handleToggle(body.name, isOpen)}
+                              onSiteHover={setHoveredSite}
+                              onSiteClick={setSelectedSite}
                             />              
-                        ))}
+                          ))}
                         </PrimaryTable.Body>
-                    </PrimaryTable.Root>
-                )}
-              </SearchableTableLayout>
+                      </PrimaryTable.Root>
+                    )
+                  },
+                  {
+                    title: "Metrics Chart",
+                    content: ({ sortedItems }) => {
+                      // Get sites from filtered bodies
+                      const filteredSites = sortedItems.flatMap(body => body.sites);
+                      return <ResponsibleBodyMetricsChart sites={filteredSites} />;
+                    }
+                  }
+                ]}
+              />
             </>
           }
         />
