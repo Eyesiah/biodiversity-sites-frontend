@@ -134,7 +134,7 @@ export default function SearchableTableLayout({
       )}
 
       {tabs && tabs.length > 0 ? (
-        <Tabs.Root key={`tabs-${sortedItems.length}`}>
+        <Tabs.Root defaultValue={0}>
           <Tabs.List
             position="sticky"
           >

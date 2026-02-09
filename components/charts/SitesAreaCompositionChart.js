@@ -14,8 +14,9 @@ import { formatNumber } from '@/lib/format';
 
 // Constants for chart configuration
 const CHART_CONFIG = {
-  HEIGHT: 500,
-  OUTER_RADIUS_PERCENTAGE: 80
+  HEIGHT: 700,
+  OUTER_RADIUS_PERCENTAGE: 85,
+  TOP_N: 10
 };
 
 const UNITS = {
@@ -112,7 +113,7 @@ export const SitesAreaCompositionChart = ({ sites }) => {
         BGS Site Area: {formatNumber(totalBGSSize, 0)} {UNITS.HECTARES}
       </Text>
       <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
-        <PieChart>
+        <PieChart>          
           <Pie
             data={chartData}
             cx="50%"

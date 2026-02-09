@@ -33,7 +33,13 @@ export const Tabs = {
     <ChakraTabs.Trigger
       _selected={{ color: 'fg', borderColor: 'link', borderBottomWidth: '0px' }}
       color="gray.500"
-      flexShrink={0}
+      whiteSpace="normal"
+      textAlign="center"
+      lineHeight="1.2"
+      minHeight="48px"
+      maxWidth="150px"
+      py="8px"
+      px="12px"
       {...props}
     />
   ),

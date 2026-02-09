@@ -1,0 +1,356 @@
+'use client'
+
+import { useMemo, useState } from 'react';
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
+import { Box, Text, Heading } from '@chakra-ui/react';
+import { SegmentGroup } from '@chakra-ui/react';
+import { formatNumber, normalizeBodyName } from '@/lib/format';
+import { toTitleCase } from '@/lib/utils';
+
+// Constants for chart configuration
+const CHART_CONFIG = {
+  HEIGHT: 700,
+  OUTER_RADIUS_PERCENTAGE: 85
+};
+
+// Color palette for the top entities (25 distinct colors)
+const COLORS = [
+  '#0088FE', // Blue
+  '#00C49F', // Teal
+  '#FFBB28', // Yellow
+  '#FF8042', // Orange
+  '#8884d8', // Purple
+  '#82ca9d', // Green
+  '#ffc658', // Gold
+  '#d0ed57', // Lime
+  '#a4de6c', // Light Green
+  '#8dd1e1', // Sky Blue
+  '#ff6b9d', // Pink
+  '#c084fc', // Lavender
+  '#fb923c', // Coral
+  '#14b8a6', // Cyan
+  '#f59e0b', // Amber
+  '#ef4444', // Red
+  '#10b981', // Emerald
+  '#3b82f6', // Royal Blue
+  '#f97316', // Deep Orange
+  '#8b5cf6', // Violet
+  '#06b6d4', // Light Blue
+  '#84cc16', // Lime Green
+  '#eab308', // Yellow Green
+  '#ec4899', // Hot Pink
+  '#6366f1'  // Indigo
+];
+
+const OTHER_COLOR = '#889095'; // Neutral grey for "Other" category
+
+// Metric configurations factory
+const createMetrics = (entityName) => ({
+  area: {
+    label: 'Area',
+    unit: 'ha',
+    property: 'siteSize',
+    tooltipLabel: 'Area',
+    description: `Filtered distribution of BGS site area across ${entityName}`
+  },
+  baselineHUs: {
+    label: 'Baseline HUs',
+    unit: 'HU',
+    property: 'baselineHUs',
+    tooltipLabel: 'Baseline HUs',
+    description: `Filtered distribution of baseline habitat units across ${entityName}`
+  },
+  improvementHUs: {
+    label: 'Improvement HUs',
+    unit: 'HU',
+    property: 'improvementHUs',
+    tooltipLabel: 'Improvement HUs',
+    description: `Filtered distribution of improvement habitat units across ${entityName}`
+  },
+  huGain: {
+    label: 'HU Gain',
+    unit: 'HU',
+    property: 'huGain',
+    tooltipLabel: 'HU Gain',
+    description: `Filtered distribution of total HU Gain across ${entityName}`
+  },
+  allocations: {
+    label: 'Allocations',
+    unit: 'allocations',
+    property: 'allocationsCount',
+    tooltipLabel: 'Allocations',
+    description: `Filtered distribution of total allocations across ${entityName}`
+  }
+});
+
+const CustomTooltip = ({ active, payload, metric, metrics }) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const config = metrics[metric];
+    
+    return (
+      <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
+        <Text fontWeight="bold" color="black" mb="5px">{data.name}</Text>
+        <Text color="#36454F">
+          {config.tooltipLabel}: {formatNumber(data.value, metric === 'area' ? 2 : 0)} {config.unit}
+        </Text>
+        {data.siteCount && (
+          <Text color="#36454F">
+            Sites: {data.siteCount}
+          </Text>
+        )}
+      </Box>
+    );
+  }
+  return null;
+};
+
+/**
+ * Generic organizational metrics chart component
+ * @param {Object} props
+ * @param {Array} props.sites - Array of site objects
+ * @param {string} props.entityName - Name of the entity (e.g., "Responsible Bodies", "Local Planning Authorities")
+ * @param {string} props.entityAbbr - Abbreviation for the entity (e.g., "RBs", "LPAs")
+ * @param {string} props.entityProperty - Property name to extract from site (e.g., "lpaName", "ncaName")
+ * @param {Function} props.extractEntityValue - Function to extract entity value from site
+ * @param {number} props.topN - Number of top entities to show (default 10)
+ * @param {number} props.totalEntitiesInUK - Total number of entities in UK (e.g., 309 for LPAs)
+ */
+export const OrganizationalMetricsChart = ({ 
+  sites, 
+  entityName, 
+  entityAbbr, 
+  entityProperty,
+  extractEntityValue,
+  topN = 10,
+  totalEntitiesInUK 
+}) => {
+  const [selectedMetric, setSelectedMetric] = useState('area');
+  
+  const metrics = useMemo(() => createMetrics(entityName), [entityName]);
+
+  const { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations } = useMemo(() => {
+    if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0, entitiesWithSites: 0, entitiesWithAllocations: 0 };
+
+    const config = metrics[selectedMetric];
+    
+    // Aggregate metric and site count by entity
+    const entityMetricMap = new Map();
+    const entitySiteCountMap = new Map();
+    const entitiesWithAllocationsSet = new Set();
+
+    sites.forEach(site => {
+      // Calculate improvement HUs as createdHUs + enhancedHUs
+      let siteValue;
+      if (selectedMetric === 'improvementHUs') {
+        siteValue = (site.createdHUs || 0) + (site.enhancedHUs || 0);
+      } else {
+        siteValue = site[config.property] || 0;
+      }
+      
+      // Extract entity value using custom function or property
+      const entityValue = extractEntityValue 
+        ? extractEntityValue(site)
+        : (site[entityProperty] || 'Unknown');
+      
+      const normalizedName = normalizeBodyName(entityValue);
+      entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
+      entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
+      
+      // Track entities with allocations
+      if (site.allocationsCount && site.allocationsCount > 0) {
+        entitiesWithAllocationsSet.add(normalizedName);
+      }
+    });
+
+    // Calculate statistics
+    const total = Array.from(entityMetricMap.values()).reduce((sum, value) => sum + value, 0);
+    const entitiesWithSites = entityMetricMap.size;
+    const entitiesWithAllocations = entitiesWithAllocationsSet.size;
+
+    // Convert to array and sort by value (descending)
+    const sortedEntities = Array.from(entityMetricMap.entries())
+      .map(([name, value]) => ({
+        name: toTitleCase(name),
+        value,
+        siteCount: entitySiteCountMap.get(name),
+        percentage: total > 0 ? (value / total) * 100 : 0
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    const totalEntities = sortedEntities.length;
+
+    // Take top N and combine the rest into "Other"
+    let chartData;
+    if (sortedEntities.length <= topN) {
+      chartData = sortedEntities;
+    } else {
+      const topEntities = sortedEntities.slice(0, topN);
+      const others = sortedEntities.slice(topN);
+      
+      const othersTotal = others.reduce((sum, entity) => sum + entity.value, 0);
+      const othersTotalSites = others.reduce((sum, entity) => sum + entity.siteCount, 0);
+      const othersPercentage = total > 0 ? (othersTotal / total) * 100 : 0;
+
+      chartData = [
+        ...topEntities,
+        {
+          name: `Other (${others.length} ${entityAbbr})`,
+          value: othersTotal,
+          siteCount: othersTotalSites,
+          percentage: othersPercentage,
+          isOther: true
+        }
+      ];
+    }
+
+    return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
+  }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, topN, entityAbbr]);
+
+  if (!chartData || chartData.length === 0) {
+    return <Text>No {entityName} data available to display.</Text>;
+  }
+
+  const config = metrics[selectedMetric];
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const labelText = `${(percent * 100).toFixed(1)}%`;
+
+    if (percent < 0.04) {
+      const radius = outerRadius + 25;
+      const x = cx + radius * Math.cos(-midAngle * RADIAN);
+      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+      return (
+        <text 
+          x={x} 
+          y={y} 
+          fill="#333" 
+          textAnchor={x > cx ? 'start' : 'end'} 
+          dominantBaseline="central"
+          style={{ fontSize: '12px' }}
+        >
+          {labelText}
+        </text>
+      );
+    }
+
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="#333"
+        textAnchor="middle"
+        dominantBaseline="central"
+        style={{ fontWeight: 'bold', fontSize: '14px' }}
+      >
+        {labelText}
+      </text>
+    );
+  };
+
+  return (
+    <Box bg="bg" p="1rem">
+      <Heading as="h3" size="md" textAlign="center" mb={4}>
+        Top {topN} {entityName} ({entityAbbr}) by {config.label}
+      </Heading>
+      
+      {/* Metric Selector */}
+      <Box 
+        display="flex" 
+        justifyContent="center" 
+        mb={6}
+        p={4}
+        bg="bg.muted"
+        borderRadius="md"
+        border="1px solid"
+        borderColor="border"
+      >
+        <SegmentGroup.Root
+          value={selectedMetric}
+          onValueChange={(e) => setSelectedMetric(e.value)}
+          size="lg"
+        >
+          <SegmentGroup.Indicator />
+          <SegmentGroup.Item value="area" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Area</SegmentGroup.ItemText>
+            <SegmentGroup.ItemHiddenInput />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item value="baselineHUs" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Baseline HUs</SegmentGroup.ItemText>
+            <SegmentGroup.ItemHiddenInput />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item value="improvementHUs" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Improvement HUs</SegmentGroup.ItemText>
+            <SegmentGroup.ItemHiddenInput />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item value="huGain" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">HU Gain</SegmentGroup.ItemText>
+            <SegmentGroup.ItemHiddenInput />
+          </SegmentGroup.Item>
+          <SegmentGroup.Item value="allocations" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Allocations</SegmentGroup.ItemText>
+            <SegmentGroup.ItemHiddenInput />
+          </SegmentGroup.Item>
+        </SegmentGroup.Root>
+      </Box>
+
+      <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
+        {config.description}
+      </Text>
+      
+      {/* Coverage Statistics */}
+      <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
+        {totalEntitiesInUK ? (
+          <>Coverage: {entitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {entitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
+        ) : (
+          <>Coverage: {entitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {entitiesWithAllocations} {entityAbbr} have allocations</>
+        )}
+      </Text>
+      
+      <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
+        Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {totalEntities}
+      </Text>
+      
+      <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            labelLine={(props) => props.percent < 0.04}
+            label={renderCustomizedLabel}
+            outerRadius={`${CHART_CONFIG.OUTER_RADIUS_PERCENTAGE}%`}
+            fill="#8884d8"
+            dataKey="value"
+            nameKey="name"
+          >
+            {chartData.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.isOther ? OTHER_COLOR : COLORS[index % COLORS.length]} 
+              />
+            ))}
+          </Pie>
+          <Tooltip content={<CustomTooltip metric={selectedMetric} metrics={metrics} />} />
+          <Legend 
+            verticalAlign="bottom" 
+            align="center" 
+            wrapperStyle={{ paddingTop: '20px', maxHeight: 150, overflowY: 'auto' }}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+    </Box>
+  );
+};
