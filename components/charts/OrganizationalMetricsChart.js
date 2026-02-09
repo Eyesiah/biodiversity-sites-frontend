@@ -310,7 +310,7 @@ export const OrganizationalMetricsChart = ({
         {/* Right Side - Chart and Statistics */}
         <Box flex={1}>
           <Heading as="h3" size="md" textAlign="center" mb={4}>
-            Top {topN} {entityName} ({entityAbbr}) by {config.label}
+            {entityName} ({entityAbbr}) by {config.label}
           </Heading>
           
           <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
