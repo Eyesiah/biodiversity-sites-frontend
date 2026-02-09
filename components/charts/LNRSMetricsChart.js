@@ -7,9 +7,10 @@ export const LNRSMetricsChart = ({ sites }) => {
     <OrganizationalMetricsChart
       sites={sites}
       entityName="Local Nature Recovery Strategies"
-      entityAbbr="LNRSs"
+      entityAbbr="LNRS sites"
       entityProperty="lnrsName"
       topN={20}
+      totalEntitiesInUK={48}
     />
   );
 };

@@ -58,35 +58,35 @@ const createMetrics = (entityName) => ({
     unit: 'ha',
     property: 'siteSize',
     tooltipLabel: 'Area',
-    description: `Distribution of BGS site area across ${entityName}`
+    description: `Filtered distribution of BGS site area across ${entityName}`
   },
   baselineHUs: {
     label: 'Baseline HUs',
     unit: 'HU',
     property: 'baselineHUs',
     tooltipLabel: 'Baseline HUs',
-    description: `Distribution of baseline habitat units across ${entityName}`
+    description: `Filtered distribution of baseline habitat units across ${entityName}`
   },
   improvementHUs: {
     label: 'Improvement HUs',
     unit: 'HU',
     property: 'improvementHUs',
     tooltipLabel: 'Improvement HUs',
-    description: `Distribution of improvement habitat units across ${entityName}`
+    description: `Filtered distribution of improvement habitat units across ${entityName}`
   },
   huGain: {
     label: 'HU Gain',
     unit: 'HU',
     property: 'huGain',
     tooltipLabel: 'HU Gain',
-    description: `Distribution of total HU Gain across ${entityName}`
+    description: `Filtered distribution of total HU Gain across ${entityName}`
   },
   allocations: {
     label: 'Allocations',
     unit: 'allocations',
     property: 'allocationsCount',
     tooltipLabel: 'Allocations',
-    description: `Distribution of total allocations across ${entityName}`
+    description: `Filtered distribution of total allocations across ${entityName}`
   }
 });
 
@@ -121,6 +121,7 @@ const CustomTooltip = ({ active, payload, metric, metrics }) => {
  * @param {string} props.entityProperty - Property name to extract from site (e.g., "lpaName", "ncaName")
  * @param {Function} props.extractEntityValue - Function to extract entity value from site
  * @param {number} props.topN - Number of top entities to show (default 10)
+ * @param {number} props.totalEntitiesInUK - Total number of entities in UK (e.g., 309 for LPAs)
  */
 export const OrganizationalMetricsChart = ({ 
   sites, 
@@ -128,20 +129,22 @@ export const OrganizationalMetricsChart = ({
   entityAbbr, 
   entityProperty,
   extractEntityValue,
-  topN = 10 
+  topN = 10,
+  totalEntitiesInUK 
 }) => {
   const [selectedMetric, setSelectedMetric] = useState('area');
   
   const metrics = useMemo(() => createMetrics(entityName), [entityName]);
 
-  const { chartData, total, totalEntities } = useMemo(() => {
-    if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0 };
+  const { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations } = useMemo(() => {
+    if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0, entitiesWithSites: 0, entitiesWithAllocations: 0 };
 
     const config = metrics[selectedMetric];
     
     // Aggregate metric and site count by entity
     const entityMetricMap = new Map();
     const entitySiteCountMap = new Map();
+    const entitiesWithAllocationsSet = new Set();
 
     sites.forEach(site => {
       // Calculate improvement HUs as createdHUs + enhancedHUs
@@ -160,10 +163,17 @@ export const OrganizationalMetricsChart = ({
       const normalizedName = normalizeBodyName(entityValue);
       entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
       entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
+      
+      // Track entities with allocations
+      if (site.allocationsCount && site.allocationsCount > 0) {
+        entitiesWithAllocationsSet.add(normalizedName);
+      }
     });
 
-    // Calculate total
+    // Calculate statistics
     const total = Array.from(entityMetricMap.values()).reduce((sum, value) => sum + value, 0);
+    const entitiesWithSites = entityMetricMap.size;
+    const entitiesWithAllocations = entitiesWithAllocationsSet.size;
 
     // Convert to array and sort by value (descending)
     const sortedEntities = Array.from(entityMetricMap.entries())
@@ -201,7 +211,7 @@ export const OrganizationalMetricsChart = ({
       ];
     }
 
-    return { chartData, total, totalEntities };
+    return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
   }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, topN, entityAbbr]);
 
   if (!chartData || chartData.length === 0) {
@@ -299,8 +309,18 @@ export const OrganizationalMetricsChart = ({
       <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
         {config.description}
       </Text>
+      
+      {/* Coverage Statistics */}
+      <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
+        {totalEntitiesInUK ? (
+          <>Coverage: {entitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {entitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
+        ) : (
+          <>Coverage: {entitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {entitiesWithAllocations} {entityAbbr} have allocations</>
+        )}
+      </Text>
+      
       <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
-        Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr}: {totalEntities}
+        Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {totalEntities}
       </Text>
       
       <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>

@@ -10,6 +10,7 @@ export const LPAMetricsChart = ({ sites }) => {
       entityAbbr="LPAs"
       entityProperty="lpaName"
       topN={25}
+      totalEntitiesInUK={309}
     />
   );
 };
