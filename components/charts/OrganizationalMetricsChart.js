@@ -175,8 +175,8 @@ export const OrganizationalMetricsChart = ({
     const entitiesWithSites = entityMetricMap.size;
     const entitiesWithAllocations = entitiesWithAllocationsSet.size;
 
-    // Convert to array and sort by value (descending)
-    const sortedEntities = Array.from(entityMetricMap.entries())
+    // Convert to array and calculate percentages
+    const allEntities = Array.from(entityMetricMap.entries())
       .map(([name, value]) => ({
         name: toTitleCase(name),
         value,
@@ -185,27 +185,30 @@ export const OrganizationalMetricsChart = ({
       }))
       .sort((a, b) => b.value - a.value);
 
-    const totalEntities = sortedEntities.length;
+    const totalEntities = allEntities.length;
 
-    // Take top N and combine the rest into "Other"
+    // Separate entities: >1.5% get individual slices, ≤1.5% get aggregated
+    const significantEntities = allEntities.filter(entity => entity.percentage > 1.5);
+    const minorEntities = allEntities.filter(entity => entity.percentage <= 1.5);
+
+    // Build chart data
     let chartData;
-    if (sortedEntities.length <= topN) {
-      chartData = sortedEntities;
+    if (minorEntities.length === 0) {
+      // All entities are >1.5%, show them all
+      chartData = significantEntities;
     } else {
-      const topEntities = sortedEntities.slice(0, topN);
-      const others = sortedEntities.slice(topN);
-      
-      const othersTotal = others.reduce((sum, entity) => sum + entity.value, 0);
-      const othersTotalSites = others.reduce((sum, entity) => sum + entity.siteCount, 0);
-      const othersPercentage = total > 0 ? (othersTotal / total) * 100 : 0;
+      // Aggregate minor entities into a single "≤1.5%" slice
+      const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
+      const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
+      const minorPercentage = total > 0 ? (minorTotal / total) * 100 : 0;
 
       chartData = [
-        ...topEntities,
+        ...significantEntities,
         {
-          name: `Other (${others.length} ${entityAbbr})`,
-          value: othersTotal,
-          siteCount: othersTotalSites,
-          percentage: othersPercentage,
+          name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
+          value: minorTotal,
+          siteCount: minorTotalSites,
+          percentage: minorPercentage,
           isOther: true
         }
       ];
