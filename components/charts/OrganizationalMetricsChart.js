@@ -119,8 +119,7 @@ const CustomTooltip = ({ active, payload, metric, metrics }) => {
  * @param {string} props.entityName - Name of the entity (e.g., "Responsible Bodies", "Local Planning Authorities")
  * @param {string} props.entityAbbr - Abbreviation for the entity (e.g., "RBs", "LPAs")
  * @param {string} props.entityProperty - Property name to extract from site (e.g., "lpaName", "ncaName")
- * @param {Function} props.extractEntityValue - Function to extract entity value from site
- * @param {number} props.topN - Number of top entities to show (default 10)
+ * @param {Function} props.extractEntityValue - Function to extract entity value from site 
  * @param {number} props.totalEntitiesInUK - Total number of entities in UK (e.g., 309 for LPAs)
  */
 export const OrganizationalMetricsChart = ({ 
@@ -128,8 +127,7 @@ export const OrganizationalMetricsChart = ({
   entityName, 
   entityAbbr, 
   entityProperty,
-  extractEntityValue,
-  topN = 10,
+  extractEntityValue,  
   totalEntitiesInUK 
 }) => {
   const [selectedMetric, setSelectedMetric] = useState('area');
