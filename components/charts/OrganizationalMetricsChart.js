@@ -213,7 +213,7 @@ export const OrganizationalMetricsChart = ({
     }
 
     return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
-  }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, topN, entityAbbr]);
+  }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, entityAbbr]);
 
   if (!chartData || chartData.length === 0) {
     return <Text>No {entityName} data available to display.</Text>;

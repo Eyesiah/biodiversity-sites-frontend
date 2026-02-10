@@ -9,7 +9,6 @@ export const NCAMetricsChart = ({ sites }) => {
       entityName="National Character Areas"
       entityAbbr="NCAs"
       entityProperty="ncaName"
-      topN={20}
       totalEntitiesInUK={159}
     />
   );
