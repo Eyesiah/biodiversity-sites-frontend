@@ -13,7 +13,6 @@ import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Box, Text, Heading, Link } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   ssr: false,
@@ -178,14 +177,6 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                         </PrimaryTable.Body>
                       </PrimaryTable.Root>
                     )
-                  },
-                  {
-                    title: "Metrics Chart",
-                    content: ({ sortedItems }) => {
-                      // Get sites from filtered bodies
-                      const filteredSites = sortedItems.flatMap(body => body.sites);
-                      return <ResponsibleBodyMetricsChart sites={filteredSites} />;
-                    }
                   }
                 ]}
               />

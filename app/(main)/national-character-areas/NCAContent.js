@@ -12,7 +12,6 @@ import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 
 const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
@@ -173,12 +172,6 @@ export default function NCAContent({ ncas, sites, error }) {
                         <Text fontStyle="italic">When a site map is selected, adjacent NCAs are shown coloured pink.</Text>
                       </>
                     )
-                  },
-                  {
-                    title: "Metrics Chart",
-                    content: () => {
-                      return <NCAMetricsChart sites={sites} />;
-                    }
                   }
                 ]}
             />

@@ -13,7 +13,6 @@ import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -181,12 +180,6 @@ export default function LPAContent({ lpas, sites }) {
                       <Text fontStyle="italic">When a site map is selected, adjacent LPAs are shown coloured pink.</Text>
                       </>
                     );
-                  }
-                },
-                {
-                  title: "Metrics Chart",
-                  content: () => {
-                    return <LPAMetricsChart sites={sites} />;
                   }
                 }
               ]}

@@ -13,7 +13,6 @@ import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
 
 const PolygonMap = dynamic(() => import('components/map/PolygonMap'), {
   ssr: false,
@@ -178,12 +177,6 @@ export default function LNRSContent({ lnrs, sites, error }) {
                   <Text fontStyle="italic">When a site map is selected, adjacent LNRS sites are shown coloured pink.</Text>
                   </>
                 )
-              },
-              {
-                title: "Metrics Chart",
-                content: () => {
-                  return <LNRSMetricsChart sites={sites} />;
-                }
               }
             ]}
           />
