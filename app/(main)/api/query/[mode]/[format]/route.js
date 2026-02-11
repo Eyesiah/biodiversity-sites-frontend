@@ -50,10 +50,11 @@ export async function GET(_, { params }) {
       const improvementHedgerowHU = s.improvements?.hedgerows?.reduce((acc, hab) => acc + hab.HUs, 0) || 0;
       const improvementWatercourseHU = s.improvements?.watercourses?.reduce((acc, hab) => acc + hab.HUs, 0) || 0;
 
-      // Calculate HU Gain by type (improvement HUs - baseline HUs)
-      const huGainArea = improvementAreaHU - baselineAreaHU;
-      const huGainHedgerow = improvementHedgerowHU - baselineHedgerowHU;
-      const huGainWatercourse = improvementWatercourseHU - baselineWatercourseHU;
+      // Calculate HU Gain by type (each improvement habitat has its baseline HUs stored)
+      const huGainArea = (s.improvements?.areas?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0) + 
+                         (s.improvements?.trees?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0);
+      const huGainHedgerow = s.improvements?.hedgerows?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0;
+      const huGainWatercourse = s.improvements?.watercourses?.reduce((acc, hab) => acc + (hab.HUs - hab.baselineHUs), 0) || 0;
       const huGainTotal = huGainArea + huGainHedgerow + huGainWatercourse;
 
       // Calculate allocation HUs by type
