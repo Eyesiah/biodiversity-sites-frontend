@@ -14,7 +14,6 @@ export const ResponsibleBodyMetricsChart = ({ sites }) => {
         const rbs = site.responsibleBodies || ['Unknown'];
         return rbs[0];
       }}
-      topN={10}
     />
   );
 };

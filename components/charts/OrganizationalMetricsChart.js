@@ -119,8 +119,7 @@ const CustomTooltip = ({ active, payload, metric, metrics }) => {
  * @param {string} props.entityName - Name of the entity (e.g., "Responsible Bodies", "Local Planning Authorities")
  * @param {string} props.entityAbbr - Abbreviation for the entity (e.g., "RBs", "LPAs")
  * @param {string} props.entityProperty - Property name to extract from site (e.g., "lpaName", "ncaName")
- * @param {Function} props.extractEntityValue - Function to extract entity value from site
- * @param {number} props.topN - Number of top entities to show (default 10)
+ * @param {Function} props.extractEntityValue - Function to extract entity value from site 
  * @param {number} props.totalEntitiesInUK - Total number of entities in UK (e.g., 309 for LPAs)
  */
 export const OrganizationalMetricsChart = ({ 
@@ -128,8 +127,7 @@ export const OrganizationalMetricsChart = ({
   entityName, 
   entityAbbr, 
   entityProperty,
-  extractEntityValue,
-  topN = 10,
+  extractEntityValue,  
   totalEntitiesInUK 
 }) => {
   const [selectedMetric, setSelectedMetric] = useState('area');
@@ -175,8 +173,8 @@ export const OrganizationalMetricsChart = ({
     const entitiesWithSites = entityMetricMap.size;
     const entitiesWithAllocations = entitiesWithAllocationsSet.size;
 
-    // Convert to array and sort by value (descending)
-    const sortedEntities = Array.from(entityMetricMap.entries())
+    // Convert to array and calculate percentages
+    const allEntities = Array.from(entityMetricMap.entries())
       .map(([name, value]) => ({
         name: toTitleCase(name),
         value,
@@ -185,34 +183,37 @@ export const OrganizationalMetricsChart = ({
       }))
       .sort((a, b) => b.value - a.value);
 
-    const totalEntities = sortedEntities.length;
+    const totalEntities = allEntities.length;
 
-    // Take top N and combine the rest into "Other"
+    // Separate entities: >1.5% get individual slices, ≤1.5% get aggregated
+    const significantEntities = allEntities.filter(entity => entity.percentage > 1.5);
+    const minorEntities = allEntities.filter(entity => entity.percentage <= 1.5);
+
+    // Build chart data
     let chartData;
-    if (sortedEntities.length <= topN) {
-      chartData = sortedEntities;
+    if (minorEntities.length === 0) {
+      // All entities are >1.5%, show them all
+      chartData = significantEntities;
     } else {
-      const topEntities = sortedEntities.slice(0, topN);
-      const others = sortedEntities.slice(topN);
-      
-      const othersTotal = others.reduce((sum, entity) => sum + entity.value, 0);
-      const othersTotalSites = others.reduce((sum, entity) => sum + entity.siteCount, 0);
-      const othersPercentage = total > 0 ? (othersTotal / total) * 100 : 0;
+      // Aggregate minor entities into a single "≤1.5%" slice
+      const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
+      const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
+      const minorPercentage = total > 0 ? (minorTotal / total) * 100 : 0;
 
       chartData = [
-        ...topEntities,
+        ...significantEntities,
         {
-          name: `Other (${others.length} ${entityAbbr})`,
-          value: othersTotal,
-          siteCount: othersTotalSites,
-          percentage: othersPercentage,
+          name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
+          value: minorTotal,
+          siteCount: minorTotalSites,
+          percentage: minorPercentage,
           isOther: true
         }
       ];
     }
 
     return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
-  }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, topN, entityAbbr]);
+  }, [sites, selectedMetric, metrics, entityProperty, extractEntityValue, entityAbbr]);
 
   if (!chartData || chartData.length === 0) {
     return <Text>No {entityName} data available to display.</Text>;
@@ -262,95 +263,104 @@ export const OrganizationalMetricsChart = ({
 
   return (
     <Box bg="bg" p="1rem">
-      <Heading as="h3" size="md" textAlign="center" mb={4}>
-        Top {topN} {entityName} ({entityAbbr}) by {config.label}
-      </Heading>
-      
-      {/* Metric Selector */}
-      <Box 
-        display="flex" 
-        justifyContent="center" 
-        mb={6}
-        p={4}
-        bg="bg.muted"
-        borderRadius="md"
-        border="1px solid"
-        borderColor="border"
-      >
-        <SegmentGroup.Root
-          value={selectedMetric}
-          onValueChange={(e) => setSelectedMetric(e.value)}
-          size="lg"
+      {/* Main Layout Container - Flex Row */}
+      <Box display="flex" flexDirection="row" gap={6} alignItems="center">
+        {/* Left Side - Metric Selector (Stacked Vertically) */}
+        <Box 
+          minWidth="200px"
+          maxWidth="220px"
+          p={4}
+          bg="bg.muted"
+          borderRadius="md"
+          border="1px solid"
+          borderColor="border"
         >
-          <SegmentGroup.Indicator />
-          <SegmentGroup.Item value="area" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Area</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="baselineHUs" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Baseline HUs</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="improvementHUs" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Improvement HUs</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="huGain" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">HU Gain</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-          <SegmentGroup.Item value="allocations" px={6} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-            <SegmentGroup.ItemText fontWeight="semibold" fontSize="lg">Allocations</SegmentGroup.ItemText>
-            <SegmentGroup.ItemHiddenInput />
-          </SegmentGroup.Item>
-        </SegmentGroup.Root>
-      </Box>
-
-      <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
-        {config.description}
-      </Text>
-      
-      {/* Coverage Statistics */}
-      <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
-        {totalEntitiesInUK ? (
-          <>Coverage: {entitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {entitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
-        ) : (
-          <>Coverage: {entitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {entitiesWithAllocations} {entityAbbr} have allocations</>
-        )}
-      </Text>
-      
-      <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
-        Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {totalEntities}
-      </Text>
-      
-      <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            labelLine={(props) => props.percent < 0.04}
-            label={renderCustomizedLabel}
-            outerRadius={`${CHART_CONFIG.OUTER_RADIUS_PERCENTAGE}%`}
-            fill="#8884d8"
-            dataKey="value"
-            nameKey="name"
+          <Text fontSize="sm" fontWeight="bold" mb={3} textAlign="center" color="gray.700">
+            Select Metric
+          </Text>
+          <SegmentGroup.Root
+            value={selectedMetric}
+            onValueChange={(e) => setSelectedMetric(e.value)}
+            size="md"
+            orientation="vertical"
           >
-            {chartData.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.isOther ? OTHER_COLOR : COLORS[index % COLORS.length]} 
+            <SegmentGroup.Indicator />
+            <SegmentGroup.Item value="area" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Area</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item value="baselineHUs" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Baseline HUs</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item value="improvementHUs" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Improvement HUs</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item value="huGain" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">HU Gain</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+            <SegmentGroup.Item value="allocations" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
+              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Allocations</SegmentGroup.ItemText>
+              <SegmentGroup.ItemHiddenInput />
+            </SegmentGroup.Item>
+          </SegmentGroup.Root>
+        </Box>
+
+        {/* Right Side - Chart and Statistics */}
+        <Box flex={1}>
+          <Heading as="h3" size="md" textAlign="center" mb={4}>
+            {entityName} ({entityAbbr}) by {config.label}
+          </Heading>
+          
+          <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
+            {config.description}
+          </Text>
+          
+          {/* Coverage Statistics */}
+          <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
+            {totalEntitiesInUK ? (
+              <>Coverage: {entitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {entitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
+            ) : (
+              <>Coverage: {entitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {entitiesWithAllocations} {entityAbbr} have allocations</>
+            )}
+          </Text>
+          
+          <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
+            Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {totalEntities}
+          </Text>
+          
+          <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx="50%"
+                cy="50%"
+                labelLine={(props) => props.percent < 0.04}
+                label={renderCustomizedLabel}
+                outerRadius={`${CHART_CONFIG.OUTER_RADIUS_PERCENTAGE}%`}
+                fill="#8884d8"
+                dataKey="value"
+                nameKey="name"
+              >
+                {chartData.map((entry, index) => (
+                  <Cell 
+                    key={`cell-${index}`} 
+                    fill={entry.isOther ? OTHER_COLOR : COLORS[index % COLORS.length]} 
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<CustomTooltip metric={selectedMetric} metrics={metrics} />} />
+              <Legend 
+                verticalAlign="bottom" 
+                align="center" 
+                wrapperStyle={{ paddingTop: '20px', maxHeight: 150, overflowY: 'auto' }}
               />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip metric={selectedMetric} metrics={metrics} />} />
-          <Legend 
-            verticalAlign="bottom" 
-            align="center" 
-            wrapperStyle={{ paddingTop: '20px', maxHeight: 150, overflowY: 'auto' }}
-          />
-        </PieChart>
-      </ResponsiveContainer>
+            </PieChart>
+          </ResponsiveContainer>
+        </Box>
+      </Box>
     </Box>
   );
 };
