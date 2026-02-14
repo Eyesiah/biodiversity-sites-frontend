@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
@@ -43,12 +43,22 @@ export default function BGSBodiesContent({
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
 
+  // Reset map state when switching tabs
+  useEffect(() => {
+    setMapSites([]);
+    setHoveredSite(null);
+    setSelectedSite(null);
+    setSelectedPolygon(null);
+  }, [activeTab]);
+
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
     switch (activeTab) {
       case 'responsible-bodies':
+      case 'rb-chart':
         return { type: 'site', sites: mapSites };
       case 'lpa':
+      case 'lpa-chart':
         return {
           type: 'polygon',
           geoJsonUrl: ARCGIS_LPA_URL,
@@ -58,6 +68,7 @@ export default function BGSBodiesContent({
           style: { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'nca':
+      case 'nca-chart':
         return {
           type: 'polygon',
           geoJsonUrl: 'https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query',
@@ -67,6 +78,7 @@ export default function BGSBodiesContent({
           style: { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'lnrs':
+      case 'lnrs-chart':
         return {
           type: 'polygon',
           geoJsonUrl: ARCGIS_LNRS_URL,
@@ -92,9 +104,14 @@ export default function BGSBodiesContent({
   }
 
   const renderMap = () => {
-    if (mapConfig.type === 'polygon') {
+    // For chart tabs, render SiteMap with empty sites to avoid polygon fetch attempts
+    const isChartTab = activeTab.endsWith('-chart');
+    
+    // Only render PolygonMap if we have a selected polygon to avoid "No polygon data found" errors
+    if (mapConfig.type === 'polygon' && !isChartTab && selectedPolygon) {
       return (
         <PolygonMap
+          key={activeTab}
           selectedItem={mapConfig.selectedItem}
           geoJsonUrl={mapConfig.geoJsonUrl}
           nameProperty={mapConfig.nameProperty}
@@ -105,6 +122,7 @@ export default function BGSBodiesContent({
     }
     return (
       <SiteMap
+        key={activeTab}
         sites={mapConfig.sites}
         hoveredSite={hoveredSite}
         selectedSite={selectedSite}
