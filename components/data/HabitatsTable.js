@@ -23,7 +23,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
   const mainRow = (
     <>
       <DataTable.Cell>{habitat.type}</DataTable.Cell>
-      <DataTable.Cell textAlign="center">{habitat.distinctiveness}</DataTable.Cell>
+      <DataTable.Cell textAlign="center">{habitat.distinctiveness || '[Unknown Habitat Type]'}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
       <DataTable.CenteredNumericCell>{habitat.parcels}</DataTable.CenteredNumericCell>
       <DataTable.NumericCell>
