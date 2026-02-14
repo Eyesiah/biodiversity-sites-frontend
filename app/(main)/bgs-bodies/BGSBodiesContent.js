@@ -39,17 +39,7 @@ export default function BGSBodiesContent({
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
 
-  if (error) {
-    return (
-      <Box padding="2rem">
-        <Text color="red" fontSize="1.2rem">
-          Error loading data: {error}
-        </Text>
-      </Box>
-    );
-  }
-
-  // Map configuration based on active tab
+  // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
     switch (activeTab) {
       case 'responsible-bodies':
@@ -85,6 +75,17 @@ export default function BGSBodiesContent({
         return { type: 'site', sites: [] };
     }
   }, [activeTab, mapSites, selectedPolygon]);
+
+  // Check for error after all hooks are called
+  if (error) {
+    return (
+      <Box padding="2rem">
+        <Text color="red" fontSize="1.2rem">
+          Error loading data: {error}
+        </Text>
+      </Box>
+    );
+  }
 
   const renderMap = () => {
     if (mapConfig.type === 'polygon') {
