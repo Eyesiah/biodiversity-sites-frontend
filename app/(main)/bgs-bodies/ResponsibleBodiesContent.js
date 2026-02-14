@@ -6,18 +6,12 @@ import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
-import dynamic from 'next/dynamic';
-import MapContentLayout from '@/components/ui/MapContentLayout';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Box, Text, Heading, Link } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-
-const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
-  ssr: false,
-  loading: () => <p>Loading map...</p>
-});
+import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
 
 const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const mainRow = (
@@ -64,33 +58,35 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     );
   }
   
-  export default function ResponsibleBodiesContent({ responsibleBodies }) {
-    const [mapSites, setMapSites] = useState([]);
-    const [hoveredSite, setHoveredSite] = useState(null);
-    const [selectedSite, setSelectedSite] = useState(null);
-    const [expandedRows, setExpandedRows] = useState({});
-  
-    const handleToggle = (bodyName, isOpen) => {
-      if (isOpen) {
-        setExpandedRows({ [bodyName]: true });
-      } else {
-        setExpandedRows({});
-      }
-    };
-  
-    useEffect(() => {
-      const sites = [];
-      for (const bodyName in expandedRows) {
-        if (expandedRows[bodyName]) {
-          const body = responsibleBodies.find(b => b.name === bodyName);
-          if (body) {
-            sites.push(...body.sites);
-          }
+export default function ResponsibleBodiesContent({ 
+  responsibleBodies, 
+  onMapSitesChange,
+  onHoveredSiteChange,
+  onSelectedSiteChange
+}) {
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const handleToggle = (bodyName, isOpen) => {
+    if (isOpen) {
+      setExpandedRows({ [bodyName]: true });
+    } else {
+      setExpandedRows({});
+    }
+  };
+
+  useEffect(() => {
+    const sites = [];
+    for (const bodyName in expandedRows) {
+      if (expandedRows[bodyName]) {
+        const body = responsibleBodies.find(b => b.name === bodyName);
+        if (body) {
+          sites.push(...body.sites);
         }
       }
-      setMapSites(sites);
-      setSelectedSite(null);
-    }, [expandedRows, responsibleBodies]);
+    }
+    onMapSitesChange?.(sites);
+    onSelectedSiteChange?.(null);
+  }, [expandedRows, responsibleBodies, onMapSitesChange, onSelectedSiteChange]);
   
     const handleExport = (itemsToExport) => {
       const csvData = itemsToExport.map(body => ({
@@ -113,18 +109,13 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
     
     // Collect all sites from all responsible bodies for the chart
-    const allSites = useMemo(() => {
-      return responsibleBodies.flatMap(body => body.sites);
-    }, [responsibleBodies]);
-    
-    return (
-        <MapContentLayout
-          map={
-            <SiteMap sites={mapSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
-          }
-          content={
-            <>
-              <SearchableTableLayout
+  const allSites = useMemo(() => {
+    return responsibleBodies.flatMap(body => body.sites);
+  }, [responsibleBodies]);
+  
+  return (
+    <>
+      <SearchableTableLayout
                 initialItems={responsibleBodies}
                 filterPredicate={(body, term) =>
                     (body.name?.toLowerCase() || '').includes(term) ||
@@ -146,42 +137,36 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                     )}
                     </Box>
                 )}
-                tabs={[
-                  {
-                    title: "Table",
-                    content: ({ sortedItems, requestSort, getSortIndicator }) => (
-                      <PrimaryTable.Root>
-                        <PrimaryTable.Header>
-                          <PrimaryTable.Row>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
-                          </PrimaryTable.Row>
-                        </PrimaryTable.Header>
-                        <PrimaryTable.Body>
-                          {sortedItems.map((body) => (
-                            <BodyRow
-                              body={body}
-                              key={body.name}
-                              isOpen={expandedRows[body.name] || false}
-                              onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                              onSiteHover={setHoveredSite}
-                              onSiteClick={setSelectedSite}
-                            />              
-                          ))}
-                        </PrimaryTable.Body>
-                      </PrimaryTable.Root>
-                    )
-                  }
-                ]}
-              />
-            </>
-          }
-        />
-    );
-  }
+              >
+                {({ sortedItems, requestSort, getSortIndicator }) => (
+                  <PrimaryTable.Root>
+                    <PrimaryTable.Header>
+                      <PrimaryTable.Row>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
+                      </PrimaryTable.Row>
+                    </PrimaryTable.Header>
+                    <PrimaryTable.Body>
+                      {sortedItems.map((body) => (
+                        <BodyRow
+                          body={body}
+                          key={body.name}
+                          isOpen={expandedRows[body.name] || false}
+                          onToggle={(isOpen) => handleToggle(body.name, isOpen)}
+                          onSiteHover={onHoveredSiteChange}
+                          onSiteClick={onSelectedSiteChange}
+                        />              
+                      ))}
+                    </PrimaryTable.Body>
+                  </PrimaryTable.Root>
+                )}
+              </SearchableTableLayout>
+    </>
+  );
+}

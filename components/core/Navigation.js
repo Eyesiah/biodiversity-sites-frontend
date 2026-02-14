@@ -409,12 +409,9 @@ export default function Navigation() {
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
-          <DropdownMenu category="BGS Bodies">
-            <DropdownLink href='/responsible-bodies' label='Responsible Bodies' />
-            <DropdownLink href='/local-planning-authorities' label='Local Planning Authorities' />
-            <DropdownLink href='/national-character-areas' label='National Character Areas' />
-            <DropdownLink href='/lnrs' label='Local Nature Recovery Strategies' />
-          </DropdownMenu>
+          <NavLink href="/bgs-bodies" onClick={closeMenu}>
+            BGS Bodies
+          </NavLink>
           <DropdownMenu category="Stats & More">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />

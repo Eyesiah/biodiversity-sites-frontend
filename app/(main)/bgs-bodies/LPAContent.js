@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
 import { exportToXml, exportToJson } from '@/lib/utils';
@@ -13,6 +13,7 @@ import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -85,13 +86,14 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
   />
 );
 
-export default function LPAContent({ lpas, sites }) {
+export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPolygonChange }) {
 
   const [selectedLpa, setSelectedLpa] = useState(null);
   const [openRowId, setOpenRowId] = useState(null);
 
   const handleAdjacentMapSelection = (item) => {
     setSelectedLpa(item);
+    onSelectedPolygonChange?.(item);
   };
 
   const sitesInSelectedLPA = useMemo(() => {
@@ -99,22 +101,18 @@ export default function LPAContent({ lpas, sites }) {
     return (sites || []).filter(site => site.lpaName === selectedLpa.name);
   }, [selectedLpa, sites]);
 
+  useEffect(() => {
+    onMapSitesChange?.(sitesInSelectedLPA);
+  }, [sitesInSelectedLPA, onMapSitesChange]);
+
+  useEffect(() => {
+    onSelectedPolygonChange?.(selectedLpa);
+  }, [selectedLpa, onSelectedPolygonChange]);
+
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
 
   return (
     <>
-      <MapContentLayout
-        map={
-          <PolygonMap
-            selectedItem={selectedLpa}
-            geoJsonUrl={ARCGIS_LPA_URL}
-            nameProperty="name"
-            sites={sitesInSelectedLPA}
-            style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-          />
-        }
-        content={
-          <>
             <SearchableTableLayout
               initialItems={lpas}
               filterPredicate={(lpa, term) =>
@@ -131,62 +129,55 @@ export default function LPAContent({ lpas, sites }) {
                   Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='Local Planning Authority (LPA)'>LPAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
                 </Text>
               )}
-              tabs={[
-                {
-                  title: "Table",
-                  content: ({ sortedItems, requestSort, getSortIndicator }) => {
-                    const summaryData = {
-                      totalArea: sortedItems.reduce((sum, lpa) => sum + (lpa.size || 0), 0),
-                      totalSites: sortedItems.reduce((sum, lpa) => sum + (lpa.siteCount || 0), 0),
-                      totalAllocations: sortedItems.reduce((sum, lpa) => sum + (lpa.allocationsCount || 0), 0),
-                      totalAdjacents: sortedItems.reduce((sum, lpa) => sum + (lpa.adjacentsCount || 0), 0),
-                    };
-                    return (
-                      <>
-                        <PrimaryTable.Root>
-                        <PrimaryTable.Header>
-                          <PrimaryTable.Row>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader>Map</PrimaryTable.ColumnHeader>
-                          </PrimaryTable.Row>
-                        </PrimaryTable.Header>
-                        <PrimaryTable.Body>
-                          <PrimaryTable.Row fontWeight="bold" bg="tableTotalsBg">
-                            <PrimaryTable.Cell colSpan="2" textAlign="center">Totals</PrimaryTable.Cell>
-                            <PrimaryTable.NumericCell>{formatNumber(summaryData.totalArea, 0)}</PrimaryTable.NumericCell>
-                            <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalSites, 0)}</PrimaryTable.CenteredNumericCell>
-                            <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAllocations, 0)}</PrimaryTable.CenteredNumericCell>
-                            <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAdjacents, 0)}</PrimaryTable.CenteredNumericCell>
-                            <PrimaryTable.Cell></PrimaryTable.Cell>
-                          </PrimaryTable.Row>
-                          {sortedItems.map((lpa) => (
-                            <LpaDataRow
-                              key={lpa.id}
-                              lpa={lpa}
-                              onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
-                              lpas={lpas}
-                              handleAdjacentMapSelection={handleAdjacentMapSelection}
-                              isOpen={openRowId === lpa.id}
-                              setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
-                            />
-                          ))}
-                        </PrimaryTable.Body>
-                      </PrimaryTable.Root>
-                      <Text fontStyle="italic">When a site map is selected, adjacent LPAs are shown coloured pink.</Text>
-                      </>
-                    );
-                  }
-                }
-              ]}
-            />
-          </>
-        }
-      />
+            >
+              {({ sortedItems, requestSort, getSortIndicator }) => {
+                const summaryData = {
+                  totalArea: sortedItems.reduce((sum, lpa) => sum + (lpa.size || 0), 0),
+                  totalSites: sortedItems.reduce((sum, lpa) => sum + (lpa.siteCount || 0), 0),
+                  totalAllocations: sortedItems.reduce((sum, lpa) => sum + (lpa.allocationsCount || 0), 0),
+                  totalAdjacents: sortedItems.reduce((sum, lpa) => sum + (lpa.adjacentsCount || 0), 0),
+                };
+                return (
+                  <>
+                    <PrimaryTable.Root>
+                    <PrimaryTable.Header>
+                      <PrimaryTable.Row>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('id')}>ID{getSortIndicator('id')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('size')}>Size (ha){getSortIndicator('size')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('siteCount')}># BGS Sites{getSortIndicator('siteCount')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('allocationsCount')}># Allocations{getSortIndicator('allocationsCount')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('adjacentsCount')}># Adjacent LPAs{getSortIndicator('adjacentsCount')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader>Map</PrimaryTable.ColumnHeader>
+                      </PrimaryTable.Row>
+                    </PrimaryTable.Header>
+                    <PrimaryTable.Body>
+                      <PrimaryTable.Row fontWeight="bold" bg="tableTotalsBg">
+                        <PrimaryTable.Cell colSpan="2" textAlign="center">Totals</PrimaryTable.Cell>
+                        <PrimaryTable.NumericCell>{formatNumber(summaryData.totalArea, 0)}</PrimaryTable.NumericCell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalSites, 0)}</PrimaryTable.CenteredNumericCell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAllocations, 0)}</PrimaryTable.CenteredNumericCell>
+                        <PrimaryTable.CenteredNumericCell>{formatNumber(summaryData.totalAdjacents, 0)}</PrimaryTable.CenteredNumericCell>
+                        <PrimaryTable.Cell></PrimaryTable.Cell>
+                      </PrimaryTable.Row>
+                      {sortedItems.map((lpa) => (
+                        <LpaDataRow
+                          key={lpa.id}
+                          lpa={lpa}
+                          onRowClick={(item) => { setSelectedLpa(item); setOpenRowId(item.id === openRowId ? null : item.id); }}
+                          lpas={lpas}
+                          handleAdjacentMapSelection={handleAdjacentMapSelection}
+                          isOpen={openRowId === lpa.id}
+                          setIsOpen={(isOpen) => setOpenRowId(isOpen ? lpa.id : null)}
+                        />
+                      ))}
+                    </PrimaryTable.Body>
+                  </PrimaryTable.Root>
+                  <Text fontStyle="italic">When a site map is selected, adjacent LPAs are shown coloured pink.</Text>
+                  </>
+                );
+              }}
+            </SearchableTableLayout>
     </>
   )
 }
