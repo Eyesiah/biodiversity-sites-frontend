@@ -137,47 +137,36 @@ export default function ResponsibleBodiesContent({
                     )}
                     </Box>
                 )}
-                tabs={[
-                  {
-                    title: "Table",
-                    content: ({ sortedItems, requestSort, getSortIndicator }) => (
-                      <PrimaryTable.Root>
-                        <PrimaryTable.Header>
-                          <PrimaryTable.Row>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
-                            <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
-                          </PrimaryTable.Row>
-                        </PrimaryTable.Header>
-                        <PrimaryTable.Body>
-                          {sortedItems.map((body) => (
-                            <BodyRow
-                              body={body}
-                              key={body.name}
-                              isOpen={expandedRows[body.name] || false}
-                              onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                              onSiteHover={onHoveredSiteChange}
-                              onSiteClick={onSelectedSiteChange}
-                            />              
-                          ))}
-                        </PrimaryTable.Body>
-                      </PrimaryTable.Root>
-                    )
-                  },
-                  {
-                    title: "Chart",
-                    content: ({ sortedItems }) => {
-                      const filteredSites = sortedItems.flatMap(body => body.sites);
-                      return <ResponsibleBodyMetricsChart sites={filteredSites} />;
-                    }
-                  }
-                ]}
-              />
+              >
+                {({ sortedItems, requestSort, getSortIndicator }) => (
+                  <PrimaryTable.Root>
+                    <PrimaryTable.Header>
+                      <PrimaryTable.Row>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
+                        <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
+                      </PrimaryTable.Row>
+                    </PrimaryTable.Header>
+                    <PrimaryTable.Body>
+                      {sortedItems.map((body) => (
+                        <BodyRow
+                          body={body}
+                          key={body.name}
+                          isOpen={expandedRows[body.name] || false}
+                          onToggle={(isOpen) => handleToggle(body.name, isOpen)}
+                          onSiteHover={onHoveredSiteChange}
+                          onSiteClick={onSelectedSiteChange}
+                        />              
+                      ))}
+                    </PrimaryTable.Body>
+                  </PrimaryTable.Root>
+                )}
+              </SearchableTableLayout>
     </>
   );
 }

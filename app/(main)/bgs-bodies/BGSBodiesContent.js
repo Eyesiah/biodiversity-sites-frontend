@@ -9,6 +9,10 @@ import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import LPAContent from './LPAContent';
 import NCAContent from './NCAContent';
 import LNRSContent from './LNRSContent';
+import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
+import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
+import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
+import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
 import { ARCGIS_LPA_URL, ARCGIS_LNRS_URL } from '@/config';
 
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -116,16 +120,28 @@ export default function BGSBodiesContent({
         <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
           <Tabs.List>
             <Tabs.Trigger value="responsible-bodies">
-              Responsible Bodies
+              Responsible Bodies List
+            </Tabs.Trigger>
+            <Tabs.Trigger value="rb-chart">
+              Responsible Bodies Chart
             </Tabs.Trigger>
             <Tabs.Trigger value="lpa">
-              Local Planning Authorities
+              LPA List
+            </Tabs.Trigger>
+            <Tabs.Trigger value="lpa-chart">
+              LPA Chart
             </Tabs.Trigger>
             <Tabs.Trigger value="nca">
-              National Character Areas
+              NCA List
+            </Tabs.Trigger>
+            <Tabs.Trigger value="nca-chart">
+              NCA Chart
             </Tabs.Trigger>
             <Tabs.Trigger value="lnrs">
-              Local Nature Recovery Strategies
+              LNRS List
+            </Tabs.Trigger>
+            <Tabs.Trigger value="lnrs-chart">
+              LNRS Chart
             </Tabs.Trigger>
           </Tabs.List>
 
@@ -138,6 +154,10 @@ export default function BGSBodiesContent({
             />
           </Tabs.Content>
 
+          <Tabs.Content value="rb-chart">
+            <ResponsibleBodyMetricsChart sites={responsibleBodies.flatMap(body => body.sites)} />
+          </Tabs.Content>
+
           <Tabs.Content value="lpa">
             <LPAContent
               lpas={lpas}
@@ -145,6 +165,10 @@ export default function BGSBodiesContent({
               onMapSitesChange={setMapSites}
               onSelectedPolygonChange={setSelectedPolygon}
             />
+          </Tabs.Content>
+
+          <Tabs.Content value="lpa-chart">
+            <LPAMetricsChart sites={lpaSites} />
           </Tabs.Content>
 
           <Tabs.Content value="nca">
@@ -157,6 +181,10 @@ export default function BGSBodiesContent({
             />
           </Tabs.Content>
 
+          <Tabs.Content value="nca-chart">
+            <NCAMetricsChart sites={ncaSites} />
+          </Tabs.Content>
+
           <Tabs.Content value="lnrs">
             <LNRSContent
               lnrs={lnrs}
@@ -165,6 +193,10 @@ export default function BGSBodiesContent({
               onMapSitesChange={setMapSites}
               onSelectedPolygonChange={setSelectedPolygon}
             />
+          </Tabs.Content>
+
+          <Tabs.Content value="lnrs-chart">
+            <LNRSMetricsChart sites={lnrsSites} />
           </Tabs.Content>
         </Tabs.Root>
       }
