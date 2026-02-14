@@ -6,18 +6,12 @@ import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
-import dynamic from 'next/dynamic';
-import MapContentLayout from '@/components/ui/MapContentLayout';
 import ExternalLink from '@/components/ui/ExternalLink';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { Box, Text, Heading, Link } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-
-const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
-  ssr: false,
-  loading: () => <p>Loading map...</p>
-});
+import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
 
 const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const mainRow = (
@@ -64,33 +58,35 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     );
   }
   
-  export default function ResponsibleBodiesContent({ responsibleBodies }) {
-    const [mapSites, setMapSites] = useState([]);
-    const [hoveredSite, setHoveredSite] = useState(null);
-    const [selectedSite, setSelectedSite] = useState(null);
-    const [expandedRows, setExpandedRows] = useState({});
-  
-    const handleToggle = (bodyName, isOpen) => {
-      if (isOpen) {
-        setExpandedRows({ [bodyName]: true });
-      } else {
-        setExpandedRows({});
-      }
-    };
-  
-    useEffect(() => {
-      const sites = [];
-      for (const bodyName in expandedRows) {
-        if (expandedRows[bodyName]) {
-          const body = responsibleBodies.find(b => b.name === bodyName);
-          if (body) {
-            sites.push(...body.sites);
-          }
+export default function ResponsibleBodiesContent({ 
+  responsibleBodies, 
+  onMapSitesChange,
+  onHoveredSiteChange,
+  onSelectedSiteChange
+}) {
+  const [expandedRows, setExpandedRows] = useState({});
+
+  const handleToggle = (bodyName, isOpen) => {
+    if (isOpen) {
+      setExpandedRows({ [bodyName]: true });
+    } else {
+      setExpandedRows({});
+    }
+  };
+
+  useEffect(() => {
+    const sites = [];
+    for (const bodyName in expandedRows) {
+      if (expandedRows[bodyName]) {
+        const body = responsibleBodies.find(b => b.name === bodyName);
+        if (body) {
+          sites.push(...body.sites);
         }
       }
-      setMapSites(sites);
-      setSelectedSite(null);
-    }, [expandedRows, responsibleBodies]);
+    }
+    onMapSitesChange?.(sites);
+    onSelectedSiteChange?.(null);
+  }, [expandedRows, responsibleBodies, onMapSitesChange, onSelectedSiteChange]);
   
     const handleExport = (itemsToExport) => {
       const csvData = itemsToExport.map(body => ({
@@ -113,18 +109,13 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
     const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
     
     // Collect all sites from all responsible bodies for the chart
-    const allSites = useMemo(() => {
-      return responsibleBodies.flatMap(body => body.sites);
-    }, [responsibleBodies]);
-    
-    return (
-        <MapContentLayout
-          map={
-            <SiteMap sites={mapSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={setSelectedSite} />
-          }
-          content={
-            <>
-              <SearchableTableLayout
+  const allSites = useMemo(() => {
+    return responsibleBodies.flatMap(body => body.sites);
+  }, [responsibleBodies]);
+  
+  return (
+    <>
+      <SearchableTableLayout
                 initialItems={responsibleBodies}
                 filterPredicate={(body, term) =>
                     (body.name?.toLowerCase() || '').includes(term) ||
@@ -170,18 +161,23 @@ const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
                               key={body.name}
                               isOpen={expandedRows[body.name] || false}
                               onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                              onSiteHover={setHoveredSite}
-                              onSiteClick={setSelectedSite}
+                              onSiteHover={onHoveredSiteChange}
+                              onSiteClick={onSelectedSiteChange}
                             />              
                           ))}
                         </PrimaryTable.Body>
                       </PrimaryTable.Root>
                     )
+                  },
+                  {
+                    title: "Chart",
+                    content: ({ sortedItems }) => {
+                      const filteredSites = sortedItems.flatMap(body => body.sites);
+                      return <ResponsibleBodyMetricsChart sites={filteredSites} />;
+                    }
                   }
                 ]}
               />
-            </>
-          }
-        />
-    );
-  }
+    </>
+  );
+}

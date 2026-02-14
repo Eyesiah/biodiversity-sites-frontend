@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { formatNumber } from '@/lib/format';
 import { exportToXml, exportToJson } from '@/lib/utils';
@@ -13,6 +13,7 @@ import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -85,13 +86,14 @@ const LpaDataRow = ({ lpa, onRowClick, lpas, isOpen, setIsOpen, handleAdjacentMa
   />
 );
 
-export default function LPAContent({ lpas, sites }) {
+export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPolygonChange }) {
 
   const [selectedLpa, setSelectedLpa] = useState(null);
   const [openRowId, setOpenRowId] = useState(null);
 
   const handleAdjacentMapSelection = (item) => {
     setSelectedLpa(item);
+    onSelectedPolygonChange?.(item);
   };
 
   const sitesInSelectedLPA = useMemo(() => {
@@ -99,22 +101,18 @@ export default function LPAContent({ lpas, sites }) {
     return (sites || []).filter(site => site.lpaName === selectedLpa.name);
   }, [selectedLpa, sites]);
 
+  useEffect(() => {
+    onMapSitesChange?.(sitesInSelectedLPA);
+  }, [sitesInSelectedLPA, onMapSitesChange]);
+
+  useEffect(() => {
+    onSelectedPolygonChange?.(selectedLpa);
+  }, [selectedLpa, onSelectedPolygonChange]);
+
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
 
   return (
     <>
-      <MapContentLayout
-        map={
-          <PolygonMap
-            selectedItem={selectedLpa}
-            geoJsonUrl={ARCGIS_LPA_URL}
-            nameProperty="name"
-            sites={sitesInSelectedLPA}
-            style={{ color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }}
-          />
-        }
-        content={
-          <>
             <SearchableTableLayout
               initialItems={lpas}
               filterPredicate={(lpa, term) =>
@@ -181,12 +179,17 @@ export default function LPAContent({ lpas, sites }) {
                       </>
                     );
                   }
+                },
+                {
+                  title: "Chart",
+                  content: ({ sortedItems }) => {
+                    const filteredLpaNames = new Set(sortedItems.map(lpa => lpa.name));
+                    const filteredSites = sites.filter(site => filteredLpaNames.has(site.lpaName));
+                    return <LPAMetricsChart sites={filteredSites} />;
+                  }
                 }
               ]}
             />
-          </>
-        }
-      />
     </>
   )
 }
