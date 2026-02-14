@@ -51,6 +51,17 @@ export default function BGSBodiesContent({
     setSelectedPolygon(null);
   }, [activeTab]);
 
+  // Reset everything when the component unmounts (page loses focus)
+  useEffect(() => {
+    return () => {
+      setActiveTab('responsible-bodies');
+      setMapSites([]);
+      setHoveredSite(null);
+      setSelectedSite(null);
+      setSelectedPolygon(null);
+    };
+  }, []);
+
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
     switch (activeTab) {
@@ -165,6 +176,7 @@ export default function BGSBodiesContent({
 
           <Tabs.Content value="responsible-bodies">
             <ResponsibleBodiesContent
+              key={activeTab}
               responsibleBodies={responsibleBodies}
               onMapSitesChange={setMapSites}
               onHoveredSiteChange={setHoveredSite}
@@ -178,6 +190,7 @@ export default function BGSBodiesContent({
 
           <Tabs.Content value="lpa">
             <LPAContent
+              key={activeTab}
               lpas={lpas}
               sites={lpaSites}
               onMapSitesChange={setMapSites}
@@ -191,6 +204,7 @@ export default function BGSBodiesContent({
 
           <Tabs.Content value="nca">
             <NCAContent
+              key={activeTab}
               ncas={ncas}
               sites={ncaSites}
               error={null}
@@ -205,6 +219,7 @@ export default function BGSBodiesContent({
 
           <Tabs.Content value="lnrs">
             <LNRSContent
+              key={activeTab}
               lnrs={lnrs}
               sites={lnrsSites}
               error={null}
