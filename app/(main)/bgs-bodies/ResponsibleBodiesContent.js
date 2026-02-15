@@ -1,6 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
+import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
@@ -15,8 +16,8 @@ const HEADERS = [
   { key: 'expertise', label: 'Area of Expertise' },
   { key: 'organisationType', label: 'Type of Organisation' },
   { key: 'address', label: 'Address' },
-  { 
-    key: 'emails', 
+  {
+    key: 'emails',
     label: 'Email',
     render: (body) => (
       body.emails.map(email => (
@@ -41,10 +42,22 @@ const HEADERS = [
 
 export default function ResponsibleBodiesContent({
   responsibleBodies,
+  sites,
   onMapSitesChange,
   onHoveredSiteChange,
   onSelectedSiteChange
 }) {
+
+  // Pre-process bodies to add sites array for each body
+  const bodiesWithSites = useMemo(() => {
+    if (!sites) return responsibleBodies;
+    return responsibleBodies.map(item => ({
+      ...item,
+      sites: item.sites.map(ref => sites.find(s => s.referenceNumber == ref)),
+      siteCount: item.sites.length
+    }));
+  }, [responsibleBodies, sites]);
+
   const handleExport = (itemsToExport) => {
     const csvData = itemsToExport.map(body => ({
       'Name': body.name,
@@ -62,12 +75,12 @@ export default function ResponsibleBodiesContent({
     triggerDownload(blob, 'responsible-bodies.csv');
   };
 
-  const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
-  const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
+  const unknownRB = bodiesWithSites.find(rb => rb.name == '<Unknown>');
+  const numDesignated = unknownRB ? bodiesWithSites.length - 1 : bodiesWithSites.length;
 
   return (
     <SearchableBodiesLayout
-      bodies={responsibleBodies}
+      bodies={bodiesWithSites}
       headers={HEADERS}
       bodyNameKey="name"
       sitesKey="sites"

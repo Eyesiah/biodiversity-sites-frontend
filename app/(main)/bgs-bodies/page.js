@@ -16,7 +16,7 @@ export const metadata = {
   description: 'View all the Responsible Bodies, Local Planning Authorities, National Character Areas, and Local Nature Recovery Strategies in the Register.'
 };
 
-async function getResponsibleBodiesData() {
+async function getResponsibleBodiesData(sites) {
   try {
     const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
@@ -37,6 +37,36 @@ async function getResponsibleBodiesData() {
       sites: []
     }));
 
+    // Allocate sites to responsible bodies
+    sites.forEach(site => {
+      if (site.responsibleBodies) {
+        site.responsibleBodies.forEach(body => {
+          const bodyName = slugify(normalizeBodyName(body));
+          let bodyItem = bodyItems.find(b => slugify(normalizeBodyName(b.name)) === bodyName);
+          if (bodyItem == null) {
+            // when RB is not found, add it to the entry for "unknown"
+            bodyItem = bodyItems.find(b => b.name === '<Unknown>');
+            if (bodyItem == null) {
+              bodyItem = {
+                name: '<Unknown>',
+                designationDate: '',
+                expertise: '',
+                organisationType: '<Only LPAs listed for site>',
+                address: '',
+                emails: [],
+                telephone: '',
+                sites: []
+              };
+              bodyItems.push(bodyItem);
+            }
+          }
+          if (bodyItem && !bodyItem.sites.find(s => s.referenceNumber === site.referenceNumber)) {
+            bodyItem.sites.push(site.referenceNumber);
+          }
+        });
+      }
+    });
+
     return bodyItems;
   } catch (e) {
     console.error('Error loading responsible bodies:', e);
@@ -46,7 +76,6 @@ async function getResponsibleBodiesData() {
 
 async function getLPAPageData(allSites) {
   const allocationCounts = {};
-  const siteCounts = {};
 
   allSites.forEach(site => {
     if (site.allocations) {
@@ -55,38 +84,25 @@ async function getLPAPageData(allSites) {
         allocationCounts[lpaName] = (allocationCounts[lpaName] || 0) + 1;
       });
     }
-    if (site.lpaName) {
-      const lpaName = site.lpaName;
-      siteCounts[lpaName] = (siteCounts[lpaName] || 0) + 1;
-    }
   });
 
   let lpas = Array.from(getLPAData().values());
   lpas.forEach(lpa => {
-    lpa.siteCount = siteCounts[lpa.name] || 0;
+    lpa.sites = allSites.filter(s => s.lpaName == lpa.name).map(s => s.referenceNumber);
     lpa.allocationsCount = allocationCounts[lpa.name] || 0;
   });
 
-  const sites = processSitesForListView(allSites);
-
-  return { lpas, sites };
+  return lpas;
 }
 
 async function getNCAPageData(allSites) {
   const ncas = Array.from(getNCAData().values());
 
-  const siteCountsByNCA = allSites.reduce((acc, site) => {
-    if (site.ncaName) {
-      acc[site.ncaName] = (acc[site.ncaName] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
   ncas.forEach(nca => {
-    nca.siteCount = siteCountsByNCA[nca.name] || 0;
+    nca.sites = allSites.filter(s => s.ncaName == nca.name).map(s => s.referenceNumber);
   });
 
-  return { ncas, sites: processSitesForListView(allSites) };
+  return ncas;
 }
 
 async function getLNRSPageData(allSites) {
@@ -102,17 +118,10 @@ async function getLNRSPageData(allSites) {
     const csvData = fs.readFileSync(csvPath, 'utf-8');
     const parsedData = Papa.parse(csvData, { header: true, skipEmptyLines: true });
 
-    const siteCountsByLnrs = allSites.reduce((acc, site) => {
-      if (site.lnrsName) {
-        acc[site.lnrsName] = (acc[site.lnrsName] || 0) + 1;
-      }
-      return acc;
-    }, {});
-
     rawLnrs.forEach(lnrs => {
       // Convert size from square meters to hectares
       lnrs.size = lnrs.size / 10000;
-      lnrs.siteCount = siteCountsByLnrs[lnrs.name] || 0;
+      lnrs.sites = allSites.filter(s => s.lnrsName == lnrs.name).map(s => s.referenceNumber);
       // Ensure adjacents exist before processing
       (lnrs.adjacents || []).forEach(adj => adj.size = adj.size / 10000);
 
@@ -136,10 +145,10 @@ async function getLNRSPageData(allSites) {
     // Sort by name by default
     const lnrs = rawLnrs.sort((a, b) => a.name.localeCompare(b.name));
 
-    return { lnrs, sites: processSitesForListView(allSites) };
+    return lnrs;
   } catch (e) {
     console.error('Error loading LNRS data:', e);
-    return { lnrs: [], sites: [] };
+    return [];
   }
 }
 
@@ -150,41 +159,11 @@ export default async function BGSBodiesPage() {
 
     // Fetch all body data in parallel
     const [responsibleBodyItems, lpaData, ncaData, lnrsData] = await Promise.all([
-      getResponsibleBodiesData(),
+      getResponsibleBodiesData(allSites),
       getLPAPageData(allSites),
       getNCAPageData(allSites),
       getLNRSPageData(allSites)
     ]);
-
-    // Allocate sites to responsible bodies
-    allSites.forEach(site => {
-      if (site.responsibleBodies) {
-        site.responsibleBodies.forEach(body => {
-          const bodyName = slugify(normalizeBodyName(body));
-          let bodyItem = responsibleBodyItems.find(b => slugify(normalizeBodyName(b.name)) === bodyName);
-          if (bodyItem == null) {
-            // when RB is not found, add it to the entry for "unknown"
-            bodyItem = responsibleBodyItems.find(b => b.name === '<Unknown>');
-            if (bodyItem == null) {
-              bodyItem = {
-                name: '<Unknown>',
-                designationDate: '',
-                expertise: '',
-                organisationType: '<Only LPAs listed for site>',
-                address: '',
-                emails: [],
-                telephone: '',
-                sites: []
-              };
-              responsibleBodyItems.push(bodyItem);
-            }
-          }
-          if (bodyItem && !bodyItem.sites.find(s => s.referenceNumber === site.referenceNumber)) {
-            bodyItem.sites.push(processSiteForListView(site));
-          }
-        });
-      }
-    });
 
     const lastUpdated = new Date().toISOString();
 
@@ -192,12 +171,10 @@ export default async function BGSBodiesPage() {
       <>
         <BGSBodiesContent
           responsibleBodies={responsibleBodyItems}
-          lpas={lpaData.lpas}
-          lpaSites={lpaData.sites}
-          ncas={ncaData.ncas}
-          ncaSites={ncaData.sites}
-          lnrs={lnrsData.lnrs}
-          lnrsSites={lnrsData.sites}
+          lpas={lpaData}
+          ncas={ncaData}
+          lnrs={lnrsData}
+          sites={processSitesForListView(allSites)}
         />
         <Footer lastUpdated={lastUpdated} />
       </>

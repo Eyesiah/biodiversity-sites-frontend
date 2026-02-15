@@ -28,11 +28,9 @@ const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
 export default function BGSBodiesContent({
   responsibleBodies = [],
   lpas = [],
-  lpaSites = [],
   ncas = [],
-  ncaSites = [],
   lnrs = [],
-  lnrsSites = [],
+  sites = [],
   error = null
 }) {
   const [activeTab, setActiveTab] = useState('responsible-bodies');
@@ -178,6 +176,7 @@ export default function BGSBodiesContent({
             <ResponsibleBodiesContent
               key={activeTab}
               responsibleBodies={responsibleBodies}
+              sites={sites}
               onMapSitesChange={setMapSites}
               onHoveredSiteChange={setHoveredSite}
               onSelectedSiteChange={setSelectedSite}
@@ -192,21 +191,21 @@ export default function BGSBodiesContent({
             <LPAContent
               key={activeTab}
               lpas={lpas}
-              sites={lpaSites}
+              sites={sites}
               onMapSitesChange={setMapSites}
               onSelectedPolygonChange={setSelectedPolygon}
             />
           </Tabs.Content>
 
           <Tabs.Content value="lpa-chart">
-            <LPAMetricsChart sites={lpaSites} />
+            <LPAMetricsChart sites={sites} />
           </Tabs.Content>
 
           <Tabs.Content value="nca">
             <NCAContent
               key={activeTab}
               ncas={ncas}
-              sites={ncaSites}
+              sites={sites}
               error={null}
               onMapSitesChange={setMapSites}
               onSelectedPolygonChange={setSelectedPolygon}
@@ -214,14 +213,14 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="nca-chart">
-            <NCAMetricsChart sites={ncaSites} />
+            <NCAMetricsChart sites={sites} />
           </Tabs.Content>
 
           <Tabs.Content value="lnrs">
             <LNRSContent
               key={activeTab}
               lnrs={lnrs}
-              sites={lnrsSites}
+              sites={sites}
               error={null}
               onMapSitesChange={setMapSites}
               onSelectedPolygonChange={setSelectedPolygon}
@@ -229,7 +228,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="lnrs-chart">
-            <LNRSMetricsChart sites={lnrsSites} />
+            <LNRSMetricsChart sites={sites} />
           </Tabs.Content>
         </Tabs.Root>
       }

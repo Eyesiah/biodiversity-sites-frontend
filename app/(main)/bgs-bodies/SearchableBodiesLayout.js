@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Box, Text } from '@chakra-ui/react';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
@@ -46,6 +45,7 @@ export default function SearchableBodiesLayout({
   }, [expandedRows, bodies, bodyNameKey, sitesKey, onMapSitesChange, onSelectedSiteChange]);
 
   const renderCell = (body, header) => {
+    // Use custom render function if provided
     if (header.render) {
       return header.render(body);
     }
@@ -53,15 +53,26 @@ export default function SearchableBodiesLayout({
     if (Array.isArray(value)) {
       return value.join(', ');
     }
+    // Use format function if provided
+    if (header.format) {
+      return header.format(value, body);
+    }
     return value;
   };
 
   const BodyRow = ({ body, isOpen, onToggle }) => {
-    const mainRow = headers.map((header, index) => (
-      <PrimaryTable.Cell key={header.key} textAlign={header.textAlign}>
-        {renderCell(body, header)}
-      </PrimaryTable.Cell>
-    ));
+    const mainRow = headers.map((header, index) => {
+      // Determine cell component based on textAlign
+      const CellComponent = header.textAlign === 'center' || header.textAlign === 'right' 
+        ? PrimaryTable.NumericCell 
+        : PrimaryTable.Cell;
+      
+      return (
+        <CellComponent key={header.key} textAlign={header.textAlign}>
+          {renderCell(body, header)}
+        </CellComponent>
+      );
+    });
 
     const collapsibleContent = (
       <SiteList
