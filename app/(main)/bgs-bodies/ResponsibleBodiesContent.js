@@ -23,7 +23,7 @@ const HEADERS = [
         <div key={email}>
           <Link href={`mailto:${email}`}>
             <Text
-              maxW="250px"
+              maxW="150px"
               overflow="hidden"
               textOverflow="ellipsis"
               whiteSpace="nowrap"
