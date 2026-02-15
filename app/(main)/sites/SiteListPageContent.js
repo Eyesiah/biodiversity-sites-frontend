@@ -1,6 +1,6 @@
 'use client'
 
-import { useState,  useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import SiteList from '@/components/data/SiteList';
@@ -475,11 +475,6 @@ export default function SiteListPageContent({ sites }) {
   const [selectedSite, setSelectedSite] = useState(null);
   const [filteredSites, setFilteredSites] = useState(sites);
 
-  // Update filteredSites when sites prop changes
-  useEffect(() => {
-    setFilteredSites(sites);
-  }, [sites]);
-
   const handleSiteSelect = (site) => {
     setSelectedSite(site);
   };
@@ -499,6 +494,9 @@ export default function SiteListPageContent({ sites }) {
     }
   }, [selectedSite]);
 
+  // Memoize initial sites to prevent unnecessary re-renders
+  const initialSites = useMemo(() => sites, [sites]);
+
   return (
     <MapContentLayout
       map={
@@ -507,7 +505,7 @@ export default function SiteListPageContent({ sites }) {
       content={
         <ContentStack>
           <SearchableTableLayout
-            initialItems={sites}
+            initialItems={initialSites}
             filterPredicate={(item, term) => {
               const lowercasedTerm = term.toLowerCase();
               return (
@@ -544,6 +542,7 @@ export default function SiteListPageContent({ sites }) {
                 </>
               );
             }}
+            onSortedItemsChange={setFilteredSites}
             tabs={[
               {
                 title: "Sites",
