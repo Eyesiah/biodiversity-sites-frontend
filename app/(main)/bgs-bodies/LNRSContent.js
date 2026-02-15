@@ -13,10 +13,9 @@ import { Box, Text } from '@chakra-ui/react';
 // Headers configuration for LNRS table
 const HEADERS = [
   { key: 'id', label: 'ID' },
-  { key: 'name', label: 'LNRS Name' },
-  { key: 'responsibleAuthority', label: 'Responsible Authority' },
-  { key: 'publicationStatus', label: 'Publication Status' },
+  { key: 'name', label: 'Name' },
   { key: 'size', label: 'Size (ha)', textAlign: 'right', format: (val) => formatNumber(val, 0) },
+  { key: 'publicationStatus', label: 'Publication Status' },
   { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
   { 
     key: 'adjacentsCount', 
@@ -118,9 +117,8 @@ export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSe
           const csvData = items.map(item => ({
             'ID': item.id,
             'Name': item.name,
-            'Responsible Authority': item.responsibleAuthority,
-            'Publication Status': item.publicationStatus,
             'Size (ha)': item.size,
+            'Publication Status': item.publicationStatus,
             '# BGS Sites': item.siteCount,
             '# Adjacent LNRS': item.adjacentsCount,
           }));

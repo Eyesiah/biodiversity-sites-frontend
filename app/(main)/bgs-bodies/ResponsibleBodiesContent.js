@@ -1,6 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
+import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
@@ -10,7 +11,6 @@ import { Text, Link } from '@chakra-ui/react';
 
 const HEADERS = [
   { key: 'name', label: 'Name' },
-  { key: 'siteCount', label: '# BGS Sites', render: (body) => body.sites.length },
   { key: 'designationDate', label: 'Designation Date' },
   { key: 'expertise', label: 'Area of Expertise' },
   { key: 'organisationType', label: 'Type of Organisation' },
@@ -37,6 +37,8 @@ const HEADERS = [
     )
   },
   { key: 'telephone', label: 'Telephone' },
+  { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
+  { key: 'allocationsCount', label: '# Allocations', textAlign: 'center' },
 ];
 
 export default function ResponsibleBodiesContent({
@@ -46,16 +48,26 @@ export default function ResponsibleBodiesContent({
   onHoveredSiteChange,
   onSelectedSiteChange
 }) {
+  // Pre-process to ensure allocationsCount is available
+  const processedBodies = useMemo(() => {
+    return responsibleBodies.map(item => ({
+      ...item,
+      siteCount: item.sites?.length || 0,
+      allocationsCount: item.allocationsCount || 0
+    }));
+  }, [responsibleBodies]);
+
   const handleExport = (itemsToExport) => {
     const csvData = itemsToExport.map(body => ({
       'Name': body.name,
-      '# BGS Sites': body.sites.length,
       'Designation Date': body.designationDate,
       'Area of Expertise': body.expertise,
       'Type of Organisation': body.organisationType,
       'Address': body.address,
       'Email': body.emails.join('; '),
       'Telephone': body.telephone,
+      '# BGS Sites': body.sites.length,
+      '# Allocations': body.allocationsCount,
     }));
 
     const csv = Papa.unparse(csvData);
@@ -68,7 +80,7 @@ export default function ResponsibleBodiesContent({
 
   return (
     <SearchableBodiesLayout
-      bodies={responsibleBodies}
+      bodies={processedBodies}
       allSites={sites}
       headers={HEADERS}
       bodyNameKey="name"

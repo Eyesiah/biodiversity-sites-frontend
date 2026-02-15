@@ -91,6 +91,7 @@ export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPo
     return lpas.map(item => ({
       ...item,
       siteCount: item.sites?.length || 0,
+      allocationsCount: item.allocationsCount || 0,
       adjacentsCount: item.adjacents?.length || 0
     }));
   }, [lpas]);

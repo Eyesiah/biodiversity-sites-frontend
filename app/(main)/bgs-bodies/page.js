@@ -18,6 +18,20 @@ export const metadata = {
 
 async function getResponsibleBodiesData(sites) {
   try {
+    // Count allocations per responsible body
+    const allocationCounts = {};
+    sites.forEach(site => {
+      if (site.allocations) {
+        site.allocations.forEach(alloc => {
+          if (site.responsibleBodies) {
+            site.responsibleBodies.forEach(body => {
+              allocationCounts[body] = (allocationCounts[body] || 0) + 1;
+            });
+          }
+        });
+      }
+    });
+
     const csvPath = path.join(process.cwd(), 'data', 'responsible-bodies.csv');
     const csvData = fs.readFileSync(csvPath, 'utf-8');
 
@@ -34,10 +48,11 @@ async function getResponsibleBodiesData(sites) {
       address: item['Address'] || '',
       emails: item['Email'] ? item['Email'].split('; ') : [],
       telephone: item['Telephone'] || '',
-      sites: []
+      sites: [],
+      allocationsCount: 0
     }));
 
-    // Allocate sites to responsible bodies
+    // Allocate sites and allocations to responsible bodies
     sites.forEach(site => {
       if (site.responsibleBodies) {
         site.responsibleBodies.forEach(body => {
@@ -55,7 +70,8 @@ async function getResponsibleBodiesData(sites) {
                 address: '',
                 emails: [],
                 telephone: '',
-                sites: []
+                sites: [],
+                allocationsCount: 0
               };
               bodyItems.push(bodyItem);
             }
@@ -63,6 +79,7 @@ async function getResponsibleBodiesData(sites) {
           if (bodyItem && !bodyItem.sites.find(s => s.referenceNumber === site.referenceNumber)) {
             bodyItem.sites.push(site.referenceNumber);
           }
+          bodyItem.allocationsCount = allocationCounts[body] || 0;
         });
       }
     });
