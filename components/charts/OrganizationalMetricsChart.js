@@ -264,87 +264,83 @@ export const OrganizationalMetricsChart = ({
   const renderChartContent = (metric) => {
     const config = metrics[metric];
     
-    // Recalculate chart data for the selected metric
-    const { chartData: metricChartData, total: metricTotal, totalEntities: metricTotalEntities, entitiesWithSites: metricEntitiesWithSites, entitiesWithAllocations: metricEntitiesWithAllocations } = useMemo(() => {
-      if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0, entitiesWithSites: 0, entitiesWithAllocations: 0 };
+    // Calculate chart data for the selected metric
+    if (!sites || sites.length === 0) {
+      return <Text>No data available.</Text>;
+    }
 
-      const config = metrics[metric];
-      
-      // Aggregate metric and site count by entity
-      const entityMetricMap = new Map();
-      const entitySiteCountMap = new Map();
-      const entitiesWithAllocationsSet = new Set();
+    // Aggregate metric and site count by entity
+    const entityMetricMap = new Map();
+    const entitySiteCountMap = new Map();
+    const entitiesWithAllocationsSet = new Set();
 
-      sites.forEach(site => {
-        // Calculate improvement HUs as createdHUs + enhancedHUs
-        let siteValue;
-        if (metric === 'improvementHUs') {
-          siteValue = (site.createdHUs || 0) + (site.enhancedHUs || 0);
-        } else {
-          siteValue = site[config.property] || 0;
-        }
-        
-        // Extract entity value using custom function or property
-        const entityValue = extractEntityValue 
-          ? extractEntityValue(site)
-          : (site[entityProperty] || 'Unknown');
-        
-        const normalizedName = normalizeBodyName(entityValue);
-        entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
-        entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
-        
-        // Track entities with allocations
-        if (site.allocationsCount && site.allocationsCount > 0) {
-          entitiesWithAllocationsSet.add(normalizedName);
-        }
-      });
-
-      // Calculate statistics
-      const total = Array.from(entityMetricMap.values()).reduce((sum, value) => sum + value, 0);
-      const entitiesWithSites = entityMetricMap.size;
-      const entitiesWithAllocations = entitiesWithAllocationsSet.size;
-
-      // Convert to array and calculate percentages
-      const allEntities = Array.from(entityMetricMap.entries())
-        .map(([name, value]) => ({
-          name: toTitleCase(name),
-          value,
-          siteCount: entitySiteCountMap.get(name),
-          percentage: total > 0 ? (value / total) * 100 : 0
-        }))
-        .sort((a, b) => b.value - a.value);
-
-      const totalEntities = allEntities.length;
-
-      // Separate entities: >1.5% get individual slices, ≤1.5% get aggregated
-      const significantEntities = allEntities.filter(entity => entity.percentage > 1.5);
-      const minorEntities = allEntities.filter(entity => entity.percentage <= 1.5);
-
-      // Build chart data
-      let chartData;
-      if (minorEntities.length === 0) {
-        // All entities are >1.5%, show them all
-        chartData = significantEntities;
+    sites.forEach(site => {
+      // Calculate improvement HUs as createdHUs + enhancedHUs
+      let siteValue;
+      if (metric === 'improvementHUs') {
+        siteValue = (site.createdHUs || 0) + (site.enhancedHUs || 0);
       } else {
-        // Aggregate minor entities into a single "≤1.5%" slice
-        const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
-        const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
-        const minorPercentage = total > 0 ? (minorTotal / total) * 100 : 0;
-
-        chartData = [
-          ...significantEntities,
-          {
-            name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
-            value: minorTotal,
-            siteCount: minorTotalSites,
-            percentage: minorPercentage,
-            isOther: true
-          }
-        ];
+        siteValue = site[config.property] || 0;
       }
+      
+      // Extract entity value using custom function or property
+      const entityValue = extractEntityValue 
+        ? extractEntityValue(site)
+        : (site[entityProperty] || 'Unknown');
+      
+      const normalizedName = normalizeBodyName(entityValue);
+      entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
+      entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
+      
+      // Track entities with allocations
+      if (site.allocationsCount && site.allocationsCount > 0) {
+        entitiesWithAllocationsSet.add(normalizedName);
+      }
+    });
 
-      return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
-    }, [sites, metric, metrics, entityProperty, extractEntityValue, entityAbbr]);
+    // Calculate statistics
+    const metricTotal = Array.from(entityMetricMap.values()).reduce((sum, value) => sum + value, 0);
+    const metricEntitiesWithSites = entityMetricMap.size;
+    const metricEntitiesWithAllocations = entitiesWithAllocationsSet.size;
+
+    // Convert to array and calculate percentages
+    const allEntities = Array.from(entityMetricMap.entries())
+      .map(([name, value]) => ({
+        name: toTitleCase(name),
+        value,
+        siteCount: entitySiteCountMap.get(name),
+        percentage: metricTotal > 0 ? (value / metricTotal) * 100 : 0
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    const metricTotalEntities = allEntities.length;
+
+    // Separate entities: >1.5% get individual slices, ≤1.5% get aggregated
+    const significantEntities = allEntities.filter(entity => entity.percentage > 1.5);
+    const minorEntities = allEntities.filter(entity => entity.percentage <= 1.5);
+
+    // Build chart data
+    let metricChartData;
+    if (minorEntities.length === 0) {
+      // All entities are >1.5%, show them all
+      metricChartData = significantEntities;
+    } else {
+      // Aggregate minor entities into a single "≤1.5%" slice
+      const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
+      const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
+      const minorPercentage = metricTotal > 0 ? (minorTotal / metricTotal) * 100 : 0;
+
+      metricChartData = [
+        ...significantEntities,
+        {
+          name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
+          value: minorTotal,
+          siteCount: minorTotalSites,
+          percentage: minorPercentage,
+          isOther: true
+        }
+      ];
+    }
 
     return (
       <Box>
