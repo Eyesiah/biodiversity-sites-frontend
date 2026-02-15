@@ -10,7 +10,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { Box, Text, Heading } from '@chakra-ui/react';
-import { SegmentGroup } from '@chakra-ui/react';
+import { Tabs } from '@/components/styles/Tabs';
 import { formatNumber, normalizeBodyName } from '@/lib/format';
 import { toTitleCase } from '@/lib/utils';
 
@@ -261,106 +261,177 @@ export const OrganizationalMetricsChart = ({
     );
   };
 
-  return (
-    <Box bg="bg" p="1rem">
-      {/* Main Layout Container - Flex Row */}
-      <Box display="flex" flexDirection="row" gap={6} alignItems="center">
-        {/* Left Side - Metric Selector (Stacked Vertically) */}
-        <Box 
-          minWidth="200px"
-          maxWidth="220px"
-          p={4}
-          bg="bg.muted"
-          borderRadius="md"
-          border="1px solid"
-          borderColor="border"
-        >
-          <Text fontSize="sm" fontWeight="bold" mb={3} textAlign="center" color="gray.700">
-            Select Metric
-          </Text>
-          <SegmentGroup.Root
-            value={selectedMetric}
-            onValueChange={(e) => setSelectedMetric(e.value)}
-            size="md"
-            orientation="vertical"
-          >
-            <SegmentGroup.Indicator />
-            <SegmentGroup.Item value="area" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Area</SegmentGroup.ItemText>
-              <SegmentGroup.ItemHiddenInput />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item value="baselineHUs" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Baseline HUs</SegmentGroup.ItemText>
-              <SegmentGroup.ItemHiddenInput />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item value="improvementHUs" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Improvement HUs</SegmentGroup.ItemText>
-              <SegmentGroup.ItemHiddenInput />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item value="huGain" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">HU Gain</SegmentGroup.ItemText>
-              <SegmentGroup.ItemHiddenInput />
-            </SegmentGroup.Item>
-            <SegmentGroup.Item value="allocations" px={4} py={3} cursor="pointer" _hover={{ bg: "brand.500", color: "white" }} transition="all 0.2s">
-              <SegmentGroup.ItemText fontWeight="semibold" fontSize="md">Allocations</SegmentGroup.ItemText>
-              <SegmentGroup.ItemHiddenInput />
-            </SegmentGroup.Item>
-          </SegmentGroup.Root>
-        </Box>
+  const renderChartContent = (metric) => {
+    const config = metrics[metric];
+    
+    // Recalculate chart data for the selected metric
+    const { chartData: metricChartData, total: metricTotal, totalEntities: metricTotalEntities, entitiesWithSites: metricEntitiesWithSites, entitiesWithAllocations: metricEntitiesWithAllocations } = useMemo(() => {
+      if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0, entitiesWithSites: 0, entitiesWithAllocations: 0 };
 
-        {/* Right Side - Chart and Statistics */}
-        <Box flex={1}>
-          <Heading as="h3" size="md" textAlign="center" mb={4}>
-            {entityName} ({entityAbbr}) by {config.label}
-          </Heading>
-          
-          <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
-            {config.description}
-          </Text>
-          
-          {/* Coverage Statistics */}
-          <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
-            {totalEntitiesInUK ? (
-              <>Coverage: {entitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {entitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
-            ) : (
-              <>Coverage: {entitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {entitiesWithAllocations} {entityAbbr} have allocations</>
-            )}
-          </Text>
-          
-          <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
-            Total {config.label}: {formatNumber(total, selectedMetric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {totalEntities}
-          </Text>
-          
-          <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                labelLine={(props) => props.percent < 0.04}
-                label={renderCustomizedLabel}
-                outerRadius={`${CHART_CONFIG.OUTER_RADIUS_PERCENTAGE}%`}
-                fill="#8884d8"
-                dataKey="value"
-                nameKey="name"
-              >
-                {chartData.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={entry.isOther ? OTHER_COLOR : COLORS[index % COLORS.length]} 
-                  />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip metric={selectedMetric} metrics={metrics} />} />
-              <Legend 
-                verticalAlign="bottom" 
-                align="center" 
-                wrapperStyle={{ paddingTop: '20px', maxHeight: 150, overflowY: 'auto' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </Box>
+      const config = metrics[metric];
+      
+      // Aggregate metric and site count by entity
+      const entityMetricMap = new Map();
+      const entitySiteCountMap = new Map();
+      const entitiesWithAllocationsSet = new Set();
+
+      sites.forEach(site => {
+        // Calculate improvement HUs as createdHUs + enhancedHUs
+        let siteValue;
+        if (metric === 'improvementHUs') {
+          siteValue = (site.createdHUs || 0) + (site.enhancedHUs || 0);
+        } else {
+          siteValue = site[config.property] || 0;
+        }
+        
+        // Extract entity value using custom function or property
+        const entityValue = extractEntityValue 
+          ? extractEntityValue(site)
+          : (site[entityProperty] || 'Unknown');
+        
+        const normalizedName = normalizeBodyName(entityValue);
+        entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
+        entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
+        
+        // Track entities with allocations
+        if (site.allocationsCount && site.allocationsCount > 0) {
+          entitiesWithAllocationsSet.add(normalizedName);
+        }
+      });
+
+      // Calculate statistics
+      const total = Array.from(entityMetricMap.values()).reduce((sum, value) => sum + value, 0);
+      const entitiesWithSites = entityMetricMap.size;
+      const entitiesWithAllocations = entitiesWithAllocationsSet.size;
+
+      // Convert to array and calculate percentages
+      const allEntities = Array.from(entityMetricMap.entries())
+        .map(([name, value]) => ({
+          name: toTitleCase(name),
+          value,
+          siteCount: entitySiteCountMap.get(name),
+          percentage: total > 0 ? (value / total) * 100 : 0
+        }))
+        .sort((a, b) => b.value - a.value);
+
+      const totalEntities = allEntities.length;
+
+      // Separate entities: >1.5% get individual slices, ≤1.5% get aggregated
+      const significantEntities = allEntities.filter(entity => entity.percentage > 1.5);
+      const minorEntities = allEntities.filter(entity => entity.percentage <= 1.5);
+
+      // Build chart data
+      let chartData;
+      if (minorEntities.length === 0) {
+        // All entities are >1.5%, show them all
+        chartData = significantEntities;
+      } else {
+        // Aggregate minor entities into a single "≤1.5%" slice
+        const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
+        const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
+        const minorPercentage = total > 0 ? (minorTotal / total) * 100 : 0;
+
+        chartData = [
+          ...significantEntities,
+          {
+            name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
+            value: minorTotal,
+            siteCount: minorTotalSites,
+            percentage: minorPercentage,
+            isOther: true
+          }
+        ];
+      }
+
+      return { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations };
+    }, [sites, metric, metrics, entityProperty, extractEntityValue, entityAbbr]);
+
+    return (
+      <Box>
+        <Heading as="h3" size="md" textAlign="center" mb={4}>
+          {entityName} ({entityAbbr}) by {config.label}
+        </Heading>
+        
+        <Text textAlign="center" mb={2} fontSize="md" color="gray.600">
+          {config.description}
+        </Text>
+        
+        {/* Coverage Statistics */}
+        <Text textAlign="center" mb={2} fontSize="md" fontWeight="semibold" color="gray.700">
+          {totalEntitiesInUK ? (
+            <>Coverage: {metricEntitiesWithSites} of {totalEntitiesInUK} {entityAbbr} have BGS sites | {metricEntitiesWithAllocations} of {totalEntitiesInUK} {entityAbbr} have allocations</>
+          ) : (
+            <>Coverage: {metricEntitiesWithSites} {entityAbbr} have {sites.length} BGS sites | {metricEntitiesWithAllocations} {entityAbbr} have allocations</>
+          )}
+        </Text>
+        
+        <Text textAlign="center" mb={4} fontSize="md" color="gray.600">
+          Total {config.label}: {formatNumber(metricTotal, metric === 'area' ? 0 : 0)} {config.unit} • Total {entityAbbr} in filtered data: {metricTotalEntities}
+        </Text>
+        
+        <ResponsiveContainer width="100%" height={CHART_CONFIG.HEIGHT}>
+          <PieChart>
+            <Pie
+              data={metricChartData}
+              cx="50%"
+              cy="50%"
+              labelLine={(props) => props.percent < 0.04}
+              label={renderCustomizedLabel}
+              outerRadius={`${CHART_CONFIG.OUTER_RADIUS_PERCENTAGE}%`}
+              fill="#8884d8"
+              dataKey="value"
+              nameKey="name"
+            >
+              {metricChartData.map((entry, index) => (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={entry.isOther ? OTHER_COLOR : COLORS[index % COLORS.length]} 
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip metric={metric} metrics={metrics} />} />
+            <Legend 
+              verticalAlign="bottom" 
+              align="center" 
+              wrapperStyle={{ paddingTop: '20px', maxHeight: 150, overflowY: 'auto' }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
       </Box>
+    );
+  };
+
+  return (
+    <Box bg="bg" p="1rem" pt="0">
+      <Tabs.Root value={selectedMetric} onValueChange={(details) => setSelectedMetric(details.value)}>
+        <Tabs.List>
+          <Tabs.Trigger value="area">Area</Tabs.Trigger>
+          <Tabs.Trigger value="baselineHUs">Baseline HUs</Tabs.Trigger>
+          <Tabs.Trigger value="improvementHUs">Improvement HUs</Tabs.Trigger>
+          <Tabs.Trigger value="huGain">HU Gain</Tabs.Trigger>
+          <Tabs.Trigger value="allocations">Allocations</Tabs.Trigger>
+        </Tabs.List>
+
+        <Tabs.Content value="area">
+          {renderChartContent('area')}
+        </Tabs.Content>
+
+        <Tabs.Content value="baselineHUs">
+          {renderChartContent('baselineHUs')}
+        </Tabs.Content>
+
+        <Tabs.Content value="improvementHUs">
+          {renderChartContent('improvementHUs')}
+        </Tabs.Content>
+
+        <Tabs.Content value="huGain">
+          {renderChartContent('huGain')}
+        </Tabs.Content>
+
+        <Tabs.Content value="allocations">
+          {renderChartContent('allocations')}
+        </Tabs.Content>
+      </Tabs.Root>
     </Box>
   );
 };
