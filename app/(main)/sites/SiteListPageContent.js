@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState,  useEffect, useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import SiteList from '@/components/data/SiteList';
@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, PieChart, Pie, Cell, Legend, ScatterChart, Scatter, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, Line } from 'recharts';
 import { SitesAreaCompositionChart } from '@/components/charts/SitesAreaCompositionChart';
 import { correlation, bootstrapMedianCI, scatter_sums, regression_line } from '@/lib/Stats';
 
@@ -18,7 +18,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-const IMDSiteDecileChart = ({sites}) => {
+const IMDSiteDecileChart = ({ sites }) => {
 
   const imdChart = useMemo(() => {
     if (sites == null) return [];
@@ -54,7 +54,7 @@ const IMDSiteDecileChart = ({sites}) => {
   )
 }
 
-const SiteSizeDistributionChart = ({sites}) => {
+const SiteSizeDistributionChart = ({ sites }) => {
   const chartData = useMemo(() => {
     if (!sites || sites.length === 0) return [];
 
@@ -132,7 +132,7 @@ const SiteSizeDistributionChart = ({sites}) => {
   );
 }
 
-const HUGainVsBaselineScatterChart = ({sites}) => {
+const HUGainVsBaselineScatterChart = ({ sites }) => {
   const { scatterData, trendLineData, statistics } = useMemo(() => {
     if (!sites || sites.length === 0) return { scatterData: [], trendLineData: [], statistics: null };
 
@@ -201,7 +201,7 @@ const HUGainVsBaselineScatterChart = ({sites}) => {
         <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
           <Text fontWeight="bold" color="black" mb="5px">{data.referenceNumber}</Text>
           <Text color="#36454F">
-            Baseline Area: {formatNumber(data.baselineArea, 2)} ha<br/>
+            Baseline Area: {formatNumber(data.baselineArea, 2)} ha<br />
             HU Gain: {formatNumber(data.huGain, 2)}
           </Text>
         </Box>
@@ -299,7 +299,7 @@ const HUGainVsBaselineScatterChart = ({sites}) => {
   );
 };
 
-const HUGainPerHectareScatterChart = ({sites}) => {
+const HUGainPerHectareScatterChart = ({ sites }) => {
   const { scatterData, trendLineData, statistics } = useMemo(() => {
     if (!sites || sites.length === 0) return { scatterData: [], trendLineData: [], statistics: null };
 
@@ -368,8 +368,8 @@ const HUGainPerHectareScatterChart = ({sites}) => {
         <Box bg="white" p="10px" border="1px solid #ccc" borderRadius="4px">
           <Text fontWeight="bold" color="black" mb="5px">{data.referenceNumber}</Text>
           <Text color="#36454F">
-            Baseline Area: {formatNumber(data.baselineArea, 2)} ha<br/>
-            HU Gain: {formatNumber(data.huGain, 2)}<br/>
+            Baseline Area: {formatNumber(data.baselineArea, 2)} ha<br />
+            HU Gain: {formatNumber(data.huGain, 2)}<br />
             Hectares per HU Gain: {formatNumber(data.y, 2)}
           </Text>
         </Box>
@@ -490,10 +490,19 @@ export default function SiteListPageContent({ sites }) {
     triggerDownload(blob, 'bgs-sites.csv');
   };
 
+  // display satellite if showing a site
+  const mapLayer = useMemo(() => {
+    if (selectedSite) {
+      return 'Satellite';
+    } else {
+      return 'OpenStreetMap';
+    }
+  }, [selectedSite]);
+
   return (
     <MapContentLayout
       map={
-        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} />
+        <SiteMap sites={filteredSites} hoveredSite={hoveredSite} selectedSite={selectedSite} onSiteSelect={handleSiteSelect} mapLayer={mapLayer} />
       }
       content={
         <ContentStack>
@@ -556,11 +565,11 @@ export default function SiteListPageContent({ sites }) {
                 }
               },
               {
-                title:"BGS Size Distribution Chart",
+                title: "BGS Size Distribution Chart",
                 content: ({ sortedItems }) => <SiteSizeDistributionChart sites={sortedItems} />
               },
               {
-                title:"HU Gain per BGS Scattergram",
+                title: "HU Gain per BGS Scattergram",
                 content: ({ sortedItems }) => <HUGainVsBaselineScatterChart sites={sortedItems} />
               },
               {

@@ -107,13 +107,14 @@ const SiteMap = ({
   hoveredSite,
   selectedSite,
   onSiteSelect,
-  isForSitePage,
   showAllocations = false,
-  showLPA = true,
-  showNCA = true,
-  showLNRS = true,
-  showLSOA = true,
-  showSiteArea = false,
+  showLPA = false,
+  showNCA = false,
+  showLNRS = false,
+  showLSOA = false,
+  showSiteArea = true,
+  openPopups = true,
+  mapLayer = 'OpenStreetMap'
 }) => {
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
   const [cacheVersion, setCacheVersion] = useState(0);
@@ -127,32 +128,19 @@ const SiteMap = ({
   };
 
   useEffect(() => {
-    if (selectedSite) {
-      if (!isForSitePage) {
-        const marker = markerRefs.current[selectedSite.referenceNumber];
-        if (marker) {
-          marker.openPopup();
-        }
+    if (selectedSite && openPopups) {
+      const marker = markerRefs.current[selectedSite.referenceNumber];
+      if (marker) {
+        marker.openPopup();
       }
     }
-  }, [selectedSite, isForSitePage]);
+  }, [selectedSite, openPopups]);
 
   const handlePopupClose = (site) => {
     if (onSiteSelect && site?.referenceNumber == selectedSite?.referenceNumber) { onSiteSelect(null) };
   };
 
   const mapHeight = '100%'
-
-  // display satellite if on site page and not showing allocs
-  const mapLayer = useMemo(() => {
-    if (isForSitePage) {
-      if (showAllocations && selectedSite && selectedSite.allocations.length > 0) {
-        return 'OpenStreetMap';
-      }
-      return 'Satellite';
-    }
-    return 'OpenStreetMap';
-  }, [isForSitePage, showAllocations, selectedSite]);
 
   // depending on context, lsoa can be just the name or the full lsoa object
   const lsoaName = selectedSite?.lsoa?.name ?? selectedSite?.lsoaName;
