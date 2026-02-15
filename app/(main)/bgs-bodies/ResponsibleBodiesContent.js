@@ -1,7 +1,6 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
@@ -47,17 +46,6 @@ export default function ResponsibleBodiesContent({
   onHoveredSiteChange,
   onSelectedSiteChange
 }) {
-
-  // Pre-process bodies to add sites array for each body
-  const bodiesWithSites = useMemo(() => {
-    if (!sites) return responsibleBodies;
-    return responsibleBodies.map(item => ({
-      ...item,
-      sites: item.sites.map(ref => sites.find(s => s.referenceNumber == ref)),
-      siteCount: item.sites.length
-    }));
-  }, [responsibleBodies, sites]);
-
   const handleExport = (itemsToExport) => {
     const csvData = itemsToExport.map(body => ({
       'Name': body.name,
@@ -75,15 +63,16 @@ export default function ResponsibleBodiesContent({
     triggerDownload(blob, 'responsible-bodies.csv');
   };
 
-  const unknownRB = bodiesWithSites.find(rb => rb.name == '<Unknown>');
-  const numDesignated = unknownRB ? bodiesWithSites.length - 1 : bodiesWithSites.length;
+  const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
+  const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
 
   return (
     <SearchableBodiesLayout
-      bodies={bodiesWithSites}
+      bodies={responsibleBodies}
+      allSites={sites}
       headers={HEADERS}
       bodyNameKey="name"
-      sitesKey="sites"
+      siteRefsKey="sites"
       filterPredicate={(body, term) =>
         (body.name?.toLowerCase() || '').includes(term) ||
         (body.expertise?.toLowerCase() || '').includes(term) ||

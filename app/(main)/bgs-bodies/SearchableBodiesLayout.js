@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
@@ -8,9 +8,10 @@ import { PrimaryTable } from '@/components/styles/PrimaryTable';
 
 export default function SearchableBodiesLayout({
   bodies,
+  allSites,
   headers,
   bodyNameKey = 'name',
-  sitesKey = 'sites',
+  siteRefsKey = 'sites',  // Key containing array of reference numbers
   filterPredicate,
   initialSortConfig,
   summary,
@@ -21,6 +22,14 @@ export default function SearchableBodiesLayout({
   onSelectedSiteChange,
 }) {
   const [expandedRows, setExpandedRows] = useState({});
+
+  // Create a Map for O(1) site lookups by referenceNumber
+  const sitesMap = useMemo(() => {
+    if (!allSites) return null;
+    const map = new Map();
+    allSites.forEach(site => map.set(site.referenceNumber, site));
+    return map;
+  }, [allSites]);
 
   const handleToggle = (bodyName, isOpen) => {
     if (isOpen) {
@@ -35,14 +44,18 @@ export default function SearchableBodiesLayout({
     for (const bodyName in expandedRows) {
       if (expandedRows[bodyName]) {
         const body = bodies.find(b => b[bodyNameKey] === bodyName);
-        if (body) {
-          sites.push(...(body[sitesKey] || []));
+        if (body && sitesMap) {
+          const refs = body[siteRefsKey] || [];
+          refs.forEach(ref => {
+            const site = sitesMap.get(ref);
+            if (site) sites.push(site);
+          });
         }
       }
     }
     onMapSitesChange?.(sites);
     onSelectedSiteChange?.(null);
-  }, [expandedRows, bodies, bodyNameKey, sitesKey, onMapSitesChange, onSelectedSiteChange]);
+  }, [expandedRows, bodies, bodyNameKey, siteRefsKey, sitesMap, onMapSitesChange, onSelectedSiteChange]);
 
   const renderCell = (body, header) => {
     // Use custom render function if provided
@@ -74,9 +87,16 @@ export default function SearchableBodiesLayout({
       );
     });
 
+    // Lazily expand site references to full site objects when row is expanded
+    const expandedSites = useMemo(() => {
+      if (!sitesMap) return [];
+      const refs = body[siteRefsKey] || [];
+      return refs.map(ref => sitesMap.get(ref)).filter(Boolean);
+    }, [body, siteRefsKey, sitesMap]);
+
     const collapsibleContent = (
       <SiteList
-        sites={body[sitesKey]}
+        sites={expandedSites}
         onSiteHover={onSiteHover}
         onSiteClick={onSiteClick}
         minimalHeight={true}

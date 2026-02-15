@@ -61,23 +61,14 @@ export function renderAdjacencyTable(lnrs, allLnrs) {
 }
 
 export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSelectedPolygonChange }) {
-  // Pre-process lnrs to add sites array for each body
-  const lnrsWithSites = useMemo(() => {
-    if (!sites) return lnrs;
+  // Pre-process to add siteCount and adjacentsCount (without expanding sites)
+  const processedBodies = useMemo(() => {
     return lnrs.map(item => ({
       ...item,
-      sites: item.sites.map(ref => sites.find(s => s.referenceNumber == ref)),
-      siteCount: item.sites.length
-    }));
-  }, [lnrs, sites]);
-
-  // Pre-process to add adjacentsCount
-  const processedBodies = useMemo(() => {
-    return lnrsWithSites.map(item => ({
-      ...item,
+      siteCount: item.sites?.length || 0,
       adjacentsCount: item.adjacents?.length || 0
     }));
-  }, [lnrsWithSites]);
+  }, [lnrs]);
 
   const totalArea = useMemo(() => lnrs.reduce((sum, item) => sum + item.size, 0), [lnrs]);
 
@@ -88,9 +79,10 @@ export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSe
   return (
     <SearchableBodiesLayout
       bodies={processedBodies}
+      allSites={sites}
       headers={HEADERS}
       bodyNameKey="name"
-      sitesKey="sites"
+      siteRefsKey="sites"
       filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
       initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
       summary={(filteredCount, totalCount) => (

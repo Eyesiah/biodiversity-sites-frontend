@@ -60,23 +60,14 @@ export function renderAdjacencyTable(nca, allNcas) {
 }
 
 export default function NCAContent({ ncas, sites, error, onMapSitesChange, onSelectedPolygonChange }) {
-  // Pre-process ncas to add sites array for each body
-  const ncasWithSites = useMemo(() => {
-    if (!sites) return ncas;
+  // Pre-process to add siteCount and adjacentsCount (without expanding sites)
+  const processedBodies = useMemo(() => {
     return ncas.map(item => ({
       ...item,
-      sites: item.sites.map(ref => sites.find(s => s.referenceNumber == ref)),
-      siteCount: item.sites.length
-    }));
-  }, [ncas, sites]);
-
-  // Pre-process to add adjacentsCount
-  const processedBodies = useMemo(() => {
-    return ncasWithSites.map(item => ({
-      ...item,
+      siteCount: item.sites?.length || 0,
       adjacentsCount: item.adjacents?.length || 0
     }));
-  }, [ncasWithSites]);
+  }, [ncas]);
 
   const totalArea = useMemo(() => ncas.reduce((sum, nca) => sum + nca.size, 0), [ncas]);
 
@@ -87,9 +78,10 @@ export default function NCAContent({ ncas, sites, error, onMapSitesChange, onSel
   return (
     <SearchableBodiesLayout
       bodies={processedBodies}
+      allSites={sites}
       headers={HEADERS}
       bodyNameKey="name"
-      sitesKey="sites"
+      siteRefsKey="sites"
       filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
       initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
       summary={(filteredCount, totalCount) => (

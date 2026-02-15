@@ -63,32 +63,24 @@ export function renderLpaAdjacencyTable(lpa, allLpas) {
 }
 
 export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPolygonChange }) {
-  // Pre-process lpas to add sites array for each body
-  const lpasWithSites = useMemo(() => {
-    if (!sites) return lpas;
+  // Pre-process to add siteCount and adjacentsCount (without expanding sites)
+  const processedBodies = useMemo(() => {
     return lpas.map(item => ({
       ...item,
-      sites: item.sites.map(ref => sites.find(s => s.referenceNumber == ref)),
-      siteCount: item.sites.length
-    }));
-  }, [lpas, sites]);
-
-  // Pre-process to add adjacentsCount
-  const processedBodies = useMemo(() => {
-    return lpasWithSites.map(item => ({
-      ...item,
+      siteCount: item.sites?.length || 0,
       adjacentsCount: item.adjacents?.length || 0
     }));
-  }, [lpasWithSites]);
+  }, [lpas]);
 
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
 
   return (
     <SearchableBodiesLayout
       bodies={processedBodies}
+      allSites={sites}
       headers={HEADERS}
       bodyNameKey="name"
-      sitesKey="sites"
+      siteRefsKey="sites"
       filterPredicate={(item, term) =>
         (item.name?.toLowerCase() || '').includes(term) ||
         (item.id?.toLowerCase() || '').includes(term)
