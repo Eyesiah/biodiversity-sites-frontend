@@ -1,5 +1,4 @@
-
-import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl } from 'react-leaflet';
+import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl, LayerGroup } from 'react-leaflet';
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
@@ -39,16 +38,18 @@ export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-        </LayersControl.BaseLayer>
+        </LayersControl.BaseLayer>        
         <LayersControl.BaseLayer checked={defaultBaseLayer === 'Satellite'} name="Satellite">
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          />
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-            attribution=""
-          />
+          <LayerGroup>
+            <TileLayer
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            />
+            <TileLayer
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+              attribution=""
+            />
+          </LayerGroup>
         </LayersControl.BaseLayer>
       </LayersControl>
       <ScaleControl position="topleft" imperial={false} />
