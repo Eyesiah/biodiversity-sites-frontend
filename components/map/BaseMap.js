@@ -3,6 +3,7 @@ import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
+import L from 'leaflet';
 
 const defaultSiteIcon = new L.Icon({
   iconUrl: '/icons/greenMarker.svg',
@@ -38,7 +39,7 @@ export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-        </LayersControl.BaseLayer>        
+        </LayersControl.BaseLayer>
         <LayersControl.BaseLayer checked={defaultBaseLayer === 'Satellite'} name="Satellite">
           <LayerGroup>
             <TileLayer
@@ -85,8 +86,9 @@ export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, 
         click: () => { if (onSiteSelect) onSiteSelect(site) },
         popupclose: () => { if (handlePopupClose) handlePopupClose(site) },
       }}
+      autoPan={false}
     >
-      <Popup>
+      <Popup autoPan={false}>
         <h2><Link href={`/sites/${site.referenceNumber}`}>{site.referenceNumber}</Link></h2>
         {site.name && <><b>{site.name}</b><br /></>}
         <b>Responsible Body:</b> {site.responsibleBody}<br />
