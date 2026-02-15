@@ -67,15 +67,7 @@ async function getLPAPageData(allSites) {
     lpa.allocationsCount = allocationCounts[lpa.name] || 0;
   });
 
-  const sites = allSites.map(s => ({
-    referenceNumber: s.referenceNumber,
-    lpaName: s.lpaName || null,
-    position: [s.latitude, s.longitude],
-    responsibleBodies: s.responsibleBodies || [],
-    ncaName: s.ncaName || null,
-    siteSize: s.siteSize || 0,
-    lnrsName: s.lnrsName || null
-  }));
+  const sites = processSitesForListView(allSites);
 
   return { lpas, sites };
 }
