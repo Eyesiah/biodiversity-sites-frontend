@@ -5,6 +5,7 @@ import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { InfoModal } from '@/components/ui/InfoModal';
 
 export default function SearchableBodiesLayout({
   bodies,
@@ -20,8 +21,10 @@ export default function SearchableBodiesLayout({
   onSiteHover,
   onSiteClick,
   onSelectedSiteChange,
+  modalType,  // Type for InfoModal: 'lpa', 'lnrs', 'nca', etc.
 }) {
   const [expandedRows, setExpandedRows] = useState({});
+  const [modalState, setModalState] = useState({ show: false, type: '', name: '', title: '', size: '' });
 
   // Create a Map for O(1) site lookups by referenceNumber
   const sitesMap = useMemo(() => {
@@ -60,7 +63,7 @@ export default function SearchableBodiesLayout({
   const renderCell = (body, header) => {
     // Use custom render function if provided
     if (header.render) {
-      return header.render(body);
+      return header.render(body, modalType, setModalState);
     }
     const value = body[header.key];
     if (Array.isArray(value)) {
@@ -115,41 +118,49 @@ export default function SearchableBodiesLayout({
   };
 
   return (
-    <SearchableTableLayout
-      initialItems={bodies}
-      filterPredicate={filterPredicate}
-      initialSortConfig={initialSortConfig}
-      exportConfig={exportConfig}
-      summary={summary}
-    >
-      {({ sortedItems, requestSort, getSortIndicator }) => (
-        <PrimaryTable.Root>
-          <PrimaryTable.Header>
-            <PrimaryTable.Row>
-              {headers.map((header) => (
-                <PrimaryTable.ColumnHeader
-                  key={header.key}
-                  onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
-                  textAlign={header.textAlign}
-                >
-                  {header.label}
-                  {header.sortable !== false && getSortIndicator(header.key)}
-                </PrimaryTable.ColumnHeader>
+    <>
+      <SearchableTableLayout
+        initialItems={bodies}
+        filterPredicate={filterPredicate}
+        initialSortConfig={initialSortConfig}
+        exportConfig={exportConfig}
+        summary={summary}
+      >
+        {({ sortedItems, requestSort, getSortIndicator }) => (
+          <PrimaryTable.Root>
+            <PrimaryTable.Header>
+              <PrimaryTable.Row>
+                {headers.map((header) => (
+                  <PrimaryTable.ColumnHeader
+                    key={header.key}
+                    onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
+                    textAlign={header.textAlign}
+                  >
+                    {header.label}
+                    {header.sortable !== false && getSortIndicator(header.key)}
+                  </PrimaryTable.ColumnHeader>
+                ))}
+              </PrimaryTable.Row>
+            </PrimaryTable.Header>
+            <PrimaryTable.Body>
+              {sortedItems.map((body) => (
+                <BodyRow
+                  body={body}
+                  key={body[bodyNameKey]}
+                  isOpen={expandedRows[body[bodyNameKey]] || false}
+                  onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
+                />
               ))}
-            </PrimaryTable.Row>
-          </PrimaryTable.Header>
-          <PrimaryTable.Body>
-            {sortedItems.map((body) => (
-              <BodyRow
-                body={body}
-                key={body[bodyNameKey]}
-                isOpen={expandedRows[body[bodyNameKey]] || false}
-                onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
-              />
-            ))}
-          </PrimaryTable.Body>
-        </PrimaryTable.Root>
+            </PrimaryTable.Body>
+          </PrimaryTable.Root>
+        )}
+      </SearchableTableLayout>
+      {modalType && (
+        <InfoModal 
+          modalState={modalState} 
+          onClose={() => setModalState({ show: false, type: '', name: '', title: '', size: '' })} 
+        />
       )}
-    </SearchableTableLayout>
+    </>
   );
 }

@@ -32,10 +32,14 @@ export async function GET(request, { params }) {
     lpa = allLpas.find(l => l.id === paramData.lpaName);
   }
 
-  if (lpa && lpa.adjacents) {
-    lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
-  }
   if (lpa) {
+    // Add site count
+    lpa.siteCount = lpa.sites?.length || 0;
+    
+    // Convert sizes
+    if (lpa.adjacents) {
+      lpa.adjacents.forEach(adj => adj.size = adj.size / 10000);
+    }
     lpa.size = lpa.size / 10000;
   }
 

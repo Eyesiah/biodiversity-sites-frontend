@@ -7,6 +7,7 @@ import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import { InfoButton } from '@/components/styles/InfoButton';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 
@@ -16,7 +17,29 @@ const HEADERS = [
   { key: 'name', label: 'Name' },
   { key: 'size', label: 'Size (ha)', textAlign: 'right', format: (val) => formatNumber(val, 0) },
   { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
-  { key: 'adjacentsCount', label: '# Adjacent NCAs', textAlign: 'center', render: (nca) => nca.adjacents?.length || 0 },
+  { 
+    key: 'adjacentsCount', 
+    label: '# Adjacent NCAs', 
+    textAlign: 'center', 
+    render: (nca, modalType, setModalState) => {
+      const count = nca.adjacents?.length || 0;
+      if (count === 0) return count;
+      return (
+        <>
+          {count}
+          <InfoButton 
+            onClick={() => setModalState({ 
+              show: true, 
+              type: modalType, 
+              name: slugify(normalizeBodyName(nca.name)), 
+              title: `Adjacent NCAs: ${nca.name}`,
+              size: 'md'
+            })} 
+          />
+        </>
+      );
+    }
+  },
 ];
 
 /**
@@ -104,6 +127,7 @@ export default function NCAContent({ ncas, sites, error, onMapSitesChange, onSel
         }
       }}
       onMapSitesChange={onMapSitesChange}
+      modalType="nca"
       onSiteClick={(site) => {
         // When a site is clicked, update the polygon to show this NCA
         if (site?.ncaName) {

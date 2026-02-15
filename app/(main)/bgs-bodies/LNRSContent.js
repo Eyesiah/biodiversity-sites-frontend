@@ -2,10 +2,11 @@
 
 import Papa from 'papaparse';
 import { useMemo } from 'react';
-import { formatNumber } from '@/lib/format';
+import { formatNumber, slugify } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
+import { InfoButton } from '@/components/styles/InfoButton';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
 
@@ -17,7 +18,29 @@ const HEADERS = [
   { key: 'publicationStatus', label: 'Publication Status' },
   { key: 'size', label: 'Size (ha)', textAlign: 'right', format: (val) => formatNumber(val, 0) },
   { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
-  { key: 'adjacentsCount', label: '# Adjacent LNRS', textAlign: 'center', render: (lnrs) => lnrs.adjacents?.length || 0 },
+  { 
+    key: 'adjacentsCount', 
+    label: '# Adjacent LNRS', 
+    textAlign: 'center', 
+    render: (lnrs, modalType, setModalState) => {
+      const count = lnrs.adjacents?.length || 0;
+      if (count === 0) return count;
+      return (
+        <>
+          {count}
+          <InfoButton 
+            onClick={() => setModalState({ 
+              show: true, 
+              type: modalType, 
+              name: slugify(lnrs.name), 
+              title: `Adjacent LNRS: ${lnrs.name}`,
+              size: 'md'
+            })} 
+          />
+        </>
+      );
+    }
+  },
 ];
 
 /**
@@ -107,6 +130,7 @@ export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSe
         }
       }}
       onMapSitesChange={onMapSitesChange}
+      modalType="lnrs"
       onSiteClick={(site) => {
         // When a site is clicked, update the polygon to show this LNRS
         if (site?.lnrsName) {
