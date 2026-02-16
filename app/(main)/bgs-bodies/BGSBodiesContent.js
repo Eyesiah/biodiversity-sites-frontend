@@ -184,7 +184,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="rb-chart">
-            <ResponsibleBodyMetricsChart sites={responsibleBodies.flatMap(body => body.sites)} />
+            <ResponsibleBodyMetricsChart sites={sites} />
           </Tabs.Content>
 
           <Tabs.Content value="lpa">
