@@ -112,7 +112,7 @@ export default function BGSBodiesContent({
     }
     // List tabs show expanded body sites
     return mapSites;
-  }, [activeTab, sites, mapSites, hoveredEntitySites]);
+  }, [activeTab, mapSites, hoveredEntitySites]);
 
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
