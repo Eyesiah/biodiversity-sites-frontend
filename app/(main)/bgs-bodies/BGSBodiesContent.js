@@ -46,6 +46,7 @@ export default function BGSBodiesContent({
   const handleChartHover = useCallback((hoverData) => {
     if (!hoverData) {
       setHoveredEntitySites(null);
+      setSelectedBody(null);
       return;
     }
     
@@ -54,12 +55,28 @@ export default function BGSBodiesContent({
     if (isOther) {
       // For "Other" segment, show all BGS sites
       setHoveredEntitySites(sites);
+      setSelectedBody(null);
     } else if (entitySites && entitySites.length > 0) {
       setHoveredEntitySites(entitySites);
+      
+      // Get the correct body name from the first site's properties
+      let bodyName = null;
+      if (activeTab === 'lpa-chart' && entitySites[0].lpaName) {
+        bodyName = entitySites[0].lpaName;
+      } else if (activeTab === 'nca-chart' && entitySites[0].ncaName) {
+        bodyName = entitySites[0].ncaName;
+      } else if (activeTab === 'lnrs-chart' && entitySites[0].lnrsName) {
+        bodyName = entitySites[0].lnrsName;
+      }
+      
+      if (bodyName) {
+        setSelectedBody({ name: bodyName });
+      }
     } else {
       setHoveredEntitySites(null);
+      setSelectedBody(null);
     }
-  }, [sites]);
+  }, [sites, activeTab]);
 
   // Reset map state when switching tabs
   useEffect(() => {
@@ -135,6 +152,19 @@ export default function BGSBodiesContent({
     }
   }, [activeTab, selectedBody]);
 
+  // Determine which site to highlight on the map
+  const mapHoveredSite = useMemo(() => {
+    // On chart tabs, use the first site from hovered entity
+    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
+      return hoveredEntitySites && hoveredEntitySites.length > 0 ? hoveredEntitySites[0] : null;
+    }
+    // On list tabs, use the hoveredSite from list
+    return hoveredSite;
+  }, [activeTab, hoveredEntitySites, hoveredSite]);
+
+  // Determine if we should disable zoom on the map (for chart hover)
+  const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
+
   // Check for error after all hooks are called
   if (error) {
     return (
@@ -146,16 +176,6 @@ export default function BGSBodiesContent({
     );
   }
 
-  // Determine which site to highlight on the map
-  const mapHoveredSite = useMemo(() => {
-    // On chart tabs, use the first site from hovered entity
-    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
-      return hoveredEntitySites && hoveredEntitySites.length > 0 ? hoveredEntitySites[0] : null;
-    }
-    // On list tabs, use the hoveredSite from list
-    return hoveredSite;
-  }, [activeTab, hoveredEntitySites, hoveredSite]);
-
   return (
     <MapContentLayout
       map={<PolygonMap
@@ -165,6 +185,7 @@ export default function BGSBodiesContent({
           nameProperty={mapConfig.nameProperty}
           sites={mapSitesToShow}
           style={mapConfig.style}
+          disableZoom={disableZoom}
         />}
       content={
         <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
