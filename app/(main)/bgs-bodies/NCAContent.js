@@ -82,7 +82,7 @@ export function renderAdjacencyTable(nca, allNcas) {
   );
 }
 
-export default function NCAContent({ ncas, sites, error, onMapSitesChange, onSelectedPolygonChange }) {
+export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSiteClick }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return ncas.map(item => ({
@@ -126,15 +126,9 @@ export default function NCAContent({ ncas, sites, error, onMapSitesChange, onSel
           triggerDownload(blob, 'ncas.csv');
         }
       }}
-      onMapSitesChange={onMapSitesChange}
+      onExpandedRowChanged={onExpandedRowChanged}
       modalType="nca"
-      onSiteClick={(site) => {
-        // When a site is clicked, update the polygon to show this NCA
-        if (site?.ncaName) {
-          const matchingNca = ncas.find(n => slugify(normalizeBodyName(n.name)) === slugify(normalizeBodyName(site.ncaName)));
-          onSelectedPolygonChange?.(matchingNca);
-        }
-      }}
+      onSiteClick={onSiteClick}
     />
   );
 }

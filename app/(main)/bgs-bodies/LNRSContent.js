@@ -82,7 +82,7 @@ export function renderAdjacencyTable(lnrs, allLnrs) {
   );
 }
 
-export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSelectedPolygonChange }) {
+export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, onSiteClick }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lnrs.map(item => ({
@@ -127,15 +127,9 @@ export default function LNRSContent({ lnrs, sites, error, onMapSitesChange, onSe
           triggerDownload(blob, 'lnrs-areas.csv');
         }
       }}
-      onMapSitesChange={onMapSitesChange}
+      onExpandedRowChanged={onExpandedRowChanged}
       modalType="lnrs"
-      onSiteClick={(site) => {
-        // When a site is clicked, update the polygon to show this LNRS
-        if (site?.lnrsName) {
-          const matchingLnrs = lnrs.find(l => l.name === site.lnrsName);
-          onSelectedPolygonChange?.(matchingLnrs);
-        }
-      }}
+      onSiteClick={onSiteClick}
     />
   );
 }

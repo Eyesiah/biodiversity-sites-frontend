@@ -17,13 +17,12 @@ export default function SearchableBodiesLayout({
   initialSortConfig,
   summary,
   exportConfig,
-  onMapSitesChange,
+  onExpandedRowChanged,
   onSiteHover,
   onSiteClick,
-  onSelectedSiteChange,
   modalType,  // Type for InfoModal: 'lpa', 'lnrs', 'nca', etc.
 }) {
-  const [expandedRows, setExpandedRows] = useState({});
+  const [expandedRow, setExpandedRow] = useState(null);
   const [modalState, setModalState] = useState({ show: false, type: '', name: '', title: '', size: '' });
 
   // Create a Map for O(1) site lookups by referenceNumber
@@ -36,29 +35,28 @@ export default function SearchableBodiesLayout({
 
   const handleToggle = (bodyName, isOpen) => {
     if (isOpen) {
-      setExpandedRows({ [bodyName]: true });
+      setExpandedRow(bodyName);
     } else {
-      setExpandedRows({});
+      setExpandedRow(null);
     }
   };
 
   useEffect(() => {
     const sites = [];
-    for (const bodyName in expandedRows) {
-      if (expandedRows[bodyName]) {
-        const body = bodies.find(b => b[bodyNameKey] === bodyName);
-        if (body && sitesMap) {
-          const refs = body[siteRefsKey] || [];
-          refs.forEach(ref => {
-            const site = sitesMap.get(ref);
-            if (site) sites.push(site);
-          });
-        }
+    if (expandedRow != null) {
+      const body = bodies.find(b => b[bodyNameKey] === expandedRow);
+      if (body && sitesMap) {
+        const refs = body[siteRefsKey] || [];
+        refs.forEach(ref => {
+          const site = sitesMap.get(ref);
+          if (site) sites.push(site);
+        });
       }
+      onExpandedRowChanged?.(body, sites);
+    } else {      
+      onExpandedRowChanged?.(null, null);
     }
-    onMapSitesChange?.(sites);
-    onSelectedSiteChange?.(null);
-  }, [expandedRows, bodies, bodyNameKey, siteRefsKey, sitesMap, onMapSitesChange, onSelectedSiteChange]);
+  }, [expandedRow, bodies, bodyNameKey, siteRefsKey, sitesMap, onExpandedRowChanged]);
 
   const renderCell = (body, header) => {
     // Use custom render function if provided
@@ -79,10 +77,10 @@ export default function SearchableBodiesLayout({
   const BodyRow = ({ body, isOpen, onToggle }) => {
     const mainRow = headers.map((header, index) => {
       // Determine cell component based on textAlign
-      const CellComponent = header.textAlign === 'center' || header.textAlign === 'right' 
-        ? PrimaryTable.NumericCell 
+      const CellComponent = header.textAlign === 'center' || header.textAlign === 'right'
+        ? PrimaryTable.NumericCell
         : PrimaryTable.Cell;
-      
+
       return (
         <CellComponent key={header.key} textAlign={header.textAlign}>
           {renderCell(body, header)}
@@ -95,7 +93,7 @@ export default function SearchableBodiesLayout({
       if (!sitesMap) return [];
       const refs = body[siteRefsKey] || [];
       return refs.map(ref => sitesMap.get(ref)).filter(Boolean);
-    }, [body, siteRefsKey, sitesMap]);
+    }, [body]);
 
     const collapsibleContent = (
       <SiteList
@@ -147,7 +145,7 @@ export default function SearchableBodiesLayout({
                 <BodyRow
                   body={body}
                   key={body[bodyNameKey]}
-                  isOpen={expandedRows[body[bodyNameKey]] || false}
+                  isOpen={expandedRow == body[bodyNameKey]}
                   onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
                 />
               ))}
@@ -156,9 +154,9 @@ export default function SearchableBodiesLayout({
         )}
       </SearchableTableLayout>
       {modalType && (
-        <InfoModal 
-          modalState={modalState} 
-          onClose={() => setModalState({ show: false, type: '', name: '', title: '', size: '' })} 
+        <InfoModal
+          modalState={modalState}
+          onClose={() => setModalState({ show: false, type: '', name: '', title: '', size: '' })}
         />
       )}
     </>

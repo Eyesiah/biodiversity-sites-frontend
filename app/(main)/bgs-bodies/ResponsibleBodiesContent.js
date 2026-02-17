@@ -44,7 +44,7 @@ const HEADERS = [
 export default function ResponsibleBodiesContent({
   responsibleBodies,
   sites,
-  onMapSitesChange,
+  onExpandedRowChanged,
   onHoveredSiteChange,
   onSelectedSiteChange
 }) {
@@ -105,10 +105,9 @@ export default function ResponsibleBodiesContent({
         </div>
       )}
       exportConfig={{ onExportCsv: handleExport }}
-      onMapSitesChange={onMapSitesChange}
+      onExpandedRowChanged={onExpandedRowChanged}
       onSiteHover={onHoveredSiteChange}
       onSiteClick={onSelectedSiteChange}
-      onSelectedSiteChange={onSelectedSiteChange}
     />
   );
 }

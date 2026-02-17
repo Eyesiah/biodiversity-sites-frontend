@@ -85,7 +85,7 @@ export function renderLpaAdjacencyTable(lpa, allLpas) {
   );
 }
 
-export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPolygonChange }) {
+export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSiteClick }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lpas.map(item => ({
@@ -130,15 +130,9 @@ export default function LPAContent({ lpas, sites, onMapSitesChange, onSelectedPo
           triggerDownload(blob, 'lpas.csv');
         }
       }}
-      onMapSitesChange={onMapSitesChange}
+      onExpandedRowChanged={onExpandedRowChanged}
       modalType="lpa"
-      onSiteClick={(site) => {
-        // When a site is clicked, update the polygon to show this LPA
-        if (site?.lpaName) {
-          const matchingLpa = lpas.find(l => l.name === site.lpaName);
-          onSelectedPolygonChange?.(matchingLpa);
-        }
-      }}
+      onSiteClick={onSiteClick}
     />
   );
 }

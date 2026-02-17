@@ -1,4 +1,4 @@
-import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
+import { GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -30,13 +30,15 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
     let isCancelled = false;
 
     const fetchPolygons = async () => {
-      // Reset state when starting a new fetch to clear previous polygons
       setGeoJson(null);
       setAdjacentGeoJson(null);
       setError(null);
 
-      if (!selectedItem || !selectedItem[nameProperty]) return;
+      if (!selectedItem || !selectedItem[nameProperty] || geoJsonUrl == null) return;
+
       const name = selectedItem[nameProperty];
+
+      // Reset state when starting a new fetch to clear previous polygons
 
       // Use a different field for the query if the geoJsonUrl indicates it's for LPAs
       let queryField = nameProperty;
@@ -104,7 +106,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         {geoJson && <GeoJSON data={geoJson} style={style} />}
         <MapController geoJson={geoJson} />
 
-        {sites.filter(site => site.position != null).map(site => (
+        {sites && sites.filter(site => site.position != null).map(site => (
           <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
         ))}
       </BaseMap>

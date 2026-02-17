@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
@@ -14,11 +14,6 @@ import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
 import { ARCGIS_LPA_URL, ARCGIS_LNRS_URL } from '@/config';
-
-const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
-  ssr: false,
-  loading: () => <p>Loading map...</p>
-});
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -39,14 +34,19 @@ export default function BGSBodiesContent({
   const [mapSites, setMapSites] = useState([]);
   const [hoveredSite, setHoveredSite] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
-  const [selectedPolygon, setSelectedPolygon] = useState(null);
+  const [selectedBody, setSelectedBody] = useState(null);
+
+  const handleExpandedBodyChanged = useCallback((body, sites) => {
+    setSelectedBody(body);
+    setMapSites(sites);
+  }, []);
 
   // Reset map state when switching tabs
   useEffect(() => {
     setMapSites([]);
     setHoveredSite(null);
     setSelectedSite(null);
-    setSelectedPolygon(null);
+    setSelectedBody(null);
   }, [activeTab]);
 
   // Reset everything when the component unmounts (page loses focus)
@@ -56,7 +56,7 @@ export default function BGSBodiesContent({
       setMapSites([]);
       setHoveredSite(null);
       setSelectedSite(null);
-      setSelectedPolygon(null);
+      setSelectedBody(null);
     };
   }, []);
 
@@ -65,15 +65,14 @@ export default function BGSBodiesContent({
     switch (activeTab) {
       case 'responsible-bodies':
       case 'rb-chart':
-        return { type: 'site', sites: mapSites };
+        return { type: 'site' };
       case 'lpa':
       case 'lpa-chart':
         return {
           type: 'polygon',
           geoJsonUrl: ARCGIS_LPA_URL,
           nameProperty: 'name',
-          selectedItem: selectedPolygon,
-          sites: mapSites,
+          selectedItem: selectedBody,
           style: { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'nca':
@@ -82,8 +81,7 @@ export default function BGSBodiesContent({
           type: 'polygon',
           geoJsonUrl: 'https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query',
           nameProperty: 'name',
-          selectedItem: selectedPolygon,
-          sites: mapSites,
+          selectedItem: selectedBody,
           style: { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'lnrs':
@@ -92,14 +90,13 @@ export default function BGSBodiesContent({
           type: 'polygon',
           geoJsonUrl: ARCGIS_LNRS_URL,
           nameProperty: 'name',
-          selectedItem: selectedPolygon,
-          sites: mapSites,
+          selectedItem: selectedBody,
           style: { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }
         };
       default:
         return { type: 'site', sites: [] };
     }
-  }, [activeTab, mapSites, selectedPolygon]);
+  }, [activeTab, selectedBody]);
 
   // Check for error after all hooks are called
   if (error) {
@@ -112,37 +109,16 @@ export default function BGSBodiesContent({
     );
   }
 
-  const renderMap = () => {
-    // For chart tabs, render SiteMap with empty sites to avoid polygon fetch attempts
-    const isChartTab = activeTab.endsWith('-chart');
-    
-    // Only render PolygonMap if we have a selected polygon to avoid "No polygon data found" errors
-    if (mapConfig.type === 'polygon' && !isChartTab && selectedPolygon) {
-      return (
-        <PolygonMap
+  return (
+    <MapContentLayout
+      map={<PolygonMap
           key={activeTab}
           selectedItem={mapConfig.selectedItem}
           geoJsonUrl={mapConfig.geoJsonUrl}
           nameProperty={mapConfig.nameProperty}
-          sites={mapConfig.sites}
+          sites={mapSites}
           style={mapConfig.style}
-        />
-      );
-    }
-    return (
-      <SiteMap
-        key={activeTab}
-        sites={mapConfig.sites}
-        hoveredSite={hoveredSite}
-        selectedSite={selectedSite}
-        onSiteSelect={setSelectedSite}
-      />
-    );
-  };
-
-  return (
-    <MapContentLayout
-      map={renderMap()}
+        />}
       content={
         <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
           <Tabs.List>
@@ -177,7 +153,7 @@ export default function BGSBodiesContent({
               key={activeTab}
               responsibleBodies={responsibleBodies}
               sites={sites}
-              onMapSitesChange={setMapSites}
+              onExpandedRowChanged={handleExpandedBodyChanged}
               onHoveredSiteChange={setHoveredSite}
               onSelectedSiteChange={setSelectedSite}
             />
@@ -192,8 +168,7 @@ export default function BGSBodiesContent({
               key={activeTab}
               lpas={lpas}
               sites={sites}
-              onMapSitesChange={setMapSites}
-              onSelectedPolygonChange={setSelectedPolygon}
+              onExpandedRowChanged={handleExpandedBodyChanged}
             />
           </Tabs.Content>
 
@@ -207,8 +182,7 @@ export default function BGSBodiesContent({
               ncas={ncas}
               sites={sites}
               error={null}
-              onMapSitesChange={setMapSites}
-              onSelectedPolygonChange={setSelectedPolygon}
+              onExpandedRowChanged={handleExpandedBodyChanged}
             />
           </Tabs.Content>
 
@@ -222,8 +196,7 @@ export default function BGSBodiesContent({
               lnrs={lnrs}
               sites={sites}
               error={null}
-              onMapSitesChange={setMapSites}
-              onSelectedPolygonChange={setSelectedPolygon}
+              onExpandedRowChanged={handleExpandedBodyChanged}
             />
           </Tabs.Content>
 
