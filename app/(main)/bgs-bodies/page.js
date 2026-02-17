@@ -172,7 +172,7 @@ async function getLNRSPageData(allSites) {
 export default async function BGSBodiesPage() {
   try {
     // Fetch all sites once
-    const allSites = await fetchAllSites(true);
+    const allSites = await fetchAllSites(true, false, true);
 
     // Fetch all body data in parallel
     const [responsibleBodyItems, lpaData, ncaData, lnrsData] = await Promise.all([
