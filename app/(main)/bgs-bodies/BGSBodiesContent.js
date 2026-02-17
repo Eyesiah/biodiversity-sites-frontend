@@ -32,7 +32,8 @@ export default function BGSBodiesContent({
   
   // Shared map state
   const [mapSites, setMapSites] = useState([]);
-  const [hoveredSite, setHoveredSite] = useState(null);
+  const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
+  const [hoveredEntitySites, setHoveredEntitySites] = useState(null); // All sites for hovered entity (chart tabs)
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
 
@@ -41,10 +42,30 @@ export default function BGSBodiesContent({
     setMapSites(sites);
   }, []);
 
+  // Handle hover on chart segment - pass all sites for the hovered entity
+  const handleChartHover = useCallback((hoverData) => {
+    if (!hoverData) {
+      setHoveredEntitySites(null);
+      return;
+    }
+    
+    const { sites: entitySites, isOther } = hoverData;
+    
+    if (isOther) {
+      // For "Other" segment, show all BGS sites
+      setHoveredEntitySites(sites);
+    } else if (entitySites && entitySites.length > 0) {
+      setHoveredEntitySites(entitySites);
+    } else {
+      setHoveredEntitySites(null);
+    }
+  }, [sites]);
+
   // Reset map state when switching tabs
   useEffect(() => {
     setMapSites([]);
     setHoveredSite(null);
+    setHoveredEntitySites(null);
     setSelectedSite(null);
     setSelectedBody(null);
   }, [activeTab]);
@@ -55,10 +76,26 @@ export default function BGSBodiesContent({
       setActiveTab('responsible-bodies');
       setMapSites([]);
       setHoveredSite(null);
+      setHoveredEntitySites(null);
       setSelectedSite(null);
       setSelectedBody(null);
     };
   }, []);
+
+  // Determine which sites to show on the map based on active tab
+  const mapSitesToShow = useMemo(() => {
+    // On chart tabs - show all sites for the hovered entity
+    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
+      // If hovering over a segment, show all sites belonging to that entity
+      if (hoveredEntitySites) {
+        return hoveredEntitySites;
+      }
+      // Otherwise show no sites
+      return [];
+    }
+    // List tabs show expanded body sites
+    return mapSites;
+  }, [activeTab, sites, mapSites, hoveredEntitySites]);
 
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
@@ -109,6 +146,16 @@ export default function BGSBodiesContent({
     );
   }
 
+  // Determine which site to highlight on the map
+  const mapHoveredSite = useMemo(() => {
+    // On chart tabs, use the first site from hovered entity
+    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
+      return hoveredEntitySites && hoveredEntitySites.length > 0 ? hoveredEntitySites[0] : null;
+    }
+    // On list tabs, use the hoveredSite from list
+    return hoveredSite;
+  }, [activeTab, hoveredEntitySites, hoveredSite]);
+
   return (
     <MapContentLayout
       map={<PolygonMap
@@ -116,7 +163,7 @@ export default function BGSBodiesContent({
           selectedItem={mapConfig.selectedItem}
           geoJsonUrl={mapConfig.geoJsonUrl}
           nameProperty={mapConfig.nameProperty}
-          sites={mapSites}
+          sites={mapSitesToShow}
           style={mapConfig.style}
         />}
       content={
@@ -160,7 +207,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="rb-chart">
-            <ResponsibleBodyMetricsChart sites={sites} />
+            <ResponsibleBodyMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
           </Tabs.Content>
 
           <Tabs.Content value="lpa">
@@ -173,7 +220,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="lpa-chart">
-            <LPAMetricsChart sites={sites} />
+            <LPAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
           </Tabs.Content>
 
           <Tabs.Content value="nca">
@@ -187,7 +234,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="nca-chart">
-            <NCAMetricsChart sites={sites} />
+            <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
           </Tabs.Content>
 
           <Tabs.Content value="lnrs">
@@ -201,7 +248,7 @@ export default function BGSBodiesContent({
           </Tabs.Content>
 
           <Tabs.Content value="lnrs-chart">
-            <LNRSMetricsChart sites={sites} />
+            <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
           </Tabs.Content>
         </Tabs.Root>
       }

@@ -19,7 +19,7 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle }) => {
+const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
   const [error, setError] = useState(null);
@@ -107,7 +107,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         <MapController geoJson={geoJson} />
 
         {sites && sites.filter(site => site.position != null).map(site => (
-          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
+          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} />
         ))}
       </BaseMap>
     </div>

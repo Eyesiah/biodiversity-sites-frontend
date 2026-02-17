@@ -2,7 +2,7 @@
 
 import { OrganizationalMetricsChart } from './OrganizationalMetricsChart';
 
-export const LNRSMetricsChart = ({ sites }) => {
+export const LNRSMetricsChart = ({ sites, onHoveredEntityChange }) => {
   return (
     <OrganizationalMetricsChart
       sites={sites}
@@ -10,6 +10,7 @@ export const LNRSMetricsChart = ({ sites }) => {
       entityAbbr="LNRS sites"
       entityProperty="lnrsName"
       totalEntitiesInUK={48}
+      onHoveredEntityChange={onHoveredEntityChange}
     />
   );
 };
