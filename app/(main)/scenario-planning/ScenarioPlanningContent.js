@@ -29,9 +29,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const [state, formAction] = useActionState(calculateScenarios, initialState);
   const formRef = useRef(null);
   const [formData, setFormData] = useState(initialState);
+  const [sizeInput, setSizeInput] = useState('1');
 
   useEffect(() => {
     setFormData(state);
+    setSizeInput(String(state.size || 1));
   }, [state]);
 
   const handleCalculate = () => {
@@ -43,6 +45,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
   const handleReset = () => {
     setFormData(initialState);
+    setSizeInput('1');
     if (formRef.current) {
       formRef.current.reset();
     }
@@ -122,8 +125,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <Text flex="1" fontWeight="bold">Size (ha)</Text>
               <Input 
                 name="size" 
-                value={formData.size || 1}
-                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                value={sizeInput}
+                onChange={(e) => {
+                  setSizeInput(e.target.value);
+                  setFormData({ ...formData, size: e.target.value });
+                }}
                 flex="2" 
                 type="number"
                 min="0.01"
@@ -290,9 +296,9 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <thead>
                   <tr>
                     <th style={{ padding: '8px', textAlign: 'left' }}>Baseline Habitat</th>
-                    <th style={{ padding: '8px', textAlign: 'center' }}>Baseline Condition</th>
+                    <th style={{ padding: '8px', textAlign: 'left' }}>Baseline Condition</th>
                     <th style={{ padding: '8px', textAlign: 'left' }}>Target Condition</th>
-                    <th style={{ padding: '8px', textAlign: 'center' }}>Time to Target (years)</th>
+                    <th style={{ padding: '8px', textAlign: 'left' }}>Time to Target (years)</th>
                     <th style={{ padding: '8px', textAlign: 'right' }}>HUs</th>
                   </tr>
                 </thead>
