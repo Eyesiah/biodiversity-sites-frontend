@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useRef, useState, useEffect } from 'react';
+import { useActionState, useRef, useState, useEffect, startTransition } from 'react';
 import { Box, Input, NativeSelect, Text, VStack, HStack, Heading, Button } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import dynamic from 'next/dynamic';
@@ -39,13 +39,27 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const handleCalculate = () => {
     if (formRef.current) {
       const formDataToSubmit = new FormData(formRef.current);
-      formAction(formDataToSubmit);
+      startTransition(() => {
+        formAction(formDataToSubmit);
+      });
     }
   };
 
   const handleReset = () => {
     setFormData(initialState);
     setSizeInput('1');
+    // Clear results by calling formAction with minimal data
+    const emptyFormData = new FormData();
+    emptyFormData.set("habitat", "");
+    emptyFormData.set("isReset", "true");
+    emptyFormData.set("size", "1");
+    emptyFormData.set("improvementType", "creation");
+    emptyFormData.set("strategicSignificance", "1");
+    emptyFormData.set("spatialRisk", "1");
+    emptyFormData.set("timeToTargetOffset", "0");
+    startTransition(() => {
+      formAction(emptyFormData);
+    });
     if (formRef.current) {
       formRef.current.reset();
     }

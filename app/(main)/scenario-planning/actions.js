@@ -18,11 +18,23 @@ export async function calculateScenarios(prevState, formData) {
   const spatialRisk = Number(formData.get("spatialRisk")) || 1;
   const timeToTargetOffset = Number(formData.get("timeToTargetOffset")) || 0;
 
+  // Check if this is a reset (empty habitat with no error flag)
+  const isReset = formData.get("isReset") === "true";
+  
   if (!habitat) {
     return {
-      ...prevState,
+      size: Number(size) || 1,
+      habitat: '',
+      baselineHabitat: '',
+      baselineCondition: '',
+      improvementType: improvementType || 'creation',
+      strategicSignificance,
+      spatialRisk,
+      timeToTargetOffset,
       results: null,
-      error: 'Please select a habitat'
+      summary: null,
+      habitatGroup: null,
+      error: isReset ? null : 'Please select a habitat'
     };
   }
 
