@@ -1,6 +1,6 @@
 "use server"
 
-import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup } from "@/lib/habitat";
+import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget } from "@/lib/habitat";
 
 // Condition order from lowest to highest
 const CONDITION_ORDER = ['Poor', 'Fairly Poor', 'Moderate', 'Fairly Good', 'Good'];
@@ -73,6 +73,7 @@ export async function calculateScenarios(prevState, formData) {
         spatialRisk
       );
       
+      const effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, targetCondition, timeToTargetOffset);
       scenarios.push({
         baselineHabitat: 'N/A (Creation)',
         baselineCondition: 'N/A (Creation)',
@@ -81,7 +82,7 @@ export async function calculateScenarios(prevState, formData) {
         baselineHUs: huData.baselineHUs || 0,
         distinctivenessScore: getDistinctivenessScore(habitat),
         conditionScore: getConditionScore(targetCondition),
-        timeToTarget: huData.timeToTarget || 'N/A',
+        timeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
       });
     });
   } else {

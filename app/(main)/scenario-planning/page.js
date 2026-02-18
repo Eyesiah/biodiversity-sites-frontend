@@ -3,8 +3,8 @@ import { getAllHabitats, getAllConditions } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 
 export const metadata = {
-  title: 'Scenario Planning - Biodiversity Gain Sites',
-  description: 'Explore potential Habitat Unit outcomes across different baseline and target conditions'
+  title: 'Habitat Unit Scenario Planning',
+  description: 'Explore potential Habitat Unit outcomes across different target conditions'
 };
 
 export default function ScenarioPlanningPage() {

@@ -34,6 +34,9 @@ export async function calcHU(prevState, formData) {
         result.baselineDistinctiveness = getHabitatDistinctiveness(baselineHabitat);
         result.baselineDistinctivenessScore = getDistinctivenessScore(baselineHabitat);
         result.baselineConditionScore = getConditionScore(baselineCondition);
+        // Add effective time to target for enhancement
+        result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
+        result.timeToTargetOffset = timeToTargetOffset;
       }
 
       // the calculateImprovementHU returns also the values used for the final calculation, so use those

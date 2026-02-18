@@ -1,14 +1,36 @@
 'use client'
 
 import { useActionState, useRef, useState, useEffect, startTransition } from 'react';
-import { Box, Input, NativeSelect, Text, VStack, HStack, Heading, Button } from '@chakra-ui/react';
+import { useFormStatus } from 'react-dom';
+import { Box, Input, NativeSelect, Text, VStack, HStack, Heading } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
+import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
 import { TbFileTypeXml } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
+
+function SubmitButton({ onReset }) {
+  const { pending } = useFormStatus();
+  return (
+    <>
+      <Button 
+        onClick={onReset}
+        disabled={pending}
+      >
+        Reset
+      </Button>
+      <Button 
+        type="submit"
+        disabled={pending}
+      >
+        {pending ? "Calculating..." : "Calculate"}
+      </Button>
+    </>
+  );
+}
 
 const initialState = {
   size: 1,
@@ -223,16 +245,21 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             </HStack>
 
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
-              <Input 
-                name="timeToTargetOffset" 
-                value={formData.timeToTargetOffset || 0}
-                onChange={(e) => setFormData({ ...formData, timeToTargetOffset: e.target.value })}
-                flex="2" 
-                type="number"
-                min="0"
-                step="1"
-              />
+              <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field 
+                  name="timeToTargetOffset"
+                  value={formData.timeToTargetOffset}
+                  onChange={(e) => setFormData({ ...formData, timeToTargetOffset: Number(e.target.value) })}
+                >
+                  {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
+                    <option key={offset} value={offset}>
+                      {offset > 0 ? `+${offset}` : offset} years
+                    </option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
             </HStack>
 
             {state.habitatGroup && (
@@ -242,19 +269,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             )}
 
             <HStack spacing={4} justify="flex-end" mt={4}>
-              <Button 
-                onClick={handleReset}
-                variant="outline"
-                colorPalette="gray"
-              >
-                Reset
-              </Button>
-              <Button 
-                onClick={handleCalculate}
-                colorPalette="green"
-              >
-                Calculate
-              </Button>
+              <SubmitButton onReset={handleReset} />
             </HStack>
           </VStack>
         </PrimaryCard>

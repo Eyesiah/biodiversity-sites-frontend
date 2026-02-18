@@ -114,9 +114,9 @@ export default function HUCalculatorForm({ habitats, conditions }) {
               </NativeSelect.Root>
             </HStack>
           )}
-          {formData.improvementType === 'creation' && (
+          {(formData.improvementType === 'creation' || formData.improvementType === 'enhanced') && (
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Time to Target Offset</Text>
+              <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
               <NativeSelect.Root flex="2" size="sm">
                 <NativeSelect.Field
                   name="timeToTargetOffset"
@@ -166,7 +166,7 @@ export default function HUCalculatorForm({ habitats, conditions }) {
                         ...(formData.improvementType !== 'baseline' && {
                           spatialRisk: formData.spatialRisk,
                         }),
-                        ...(formData.improvementType === 'creation' && {
+                        ...((formData.improvementType === 'creation' || formData.improvementType === 'enhanced') && {
                           timeToTargetOffset: formData.timeToTargetOffset,
                         }),
                       };
