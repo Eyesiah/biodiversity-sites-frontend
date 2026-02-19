@@ -1,6 +1,7 @@
-import ScenarioPlanningContent from './ScenarioPlanningContent';
-import { getAllHabitats, getAllConditions, getAllHabitatGroups, getHabitatsByGroup } from '@/lib/habitat';
+import { calculateScenarios } from './actions';
+import { getAllHabitats, getAllConditions, getAllHabitatGroups, getHabitatsByGroup, getCompatibleHabitatsForEnhancement } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
+import ScenarioPlanningContent from './ScenarioPlanningContent';
 
 export const metadata = {
   title: 'Habitat Unit Scenario Planning',
@@ -18,6 +19,9 @@ export default function ScenarioPlanningPage() {
     habitatsByGroup[group] = getHabitatsByGroup(group);
   });
 
+  // Pre-compute compatible habitats for enhancement
+  const allCompatibleHabitats = getCompatibleHabitatsForEnhancement(null);
+
   return (
     <>
       <ScenarioPlanningContent 
@@ -25,6 +29,7 @@ export default function ScenarioPlanningPage() {
         conditions={conditions} 
         broadHabitats={broadHabitats}
         habitatsByGroup={habitatsByGroup}
+        allCompatibleHabitats={allCompatibleHabitats}
       />
       <Footer lastUpdated={new Date().toISOString()} />
     </>

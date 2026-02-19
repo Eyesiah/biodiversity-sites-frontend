@@ -1,8 +1,8 @@
-'use client'
+"use client"
 
 import { useActionState, useRef, useState, useEffect, startTransition } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Box, Input, NativeSelect, Text, VStack, HStack, Heading } from '@chakra-ui/react';
+import { Box, Input, NativeSelect, Text, VStack, HStack, Heading, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
@@ -48,7 +48,7 @@ const initialState = {
   error: null,
 };
 
-export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup }) {
+export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats }) {
   const [state, formAction] = useActionState(calculateScenarios, initialState);
   const formRef = useRef(null);
   const [formData, setFormData] = useState(initialState);
@@ -59,6 +59,60 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   // Get filtered habitats based on broad habitat selection
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
   const targetHabitats = targetBroadHabitat ? habitatsByGroup[targetBroadHabitat] || [] : [];
+
+  // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area)
+  // This ensures Hedgerow baselines only show Hedgerow targets, Watercourse only show Watercourse, etc.
+  let filteredTargetBroadHabitats = broadHabitats;
+  const currentImprovementType = formData.improvementType;
+  
+  if (currentImprovementType === 'enhancement') {
+    // Get the baseline habitat's broad group - check specific habitat first, then broad habitat dropdown
+    let baselineGroup = null;
+    
+    // First try to find from specific baseline habitat selection
+    const currentBaselineHabitat = formData.baselineHabitat;
+    if (currentBaselineHabitat) {
+      for (const [group, habitats] of Object.entries(habitatsByGroup)) {
+        if (habitats.some(h => currentBaselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
+          baselineGroup = group;
+          break;
+        }
+      }
+    }
+    
+    // If not found, try using the baseline broad habitat dropdown
+    if (!baselineGroup && baselineBroadHabitat) {
+      baselineGroup = baselineBroadHabitat;
+    }
+    
+    // If we found the baseline group, filter target broad habitats to only show compatible ones
+    if (baselineGroup) {
+      // For linear habitats (Hedgerow, Watercourse), only allow same habitat type
+      // For area habitats, allow any other area habitat
+      const isLinear = ['Hedgerow', 'Watercourse'].includes(baselineGroup);
+      
+      if (isLinear) {
+        // Strict filtering: only allow the exact same broad habitat type for linear habitats
+        filteredTargetBroadHabitats = [baselineGroup];
+        // Clear target broad habitat if it doesn't match
+        if (targetBroadHabitat && targetBroadHabitat !== baselineGroup) {
+          setTargetBroadHabitat(baselineGroup);
+        }
+      } else {
+        // For area habitats, allow any area habitat (not linear)
+        filteredTargetBroadHabitats = broadHabitats.filter(group => {
+          const targetIsLinear = ['Hedgerow', 'Watercourse'].includes(group);
+          return !targetIsLinear;
+        });
+      }
+    }
+  }
+
+  // For enhancement mode, also filter target specific habitats
+  let filteredTargetHabitats = targetHabitats;
+  if (formData.improvementType === 'enhancement' && formData.baselineHabitat && allCompatibleHabitats) {
+    filteredTargetHabitats = targetHabitats.filter(h => allCompatibleHabitats.includes(h));
+  }
 
   useEffect(() => {
     setFormData(state);
@@ -170,18 +224,20 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
-              <Input 
-                name="size" 
-                value={sizeInput}
-                onChange={(e) => {
-                  setSizeInput(e.target.value);
-                  setFormData({ ...formData, size: e.target.value });
-                }}
-                flex="2" 
-                type="number"
-                min="0.01"
-                step="0.01"
-              />
+              <Box flex="2">
+                <Input 
+                  name="size" 
+                  value={sizeInput}
+                  onChange={(e) => {
+                    setSizeInput(e.target.value);
+                    setFormData({ ...formData, size: e.target.value });
+                  }}
+                  width="100%" 
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                />
+              </Box>
             </HStack>
 
             {showBaselineFields && (
@@ -242,7 +298,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   }}
                 >
                   <option value="">Select Broad Habitat</option>
-                  {broadHabitats.map(group => (
+                  {filteredTargetBroadHabitats.map(group => (
                     <option key={group} value={group}>{group}</option>
                   ))}
                 </NativeSelect.Field>
@@ -254,14 +310,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <Text flex="1" fontWeight="bold">Target Habitat</Text>
               <Box flex="2">
                 <SearchableDropdown 
-                  options={targetBroadHabitat ? targetHabitats : serverHabitats} 
+                  options={targetBroadHabitat ? filteredTargetHabitats : serverHabitats} 
                   name="habitat"
                   value={formData.habitat}
                   onChange={(value) => setFormData({ ...formData, habitat: value })}
                   disabled={!targetBroadHabitat}
                 />
               </Box>
-            </HStack>            
+            </HStack>
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Strategic Significance</Text>
               <NativeSelect.Root flex="2" size="sm">
