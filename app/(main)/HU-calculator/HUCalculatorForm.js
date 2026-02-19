@@ -121,7 +121,7 @@ export default function HUCalculatorForm({ habitats, conditions, broadHabitats, 
                   setFormData({ ...formData, habitat: '' });
                 }}
               >
-                <option value="">Select...</option>
+                <option value="">Select Broad Habitat</option>
                 {broadHabitats.map(group => (
                   <option key={group} value={group}>{group}</option>
                 ))}
