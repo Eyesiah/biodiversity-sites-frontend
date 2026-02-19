@@ -1,6 +1,6 @@
 "use server"
 
-import { getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
+import { getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness, checkTradingRules } from "@/lib/habitat";
 
 export async function calcHU(prevState, formData) {
     const size = formData.get("size");
@@ -44,6 +44,24 @@ export async function calcHU(prevState, formData) {
                 ...prevState,
                 result: null,
                 error: 'Please select a baseline condition for enhancement'
+            };
+        }
+        
+        // Check trading rules
+        const tradingCheck = checkTradingRules(baselineHabitat, habitat);
+        if (!tradingCheck.allowed) {
+            return {
+                size: size,
+                habitat: habitat,
+                condition: condition,
+                improvementType: improvementType,
+                strategicSignificance: strategicSignificance,
+                spatialRisk: spatialRisk,
+                timeToTargetOffset: timeToTargetOffset,
+                baselineHabitat: baselineHabitat,
+                baselineCondition: baselineCondition,
+                result: null,
+                error: tradingCheck.reason
             };
         }
     }

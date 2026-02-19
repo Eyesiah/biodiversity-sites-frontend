@@ -1,6 +1,6 @@
 "use server"
 
-import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget, getHabitatDistinctiveness } from "@/lib/habitat";
+import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget, getHabitatDistinctiveness, checkTradingRules } from "@/lib/habitat";
 
 // Condition order from lowest to highest
 const CONDITION_ORDER = ['Poor', 'Fairly Poor', 'Moderate', 'Fairly Good', 'Good'];
@@ -25,8 +25,8 @@ export async function calculateScenarios(prevState, formData) {
     return {
       size: Number(size) || 0,
       habitat: '',
-      baselineHabitat: '',
-      baselineCondition: '',
+      baselineHabitat: baselineHabitat || '',
+      baselineCondition: baselineCondition || '',
       improvementType: improvementType || 'creation',
       strategicSignificance,
       spatialRisk,
@@ -34,6 +34,8 @@ export async function calculateScenarios(prevState, formData) {
       results: null,
       summary: null,
       habitatGroup: null,
+      baselineDistinctiveness: baselineHabitat ? getHabitatDistinctiveness(baselineHabitat) : null,
+      targetDistinctiveness: null,
       error: isReset ? null : 'Please select a habitat'
     };
   }
@@ -42,16 +44,59 @@ export async function calculateScenarios(prevState, formData) {
   if (improvementType === 'enhancement') {
     if (!baselineHabitat) {
       return {
-        ...prevState,
+        size,
+        habitat,
+        baselineHabitat,
+        baselineCondition,
+        improvementType,
+        strategicSignificance,
+        spatialRisk,
+        timeToTargetOffset,
         results: null,
+        summary: null,
+        habitatGroup: getHabitatGroup(habitat),
+        baselineDistinctiveness: null,
+        targetDistinctiveness: getHabitatDistinctiveness(habitat),
         error: 'Please select a baseline habitat for enhancement'
       };
     }
     if (!baselineCondition) {
       return {
-        ...prevState,
+        size,
+        habitat,
+        baselineHabitat,
+        baselineCondition,
+        improvementType,
+        strategicSignificance,
+        spatialRisk,
+        timeToTargetOffset,
         results: null,
+        summary: null,
+        habitatGroup: getHabitatGroup(habitat),
+        baselineDistinctiveness: getHabitatDistinctiveness(baselineHabitat),
+        targetDistinctiveness: getHabitatDistinctiveness(habitat),
         error: 'Please select a baseline condition for enhancement'
+      };
+    }
+    
+    // Check trading rules
+    const tradingCheck = checkTradingRules(baselineHabitat, habitat);
+    if (!tradingCheck.allowed) {
+      return {
+        size,
+        habitat,
+        baselineHabitat,
+        baselineCondition,
+        improvementType,
+        strategicSignificance,
+        spatialRisk,
+        timeToTargetOffset,
+        results: null,
+        summary: null,
+        habitatGroup: getHabitatGroup(habitat),
+        baselineDistinctiveness: getHabitatDistinctiveness(baselineHabitat),
+        targetDistinctiveness: getHabitatDistinctiveness(habitat),
+        error: tradingCheck.reason
       };
     }
   }
