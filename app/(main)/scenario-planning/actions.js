@@ -1,6 +1,6 @@
 "use server"
 
-import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget } from "@/lib/habitat";
+import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget, getHabitatDistinctiveness } from "@/lib/habitat";
 
 // Condition order from lowest to highest
 const CONDITION_ORDER = ['Poor', 'Fairly Poor', 'Moderate', 'Fairly Good', 'Good'];
@@ -9,7 +9,7 @@ const CONDITION_ORDER = ['Poor', 'Fairly Poor', 'Moderate', 'Fairly Good', 'Good
 const VALID_CONDITIONS = CONDITION_ORDER.filter(c => c !== 'Condition Assessment N/A');
 
 export async function calculateScenarios(prevState, formData) {
-  const size = Number(formData.get("size")) || 1;
+  const size = Number(formData.get("size")) || 0;
   const habitat = formData.get("habitat");
   const baselineHabitat = formData.get("baselineHabitat");
   const baselineCondition = formData.get("baselineCondition");
@@ -23,7 +23,7 @@ export async function calculateScenarios(prevState, formData) {
   
   if (!habitat) {
     return {
-      size: Number(size) || 1,
+      size: Number(size) || 0,
       habitat: '',
       baselineHabitat: '',
       baselineCondition: '',
@@ -124,6 +124,8 @@ export async function calculateScenarios(prevState, formData) {
 
   const summary = { minHUs, maxHUs, avgHUs };
   const habitatGroup = getHabitatGroup(habitat);
+  const targetDistinctiveness = getHabitatDistinctiveness(habitat);
+  const baselineDistinctiveness = baselineHabitat ? getHabitatDistinctiveness(baselineHabitat) : null;
 
   return {
     size,
@@ -137,6 +139,8 @@ export async function calculateScenarios(prevState, formData) {
     results: scenarios,
     summary,
     habitatGroup,
+    baselineDistinctiveness,
+    targetDistinctiveness,
     error: null
   };
 }

@@ -7,6 +7,7 @@ import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
+import { getHabitatDistinctiveness } from '@/lib/habitat';
 import { TbFileTypeXml } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 
@@ -33,7 +34,7 @@ function SubmitButton({ onReset }) {
 }
 
 const initialState = {
-  size: 1,
+  size: 0,
   habitat: '',
   baselineHabitat: '',
   baselineCondition: '',
@@ -47,15 +48,21 @@ const initialState = {
   error: null,
 };
 
-export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions }) {
+export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup }) {
   const [state, formAction] = useActionState(calculateScenarios, initialState);
   const formRef = useRef(null);
   const [formData, setFormData] = useState(initialState);
   const [sizeInput, setSizeInput] = useState('1');
+  const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
+  const [targetBroadHabitat, setTargetBroadHabitat] = useState('');
+
+  // Get filtered habitats based on broad habitat selection
+  const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
+  const targetHabitats = targetBroadHabitat ? habitatsByGroup[targetBroadHabitat] || [] : [];
 
   useEffect(() => {
     setFormData(state);
-    setSizeInput(String(state.size || 1));
+    setSizeInput(state.size !== undefined && state.size !== null ? String(state.size) : '0');
   }, [state]);
 
   const handleCalculate = () => {
@@ -69,12 +76,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
   const handleReset = () => {
     setFormData(initialState);
-    setSizeInput('1');
+    setSizeInput('0');
+    setBaselineBroadHabitat('');
+    setTargetBroadHabitat('');
     // Clear results by calling formAction with minimal data
     const emptyFormData = new FormData();
     emptyFormData.set("habitat", "");
     emptyFormData.set("isReset", "true");
-    emptyFormData.set("size", "1");
+    emptyFormData.set("size", "0");
     emptyFormData.set("improvementType", "creation");
     emptyFormData.set("strategicSignificance", "1");
     emptyFormData.set("spatialRisk", "1");
@@ -100,7 +109,9 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     xml += `    <Size unit="ha">${state.size}</Size>\n`;
     xml += `    <BaselineHabitat>${state.baselineHabitat || 'N/A'}</BaselineHabitat>\n`;
     xml += `    <BaselineCondition>${state.baselineCondition || 'N/A'}</BaselineCondition>\n`;
+    xml += `    <BaselineDistinctiveness>${state.baselineDistinctiveness || 'N/A'}</BaselineDistinctiveness>\n`;
     xml += `    <TargetHabitat>${state.habitat}</TargetHabitat>\n`;
+    xml += `    <TargetDistinctiveness>${state.targetDistinctiveness || 'N/A'}</TargetDistinctiveness>\n`;
     xml += `    <StrategicSignificance>${state.strategicSignificance || 1}</StrategicSignificance>\n`;
     xml += `    <SpatialRisk>${state.spatialRisk || 1}</SpatialRisk>\n`;
     xml += `    <TimeToTargetOffset>${state.timeToTargetOffset || 0}</TimeToTargetOffset>\n`;
@@ -158,7 +169,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             </HStack>
 
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Size (ha)</Text>
+              <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
               <Input 
                 name="size" 
                 value={sizeInput}
@@ -176,16 +187,36 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             {showBaselineFields && (
               <>
                 <HStack spacing={4}>
+                  <Text flex="1" fontWeight="bold">Baseline Broad Habitat</Text>
+                  <NativeSelect.Root flex="2" size="sm">
+                    <NativeSelect.Field 
+                      value={baselineBroadHabitat}
+                      onChange={(e) => {
+                        setBaselineBroadHabitat(e.target.value);
+                        setFormData({ ...formData, baselineHabitat: '' });
+                      }}
+                    >
+                      <option value="">Select Broad Habitat</option>
+                      {broadHabitats.map(group => (
+                        <option key={group} value={group}>{group}</option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                </HStack>
+                <HStack spacing={4}>
                   <Text flex="1" fontWeight="bold">Baseline Habitat</Text>
                   <Box flex="2">
                     <SearchableDropdown 
-                      options={serverHabitats} 
+                      options={baselineHabitats} 
                       name="baselineHabitat"
                       value={formData.baselineHabitat}
                       onChange={(value) => setFormData({ ...formData, baselineHabitat: value })}
+                      disabled={!baselineBroadHabitat}
                     />
                   </Box>
                 </HStack>
+                
                 <HStack spacing={4}>
                   <Text flex="1" fontWeight="bold">Baseline Condition</Text>
                   <Box flex="2">
@@ -201,17 +232,36 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             )}
 
             <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Target Broad Habitat</Text>
+              <NativeSelect.Root flex="2" size="sm">
+                <NativeSelect.Field 
+                  value={targetBroadHabitat}
+                  onChange={(e) => {
+                    setTargetBroadHabitat(e.target.value);
+                    setFormData({ ...formData, habitat: '' });
+                  }}
+                >
+                  <option value="">Select Broad Habitat</option>
+                  {broadHabitats.map(group => (
+                    <option key={group} value={group}>{group}</option>
+                  ))}
+                </NativeSelect.Field>
+                <NativeSelect.Indicator />
+              </NativeSelect.Root>
+            </HStack>
+
+            <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Target Habitat</Text>
               <Box flex="2">
                 <SearchableDropdown 
-                  options={serverHabitats} 
+                  options={targetBroadHabitat ? targetHabitats : serverHabitats} 
                   name="habitat"
                   value={formData.habitat}
                   onChange={(value) => setFormData({ ...formData, habitat: value })}
+                  disabled={!targetBroadHabitat}
                 />
               </Box>
-            </HStack>
-
+            </HStack>            
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Strategic Significance</Text>
               <NativeSelect.Root flex="2" size="sm">
@@ -262,9 +312,15 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </NativeSelect.Root>
             </HStack>
 
-            {state.habitatGroup && (
+            {state.targetDistinctiveness && (
               <Text fontSize="sm" color="gray.500">
-                Habitat Group: {state.habitatGroup}
+                Target Habitat Distinctiveness: {state.targetDistinctiveness}
+              </Text>
+            )}
+
+            {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
+              <Text fontSize="sm" color="gray.500">
+                Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}
               </Text>
             )}
 

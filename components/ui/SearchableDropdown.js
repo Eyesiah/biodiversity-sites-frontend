@@ -3,7 +3,7 @@
 import Select from "react-select";
 import { useColorModeValue } from "@/components/styles/color-mode";
 
-export default function SearchableDropdown({ name, options, value, onChange }) {
+export default function SearchableDropdown({ name, options, value, onChange, disabled = false }) {
   const selectOptions = options.map(o => ({ value: o, label: o }));
   const selectedOption = value ? { value: value, label: value } : null;
 
@@ -15,6 +15,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
   const placeholderColor = useColorModeValue("#666", "#ccc");
   const selectedBgColor = useColorModeValue("#2ecc71", "#27ae60"); // brand colors
   const selectedActiveBgColor = useColorModeValue("#27ae60", "#1f8c4e");
+  const disabledBgColor = useColorModeValue("#f5f5f5", "#3a3a3a");
 
   const customStyles = {
     container: (provided) => ({
@@ -24,7 +25,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
     }),
     control: (provided, state) => ({
       ...provided,
-      backgroundColor: bgColor,
+      backgroundColor: disabled ? disabledBgColor : bgColor,
       borderColor: state.isFocused ? borderColor : borderColor,
       color: textColor,
       boxShadow: state.isFocused ? `0 0 0 1px ${borderColor}` : 'none',
@@ -32,7 +33,9 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
         borderColor: borderColor,
       },
       minHeight: '40px',
-      fontSize: '14px'
+      fontSize: '14px',
+      opacity: disabled ? 0.6 : 1,
+      cursor: disabled ? 'not-allowed' : 'pointer'
     }),
     input: (provided) => ({
       ...provided,
@@ -106,6 +109,7 @@ export default function SearchableDropdown({ name, options, value, onChange }) {
       value={selectedOption}
       onChange={handleChange}
       styles={customStyles}
+      isDisabled={disabled}
       menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
     />
   );
