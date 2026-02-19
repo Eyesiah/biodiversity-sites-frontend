@@ -24,6 +24,7 @@ const initialState = {
   baselineHabitat: '',
   baselineCondition: '',
   result: null,
+  error: null,
 };
 
 function SubmitButton() {
@@ -34,18 +35,32 @@ function SubmitButton() {
     </Button>
   );
 }
-export default function HUCalculatorForm({ habitats, conditions }) {
+export default function HUCalculatorForm({ habitats, conditions, broadHabitats, habitatsByGroup }) {
 
   const [state, formAction] = useActionState(calcHU, initialState);
   const [formData, setFormData] = useState(initialState);
+  const [broadHabitat, setBroadHabitat] = useState('');
+  const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
+
+  // Get filtered habitats based on broad habitat selection
+  const filteredHabitats = broadHabitat ? habitatsByGroup[broadHabitat] || [] : habitats;
+  const filteredBaselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : habitats;
 
   useEffect(() => {
     setFormData(state);
   }, [state]);
 
+  // Show error message from state
+  const error = state?.error;
+
   return (
     <form action={formAction}>
       <PrimaryCard maxWidth="1000px" margin="20px">
+        {error && (
+          <Box mb={4} p={3} bg="red.50" borderRadius="md">
+            <Text color="red.500">{error}</Text>
+          </Box>
+        )}
         <VStack spacing={4} align="stretch">
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Habitat Type</Text>
@@ -65,9 +80,27 @@ export default function HUCalculatorForm({ habitats, conditions }) {
           {formData.improvementType === 'enhanced' && (
             <>
               <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Baseline Broad Habitat</Text>
+                <NativeSelect.Root flex="2" size="sm">
+                  <NativeSelect.Field 
+                    value={baselineBroadHabitat}
+                    onChange={(e) => {
+                      setBaselineBroadHabitat(e.target.value);
+                      setFormData({ ...formData, baselineHabitat: '' });
+                    }}
+                  >
+                    <option value="">Select Broad Habitat</option>
+                    {broadHabitats.map(group => (
+                      <option key={group} value={group}>{group}</option>
+                    ))}
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
+              </HStack>
+              <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Baseline Habitat</Text>
                 <Box flex="2">
-                  <SearchableDropdown name="baselineHabitat" options={habitats} value={formData.baselineHabitat} onChange={(value) => setFormData({ ...formData, baselineHabitat: value })} />
+                  <SearchableDropdown name="baselineHabitat" options={filteredBaselineHabitats} value={formData.baselineHabitat} onChange={(value) => setFormData({ ...formData, baselineHabitat: value })} disabled={!baselineBroadHabitat} />
                 </Box>
               </HStack>
               <HStack spacing={4}>
@@ -79,13 +112,31 @@ export default function HUCalculatorForm({ habitats, conditions }) {
             </>
           )}
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Habitat</Text>
+            <Text flex="1" fontWeight="bold">Target Broad Habitat</Text>
+            <NativeSelect.Root flex="2" size="sm">
+              <NativeSelect.Field 
+                value={broadHabitat}
+                onChange={(e) => {
+                  setBroadHabitat(e.target.value);
+                  setFormData({ ...formData, habitat: '' });
+                }}
+              >
+                <option value="">Select...</option>
+                {broadHabitats.map(group => (
+                  <option key={group} value={group}>{group}</option>
+                ))}
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+          </HStack>
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Target Habitat</Text>
             <Box flex="2">
-              <SearchableDropdown name="habitat" options={habitats} value={formData.habitat} onChange={(value) => setFormData({ ...formData, habitat: value })} />
+              <SearchableDropdown name="habitat" options={filteredHabitats} value={formData.habitat} onChange={(value) => setFormData({ ...formData, habitat: value })} disabled={!broadHabitat} />
             </Box>
           </HStack>
           <HStack spacing={4}>
-            <Text flex="1" fontWeight="bold">Condition</Text>
+            <Text flex="1" fontWeight="bold">Target Condition</Text>
             <Box flex="2">
               <SearchableDropdown name="condition" options={conditions} value={formData.condition} onChange={(value) => setFormData({ ...formData, condition: value })} />
             </Box>
@@ -136,7 +187,11 @@ export default function HUCalculatorForm({ habitats, conditions }) {
 
           <HStack spacing={4}>
             <SubmitButton />
-            <Button onClick={() => setFormData(initialState)}>
+            <Button onClick={() => {
+              setFormData(initialState);
+              setBroadHabitat('');
+              setBaselineBroadHabitat('');
+            }}>
               Reset
             </Button>
             {formData.result && (

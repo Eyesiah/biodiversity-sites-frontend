@@ -13,6 +13,41 @@ export async function calcHU(prevState, formData) {
     const baselineHabitat = formData.get("baselineHabitat");
     const baselineCondition = formData.get("baselineCondition");
 
+    // Validate required fields
+    if (!habitat) {
+        return {
+            size: size,
+            habitat: '',
+            condition: condition,
+            improvementType: improvementType,
+            strategicSignificance: strategicSignificance,
+            spatialRisk: spatialRisk,
+            timeToTargetOffset: timeToTargetOffset,
+            baselineHabitat: baselineHabitat,
+            baselineCondition: baselineCondition,
+            result: null,
+            error: 'Please select a habitat'
+        };
+    }
+
+    // For enhancement, require baseline habitat and condition
+    if (improvementType === 'enhanced') {
+        if (!baselineHabitat) {
+            return {
+                ...prevState,
+                result: null,
+                error: 'Please select a baseline habitat for enhancement'
+            };
+        }
+        if (!baselineCondition) {
+            return {
+                ...prevState,
+                result: null,
+                error: 'Please select a baseline condition for enhancement'
+            };
+        }
+    }
+
     const isBaseline = improvementType == "baseline" || improvementType == "none" || improvementType == null || improvementType == '';
 
     const result = {

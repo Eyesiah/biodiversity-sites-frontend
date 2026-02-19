@@ -1,5 +1,5 @@
 import HUCalculatorForm from './HUCalculatorForm';
-import { getAllConditions, getAllHabitats } from '@/lib/habitat';
+import { getAllConditions, getAllHabitats, getAllHabitatGroups, getHabitatsByGroup } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import { ContentLayout } from '@/components/styles/ContentLayout';
 
@@ -12,10 +12,22 @@ export default function HUCalculatorPage({}) {
 
   const habitats = getAllHabitats().sort();
   const conditions = getAllConditions();
+  const broadHabitats = getAllHabitatGroups();
+  
+  // Pre-compute habitats by group to avoid passing functions to client component
+  const habitatsByGroup = {};
+  broadHabitats.forEach(group => {
+    habitatsByGroup[group] = getHabitatsByGroup(group);
+  });
 
   return (
     <ContentLayout footer={<Footer lastUpdated={Date.now()} />}>
-      <HUCalculatorForm habitats={habitats} conditions={conditions} />
+      <HUCalculatorForm 
+        habitats={habitats} 
+        conditions={conditions}
+        broadHabitats={broadHabitats}
+        habitatsByGroup={habitatsByGroup}
+      />
     </ContentLayout>
   )
 }
