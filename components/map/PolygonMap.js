@@ -60,7 +60,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
 
         if (mainData.error || !mainData.features || mainData.features.length === 0) {
-          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : "No polygon data found for the selected item.";
+          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : `No polygon data found for the selected item (${name}).`;
           if (!isCancelled) {
             setError(errorMessage);
           }

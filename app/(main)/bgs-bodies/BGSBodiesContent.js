@@ -33,7 +33,6 @@ export default function BGSBodiesContent({
   // Shared map state
   const [mapSites, setMapSites] = useState([]);
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
-  const [hoveredEntitySites, setHoveredEntitySites] = useState(null); // All sites for hovered entity (chart tabs)
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
 
@@ -45,7 +44,7 @@ export default function BGSBodiesContent({
   // Handle hover on chart segment - pass all sites for the hovered entity
   const handleChartHover = useCallback((hoverData) => {
     if (!hoverData) {
-      setHoveredEntitySites(null);
+      setMapSites(null);
       setSelectedBody(null);
       return;
     }
@@ -54,15 +53,15 @@ export default function BGSBodiesContent({
     
     if (isOther) {
       // For "Other" segment, show all BGS sites
-      setHoveredEntitySites(sites);
+      setMapSites(sites);
       setSelectedBody(null);
     } else if (entitySites && entitySites.length > 0) {
-      setHoveredEntitySites(entitySites);
+      setMapSites(entitySites);
       
       // Get the correct body name from the first site's properties
       let bodyName = null;
       if (activeTab === 'lpa-chart' && entitySites[0].lpaName) {
-        bodyName = entitySites[0].lpaName;
+        bodyName = `${entitySites[0].lpaName} LPA`;
       } else if (activeTab === 'nca-chart' && entitySites[0].ncaName) {
         bodyName = entitySites[0].ncaName;
       } else if (activeTab === 'lnrs-chart' && entitySites[0].lnrsName) {
@@ -73,7 +72,7 @@ export default function BGSBodiesContent({
         setSelectedBody({ name: bodyName });
       }
     } else {
-      setHoveredEntitySites(null);
+      setMapSites(null);
       setSelectedBody(null);
     }
   }, [sites, activeTab]);
@@ -82,7 +81,6 @@ export default function BGSBodiesContent({
   useEffect(() => {
     setMapSites([]);
     setHoveredSite(null);
-    setHoveredEntitySites(null);
     setSelectedSite(null);
     setSelectedBody(null);
   }, [activeTab]);
@@ -93,26 +91,10 @@ export default function BGSBodiesContent({
       setActiveTab('responsible-bodies');
       setMapSites([]);
       setHoveredSite(null);
-      setHoveredEntitySites(null);
       setSelectedSite(null);
       setSelectedBody(null);
     };
   }, []);
-
-  // Determine which sites to show on the map based on active tab
-  const mapSitesToShow = useMemo(() => {
-    // On chart tabs - show all sites for the hovered entity
-    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
-      // If hovering over a segment, show all sites belonging to that entity
-      if (hoveredEntitySites) {
-        return hoveredEntitySites;
-      }
-      // Otherwise show no sites
-      return [];
-    }
-    // List tabs show expanded body sites
-    return mapSites;
-  }, [activeTab, mapSites, hoveredEntitySites]);
 
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
@@ -152,16 +134,6 @@ export default function BGSBodiesContent({
     }
   }, [activeTab, selectedBody]);
 
-  // Determine which site to highlight on the map
-  const mapHoveredSite = useMemo(() => {
-    // On chart tabs, use the first site from hovered entity
-    if (activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart') {
-      return hoveredEntitySites && hoveredEntitySites.length > 0 ? hoveredEntitySites[0] : null;
-    }
-    // On list tabs, use the hoveredSite from list
-    return hoveredSite;
-  }, [activeTab, hoveredEntitySites, hoveredSite]);
-
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
 
@@ -183,10 +155,10 @@ export default function BGSBodiesContent({
           selectedItem={mapConfig.selectedItem}
           geoJsonUrl={mapConfig.geoJsonUrl}
           nameProperty={mapConfig.nameProperty}
-          sites={mapSitesToShow}
+          sites={mapSites}
           style={mapConfig.style}
           disableZoom={disableZoom}
-          hoveredSite={mapHoveredSite}
+          hoveredSite={hoveredSite}
         />}
       content={
         <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
