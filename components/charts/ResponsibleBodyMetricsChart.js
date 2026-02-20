@@ -2,7 +2,7 @@
 
 import { OrganizationalMetricsChart } from './OrganizationalMetricsChart';
 
-export const ResponsibleBodyMetricsChart = ({ sites }) => {
+export const ResponsibleBodyMetricsChart = ({ sites, onHoveredEntityChange }) => {
   return (
     <OrganizationalMetricsChart
       sites={sites}
@@ -14,6 +14,7 @@ export const ResponsibleBodyMetricsChart = ({ sites }) => {
         const rbs = site.responsibleBodies || ['Unknown'];
         return rbs[0];
       }}
+      onHoveredEntityChange={onHoveredEntityChange}
     />
   );
 };

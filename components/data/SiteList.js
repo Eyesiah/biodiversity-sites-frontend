@@ -75,8 +75,7 @@ const SiteList = ({ sites, onSiteHover, onSiteClick, minimalHeight = false, colu
           {columns.map((column) => (
             <PrimaryTable.ColumnHeader
               key={column}
-              onClick={() => requestSort(column)}              
-              whiteSpace="nowrap"
+              onClick={() => requestSort(column)}
             >
               {renderHeader(column)}
             </PrimaryTable.ColumnHeader>

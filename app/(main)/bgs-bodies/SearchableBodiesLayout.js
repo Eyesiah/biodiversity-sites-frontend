@@ -1,0 +1,164 @@
+'use client';
+
+import { useState, useEffect, useMemo } from 'react';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
+import SiteList from '@/components/data/SiteList';
+import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { PrimaryTable } from '@/components/styles/PrimaryTable';
+import { InfoModal } from '@/components/ui/InfoModal';
+
+export default function SearchableBodiesLayout({
+  bodies,
+  allSites,
+  headers,
+  bodyNameKey = 'name',
+  siteRefsKey = 'sites',  // Key containing array of reference numbers
+  filterPredicate,
+  initialSortConfig,
+  summary,
+  exportConfig,
+  onExpandedRowChanged,
+  onSiteHover,
+  onSiteClick,
+  modalType,  // Type for InfoModal: 'lpa', 'lnrs', 'nca', etc.
+}) {
+  const [expandedRow, setExpandedRow] = useState(null);
+  const [modalState, setModalState] = useState({ show: false, type: '', name: '', title: '', size: '' });
+
+  // Create a Map for O(1) site lookups by referenceNumber
+  const sitesMap = useMemo(() => {
+    if (!allSites) return null;
+    const map = new Map();
+    allSites.forEach(site => map.set(site.referenceNumber, site));
+    return map;
+  }, [allSites]);
+
+  const handleToggle = (bodyName, isOpen) => {
+    if (isOpen) {
+      setExpandedRow(bodyName);
+    } else {
+      setExpandedRow(null);
+    }
+  };
+
+  useEffect(() => {
+    const sites = [];
+    if (expandedRow != null) {
+      const body = bodies.find(b => b[bodyNameKey] === expandedRow);
+      if (body && sitesMap) {
+        const refs = body[siteRefsKey] || [];
+        refs.forEach(ref => {
+          const site = sitesMap.get(ref);
+          if (site) sites.push(site);
+        });
+      }
+      onExpandedRowChanged?.(body, sites);
+    } else {      
+      onExpandedRowChanged?.(null, null);
+    }
+  }, [expandedRow, bodies, bodyNameKey, siteRefsKey, sitesMap, onExpandedRowChanged]);
+
+  const renderCell = (body, header) => {
+    // Use custom render function if provided
+    if (header.render) {
+      return header.render(body, modalType, setModalState);
+    }
+    const value = body[header.key];
+    if (Array.isArray(value)) {
+      return value.join(', ');
+    }
+    // Use format function if provided
+    if (header.format) {
+      return header.format(value, body);
+    }
+    return value;
+  };
+
+  const BodyRow = ({ body, isOpen, onToggle }) => {
+    const mainRow = headers.map((header, index) => {
+      // Determine cell component based on textAlign
+      const CellComponent = header.textAlign === 'center' || header.textAlign === 'right'
+        ? PrimaryTable.NumericCell
+        : PrimaryTable.Cell;
+
+      return (
+        <CellComponent key={header.key} textAlign={header.textAlign}>
+          {renderCell(body, header)}
+        </CellComponent>
+      );
+    });
+
+    // Lazily expand site references to full site objects when row is expanded
+    const expandedSites = useMemo(() => {
+      if (!sitesMap) return [];
+      const refs = body[siteRefsKey] || [];
+      return refs.map(ref => sitesMap.get(ref)).filter(Boolean);
+    }, [body]);
+
+    const collapsibleContent = (
+      <SiteList
+        sites={expandedSites}
+        onSiteHover={onSiteHover}
+        onSiteClick={onSiteClick}
+        minimalHeight={true}
+      />
+    );
+
+    return (
+      <CollapsibleRow
+        mainRow={mainRow}
+        collapsibleContent={collapsibleContent}
+        colSpan={headers.length}
+        onToggle={onToggle}
+        isOpen={isOpen}
+      />
+    );
+  };
+
+  return (
+    <>
+      <SearchableTableLayout
+        initialItems={bodies}
+        filterPredicate={filterPredicate}
+        initialSortConfig={initialSortConfig}
+        exportConfig={exportConfig}
+        summary={summary}
+      >
+        {({ sortedItems, requestSort, getSortIndicator }) => (
+          <PrimaryTable.Root>
+            <PrimaryTable.Header>
+              <PrimaryTable.Row>
+                {headers.map((header) => (
+                  <PrimaryTable.ColumnHeader
+                    key={header.key}
+                    onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
+                    textAlign={header.textAlign}
+                  >
+                    {header.label}
+                    {header.sortable !== false && getSortIndicator(header.key)}
+                  </PrimaryTable.ColumnHeader>
+                ))}
+              </PrimaryTable.Row>
+            </PrimaryTable.Header>
+            <PrimaryTable.Body>
+              {sortedItems.map((body) => (
+                <BodyRow
+                  body={body}
+                  key={body[bodyNameKey]}
+                  isOpen={expandedRow == body[bodyNameKey]}
+                  onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
+                />
+              ))}
+            </PrimaryTable.Body>
+          </PrimaryTable.Root>
+        )}
+      </SearchableTableLayout>
+      {modalType && (
+        <InfoModal
+          modalState={modalState}
+          onClose={() => setModalState({ show: false, type: '', name: '', title: '', size: '' })}
+        />
+      )}
+    </>
+  );
+}

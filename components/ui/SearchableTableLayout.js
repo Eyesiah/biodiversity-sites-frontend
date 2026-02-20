@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
 import { Box, InputGroup, Input, Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
 import { Tabs } from '@/components/styles/Tabs';
 import { GrDocumentCsv } from "react-icons/gr";
-import { BsFiletypeJson } from "react-icons/bs";
 import { TbFileTypeXml, TbJson } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 
@@ -43,9 +42,15 @@ export default function SearchableTableLayout({
     sortConfig
   } = useSearchAndSort(initialItems, filterPredicate, initialSortConfig);
 
+  const prevSortedItemsRef = useRef(null);
+
   useEffect(() => {
     if (onSortedItemsChange) {
-      onSortedItemsChange(sortedItems);
+      // Only call the callback if the items have actually changed (by comparing length)
+      if (!prevSortedItemsRef.current || prevSortedItemsRef.current.length !== sortedItems.length) {
+        prevSortedItemsRef.current = sortedItems;
+        onSortedItemsChange(sortedItems);
+      }
     }
   }, [sortedItems, onSortedItemsChange]);
 

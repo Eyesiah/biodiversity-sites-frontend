@@ -1,7 +1,7 @@
 
 import { fetchAllRefNos } from '@/lib/api';
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 const URL = 'https://bgs.bristoltrees.space';
 
@@ -12,11 +12,9 @@ export default async function sitemap() {
     '/habitat-analysis',
     '/habitat-summary',
     '/HU-calculator',
-    '/lnrs',
-    '/local-planning-authorities',
-    '/national-character-areas',
+    '/scenario-planning',
     '/query',
-    '/responsible-bodies',
+    '/bgs-bodies',
     '/sites',
     '/statistics',
     '/about',

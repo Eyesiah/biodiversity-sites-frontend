@@ -1,4 +1,4 @@
-import { GeoJSON, useMap, Marker, Popup } from 'react-leaflet';
+import { GeoJSON, useMap } from 'react-leaflet';
 import React, { useState, useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -19,24 +19,36 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle }) => {
+const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null, selectedSite = null }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
   const [error, setError] = useState(null);
   const cache = useRef({});
   const [mapKey, setMapKey] = useState(Date.now());
+  const markerRefs = useRef({});
+
+  useEffect(() => {
+    if (selectedSite) {
+      const marker = markerRefs.current[selectedSite.referenceNumber];
+      if (marker) {
+        marker.openPopup();
+      }
+    }
+  }, [selectedSite]);
 
   useEffect(() => {
     let isCancelled = false;
 
     const fetchPolygons = async () => {
-      // Reset state when starting a new fetch to clear previous polygons
       setGeoJson(null);
       setAdjacentGeoJson(null);
       setError(null);
 
-      if (!selectedItem || !selectedItem[nameProperty]) return;
+      if (!selectedItem || !selectedItem[nameProperty] || geoJsonUrl == null) return;
+
       const name = selectedItem[nameProperty];
+
+      // Reset state when starting a new fetch to clear previous polygons
 
       // Use a different field for the query if the geoJsonUrl indicates it's for LPAs
       let queryField = nameProperty;
@@ -58,7 +70,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
 
         if (mainData.error || !mainData.features || mainData.features.length === 0) {
-          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : "No polygon data found for the selected item.";
+          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : `No polygon data found for the selected item (${name}).`;
           if (!isCancelled) {
             setError(errorMessage);
           }
@@ -104,8 +116,8 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         {geoJson && <GeoJSON data={geoJson} style={style} />}
         <MapController geoJson={geoJson} />
 
-        {sites.filter(site => site.position != null).map(site => (
-          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} />
+        {sites && sites.filter(site => site.position != null).map(site => (
+          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />
         ))}
       </BaseMap>
     </div>

@@ -2,7 +2,7 @@
 
 import { OrganizationalMetricsChart } from './OrganizationalMetricsChart';
 
-export const NCAMetricsChart = ({ sites }) => {
+export const NCAMetricsChart = ({ sites, onHoveredEntityChange }) => {
   return (
     <OrganizationalMetricsChart
       sites={sites}
@@ -10,6 +10,7 @@ export const NCAMetricsChart = ({ sites }) => {
       entityAbbr="NCAs"
       entityProperty="ncaName"
       totalEntitiesInUK={159}
+      onHoveredEntityChange={onHoveredEntityChange}
     />
   );
 };

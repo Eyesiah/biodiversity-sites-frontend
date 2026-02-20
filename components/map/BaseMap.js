@@ -1,9 +1,10 @@
-
-import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl } from 'react-leaflet';
+import { Marker, Popup, MapContainer, TileLayer, LayersControl, ScaleControl, LayerGroup } from 'react-leaflet';
 import Link from 'next/link';
 import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
+import L from 'leaflet';
+import React from 'react';
 
 const defaultSiteIcon = new L.Icon({
   iconUrl: '/icons/greenMarker.svg',
@@ -41,14 +42,16 @@ export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
           />
         </LayersControl.BaseLayer>
         <LayersControl.BaseLayer checked={defaultBaseLayer === 'Satellite'} name="Satellite">
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-          />
-          <TileLayer
-            url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-            attribution=""
-          />
+          <LayerGroup>
+            <TileLayer
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            />
+            <TileLayer
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+              attribution=""
+            />
+          </LayerGroup>
         </LayersControl.BaseLayer>
       </LayersControl>
       <ScaleControl position="topleft" imperial={false} />
@@ -71,7 +74,7 @@ const ColorKey = ({ color }) => {
   )
 }
 
-export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, handlePopupClose = null, markerRefs, onSiteSelect = null }) => {
+export const SiteMapMarker = React.memo(({ site, withColorKeys = false, isHovered = false, handlePopupClose = null, markerRefs, onSiteSelect = null }) => {
   const imdDecile = site.imdDecile ?? site.lsoa?.IMDDecile;
   return (
     <Marker
@@ -84,8 +87,9 @@ export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, 
         click: () => { if (onSiteSelect) onSiteSelect(site) },
         popupclose: () => { if (handlePopupClose) handlePopupClose(site) },
       }}
+      autoPan={false}
     >
-      <Popup>
+      <Popup autoPan={false}>
         <h2><Link href={`/sites/${site.referenceNumber}`}>{site.referenceNumber}</Link></h2>
         {site.name && <><b>{site.name}</b><br /></>}
         <b>Responsible Body:</b> {site.responsibleBody}<br />
@@ -106,5 +110,7 @@ export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, 
         <br />
       </Popup>
     </Marker>
-  )
-}
+  );
+});
+
+SiteMapMarker.displayName = 'SiteMapMarker';

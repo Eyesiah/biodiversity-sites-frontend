@@ -10,7 +10,7 @@ export const metadata = {
   description: 'View which baseline habitats exist in the register, which will be improved and which have been allocated.'
 };
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 export default async function HabitatAnalysis() {
   const allSites = await fetchAllSites();

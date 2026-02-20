@@ -128,11 +128,32 @@ export const OrganizationalMetricsChart = ({
   entityAbbr, 
   entityProperty,
   extractEntityValue,  
-  totalEntitiesInUK 
+  totalEntitiesInUK,
+  onHoveredEntityChange
 }) => {
   const [selectedMetric, setSelectedMetric] = useState('area');
+  const [hoveredEntity, setHoveredEntity] = useState(null);
   
   const metrics = useMemo(() => createMetrics(entityName), [entityName]);
+
+  // Handle hover on pie segment
+  const handlePieHover = (event, data) => {
+    if (event && event.type === 'mouseenter' && data && data.length > 0) {
+      const hoveredEntry = data[0].payload;
+      if (hoveredEntry && hoveredEntry.entitySites) {
+        setHoveredEntity(hoveredEntry.name);
+        // Find the first site belonging to this entity to highlight on map
+        if (onHoveredEntityChange && hoveredEntry.entitySites.length > 0) {
+          onHoveredEntityChange(hoveredEntry.entitySites);
+        }
+      }
+    } else if (event && event.type === 'mouseleave') {
+      setHoveredEntity(null);
+      if (onHoveredEntityChange) {
+        onHoveredEntityChange(null);
+      }
+    }
+  };
 
   const { chartData, total, totalEntities, entitiesWithSites, entitiesWithAllocations } = useMemo(() => {
     if (!sites || sites.length === 0) return { chartData: [], total: 0, totalEntities: 0, entitiesWithSites: 0, entitiesWithAllocations: 0 };
@@ -269,9 +290,10 @@ export const OrganizationalMetricsChart = ({
       return <Text>No data available.</Text>;
     }
 
-    // Aggregate metric and site count by entity
+    // Aggregate metric and site count by entity, and track sites per entity
     const entityMetricMap = new Map();
     const entitySiteCountMap = new Map();
+    const entitySitesMap = new Map(); // Track sites belonging to each entity
     const entitiesWithAllocationsSet = new Set();
 
     sites.forEach(site => {
@@ -292,6 +314,12 @@ export const OrganizationalMetricsChart = ({
       entityMetricMap.set(normalizedName, (entityMetricMap.get(normalizedName) || 0) + siteValue);
       entitySiteCountMap.set(normalizedName, (entitySiteCountMap.get(normalizedName) || 0) + 1);
       
+      // Track all sites for this entity (for hover highlighting)
+      if (!entitySitesMap.has(normalizedName)) {
+        entitySitesMap.set(normalizedName, []);
+      }
+      entitySitesMap.get(normalizedName).push(site);
+      
       // Track entities with allocations
       if (site.allocationsCount && site.allocationsCount > 0) {
         entitiesWithAllocationsSet.add(normalizedName);
@@ -303,12 +331,13 @@ export const OrganizationalMetricsChart = ({
     const metricEntitiesWithSites = entityMetricMap.size;
     const metricEntitiesWithAllocations = entitiesWithAllocationsSet.size;
 
-    // Convert to array and calculate percentages
+    // Convert to array and calculate percentages, include entitySites for hover
     const allEntities = Array.from(entityMetricMap.entries())
       .map(([name, value]) => ({
         name: toTitleCase(name),
         value,
         siteCount: entitySiteCountMap.get(name),
+        entitySites: entitySitesMap.get(name) || [], // Include all sites for this entity
         percentage: metricTotal > 0 ? (value / metricTotal) * 100 : 0
       }))
       .sort((a, b) => b.value - a.value);
@@ -329,6 +358,14 @@ export const OrganizationalMetricsChart = ({
       const minorTotal = minorEntities.reduce((sum, entity) => sum + entity.value, 0);
       const minorTotalSites = minorEntities.reduce((sum, entity) => sum + entity.siteCount, 0);
       const minorPercentage = metricTotal > 0 ? (minorTotal / metricTotal) * 100 : 0;
+      
+      // Aggregate all sites from minor entities for the Other segment
+      const minorEntitySites = [];
+      minorEntities.forEach(entity => {
+        if (entity.entitySites) {
+          minorEntitySites.push(...entity.entitySites);
+        }
+      });
 
       metricChartData = [
         ...significantEntities,
@@ -336,6 +373,7 @@ export const OrganizationalMetricsChart = ({
           name: `≤1.5% share (${minorEntities.length} ${entityAbbr})`,
           value: minorTotal,
           siteCount: minorTotalSites,
+          entitySites: minorEntitySites,
           percentage: minorPercentage,
           isOther: true
         }
@@ -377,6 +415,21 @@ export const OrganizationalMetricsChart = ({
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
+              onMouseEnter={(data, index) => {
+                const entry = metricChartData[index];
+                if (entry && entry.entitySites && onHoveredEntityChange) {
+                  // Pass both sites and whether this is the "Other" category
+                  onHoveredEntityChange({
+                    sites: entry.entitySites,
+                    isOther: entry.isOther || false
+                  });
+                }
+              }}
+              onMouseLeave={() => {
+                if (onHoveredEntityChange) {
+                  onHoveredEntityChange(null);
+                }
+              }}
             >
               {metricChartData.map((entry, index) => (
                 <Cell 

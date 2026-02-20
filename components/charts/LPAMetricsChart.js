@@ -2,7 +2,7 @@
 
 import { OrganizationalMetricsChart } from './OrganizationalMetricsChart';
 
-export const LPAMetricsChart = ({ sites }) => {
+export const LPAMetricsChart = ({ sites, onHoveredEntityChange }) => {
   return (
     <OrganizationalMetricsChart
       sites={sites}
@@ -10,6 +10,7 @@ export const LPAMetricsChart = ({ sites }) => {
       entityAbbr="LPAs"
       entityProperty="lpaName"
       totalEntitiesInUK={309}
+      onHoveredEntityChange={onHoveredEntityChange}
     />
   );
 };

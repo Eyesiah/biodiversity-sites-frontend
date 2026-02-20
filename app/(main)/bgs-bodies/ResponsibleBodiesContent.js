@@ -1,172 +1,113 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useState, useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
-import { CollapsibleRow } from '@/components/data/CollapsibleRow';
-import SiteList from '@/components/data/SiteList';
+import SearchableBodiesLayout from './SearchableBodiesLayout';
 import ExternalLink from '@/components/ui/ExternalLink';
-import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
-import { PrimaryTable } from '@/components/styles/PrimaryTable';
-import { Box, Text, Heading, Link } from '@chakra-ui/react';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
-import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBodyMetricsChart';
+import { Text, Link } from '@chakra-ui/react';
 
-const BodyRow = ({ body, onToggle, isOpen, onSiteHover, onSiteClick }) => {
-    const mainRow = (
-      <>
-        <PrimaryTable.Cell>{body.name}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.sites.length}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.designationDate}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.expertise}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.organisationType}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.address}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>
-          {body.emails.map(email => (
-            <div key={email}>
-              <Link href={`mailto:${email}`}>
-                <Text
-                  maxW="250px"
-                  overflow="hidden"
-                  textOverflow="ellipsis"
-                  whiteSpace="nowrap"
-                  display="inline-block"
-                >
-                  {email}
-                </Text>
-              </Link>
-            </div>
-          ))}
-        </PrimaryTable.Cell>
-        <PrimaryTable.Cell>{body.telephone}</PrimaryTable.Cell>
-      </>
+const HEADERS = [
+  { key: 'name', label: 'Name' },
+  { key: 'designationDate', label: 'Designation Date' },
+  { key: 'expertise', label: 'Area of Expertise' },
+  { key: 'organisationType', label: 'Type of Organisation' },
+  { key: 'address', label: 'Address' },
+  {
+    key: 'emails',
+    label: 'Email',
+    render: (body) => (
+      body.emails.map(email => (
+        <div key={email}>
+          <Link href={`mailto:${email}`}>
+            <Text
+              maxW="150px"
+              overflow="hidden"
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+              display="inline-block"
+            >
+              {email}
+            </Text>
+          </Link>
+        </div>
+      ))
     )
-  
-    const collapsibleContent = (
-      <SiteList sites={body.sites} onSiteHover={onSiteHover} onSiteClick={onSiteClick} minimalHeight={true} />
-    )
-  
-    return (
-      <CollapsibleRow
-        mainRow={mainRow}
-        collapsibleContent={collapsibleContent}
-        colSpan={8}
-        onToggle={onToggle}
-        isOpen={isOpen}
-      />
-    );
-  }
-  
-export default function ResponsibleBodiesContent({ 
-  responsibleBodies, 
-  onMapSitesChange,
+  },
+  { key: 'telephone', label: 'Telephone' },
+  { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
+  { key: 'allocationsCount', label: '# Allocations', textAlign: 'center' },
+];
+
+export default function ResponsibleBodiesContent({
+  responsibleBodies,
+  sites,
+  onExpandedRowChanged,
   onHoveredSiteChange,
   onSelectedSiteChange
 }) {
-  const [expandedRows, setExpandedRows] = useState({});
+  // Pre-process to ensure allocationsCount is available
+  const processedBodies = useMemo(() => {
+    return responsibleBodies.map(item => ({
+      ...item,
+      siteCount: item.sites?.length || 0,
+      allocationsCount: item.allocationsCount || 0
+    }));
+  }, [responsibleBodies]);
 
-  const handleToggle = (bodyName, isOpen) => {
-    if (isOpen) {
-      setExpandedRows({ [bodyName]: true });
-    } else {
-      setExpandedRows({});
-    }
+  const handleExport = (itemsToExport) => {
+    const csvData = itemsToExport.map(body => ({
+      'Name': body.name,
+      'Designation Date': body.designationDate,
+      'Area of Expertise': body.expertise,
+      'Type of Organisation': body.organisationType,
+      'Address': body.address,
+      'Email': body.emails.join('; '),
+      'Telephone': body.telephone,
+      '# BGS Sites': body.sites.length,
+      '# Allocations': body.allocationsCount,
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    triggerDownload(blob, 'responsible-bodies.csv');
   };
 
-  useEffect(() => {
-    const sites = [];
-    for (const bodyName in expandedRows) {
-      if (expandedRows[bodyName]) {
-        const body = responsibleBodies.find(b => b.name === bodyName);
-        if (body) {
-          sites.push(...body.sites);
-        }
-      }
-    }
-    onMapSitesChange?.(sites);
-    onSelectedSiteChange?.(null);
-  }, [expandedRows, responsibleBodies, onMapSitesChange, onSelectedSiteChange]);
-  
-    const handleExport = (itemsToExport) => {
-      const csvData = itemsToExport.map(body => ({
-        'Name': body.name,
-        '# BGS Sites': body.sites.length,
-        'Designation Date': body.designationDate,
-        'Area of Expertise': body.expertise,
-        'Type of Organisation': body.organisationType,
-        'Address': body.address,
-        'Email': body.emails.join('; '),
-        'Telephone': body.telephone,
-      }));
-  
-      const csv = Papa.unparse(csvData);
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      triggerDownload(blob, 'responsible-bodies.csv');
-    };
+  const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
+  const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
 
-    const unknownRB = responsibleBodies.find(rb => rb.name == '<Unknown>');
-    const numDesignated = unknownRB ? responsibleBodies.length - 1 : responsibleBodies.length;
-    
-    // Collect all sites from all responsible bodies for the chart
-  const allSites = useMemo(() => {
-    return responsibleBodies.flatMap(body => body.sites);
-  }, [responsibleBodies]);
-  
   return (
-    <>
-      <SearchableTableLayout
-                initialItems={responsibleBodies}
-                filterPredicate={(body, term) =>
-                    (body.name?.toLowerCase() || '').includes(term) ||
-                    (body.expertise?.toLowerCase() || '').includes(term) ||
-                    (body.organisationType?.toLowerCase() || '').includes(term) ||
-                    (body.address?.toLowerCase() || '').includes(term)}
-                initialSortConfig={{ key: 'sites.length', direction: 'descending' }}
-                placeholder="Search by name, expertise, type, or address."
-                exportConfig={{ onExportCsv: handleExport }}
-                summary={(filteredCount, totalCount) => (
-                    <Box>
-                        {filteredCount != totalCount ? (
-                        <Text>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</Text>
-                        ) : (
-                        <Text fontSize="1.2rem" fontWeight="normal">
-                          These <strong>{numDesignated}</strong> <GlossaryTooltip term='Responsible Body'>responsible bodies</GlossaryTooltip> may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
-                          {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
-                        </Text>
-                    )}
-                    </Box>
-                )}
-              >
-                {({ sortedItems, requestSort, getSortIndicator }) => (
-                  <PrimaryTable.Root>
-                    <PrimaryTable.Header>
-                      <PrimaryTable.Row>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('name')}>Name{getSortIndicator('name')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('sites.length')}># BGS Sites{getSortIndicator('sites.length')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('designationDate')}>Designation Date{getSortIndicator('designationDate')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('expertise')}>Area of Expertise{getSortIndicator('expertise')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('organisationType')}>Type of Organisation{getSortIndicator('organisationType')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader onClick={() => requestSort('address')}>Address{getSortIndicator('address')}</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader>Email</PrimaryTable.ColumnHeader>
-                        <PrimaryTable.ColumnHeader>Telephone</PrimaryTable.ColumnHeader>
-                      </PrimaryTable.Row>
-                    </PrimaryTable.Header>
-                    <PrimaryTable.Body>
-                      {sortedItems.map((body) => (
-                        <BodyRow
-                          body={body}
-                          key={body.name}
-                          isOpen={expandedRows[body.name] || false}
-                          onToggle={(isOpen) => handleToggle(body.name, isOpen)}
-                          onSiteHover={onHoveredSiteChange}
-                          onSiteClick={onSelectedSiteChange}
-                        />              
-                      ))}
-                    </PrimaryTable.Body>
-                  </PrimaryTable.Root>
-                )}
-              </SearchableTableLayout>
-    </>
+    <SearchableBodiesLayout
+      bodies={processedBodies}
+      allSites={sites}
+      headers={HEADERS}
+      bodyNameKey="name"
+      siteRefsKey="sites"
+      filterPredicate={(body, term) =>
+        (body.name?.toLowerCase() || '').includes(term) ||
+        (body.expertise?.toLowerCase() || '').includes(term) ||
+        (body.organisationType?.toLowerCase() || '').includes(term) ||
+        (body.address?.toLowerCase() || '').includes(term)
+      }
+      initialSortConfig={{ key: 'sites.length', direction: 'descending' }}
+      summary={(filteredCount, totalCount) => (
+        <div>
+          {filteredCount != totalCount ? (
+            <Text>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> of <strong>{formatNumber(totalCount, 0)}</strong> bodies</Text>
+          ) : (
+            <Text fontSize="1.2rem" fontWeight="normal">
+              These <strong>{numDesignated}</strong> <GlossaryTooltip term='Responsible Body'>responsible bodies</GlossaryTooltip> may enter into <ExternalLink href={`https://www.gov.uk/government/publications/conservation-covenant-agreements-designated-responsible-bodies/conservation-covenants-list-of-designated-responsible-bodies`}><strong>conservation covenant agreements</strong></ExternalLink> with landowners in England.
+              {unknownRB && <><br />There are <strong>{unknownRB.sites.length}</strong> BGS sites that do not list a designated responsible body, only LPAs.</>}
+            </Text>
+          )}
+        </div>
+      )}
+      exportConfig={{ onExportCsv: handleExport }}
+      onExpandedRowChanged={onExpandedRowChanged}
+      onSiteHover={onHoveredSiteChange}
+      onSiteClick={onSelectedSiteChange}
+    />
   );
 }

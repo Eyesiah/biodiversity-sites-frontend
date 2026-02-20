@@ -155,26 +155,35 @@ export default function SitePageContent({ site }) {
     handleTabChange(0); // Default to first tab
   }, [handleTabChange]);
 
+  // display satellite if not showing allocs
+  const mapLayer = useMemo(() => {
+    if (showAllocations && site && site.allocations.length > 0) {
+      return 'OpenStreetMap';
+    } else {
+      return 'Satellite';
+    }
+  }, [showAllocations, site]);
+
   return (
     <MapContentLayout
       map={
         <SiteMap
           sites={[site]}
           selectedSite={site}
-          isForSitePage={true}
+          openPopups={false}
           showAllocations={showAllocations}
           showLPA={showLPA}
           showNCA={showNCA}
           showLNRS={showLNRS}
           showLSOA={showLSOA}
-          showSiteArea={true}
+          mapLayer={mapLayer}
         />
       }
       content={(
 
         <ContentStack ref={contentRef}>
 
-          <SiteDetailsCard site={site} bodyLayerStates={{showLPA, setShowLPA, showNCA, setShowNCA, showLNRS, setShowLNRS, showLSOA, setShowLSOA}} />
+          <SiteDetailsCard site={site} bodyLayerStates={{ showLPA, setShowLPA, showNCA, setShowNCA, showLNRS, setShowLNRS, showLSOA, setShowLSOA }} />
 
           <Tabs.Root lazyMount defaultValue={0} onValueChange={handleTabChange} width="100%">
             <Tabs.List>

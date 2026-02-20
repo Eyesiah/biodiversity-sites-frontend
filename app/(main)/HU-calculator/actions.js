@@ -1,6 +1,6 @@
 "use server"
 
-import { getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness } from "@/lib/habitat";
+import { getEffectiveTimeToTarget, calculateBaselineHU, calculateImprovementHU, getConditionScore, getDistinctivenessScore, getHabitatDistinctiveness, checkTradingRules } from "@/lib/habitat";
 
 export async function calcHU(prevState, formData) {
     const size = formData.get("size");
@@ -12,6 +12,59 @@ export async function calcHU(prevState, formData) {
     const timeToTargetOffset = Number(formData.get("timeToTargetOffset") || 0);
     const baselineHabitat = formData.get("baselineHabitat");
     const baselineCondition = formData.get("baselineCondition");
+
+    // Validate required fields
+    if (!habitat) {
+        return {
+            size: size,
+            habitat: '',
+            condition: condition,
+            improvementType: improvementType,
+            strategicSignificance: strategicSignificance,
+            spatialRisk: spatialRisk,
+            timeToTargetOffset: timeToTargetOffset,
+            baselineHabitat: baselineHabitat,
+            baselineCondition: baselineCondition,
+            result: null,
+            error: 'Please select a habitat'
+        };
+    }
+
+    // For enhancement, require baseline habitat and condition
+    if (improvementType === 'enhanced') {
+        if (!baselineHabitat) {
+            return {
+                ...prevState,
+                result: null,
+                error: 'Please select a baseline habitat for enhancement'
+            };
+        }
+        if (!baselineCondition) {
+            return {
+                ...prevState,
+                result: null,
+                error: 'Please select a baseline condition for enhancement'
+            };
+        }
+        
+        // Check trading rules
+        const tradingCheck = checkTradingRules(baselineHabitat, habitat);
+        if (!tradingCheck.allowed) {
+            return {
+                size: size,
+                habitat: habitat,
+                condition: condition,
+                improvementType: improvementType,
+                strategicSignificance: strategicSignificance,
+                spatialRisk: spatialRisk,
+                timeToTargetOffset: timeToTargetOffset,
+                baselineHabitat: baselineHabitat,
+                baselineCondition: baselineCondition,
+                result: null,
+                error: tradingCheck.reason
+            };
+        }
+    }
 
     const isBaseline = improvementType == "baseline" || improvementType == "none" || improvementType == null || improvementType == '';
 
@@ -34,6 +87,9 @@ export async function calcHU(prevState, formData) {
         result.baselineDistinctiveness = getHabitatDistinctiveness(baselineHabitat);
         result.baselineDistinctivenessScore = getDistinctivenessScore(baselineHabitat);
         result.baselineConditionScore = getConditionScore(baselineCondition);
+        // Add effective time to target for enhancement
+        result.effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, condition, timeToTargetOffset);
+        result.timeToTargetOffset = timeToTargetOffset;
       }
 
       // the calculateImprovementHU returns also the values used for the final calculation, so use those
