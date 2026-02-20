@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { formatNumber } from '@/lib/format';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 import L from 'leaflet';
+import React from 'react';
 
 const defaultSiteIcon = new L.Icon({
   iconUrl: '/icons/greenMarker.svg',
@@ -73,7 +74,7 @@ const ColorKey = ({ color }) => {
   )
 }
 
-export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, handlePopupClose = null, markerRefs, onSiteSelect = null }) => {
+export const SiteMapMarker = React.memo(({ site, withColorKeys = false, isHovered = false, handlePopupClose = null, markerRefs, onSiteSelect = null }) => {
   const imdDecile = site.imdDecile ?? site.lsoa?.IMDDecile;
   return (
     <Marker
@@ -109,5 +110,7 @@ export const SiteMapMarker = ({ site, withColorKeys = false, isHovered = false, 
         <br />
       </Popup>
     </Marker>
-  )
-}
+  );
+});
+
+SiteMapMarker.displayName = 'SiteMapMarker';
