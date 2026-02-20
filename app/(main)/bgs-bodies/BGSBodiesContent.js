@@ -29,7 +29,7 @@ export default function BGSBodiesContent({
   error = null
 }) {
   const [activeTab, setActiveTab] = useState('responsible-bodies');
-  
+
   // Shared map state
   const [mapSites, setMapSites] = useState([]);
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
@@ -48,16 +48,16 @@ export default function BGSBodiesContent({
       setSelectedBody(null);
       return;
     }
-    
+
     const { sites: entitySites, isOther } = hoverData;
-    
+
     if (isOther) {
       // For "Other" segment, show all BGS sites
       setMapSites(sites);
       setSelectedBody(null);
     } else if (entitySites && entitySites.length > 0) {
       setMapSites(entitySites);
-      
+
       // Get the correct body name from the first site's properties
       let bodyName = null;
       if (activeTab === 'lpa-chart' && entitySites[0].lpaName) {
@@ -67,7 +67,7 @@ export default function BGSBodiesContent({
       } else if (activeTab === 'lnrs-chart' && entitySites[0].lnrsName) {
         bodyName = entitySites[0].lnrsName;
       }
-      
+
       if (bodyName) {
         setSelectedBody({ name: bodyName });
       }
@@ -84,17 +84,6 @@ export default function BGSBodiesContent({
     setSelectedSite(null);
     setSelectedBody(null);
   }, [activeTab]);
-
-  // Reset everything when the component unmounts (page loses focus)
-  useEffect(() => {
-    return () => {
-      setActiveTab('responsible-bodies');
-      setMapSites([]);
-      setHoveredSite(null);
-      setSelectedSite(null);
-      setSelectedBody(null);
-    };
-  }, []);
 
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
@@ -137,6 +126,95 @@ export default function BGSBodiesContent({
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
 
+  const mainContent = useMemo(() => (
+    <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
+      <Tabs.List>
+        <Tabs.Trigger value="responsible-bodies">
+          Responsible Bodies List
+        </Tabs.Trigger>
+        <Tabs.Trigger value="rb-chart">
+          Responsible Bodies Chart
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lpa">
+          LPA List
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lpa-chart">
+          LPA Chart
+        </Tabs.Trigger>
+        <Tabs.Trigger value="nca">
+          NCA List
+        </Tabs.Trigger>
+        <Tabs.Trigger value="nca-chart">
+          NCA Chart
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs">
+          LNRS List
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs-chart">
+          LNRS Chart
+        </Tabs.Trigger>
+      </Tabs.List>
+
+      <Tabs.Content value="responsible-bodies">
+        <ResponsibleBodiesContent
+          responsibleBodies={responsibleBodies}
+          sites={sites}
+          onExpandedRowChanged={handleExpandedBodyChanged}
+          onHoveredSiteChange={setHoveredSite}
+          onSelectedSiteChange={setSelectedSite}
+        />
+      </Tabs.Content>
+
+      <Tabs.Content value="rb-chart">
+        <ResponsibleBodyMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+
+      <Tabs.Content value="lpa">
+        <LPAContent
+          lpas={lpas}
+          sites={sites}
+          onExpandedRowChanged={handleExpandedBodyChanged}
+          onHoveredSiteChange={setHoveredSite}
+          onSelectedSiteChange={setSelectedSite}
+        />
+      </Tabs.Content>
+
+      <Tabs.Content value="lpa-chart">
+        <LPAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+
+      <Tabs.Content value="nca">
+        <NCAContent
+          ncas={ncas}
+          sites={sites}
+          error={null}
+          onExpandedRowChanged={handleExpandedBodyChanged}
+          onHoveredSiteChange={setHoveredSite}
+          onSelectedSiteChange={setSelectedSite}
+        />
+      </Tabs.Content>
+
+      <Tabs.Content value="nca-chart">
+        <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+
+      <Tabs.Content value="lnrs">
+        <LNRSContent
+          lnrs={lnrs}
+          sites={sites}
+          error={null}
+          onExpandedRowChanged={handleExpandedBodyChanged}
+          onHoveredSiteChange={setHoveredSite}
+          onSelectedSiteChange={setSelectedSite}
+        />
+      </Tabs.Content>
+
+      <Tabs.Content value="lnrs-chart">
+        <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+    </Tabs.Root>
+  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites]);
+
   // Check for error after all hooks are called
   if (error) {
     return (
@@ -151,108 +229,16 @@ export default function BGSBodiesContent({
   return (
     <MapContentLayout
       map={<PolygonMap
-          key={activeTab}
-          selectedItem={mapConfig.selectedItem}
-          geoJsonUrl={mapConfig.geoJsonUrl}
-          nameProperty={mapConfig.nameProperty}
-          sites={mapSites}
-          style={mapConfig.style}
-          disableZoom={disableZoom}
-          hoveredSite={hoveredSite}
-          selectedSite={selectedSite}
-        />}
-      content={
-        <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
-          <Tabs.List>
-            <Tabs.Trigger value="responsible-bodies">
-              Responsible Bodies List
-            </Tabs.Trigger>
-            <Tabs.Trigger value="rb-chart">
-              Responsible Bodies Chart
-            </Tabs.Trigger>
-            <Tabs.Trigger value="lpa">
-              LPA List
-            </Tabs.Trigger>
-            <Tabs.Trigger value="lpa-chart">
-              LPA Chart
-            </Tabs.Trigger>
-            <Tabs.Trigger value="nca">
-              NCA List
-            </Tabs.Trigger>
-            <Tabs.Trigger value="nca-chart">
-              NCA Chart
-            </Tabs.Trigger>
-            <Tabs.Trigger value="lnrs">
-              LNRS List
-            </Tabs.Trigger>
-            <Tabs.Trigger value="lnrs-chart">
-              LNRS Chart
-            </Tabs.Trigger>
-          </Tabs.List>
-
-          <Tabs.Content value="responsible-bodies">
-            <ResponsibleBodiesContent
-              key={activeTab}
-              responsibleBodies={responsibleBodies}
-              sites={sites}
-              onExpandedRowChanged={handleExpandedBodyChanged}
-              onHoveredSiteChange={setHoveredSite}
-              onSelectedSiteChange={setSelectedSite}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content value="rb-chart">
-            <ResponsibleBodyMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
-          </Tabs.Content>
-
-          <Tabs.Content value="lpa">
-            <LPAContent
-              key={activeTab}
-              lpas={lpas}
-              sites={sites}
-              onExpandedRowChanged={handleExpandedBodyChanged}
-              onHoveredSiteChange={setHoveredSite}
-              onSelectedSiteChange={setSelectedSite}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content value="lpa-chart">
-            <LPAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
-          </Tabs.Content>
-
-          <Tabs.Content value="nca">
-            <NCAContent
-              key={activeTab}
-              ncas={ncas}
-              sites={sites}
-              error={null}
-              onExpandedRowChanged={handleExpandedBodyChanged}
-              onHoveredSiteChange={setHoveredSite}
-              onSelectedSiteChange={setSelectedSite}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content value="nca-chart">
-            <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
-          </Tabs.Content>
-
-          <Tabs.Content value="lnrs">
-            <LNRSContent
-              key={activeTab}
-              lnrs={lnrs}
-              sites={sites}
-              error={null}
-              onExpandedRowChanged={handleExpandedBodyChanged}
-              onHoveredSiteChange={setHoveredSite}
-              onSelectedSiteChange={setSelectedSite}
-            />
-          </Tabs.Content>
-
-          <Tabs.Content value="lnrs-chart">
-            <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
-          </Tabs.Content>
-        </Tabs.Root>
-      }
+        selectedItem={mapConfig.selectedItem}
+        geoJsonUrl={mapConfig.geoJsonUrl}
+        nameProperty={mapConfig.nameProperty}
+        sites={mapSites}
+        style={mapConfig.style}
+        disableZoom={disableZoom}
+        hoveredSite={hoveredSite}
+        selectedSite={selectedSite}
+      />}
+      content={mainContent}
     />
   );
 }
