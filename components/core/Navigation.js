@@ -128,7 +128,7 @@ const DropdownMenu = ({ category, children, ...props }) => {
           bg: "charcoal"
         }}
       >
-        {category} <Text as="span" fontSize="0.8em">▼</Text>
+        {category}<Text as="span" fontSize="0.8em" marginStart="-0.25em">▼</Text>
       </Button>
       {isOpen && (
         <Box
@@ -404,14 +404,14 @@ export default function Navigation() {
           <NavLink href="/sites" onClick={closeMenu}>
             BGS Sites List
           </NavLink>
+          <NavLink href="/bgs-bodies" onClick={closeMenu}>
+            BGS Bodies
+          </NavLink>
           <DropdownMenu category="BGS Insights">
             <DropdownLink href='/habitat-summary' label='BGS Habitat Finder' />
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
-          <NavLink href="/bgs-bodies" onClick={closeMenu}>
-            BGS Bodies
-          </NavLink>
           <DropdownMenu category="Stats & More">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
