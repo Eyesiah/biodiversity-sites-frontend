@@ -5,7 +5,7 @@ import { formatNumber } from '@/lib/format'
 import { NextResponse } from 'next/server';
 import Papa from 'papaparse';
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 export function generateStaticParams() {
   return [

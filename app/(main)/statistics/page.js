@@ -7,7 +7,7 @@ import { ContentLayout } from '@/components/styles/ContentLayout';
 import SiteRegisterAdditionTable from './SiteRegisterAdditionTable';
 import { calculateTreeCount } from '@/lib/tree-utils';
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 export const metadata = {
   title: 'BGS Register Statistics',

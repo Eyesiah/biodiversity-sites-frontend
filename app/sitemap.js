@@ -1,7 +1,7 @@
 
 import { fetchAllRefNos } from '@/lib/api';
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 const URL = 'https://bgs.bristoltrees.space';
 

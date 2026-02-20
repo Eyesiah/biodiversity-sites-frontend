@@ -9,7 +9,7 @@ import { ARCGIS_LNRS_URL } from '@/config';
 import BGSBodiesContent from './BGSBodiesContent';
 import Footer from '@/components/core/Footer';
 
-export const revalidate = 43200; // 12 hours
+export const revalidate = 86400; // 24 hours
 
 export const metadata = {
   title: 'BGS Bodies',
