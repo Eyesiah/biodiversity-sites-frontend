@@ -82,7 +82,7 @@ export function renderAdjacencyTable(nca, allNcas) {
   );
 }
 
-export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSiteClick }) {
+export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSiteClick, onHoveredSiteChange }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return ncas.map(item => ({
@@ -105,6 +105,7 @@ export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, o
       headers={HEADERS}
       bodyNameKey="name"
       siteRefsKey="sites"
+      onSiteHover={onHoveredSiteChange}
       filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
       initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
       summary={(filteredCount, totalCount) => (

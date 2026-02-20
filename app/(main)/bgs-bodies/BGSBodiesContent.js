@@ -186,6 +186,7 @@ export default function BGSBodiesContent({
           sites={mapSitesToShow}
           style={mapConfig.style}
           disableZoom={disableZoom}
+          hoveredSite={mapHoveredSite}
         />}
       content={
         <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
@@ -237,6 +238,7 @@ export default function BGSBodiesContent({
               lpas={lpas}
               sites={sites}
               onExpandedRowChanged={handleExpandedBodyChanged}
+              onHoveredSiteChange={setHoveredSite}
             />
           </Tabs.Content>
 
@@ -251,6 +253,7 @@ export default function BGSBodiesContent({
               sites={sites}
               error={null}
               onExpandedRowChanged={handleExpandedBodyChanged}
+              onHoveredSiteChange={setHoveredSite}
             />
           </Tabs.Content>
 
@@ -265,6 +268,7 @@ export default function BGSBodiesContent({
               sites={sites}
               error={null}
               onExpandedRowChanged={handleExpandedBodyChanged}
+              onHoveredSiteChange={setHoveredSite}
             />
           </Tabs.Content>
 
