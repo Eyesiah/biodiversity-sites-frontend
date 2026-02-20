@@ -12,6 +12,7 @@ export default async function sitemap() {
     '/habitat-analysis',
     '/habitat-summary',
     '/HU-calculator',
+    '/scenario-planning',
     '/query',
     '/bgs-bodies',
     '/sites',
