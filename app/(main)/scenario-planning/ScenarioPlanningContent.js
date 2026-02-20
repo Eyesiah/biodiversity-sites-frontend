@@ -7,7 +7,6 @@ import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
-import { getHabitatDistinctiveness } from '@/lib/habitat';
 import { TbFileTypeXml } from "react-icons/tb";
 import Tooltip from '@/components/ui/Tooltip';
 
