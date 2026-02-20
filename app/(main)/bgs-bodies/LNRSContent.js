@@ -82,7 +82,7 @@ export function renderAdjacencyTable(lnrs, allLnrs) {
   );
 }
 
-export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, onSiteClick, onHoveredSiteChange }) {
+export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lnrs.map(item => ({
@@ -130,7 +130,7 @@ export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, 
       }}
       onExpandedRowChanged={onExpandedRowChanged}
       modalType="lnrs"
-      onSiteClick={onSiteClick}
+      onSiteClick={onSelectedSiteChange}
     />
   );
 }

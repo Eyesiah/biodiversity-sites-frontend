@@ -85,7 +85,7 @@ export function renderLpaAdjacencyTable(lpa, allLpas) {
   );
 }
 
-export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSiteClick, onHoveredSiteChange }) {
+export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lpas.map(item => ({
@@ -133,7 +133,7 @@ export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSiteCl
       }}
       onExpandedRowChanged={onExpandedRowChanged}
       modalType="lpa"
-      onSiteClick={onSiteClick}
+      onSiteClick={onSelectedSiteChange}
     />
   );
 }

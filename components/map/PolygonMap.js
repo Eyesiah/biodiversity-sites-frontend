@@ -19,12 +19,22 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null }) => {
+const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null, selectedSite = null }) => {
   const [geoJson, setGeoJson] = useState(null);
   const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
   const [error, setError] = useState(null);
   const cache = useRef({});
   const [mapKey, setMapKey] = useState(Date.now());
+  const markerRefs = useRef({});
+
+  useEffect(() => {
+    if (selectedSite) {
+      const marker = markerRefs.current[selectedSite.referenceNumber];
+      if (marker) {
+        marker.openPopup();
+      }
+    }
+  }, [selectedSite]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -107,7 +117,7 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
         <MapController geoJson={geoJson} />
 
         {sites && sites.filter(site => site.position != null).map(site => (
-          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} />
+          <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />
         ))}
       </BaseMap>
     </div>
