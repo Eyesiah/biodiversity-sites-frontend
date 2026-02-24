@@ -6,6 +6,9 @@ import ProseContainer from '@/components/styles/ProseContainer';
 
 export const metadata = {
   title: 'About',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/about',
+  },
 };
 
 export default function About() {

@@ -4,6 +4,9 @@ import { Heading, Text } from "@chakra-ui/react";
 
 export const metadata = {
   title: 'Feedback',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/feedback',
+  },
 };
 
 export default function Feedback() {

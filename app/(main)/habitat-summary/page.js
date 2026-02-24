@@ -7,10 +7,12 @@ import { HABITAT_UNIT_TYPES } from '@/config'
 
 export const revalidate = 86400; // 24 hours
 
-
 export const metadata = {
   title: 'BGS Habitat Finder',
-  description: 'Use this page to find available habitats. Click on a habitat to see all the sites that offer that habitat, including how much has already been allocated.'
+  description: 'Use this page to find available habitats. Click on a habitat to see all the sites that offer that habitat, including how much has already been allocated.',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/habitat-summary',
+  },
 };
 
 

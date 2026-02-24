@@ -13,7 +13,10 @@ export const revalidate = 86400; // 24 hours
 
 export const metadata = {
   title: 'BGS Bodies',
-  description: 'View all the Responsible Bodies, Local Planning Authorities, National Character Areas, and Local Nature Recovery Strategies in the Register.'
+  description: 'View all the Responsible Bodies, Local Planning Authorities, National Character Areas, and Local Nature Recovery Strategies in the Register.',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/bgs-bodies',
+  },
 };
 
 async function getResponsibleBodiesData(sites) {

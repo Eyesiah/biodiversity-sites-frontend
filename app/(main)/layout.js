@@ -11,6 +11,9 @@ export const metadata = {
   title: 'Biodiversity Gain Sites Register',
   description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
   keywords: ['biodiversity', 'gain', 'sites', 'register', 'england', 'habitat', 'conservation', 'environment'],
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space',
+  },
   openGraph: {
     title: 'Biodiversity Gain Sites Register',
     description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",

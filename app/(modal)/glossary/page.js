@@ -5,6 +5,9 @@ import Papa from 'papaparse';
 
 export const metadata = {
   title: 'Glossary',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/glossary',
+  },
 };
 
 export default function Glossary() {

@@ -5,7 +5,10 @@ import ScenarioPlanningContent from './ScenarioPlanningContent';
 
 export const metadata = {
   title: 'Habitat Unit Scenario Planning',
-  description: 'Explore potential Habitat Unit outcomes across different target conditions'
+  description: 'Explore potential Habitat Unit outcomes across different target conditions',
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/scenario-planning',
+  },
 };
 
 export default function ScenarioPlanningPage() {
