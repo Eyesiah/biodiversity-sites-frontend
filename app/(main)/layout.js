@@ -6,6 +6,45 @@ import { Box } from '@chakra-ui/react';
 import { loadGlossary } from "@/lib/glossary"
 import { Toaster } from "@/components/ui/toaster"
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Bristol Tree Forum',
+  url: 'https://bristoltreeforum.org/',
+  logo: 'https://bgs.bristoltrees.space/ToBlogo512.png',
+  sameAs: [
+    'https://x.com/BristolTreeFora',
+    'https://github.com/Eyesiah/biodiversity-sites-frontend'
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'BGS_Suggestions@bristoltreeforum.org',
+    contactType: 'customer service'
+  }
+};
+
+const datasetSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Dataset',
+  name: 'Biodiversity Gain Sites Register',
+  description: "A dataset of biodiversity gain sites in England, part of the UK government's Biodiversity Net Gain regulations. This site presents data from the official BGS Register in a format that allows for spatial and statistical analyses.",
+  url: 'https://bgs.bristoltrees.space/',
+  keywords: ['biodiversity', 'gain', 'sites', 'register', 'England', 'habitat', 'conservation', 'environment', 'BNG', 'Net Gain'],
+  license: 'https://github.com/Eyesiah/biodiversity-sites-frontend/blob/master/LICENSE',
+  creator: {
+    '@type': 'Organization',
+    name: 'Bristol Tree Forum',
+    url: 'https://bristoltreeforum.org/'
+  },
+  sourceOrganization: {
+    '@type': 'Organization',
+    name: 'Natural England',
+    url: 'https://www.gov.uk/government/organisations/natural-england'
+  },
+  datePublished: '2025',
+  temporalCoverage: '2025/Present'
+};
+
 export const metadata = {
   metadataBase: new URL('https://bgs.bristoltrees.space'),
   title: 'Biodiversity Gain Sites Register',
@@ -29,6 +68,13 @@ export const metadata = {
     locale: 'en_GB',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Biodiversity Gain Sites Register',
+    description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses.",
+    site: '@bristoltreeforum',
+    images: ['/ToBlogo512.png'],
+  },
   verification: {
     google: '4bMY4a8_XmDsa8mtFCRGk2eh_AGJQ4n57kqTXwW1wac',
   },
@@ -37,6 +83,10 @@ export const metadata = {
     icon: '/favicon.ico',
   },
   manifest: '/manifest.json',
+  other: {
+    'schema:organization': JSON.stringify(organizationSchema),
+    'schema:dataset': JSON.stringify(datasetSchema),
+  },
 };
 
 export const viewport = {
