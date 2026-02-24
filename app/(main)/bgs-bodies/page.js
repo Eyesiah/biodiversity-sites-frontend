@@ -14,6 +14,7 @@ export const revalidate = 86400; // 24 hours
 export const metadata = {
   title: 'BGS Bodies',
   description: 'View all the Responsible Bodies, Local Planning Authorities, National Character Areas, and Local Nature Recovery Strategies in the Register.',
+  keywords: ['Responsible Bodies', 'Local Planning Authority', 'LPA', 'National Character Areas', 'NCA', 'Local Nature Recovery Strategy', 'LNRS', 'BGS organizations', 'conservation bodies'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/bgs-bodies',
   },

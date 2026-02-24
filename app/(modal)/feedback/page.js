@@ -3,7 +3,9 @@ import ProseContainer from '@/components/styles/ProseContainer';
 import { Heading, Text } from "@chakra-ui/react";
 
 export const metadata = {
-  title: 'Feedback',
+  title: 'Feedback | Biodiversity Gain Sites Register',
+  description: 'Send feedback on the BGS Register website. Report bugs, suggest features, or ask questions about using the site for biodiversity net gain planning.',
+  keywords: ['feedback BGS Register', 'contact Bristol Tree Forum', 'bug report', 'suggest feature', 'BNG website feedback'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/feedback',
   },

@@ -21,6 +21,7 @@ export async function generateMetadata({ params }) {
   return {
     title: site?.name ? `${site.name} | ${site.referenceNumber}` : `Site Details: ${site.referenceNumber}`,
     description: `Details for Biodiversity Gain Site ${site.referenceNumber} - NOTE: site names are best guesses as the register does not contain names for sites.`,
+    keywords: ['BGS site', 'biodiversity gain site', 'BNG site', `site ${site.referenceNumber}`, 'habitat units', 'biodiversity site England'],
   };
 }
 

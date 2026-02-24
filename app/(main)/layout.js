@@ -49,7 +49,7 @@ export const metadata = {
   metadataBase: new URL('https://bgs.bristoltrees.space'),
   title: 'Biodiversity Gain Sites Register',
   description: "This site presents data from the UK government's Biodiversity Gain Sites Register in a format that allows for interesting spatial and statistical analyses. The Register is part of the Biodiversity Net Gain regulations.",
-  keywords: ['biodiversity', 'gain', 'sites', 'register', 'england', 'habitat', 'conservation', 'environment'],
+  keywords: ['biodiversity gain sites', 'BGS Register', 'Biodiversity Net Gain', 'BNG', 'habitat units', 'Defra', 'Natural England', 'England', 'environmental register', 'conservation', 'habitat', 'responsible bodies', 'Local Nature Recovery Strategy', 'LNRS', 'Local Planning Authority', 'LPA', 'National Character Areas', 'NCA'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space',
   },

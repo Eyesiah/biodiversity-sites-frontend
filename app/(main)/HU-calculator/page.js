@@ -7,6 +7,7 @@ import HabitatForm, { calculatorInitialState } from '@/components/habitat-form/H
 export const metadata = {
   title: 'Habitat unit calculator',
   description: 'Use this form to calculate how many Habitat Units a particular Parcel would have.',
+  keywords: ['habitat unit calculator', 'BNG calculator', 'biodiversity net gain calculator', 'habitat units calculation', 'BNG metric calculator', 'calculate biodiversity units'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/HU-calculator',
   },

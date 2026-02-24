@@ -5,7 +5,9 @@ import { Heading, Text, List } from "@chakra-ui/react";
 import ProseContainer from '@/components/styles/ProseContainer';
 
 export const metadata = {
-  title: 'About',
+  title: 'About | Biodiversity Gain Sites Register',
+  description: 'Learn about the BGS Register and how this site helps developers, ecologists, and planners find biodiversity gain sites in England. Information about data sources, methodology, and the BNG regulations.',
+  keywords: ['about BGS Register', 'Biodiversity Net Gain information', 'BNG regulations', 'about biodiversity gain sites', 'BGS methodology', 'defra biodiversity register'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/about',
   },

@@ -6,6 +6,7 @@ import ScenarioPlanningContent from './ScenarioPlanningContent';
 export const metadata = {
   title: 'Habitat Unit Scenario Planning',
   description: 'Explore potential Habitat Unit outcomes across different target conditions',
+  keywords: ['scenario planning', 'habitat unit scenarios', 'BNG scenario', 'biodiversity outcomes', 'habitat enhancement', 'habitat creation', 'BNG planning'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/scenario-planning',
   },
