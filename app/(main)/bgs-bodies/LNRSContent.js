@@ -9,13 +9,20 @@ import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { InfoButton } from '@/components/styles/InfoButton';
 import { DataTable } from '@/components/styles/DataTable';
 import { Box, Text } from '@chakra-ui/react';
+import ExternalLink from '@/components/ui/ExternalLink';
 
 // Headers configuration for LNRS table
 const HEADERS = [
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Name' },
   { key: 'size', label: 'Size (ha)', textAlign: 'right', format: (val) => formatNumber(val, 0) },
-  { key: 'publicationStatus', label: 'Publication Status' },
+  { key: 'publicationStatus', label: 'Publication Status', render: (lnrs) => {
+    if (lnrs.link) {
+      return <ExternalLink href={lnrs.link}>{lnrs.publicationStatus}</ExternalLink>;
+    } else {
+      return lnrs.publicationStatus;
+    }
+  } },
   { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
   { 
     key: 'adjacentsCount', 
@@ -120,6 +127,7 @@ export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, 
             'Name': item.name,
             'Size (ha)': item.size,
             'Publication Status': item.publicationStatus,
+            'Publication Link': item.link,
             '# BGS Sites': item.siteCount,
             '# Adjacent LNRS': item.adjacentsCount,
           }));
