@@ -7,7 +7,11 @@ import { HABITAT_UNIT_TYPES } from '@/config'
 
 export const metadata = {
   title: 'BGS Habitat Analysis',
-  description: 'View which baseline habitats exist in the register, which will be improved and which have been allocated.'
+  description: 'View which baseline habitats exist in the register, which will be improved and which have been allocated.',
+  keywords: ['habitat analysis', 'baseline habitat', 'improved habitat', 'habitat distinctiveness', 'BGS habitat analysis', 'biodiversity habitat types', 'habitat condition'],
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/habitat-analysis',
+  },
 };
 
 export const revalidate = 86400; // 24 hours

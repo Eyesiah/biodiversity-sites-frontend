@@ -4,7 +4,12 @@ import path, { parse } from 'path';
 import Papa from 'papaparse';
 
 export const metadata = {
-  title: 'Glossary',
+  title: 'Glossary | BNG & Biodiversity Terms',
+  description: 'Glossary of terms used in the BGS Register and Biodiversity Net Gain. Understand habitat units, conditions, distinctiveness, and other BNG terminology.',
+  keywords: ['glossary', 'BNG terms', 'biodiversity glossary', 'habitat terms', 'BGS glossary', 'environmental terms', 'conservation terminology'],
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/glossary',
+  },
 };
 
 export default function Glossary() {

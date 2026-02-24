@@ -11,7 +11,11 @@ export const revalidate = 86400; // 24 hours
 
 export const metadata = {
   title: 'BGS Register Statistics',
-  description: 'View various statistics about the register to see how it has changed over time.'
+  description: 'View various statistics about the register to see how it has changed over time.',
+  keywords: ['BGS statistics', 'biodiversity register statistics', 'habitat unit statistics', 'BNG trends', 'England biodiversity data', 'register growth statistics'],
+  alternates: {
+    canonical: 'https://bgs.bristoltrees.space/statistics',
+  },
 };
 
 export default async function StatisticsPage() {
