@@ -1,5 +1,4 @@
-
-import { fetchAllRefNos } from '@/lib/api';
+import { fetchAllRefNos, fetchAllAllocationsForStaticParams } from '@/lib/api';
 
 export const revalidate = 86400; // 24 hours
 
@@ -32,5 +31,12 @@ export default async function sitemap() {
     lastModified: new Date().toISOString(),
   }));
 
-  return [...staticRoutes, ...siteRoutes];
+  // Generate dynamic routes for allocations
+  const allocations = await fetchAllAllocationsForStaticParams();
+  const allocationRoutes = allocations.map((alloc) => ({
+    url: `${URL}/allocations/${alloc.lpa}/${alloc.planningRef}`,
+    lastModified: new Date().toISOString(),
+  }));
+
+  return [...staticRoutes, ...siteRoutes, ...allocationRoutes];
 }

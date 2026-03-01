@@ -2,19 +2,28 @@
 
 import { useSortableData } from '@/lib/hooks';
 import { CollapsibleRow } from "@/components/data/CollapsibleRow"
-import { formatNumber } from '@/lib/format';
+import { formatNumber, slugify } from '@/lib/format';
 import { DataTable } from '@/components/styles/DataTable';
 import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { AllocationHabitats } from '@/components/data/AllocationHabitats';
 import { Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { HABITAT_UNIT_TYPES } from '@/config'
+import Link from 'next/link';
 
 // component for each row in the allocations table to handle drill-down
-const AllocationRow = ({ alloc }) => {
+const AllocationRow = ({ alloc, showLink = false }) => {
   const mainRow = (
     <>
-      <DataTable.Cell>{alloc.planningReference}</DataTable.Cell>
+      <DataTable.Cell>
+        {showLink ? (
+          <Link href={`/allocations/${slugify(alloc.localPlanningAuthority)}/${slugify(alloc.planningReference)}`}>
+            {alloc.planningReference}
+          </Link>
+        ) : (
+          alloc.planningReference
+        )}
+      </DataTable.Cell>
       <DataTable.Cell>{alloc.localPlanningAuthority}</DataTable.Cell>
       <DataTable.CenteredNumericCell>{alloc.lsoa.IMDDecile || 'N/A'}</DataTable.CenteredNumericCell>
       <DataTable.CenteredNumericCell>
@@ -50,7 +59,7 @@ const AllocationRow = ({ alloc }) => {
   );
 };
 
-export const AllocationsTable = ({ allocations }) => {
+export const AllocationsTable = ({ allocations, showLink = false }) => {
   const { items: sortedAllocations, requestSort: requestSortAllocations, sortConfig: sortConfigAllocations } = useSortableData(allocations || [], { key: 'planningReference', direction: 'ascending' });
 
   const getSortIndicator = (name) => {
@@ -98,7 +107,7 @@ export const AllocationsTable = ({ allocations }) => {
             </DataTable.Header>
             <DataTable.Body>
               {sortedAllocations.map((alloc) => (
-                <AllocationRow key={`${alloc.planningReference}-${alloc.developerReference}`} alloc={alloc} />
+                <AllocationRow key={`${alloc.planningReference}-${alloc.developerReference}`} alloc={alloc} showLink={showLink} />
               ))}
             </DataTable.Body>
           </DataTable.Root>
