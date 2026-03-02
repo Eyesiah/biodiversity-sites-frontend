@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { calcMedian, calcMean } from '@/lib/format';
+import { calcMedian, calcMean, formatNumber } from '@/lib/format';
 import AllocationList from '@/components/data/AllocationList';
 import { Box, Text } from '@chakra-ui/react';
 
@@ -60,7 +60,7 @@ export default function AllocationListTab({ allocations }) {
   };
 
   const huTotal = useMemo(() => {
-    return allocations.reduce((acc, alloc) => acc + (alloc.au || 0) + (alloc.hu || 0) + (alloc.wu || 0), 0);
+    return formatNumber(allocations.reduce((acc, alloc) => acc + (alloc.au || 0) + (alloc.hu || 0) + (alloc.wu || 0), 0));
   }, [allocations]);
 
   return (
