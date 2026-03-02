@@ -12,20 +12,29 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-export default function AllocationPageContent({ allocations, sites, selectedSite, allocationsForMap }) {
+export default function AllocationPageContent({ allocations, sites, selectedSite }) {
   const isMobile = useIsMobile();
   const [hoveredSite, setHoveredSite] = useState(null);
-
-  // Use OpenStreetMap when showing allocations (same as SitePageContent)
-  const mapLayer = useMemo(() => {
-    return 'OpenStreetMap';
-  }, []);
 
   // Handle site selection from map
   const handleSiteSelect = (site) => {
     // For now, we just track the hovered site for highlighting
     setHoveredSite(site);
   };
+
+  const allocationsForMap = useMemo(() => {
+    return allocations.map(alloc => {
+      const site = sites.find(s => s.referenceNumber == alloc.srn);
+      if (site) {
+        return {
+          ...alloc,
+          siteReferenceNumber: alloc.srn,
+          siteName: site.name,
+          sitePosition: site.position
+        }
+      }
+    })
+  }, [allocations, sites])
 
   return (
     <MapContentLayout
@@ -40,9 +49,9 @@ export default function AllocationPageContent({ allocations, sites, selectedSite
           showNCA={false}
           showLNRS={false}
           showLSOA={false}
-          showSiteArea={true}
-          openPopups={false}
-          mapLayer={mapLayer}
+          showSiteArea={false}
+          openPopups={true}
+          mapLayer={'OpenStreetMap'}
           allocations={allocationsForMap}
         />
       }

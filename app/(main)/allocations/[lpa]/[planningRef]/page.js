@@ -1,5 +1,5 @@
 import { fetchAllocationWithSiteData, fetchAllAllocationsForStaticParams } from '@/lib/api';
-import AllocationPageContent from 'app/(main)/allocations/[lpa]/[planningRef]/AllocationPageContent';
+import AllocationPageContent from './AllocationPageContent';
 import Footer from '@/components/core/Footer';
 
 export const revalidate = 86400; // 24 hours
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
   const actualRef = firstAlloc?.pr || decodedRef;
 
   return {
-    title: `Allocation: ${actualRef} | ${actualLpa}`,
+    title: `Allocations: ${actualRef} | ${actualLpa}`,
     description: `Biodiversity allocation details for planning application ${actualRef} by ${actualLpa}.`,
     keywords: ['BGS allocation', 'biodiversity allocation', 'BNG allocation', actualRef, actualLpa],
   };
@@ -38,7 +38,7 @@ export default async function AllocationPage({ params }) {
   const decodedLpa = lpa.replace(/-/g, ' ');
   const decodedRef = planningRef.replace(/-/g, ' ');
 
-  const { allocations, sites, selectedSite, allocationsForMap } = await fetchAllocationWithSiteData(decodedLpa, decodedRef);
+  const { allocations, sites, selectedSite } = await fetchAllocationWithSiteData(decodedLpa, decodedRef);
   
   const lastUpdated = Date.now();
 
@@ -48,7 +48,6 @@ export default async function AllocationPage({ params }) {
         allocations={allocations} 
         sites={sites} 
         selectedSite={selectedSite}
-        allocationsForMap={allocationsForMap}
       />
       <Footer lastUpdated={lastUpdated} />
     </>
