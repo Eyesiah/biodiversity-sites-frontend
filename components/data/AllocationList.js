@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { formatNumber, slugify } from '@/lib/format';
 import { DataFetchingCollapsibleRow } from '@/components/data/DataFetchingCollapsibleRow'
-import Tooltip from '@/components/ui/Tooltip';
+import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { TableContainer } from '@/components/styles/PrimaryCard';
@@ -13,38 +13,48 @@ import { useColorModeValue } from '@/components/styles/color-mode';
 
 const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
   const imdTransfer = `${typeof alloc.imd === 'number' ? formatNumber(alloc.imd, 0) : alloc.imd} → ${typeof alloc.simd === 'number' ? formatNumber(alloc.simd, 0) : alloc.simd}`;
-  return (<DataFetchingCollapsibleRow
-    mainRow={(
-      <>
-        <PrimaryTable.Cell>
-          <Link href={`/sites/${alloc.srn}`} onClick={(e) => e.stopPropagation()}>
-            {alloc.srn}{alloc.siteName && <><br /><b>{alloc.siteName}</b></>}
-          </Link>
-        </PrimaryTable.Cell>
-        {displayPlanningRef && <PrimaryTable.Cell>
-          <Link href={`/allocations/${slugify(alloc.lpa)}/${slugify(alloc.pr)}`} onClick={(e) => e.stopPropagation()}>
-            {alloc.pr}
-          </Link>
-        </PrimaryTable.Cell>}
-        <PrimaryTable.Cell>{alloc.pn}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{alloc.lpa}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{alloc.nca}</PrimaryTable.Cell>
-        <PrimaryTable.Cell>{`${alloc.sr?.cat || 'N/A'}${alloc.sr?.cat != 'Outside' ? ` (${alloc.sr?.from})` : ''}`}</PrimaryTable.Cell>
-        <PrimaryTable.CenteredNumericCell>{imdTransfer}</PrimaryTable.CenteredNumericCell>
-        <PrimaryTable.CenteredNumericCell>
-          {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
-        </PrimaryTable.CenteredNumericCell>
-        <PrimaryTable.NumericCell>{alloc.au && alloc.au > 0 ? formatNumber(alloc.au) : ''}</PrimaryTable.NumericCell>
-        <PrimaryTable.NumericCell>{alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu) : ''}</PrimaryTable.NumericCell>
-        <PrimaryTable.NumericCell>{alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu) : ''}</PrimaryTable.NumericCell>
-      </>
-    )}
-    dataUrl={alloc.srn && alloc.pr ? `/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}` : null}
-    renderDetails={details => <AllocationHabitats habitats={details} />}
-    dataExtractor={json => json}
-    colSpan={8}
-  />
+
+  const mainRow = (
+    <>
+      <PrimaryTable.Cell>
+        <Link href={`/sites/${alloc.srn}`} onClick={(e) => e.stopPropagation()}>
+          {alloc.srn}{alloc.siteName && <><br /><b>{alloc.siteName}</b></>}
+        </Link>
+      </PrimaryTable.Cell>
+      {displayPlanningRef && <PrimaryTable.Cell>
+        <Link href={`/allocations/${slugify(alloc.lpa)}/${slugify(alloc.pr)}`} onClick={(e) => e.stopPropagation()}>
+          {alloc.pr}
+        </Link>
+      </PrimaryTable.Cell>}
+      <PrimaryTable.Cell>{alloc.pn}</PrimaryTable.Cell>
+      <PrimaryTable.Cell>{alloc.lpa}</PrimaryTable.Cell>
+      <PrimaryTable.Cell>{alloc.nca}</PrimaryTable.Cell>
+      <PrimaryTable.Cell>{`${alloc.sr?.cat || 'N/A'}${alloc.sr?.cat != 'Outside' ? ` (${alloc.sr?.from})` : ''}`}</PrimaryTable.Cell>
+      <PrimaryTable.CenteredNumericCell>{imdTransfer}</PrimaryTable.CenteredNumericCell>
+      <PrimaryTable.CenteredNumericCell>
+        {typeof alloc.d === 'number' ? formatNumber(alloc.d, 0) : alloc.d}
+      </PrimaryTable.CenteredNumericCell>
+      <PrimaryTable.NumericCell>{alloc.au && alloc.au > 0 ? formatNumber(alloc.au) : ''}</PrimaryTable.NumericCell>
+      <PrimaryTable.NumericCell>{alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu) : ''}</PrimaryTable.NumericCell>
+      <PrimaryTable.NumericCell>{alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu) : ''}</PrimaryTable.NumericCell>
+    </>
   )
+
+  if (alloc.habitats) {
+    return <CollapsibleRow
+      mainRow={mainRow}
+      collapsibleContent={<AllocationHabitats habitats={[...alloc.habitats.areas, ...alloc.habitats.hedgerows, ...alloc.habitats.watercourses]} />}
+      colSpan={8}
+    />
+  } else {
+    return <DataFetchingCollapsibleRow
+      mainRow={mainRow}
+      dataUrl={alloc.srn && alloc.pr ? `/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}` : null}
+      renderDetails={details => <AllocationHabitats habitats={details} />}
+      dataExtractor={json => json}
+      colSpan={8}
+    />
+  }
 };
 
 export default function AllocationList({ sortedItems, requestSort, sortConfig, summaryData, displayPlanningRef = true }) {
