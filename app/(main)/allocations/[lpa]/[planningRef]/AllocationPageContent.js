@@ -41,59 +41,6 @@ export default function AllocationPageContent({ allocations, sites, selectedSite
     })
   }, [allocations, sites])
 
-  // Custom IMD Analysis Component for allocations
-  const imdDistributionData = useMemo(() => {
-    const bins = Array.from({ length: 10 }, (_, i) => ({
-      decile: `${i + 1}`,
-      developmentSites: 0,
-      bgsSites: 0,
-    }));
-
-    allocations.forEach(alloc => {
-      if (typeof alloc.imd === 'number' && alloc.imd >= 1 && alloc.imd <= 10) {
-        bins[alloc.imd - 1].developmentSites++;
-      }
-      if (typeof alloc.simd === 'number' && alloc.simd >= 1 && alloc.simd <= 10) {
-        bins[alloc.simd - 1].bgsSites++;
-      }
-    });
-
-    return bins;
-  }, [allocations]);
-
-  const ImdAnalysisChart = useMemo(() => {
-    return (
-      <Box>
-        <Heading as="h4" size="md" textAlign="center" mb={4}>Allocations by IMD Decile (1 = most deprived, 10 = least deprived)</Heading>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={imdDistributionData} barCategoryGap="10%">
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="decile" name="IMD Decile" />
-            <YAxis name="Number of Sites" allowDecimals={false} />
-            <RechartsTooltip formatter={(value, name, props) => [value, name]} />
-            <Legend />
-            <Bar dataKey="developmentSites" fill="#e2742fff" name="Development Sites">
-              <LabelList dataKey="developmentSites" position="top" formatter={(v) => v > 0 ? v : ''} />
-            </Bar>
-            <Bar dataKey="bgsSites" fill="#6ac98fff" name="BGS Offset Sites">
-              <LabelList dataKey="bgsSites" position="top" formatter={(v) => v > 0 ? v : ''} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-        <Flex justifyContent="center" alignItems="center" gap={4} mt={2} fontSize="0.9rem">
-          <Flex alignItems="center">
-            <Box w="12px" h="12px" bg="#e2742fff" mr="5px" border="1px solid #ccc"></Box>
-            <Text>Development Sites</Text>
-          </Flex>
-          <Flex alignItems="center">
-            <Box w="12px" h="12px" bg="#6ac98fff" mr="5px" border="1px solid #ccc"></Box>
-            <Text>BGS Offset Sites</Text>
-          </Flex>
-        </Flex>
-      </Box>
-    );
-  }, [imdDistributionData]);
-
   // Define tab configuration
   const tabs = useMemo(() => {
 
@@ -101,10 +48,6 @@ export default function AllocationPageContent({ allocations, sites, selectedSite
       {
         title: 'Allocations List',
         content: () => <AllocationListTab allocations={allocations} />
-      },
-      {
-        title: 'IMD Score<br>Analysis',
-        content: () => ImdAnalysisChart
       },
       {
         title: 'Allocation<br>Analysis',
@@ -138,7 +81,7 @@ export default function AllocationPageContent({ allocations, sites, selectedSite
     }
 
     return tabList;
-  }, [allocations, ImdAnalysisChart]);
+  }, [allocations]);
 
   return (
     <MapContentLayout
