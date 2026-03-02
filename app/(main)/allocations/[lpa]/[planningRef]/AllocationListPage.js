@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
-import AllocationList from './AllocationList';
+import AllocationList from '@/components/data/AllocationList';
 import { Box, Text } from '@chakra-ui/react';
 
 export default function AllocationListPage({ allocations }) {

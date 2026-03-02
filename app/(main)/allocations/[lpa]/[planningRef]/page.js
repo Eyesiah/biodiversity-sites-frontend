@@ -1,5 +1,5 @@
 import { fetchAllocationWithSiteData, fetchAllAllocationsForStaticParams } from '@/lib/api';
-import AllocationPageContent from '@/lib/components/AllocationPageContent';
+import AllocationPageContent from 'app/(main)/allocations/[lpa]/[planningRef]/AllocationPageContent';
 import Footer from '@/components/core/Footer';
 
 export const revalidate = 86400; // 24 hours
