@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { formatNumber, calcMedian, calcMean } from '@/lib/format';
+import { calcMedian, calcMean } from '@/lib/format';
 import AllocationList from '@/components/data/AllocationList';
 import { Box, Text } from '@chakra-ui/react';
 
-export default function AllocationListPage({ allocations }) {
+export default function AllocationListTab({ allocations }) {
   const [sortedAllocations, setSortedAllocations] = useState(allocations);
   const [sortConfig, setSortConfig] = useState({ key: 'srn', direction: 'ascending' });
 

@@ -7,10 +7,10 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart'
-import { Box, Text, SimpleGrid, Input, HStack } from '@chakra-ui/react';
+import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts';
 import AllocationList from '@/components/data/AllocationList';
-import AllocationAnalysis from './AllocationAnalysis';
+import AllocationAnalysis from '@/components/charts/AllocationAnalysis';
 
 const CustomIMDTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {

@@ -43,7 +43,7 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
   if (alloc.habitats) {
     return <CollapsibleRow
       mainRow={mainRow}
-      collapsibleContent={<AllocationHabitats habitats={[...alloc.habitats.areas, ...alloc.habitats.hedgerows, ...alloc.habitats.watercourses]} />}
+      collapsibleContent={<AllocationHabitats habitats={[...alloc.habitats.areas, ...alloc.habitats.hedgerows, ...alloc.habitats.watercourses, ...alloc.habitats.trees]} />}
       colSpan={8}
     />
   } else {
