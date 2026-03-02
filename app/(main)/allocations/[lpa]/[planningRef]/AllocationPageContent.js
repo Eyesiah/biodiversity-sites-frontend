@@ -8,8 +8,6 @@ import { useIsMobile } from '@/lib/hooks.js';
 import { Tabs } from '@/components/styles/Tabs';
 import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart';
 import AllocationAnalysis from '@/components/charts/AllocationAnalysis';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, LabelList } from 'recharts';
-import { Heading, Flex, Box, Text } from '@chakra-ui/react';
 
 // Dynamic import for SiteMap to avoid SSR issues with Leaflet
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
