@@ -6,9 +6,13 @@ import L from 'leaflet';
 
 export function CalcAllocationMapLayerBounds(allocations) {
   if (allocations.length > 0) {
-    return L.latLngBounds(allocations.filter(alloc => alloc.coords).map(alloc => {
+    const allCoords = allocations.filter(alloc => alloc.coords).map(alloc => {
       return [alloc.coords.latitude, alloc.coords.longitude]
-    }))
+    });
+    const allSiteCoords = allocations.filter(alloc => alloc.sitePosition).map(alloc => {
+      return [alloc.sitePosition[0], alloc.sitePosition[1]]
+    });
+    return L.latLngBounds([...allCoords, ...allSiteCoords]);
   } else { 
     return null;
   }
@@ -29,7 +33,7 @@ export function AllocationMapLayer({ allocations, sitePosition }) {
   }, [map]);
 
 
-  if (!allocations || !sitePosition || !paneReady) {
+  if (!allocations || !paneReady) {
     return null;
   }
 
@@ -40,7 +44,7 @@ export function AllocationMapLayer({ allocations, sitePosition }) {
         <Polyline
           key={index}
           pane="polyline-pane"
-          positions={[sitePosition, [alloc.coords.latitude, alloc.coords.longitude]]}
+          positions={[alloc.sitePosition || sitePosition, [alloc.coords.latitude, alloc.coords.longitude]]}
           pathOptions={{ color: '#0d6efd', weight: 3 }}
           eventHandlers={{
             mouseover: (e) => e.target.setStyle({ color: '#ffc107', weight: 5 }),

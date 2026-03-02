@@ -36,17 +36,21 @@ export const DataFetchingCollapsibleRow = ({
         setIsLoading(true);
         setError(null);
         try {
-          const buildId = window?.__NEXT_DATA__?.buildId;
-          let url = dataUrl
-          if (buildId != null) {
-            url = `/_next/data/${buildId}${dataUrl}`;
+          if (dataUrl) {
+            const buildId = window?.__NEXT_DATA__?.buildId;
+            let url = dataUrl
+            if (buildId != null) {
+              url = `/_next/data/${buildId}${dataUrl}`;
+            }
+            const res = await fetch(url);
+            if (!res.ok) {
+              throw new Error(`Failed to fetch data: ${res.status}`);
+            }
+            const json = await res.json();
+            setDetails(dataExtractor(json));
+          } else {
+            throw new Error('no dataUrl set');
           }
-          const res = await fetch(url);
-          if (!res.ok) {
-            throw new Error(`Failed to fetch data: ${res.status}`);
-          }
-          const json = await res.json();
-          setDetails(dataExtractor(json));
         } catch (err) {
           setError(err.message);
         } finally {

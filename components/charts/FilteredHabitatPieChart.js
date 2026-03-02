@@ -169,7 +169,7 @@ export function FilteredAllocationsPieChart ({ allocs, module, name }) {
     }, []);
   }, [allocs, module]);
 
-  return <FilteredHabitatPieChart habitats={flattenedAllocHabitats} module={module} name={name}/>
+  return <FilteredHabitatPieChart habitats={flattenedAllocHabitats} module={module} name={`Allocated ${name}`}/>
 }
 
 export function FilteredBaselinePieChart ({ allHabitats, module, name, sizeParam }) {

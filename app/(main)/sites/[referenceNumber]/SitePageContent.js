@@ -112,6 +112,7 @@ export default function SitePageContent({ site }) {
         <AllocationsTable
           title="Allocations"
           allocations={site.allocations}
+          showLink={true}
         />
       ),
       onIsActiveTabChanged: (isActive) => {

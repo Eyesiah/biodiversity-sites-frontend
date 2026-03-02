@@ -10,12 +10,12 @@ import BodyMapLayer from '@/components/map/BodyMapLayer';
 import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
 import { CalcBodyMapLayerBounds } from '@/components/map/BodyMapLayer';
 
-function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion }) {
+function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion, allocations }) {
   const map = useMap();
 
   useEffect(() => {
-    // Early return if no site selected
-    if (!selectedSite) {
+    // Early return if no data to show
+    if (!selectedSite && !allocations) {
       return;
     }
 
@@ -25,9 +25,12 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
 
     const bounds = []
 
-    // Allocation bounds
+    // Allocation bounds - use direct allocations if provided, otherwise fall back to selectedSite.allocations
     if (showAllocations) {
-      bounds.push(CalcAllocationMapLayerBounds(selectedSite.allocations))
+      const allocsToUse = allocations || selectedSite?.allocations;
+      if (allocsToUse) {
+        bounds.push(CalcAllocationMapLayerBounds(allocsToUse))
+      }
     }
 
     // Body layer bounds - access cached GeoJSON data
@@ -95,7 +98,7 @@ function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, 
       }
     }
 
-  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion]);
+  }, [map, showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion, allocations]);
 
   return null;
 }
@@ -114,7 +117,8 @@ const SiteMap = ({
   showLSOA = false,
   showSiteArea = true,
   openPopups = true,
-  mapLayer = 'OpenStreetMap'
+  mapLayer = 'OpenStreetMap',
+  allocations = null // Direct allocations to show on map (bypasses selectedSite)
 }) => {
   const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
   const [cacheVersion, setCacheVersion] = useState(0);
@@ -158,6 +162,7 @@ const SiteMap = ({
           selectedSite={selectedSite}
           polygonCache={polygonCache}
           cacheVersion={cacheVersion}
+          allocations={allocations}
         />
 
         {selectedSite && selectedSite.lpaName && (
@@ -212,10 +217,10 @@ const SiteMap = ({
           )
         )}
 
-        {selectedSite && showAllocations && (
+        {(selectedSite || allocations) && showAllocations && (
           <AllocationMapLayer
-            allocations={selectedSite.allocations}
-            sitePosition={selectedSite.position}
+            allocations={allocations || selectedSite.allocations}
+            sitePosition={allocations ? sites[0]?.position : selectedSite.position}
           />
         )}
       </BaseMap>

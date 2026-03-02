@@ -1,4 +1,4 @@
-import { fetchAllSites } from '@/lib/api';
+import { fetchAllSites, transformAllocations } from '@/lib/api';
 import AllAllocationsContent from './AllAllocationsContent';
 import Footer from '@/components/core/Footer';
 
@@ -16,34 +16,7 @@ export const metadata = {
 export default async function AllocationsPage() {
 
   const allSites = await fetchAllSites(true, true, true);
-  
-  const allocationPromises = allSites.flatMap(site => {
-    if (!site.allocations) return [];
-    return site.allocations.map(async (alloc) => {
-
-      return {
-        pr: alloc.planningReference,
-        dr: alloc.developerReference,
-        lpa: alloc.localPlanningAuthority,
-        nca: alloc.nca,
-        pn: alloc.projectName,
-        au: alloc.areaUnits,
-        hu: alloc.hedgerowUnits,
-        wu: alloc.watercoursesUnits,
-        srn: site.referenceNumber,
-        siteName: site.name,
-        d: alloc.distance,
-        sr: alloc.sr,
-        imd: alloc.lsoa?.IMDDecile || 'N/A',
-        simd: site.lsoa?.IMDDecile || 'N/A',
-        imdS: alloc.lsoa?.IMDScore || 'N/A',
-        simdS: site.lsoa?.IMDScore || 'N/A',
-        habitats: alloc.habitats
-      };
-    });
-  });
-
-  const allocations = await Promise.all(allocationPromises);
+  const allocations = transformAllocations(allSites);
 
   const lastUpdated = Date.now();
 
