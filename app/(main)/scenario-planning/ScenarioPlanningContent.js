@@ -86,9 +86,9 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     
     // If we found the baseline group, filter target broad habitats to only show compatible ones
     if (baselineGroup) {
-      // For linear habitats (Hedgerow, Watercourse), only allow same habitat type
+      // For linear habitats (Hedgerow, Watercourses), only allow same habitat type
       // For area habitats, allow any other area habitat
-      const isLinear = ['Hedgerow', 'Watercourse'].includes(baselineGroup);
+      const isLinear = ['Hedgerow', 'Watercourses'].includes(baselineGroup);
       
       if (isLinear) {
         // Strict filtering: only allow the exact same broad habitat type for linear habitats

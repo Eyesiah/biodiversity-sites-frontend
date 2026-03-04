@@ -1,12 +1,12 @@
 {
   "name": "biodiversity-sites-frontend",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "private": false,
   "license": "MIT",
   "dependencies": {
     "@chakra-ui/react": "3.30.0",
     "@emotion/react": "11.14.0",
-    "fast-xml-parser": "5.3.4",
+    "fast-xml-parser": "5.4.2",
     "geodesy": "2.4.0",
     "leaflet": "1.9.4",
     "mongodb": "7.0.0",
@@ -34,7 +34,7 @@
     "@eslint/eslintrc": "3.3.1",
     "baseline-browser-mapping": "2.9.19",
     "cross-env": "10.0.0",
-    "dotenv": "^16.4.5",
+    "dotenv": "16.4.5",
     "eslint": "9.35.0",
     "eslint-config-next": "15.5.3",
     "papaparse": "5.5.3"

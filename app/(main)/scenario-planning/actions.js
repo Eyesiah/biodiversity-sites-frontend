@@ -118,7 +118,7 @@ export async function calculateScenarios(prevState, formData) {
         spatialRisk
       );
       
-      const effectiveTimeToTarget = getEffectiveTimeToTarget(habitat, targetCondition, timeToTargetOffset);
+      const effectiveTimeToTarget = getEffectiveTimeToTarget(huData.timeToTarget, timeToTargetOffset);
       scenarios.push({
         baselineHabitat: 'N/A (Creation)',
         baselineCondition: 'N/A (Creation)',
