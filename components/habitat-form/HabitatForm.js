@@ -104,9 +104,9 @@ export default function HabitatForm({
     }
     
     if (baselineGroup) {
-      // For linear habitats (Hedgerow, Watercourse), only allow same habitat type
+      // For linear habitats (Hedgerow, Watercourses), only allow same habitat type
       // For area habitats, allow any other area habitat
-      const isLinear = ['Hedgerow', 'Watercourse'].includes(baselineGroup);
+      const isLinear = ['Hedgerow', 'Watercourses'].includes(baselineGroup);
       
       if (isLinear) {
         // Strict filtering: only allow the exact same broad habitat type for linear habitats
@@ -118,7 +118,7 @@ export default function HabitatForm({
       } else {
         // For area habitats, allow any area habitat (not linear)
         filteredTargetBroadHabitats = broadHabitats.filter(group => {
-          const targetIsLinear = ['Hedgerow', 'Watercourse'].includes(group);
+          const targetIsLinear = ['Hedgerow', 'Watercourses'].includes(group);
           return !targetIsLinear;
         });
       }
