@@ -1,4 +1,4 @@
-import { fetchAllocationWithSiteData, fetchAllAllocationsForStaticParams } from '@/lib/api';
+import { fetchAllocationWithSiteData, fetchAllAllocationsForStaticParams, getUnslugifiedValues } from '@/lib/api';
 import AllocationPageContent from './AllocationPageContent';
 import Footer from '@/components/core/Footer';
 
@@ -15,19 +15,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { lpa, planningRef } = await params;
   
-  // Fetch actual allocation data to get real values for metadata
-  const decodedLpa = lpa.replace(/-/g, ' ');
-  const decodedRef = planningRef.replace(/-/g, ' ');
-  const { allocations } = await fetchAllocationWithSiteData(decodedLpa, decodedRef);
+  // Get unslugified values from cache with fallback
+  const { lpa: unslugifiedLpa, planningRef: unslugifiedRef } = 
+    await getUnslugifiedValues(lpa, planningRef);
   
-  const firstAlloc = allocations[0];
-  const actualLpa = firstAlloc?.lpa || decodedLpa;
-  const actualRef = firstAlloc?.pr || decodedRef;
-
   return {
-    title: `Allocations: ${actualRef} | ${actualLpa}`,
-    description: `Biodiversity allocation details for planning application ${actualRef} by ${actualLpa}.`,
-    keywords: ['BGS allocation', 'biodiversity allocation', 'BNG allocation', actualRef, actualLpa],
+    title: `Allocations: ${unslugifiedRef} | ${unslugifiedLpa}`,
+    description: `Biodiversity allocation details for planning application ${unslugifiedRef} by ${unslugifiedLpa}.`,
+    keywords: ['BGS allocation', 'biodiversity allocation', 'BNG allocation', unslugifiedRef, unslugifiedLpa],
   };
 }
 

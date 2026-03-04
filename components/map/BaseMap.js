@@ -31,6 +31,13 @@ export async function getPolys(geoJsonUrl, queryField, value) {
   return await res.json();
 }
 
+const historicalLayers = {
+  "Satellite": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  "2022": "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/26120/{z}/{y}/{x}",
+  "2019": "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/11351/{z}/{y}/{x}",
+  "2014": "https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/10/{z}/{y}/{x}",
+};
+
 export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
   return (
     <MapContainer center={[52.9522, -2.0153]} zoom={6.75} zoomSnap={0.05} {...props}>
@@ -41,18 +48,20 @@ export const BaseMap = ({ children, defaultBaseLayer, ...props }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
         </LayersControl.BaseLayer>
-        <LayersControl.BaseLayer checked={defaultBaseLayer === 'Satellite'} name="Satellite">
-          <LayerGroup>
-            <TileLayer
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-            />
-            <TileLayer
-              url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
-              attribution=""
-            />
-          </LayerGroup>
-        </LayersControl.BaseLayer>
+        {Object.entries(historicalLayers).map(([layerName, layerURL])=> (
+          <LayersControl.BaseLayer key={layerName} checked={defaultBaseLayer === layerName} name={layerName}>
+            <LayerGroup>
+              <TileLayer
+                url={layerURL}
+                attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+              />
+              <TileLayer
+                url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+                attribution=""
+              />
+            </LayerGroup>
+          </LayersControl.BaseLayer>
+        ))}
       </LayersControl>
       <ScaleControl position="topleft" imperial={false} />
       {children}

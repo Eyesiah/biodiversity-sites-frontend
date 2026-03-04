@@ -1,6 +1,6 @@
 {
   "name": "biodiversity-sites-frontend",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": false,
   "license": "MIT",
   "dependencies": {
@@ -27,12 +27,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "setup-db-indexes": "node scripts/setup-database-indexes.js"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "baseline-browser-mapping": "2.9.19",
     "cross-env": "10.0.0",
+    "dotenv": "^16.4.5",
     "eslint": "9.35.0",
     "eslint-config-next": "15.5.3",
     "papaparse": "5.5.3"
