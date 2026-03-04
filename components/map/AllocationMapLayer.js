@@ -52,10 +52,11 @@ export function AllocationMapLayer({ allocations, sitePosition }) {
           }}
         >
           <Tooltip>
-            <div><strong>{alloc.projectName || 'N/A'}</strong></div>
-            <div>Planning Ref: {alloc.planningReference}</div>
-            <div>LPA: {alloc.localPlanningAuthority}</div>
-            <div>Distance: {typeof alloc.distance === 'number' ? `${alloc.distance.toFixed(2)} km (${`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`})` : 'N/A'}</div>
+            {alloc.projectName && <div><strong>{alloc.projectName || 'N/A'}</strong></div>}
+            {!alloc.projectName && alloc.srn && <div><strong>{alloc.srn || 'N/A'}</strong></div>}
+            {alloc.planningReference && <div>Planning Ref: {alloc.planningReference}</div>}
+            <div>LPA: {alloc.localPlanningAuthority ?? alloc.lpa}</div>
+            <div>Distance: {typeof (alloc.distance ?? alloc.d) === 'number' ? `${(alloc.distance ?? alloc.d).toFixed(2)} km (${`${alloc.sr.cat}${alloc.sr.cat != 'Outside' ? ` (${alloc.sr.from})` : ''}`})` : 'N/A'}</div>
           </Tooltip>
         </Polyline>
       )));

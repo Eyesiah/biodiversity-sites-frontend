@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { calcMedian, calcMean, formatNumber } from '@/lib/format';
 import AllocationList from '@/components/data/AllocationList';
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 export default function AllocationListTab({ allocations }) {
   const [sortedAllocations, setSortedAllocations] = useState(allocations);
@@ -59,19 +59,8 @@ export default function AllocationListTab({ allocations }) {
     setSortedAllocations(sorted);
   };
 
-  const huTotal = useMemo(() => {
-    return formatNumber(allocations.reduce((acc, alloc) => acc + (alloc.au || 0) + (alloc.hu || 0) + (alloc.wu || 0), 0));
-  }, [allocations]);
-
   return (
     <Box width="100%">
-      {allocations.length > 0 && (
-        <Box textAlign="center" marginBottom="1rem">
-          <Text fontSize="1.2rem" fontWeight="bold">
-            This planning application includes {allocations.length} Allocation(s) totalling {huTotal} HUs.
-          </Text>
-        </Box>
-      )}
       <AllocationList 
         sortedItems={sortedAllocations} 
         requestSort={requestSort} 
