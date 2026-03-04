@@ -20,8 +20,8 @@ export async function generateMetadata({ params }) {
     await getUnslugifiedValues(lpa, planningRef);
   
   return {
-    title: `Allocations: ${unslugifiedRef} | ${unslugifiedLpa}`,
-    description: `Biodiversity allocation details for planning application ${unslugifiedRef} by ${unslugifiedLpa}.`,
+    title: `Allocations for Development ${unslugifiedRef} (${unslugifiedLpa})`,
+    description: `Biodiversity allocation details for planning application ${unslugifiedRef} in ${unslugifiedLpa}.`,
     keywords: ['BGS allocation', 'biodiversity allocation', 'BNG allocation', unslugifiedRef, unslugifiedLpa],
   };
 }
@@ -33,7 +33,7 @@ export default async function AllocationPage({ params }) {
   const decodedLpa = lpa.replace(/-/g, ' ');
   const decodedRef = planningRef.replace(/-/g, ' ');
 
-  const { allocations, sites, selectedSite } = await fetchAllocationWithSiteData(decodedLpa, decodedRef);
+  const { allocations, sites, summary } = await fetchAllocationWithSiteData(decodedLpa, decodedRef);
   
   const lastUpdated = Date.now();
 
@@ -42,7 +42,7 @@ export default async function AllocationPage({ params }) {
       <AllocationPageContent 
         allocations={allocations} 
         sites={sites} 
-        selectedSite={selectedSite}
+        summary={summary}
       />
       <Footer lastUpdated={lastUpdated} />
     </>

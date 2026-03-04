@@ -2,7 +2,7 @@
 
 import ExternalLink from '@/components/ui/ExternalLink';
 import { HabitatSummaryTable } from "@/components/data/HabitatSummaryTable"
-import { DetailRow } from "@/components/data/DetailRow"
+import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
 import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/ui/InfoModal';
@@ -10,69 +10,6 @@ import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import Tooltip from '@/components/ui/Tooltip';
-import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
-
-const bodyDetailTypes = {
-  'lpa': {
-    style: lpaStyle,
-    label: 'LPA'
-  },
-  'lnrs': {
-    style: lnrsStyle,
-    label: 'LNRS'
-  },
-  'lsoa': {
-    style: lsoaStyle,
-    label: 'LSOA'
-  },
-  'nca': {
-    style: ncaStyle,
-    label: 'NCA'
-  }
-}
-
-const BodyDetailRow = ({ bodyType, children, hasData, isChecked, setIsChecked, glossaryTerm }) => {
-
-  const bodyInfo = bodyDetailTypes[bodyType];
-  if (bodyInfo == null) {
-    return <p>{`Unknown body type ${bodyType}`}</p>
-  }
-
-  return (
-    <DetailRow
-      label={bodyInfo.label}
-      glossaryTerm={glossaryTerm}
-      value={
-        <Box textAlign="right">
-          {children}
-          {hasData && setIsChecked && (
-            <Checkbox.Root
-              checked={isChecked}
-              onCheckedChange={() => setIsChecked(!isChecked)}
-              size="sm"
-              marginLeft={2}
-            >
-              <Checkbox.HiddenInput />
-              <Checkbox.Control />
-              <Checkbox.Label>
-                <Flex align="center" gap={1}>
-                  <Text fontSize="sm">Show</Text>
-                  <Box
-                    w="12px"
-                    h="12px"
-                    bg={bodyInfo.style.color}
-                    border="1px solid #555"
-                    borderRadius="2px"
-                  />
-                </Flex>
-              </Checkbox.Label>
-            </Checkbox.Root>
-          )}
-        </Box>
-      }
-    />
-  );
-}
 
 export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
