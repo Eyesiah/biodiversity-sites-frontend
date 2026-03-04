@@ -109,6 +109,16 @@ async function setupDatabaseIndexes() {
             options: { expireAfterSeconds: 0, name: 'expiresAt_ttl_24h' }
           }
         ]
+      },
+      {
+        name: 'slugMapping',
+        description: 'Slug mapping cache for metadata generation',
+        indexes: [
+          {
+            key: { _id: 1 },
+            options: { unique: true, name: 'slugMapping_id_idx' }
+          }
+        ]
       }
     ];
 
