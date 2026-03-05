@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UKHab Document Viewer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: #f3f4f6;
+        }
+        .viewer-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #666;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <h2>Loading UKHab Document...</h2>
+        <p>Please wait while the document loads.</p>
+    </div>
+    
+    <iframe id="viewer" class="viewer-container" src="" frameborder="0"></iframe>
+
+    <script>
+        // Get page number from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageNumber = urlParams.get('page') || 1;
+        
+        // Construct the PDF URL with page parameter
+        const pdfUrl = `/enhanced-ukhab.pdf#page=${pageNumber}`;
+        
+        // Set the iframe source
+        const iframe = document.getElementById('viewer');
+        iframe.src = pdfUrl;
+        
+        // Hide loading after a short delay
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+        }, 1000);
+        
+        // Handle page navigation
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.page) {
+                const newPage = event.data.page;
+                iframe.src = `/enhanced-ukhab.pdf#page=${newPage}`;
+            }
+        });
+    </script>
+</body>
+</html>

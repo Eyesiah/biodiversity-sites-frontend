@@ -202,15 +202,27 @@ export default function UKHabLookupContent() {
                                 </ExternalLink>
                               );
                             } else {
-                              // Handle page numbers
+                              // Handle page numbers with enhanced PDF linking using named destinations
+                              const pageNumber = result.definitionPage;
+                              const enhancedPdfUrl = `/enhanced-ukhab.pdf`;
+                              
                               return (
-                                <ExternalLink 
-                                  href={`https://bristoltreeforum.org/wp-content/uploads/2026/03/ukhab-v2.01-july-2023-final-2.pdf#page=${result.definitionPage}`}
-                                  showIcon={true}
-                                  isExternal={true}
+                                <Link 
+                                  href={`/ukhab-viewer.html?page=${pageNumber}`}
+                                  isExternal
+                                  color="blue.500"
+                                  fontWeight="medium"
+                                  _hover={{ textDecoration: 'underline' }}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    
+                                    // Open in new window with our custom viewer
+                                    const viewerUrl = `/ukhab-viewer.html?page=${pageNumber}`;
+                                    window.open(viewerUrl, '_blank', 'noopener,noreferrer');
+                                  }}
                                 >
-                                  Page {result.definitionPage}
-                                </ExternalLink>
+                                  Page {pageNumber}
+                                </Link>
                               );
                             }
                           })()
@@ -251,11 +263,11 @@ export default function UKHabLookupContent() {
             For detailed definitions and descriptions of all UKHab codes, refer to the official document:
           </Text>
           <ExternalLink 
-            href="https://bristoltreeforum.org/wp-content/uploads/2026/03/ukhab-v2.01-july-2023-final-2.pdf"
+            href="/enhanced-ukhab.pdf"
             showIcon={true}
             isExternal={true}
           >
-            UK Habitat Classification Version 2.0 (PDF)
+            UK Habitat Classification Version 2.0 (Enhanced PDF)
           </ExternalLink>
         </VStack>
       </PrimaryCard>
