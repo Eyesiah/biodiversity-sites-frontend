@@ -416,7 +416,7 @@ export default function Navigation() {
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Scenario Planning' />
-            <DropdownLink href='/ukhab-lookup' label='UKHab Classification Lookup' />
+            {false && <DropdownLink href='/ukhab-lookup' label='UKHab Classification Lookup' />}
             <DropdownLink href='/query' label='API Query & Export' />
             <CopyWfsLinkButton />
             <ModalButton 
