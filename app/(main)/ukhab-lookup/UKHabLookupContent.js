@@ -188,7 +188,7 @@ export default function UKHabLookupContent() {
                         {result.level4Label} <span style={{ color: '#666', fontSize: '0.9em' }}>({result.level4Code})</span>
                       </td>
                       <td style={{ padding: '8px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
-                        {result.definitionPage && (
+                        {result.definitionPage ? (
                           (() => {
                             // Check if definitionPage is a URL (contains http/https)
                             if (result.definitionPage.startsWith('http://') || result.definitionPage.startsWith('https://')) {
@@ -214,6 +214,8 @@ export default function UKHabLookupContent() {
                               );
                             }
                           })()
+                        ) : (
+                          <Text color="gray.500" fontStyle="italic">Not listed</Text>
                         )}
                       </td>
                     </tr>
