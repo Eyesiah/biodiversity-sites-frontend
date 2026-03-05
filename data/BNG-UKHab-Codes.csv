@@ -1,0 +1,153 @@
+BNG Habitat,UKHAB Code,Level 1,Level 2 code,Level 2 Label,Level 3 code,Level 3 Label,Level 4 code,"Level 4 Label
+(Priority Habitats in Bold)",Definition Page
+Cropland - Arable field margins cultivated annually,c1a7,Terrestrial,c,Cropland,c1,Arable and horticulture,c1a,Arable field margins,157
+Cropland - Arable field margins game bird mix,c1a8,Terrestrial,c,Cropland,c1,Arable and horticulture,c1a,Arable field margins,158
+Cropland - Arable field margins pollen and nectar,c1a6,Terrestrial,c,Cropland,c1,Arable and horticulture,c1a,Arable field margins,156
+Cropland - Arable field margins tussocky,c1a5,Terrestrial,c,Cropland,c1,Arable and horticulture,c1a,Arable field margins,155
+Cropland - Cereal crops,c1c,Terrestrial,c,Cropland,c1,Arable and horticulture,c1c,Cereal crops,163
+Cropland - Winter stubble,c1c5,Terrestrial,c,Cropland,c1,Arable and horticulture,c1c,Cereal crops,164
+Cropland - Horticulture,c1f,Terrestrial,c,Cropland,c1,Arable and horticulture,c1f,Horticulture,175
+Cropland - Intensive orchards,c1e,Terrestrial,c,Cropland,c1,Arable and horticulture,c1e,Intensive orchards,174
+Cropland - Non-cereal crops,c1d,Terrestrial,c,Cropland,c1,Arable and horticulture,c1d,Non-cereal crops,169
+Cropland - Temporary grass and clover leys,c1b,Terrestrial,c,Cropland,c1,Arable and horticulture,c1b,Temporary grass and clover leys,159
+Grassland - Traditional orchards,27,Terrestrial,Various,,,,,,298
+Grassland - Bracken,g1c,Terrestrial,g,Grassland,g1,Acid grassland,g1c,Bracken,33
+Grassland - Floodplain wetland mosaic and CFGM,19,Terrestrial,Various,,,,,,295
+Grassland - Lowland calcareous grassland,g2a,Terrestrial,g,Grassland,g2,Calcareous grassland,g2a,Lowland calcareous grassland,36
+Grassland - Lowland dry acid grassland,g1a,Terrestrial,g,Grassland,g1,Acid grassland,g1a,Lowland dry acid grassland,26
+Grassland - Lowland meadows,g3a,Terrestrial,g,Grassland,g3,Neutral grassland,g3a,Lowland meadows,47
+Grassland - Modified grassland,g4,Terrestrial,g,Grassland,g4,Modified grassland,Carried forward,Modified grassland,58
+Grassland - Other lowland acid grassland,g1d,Terrestrial,g,Grassland,g1,Acid grassland,g1d,Other lowland acid grassland,34
+Grassland - Other neutral grassland,g3c,Terrestrial,g,Grassland,g3,Neutral grassland,g3c,Other neutral grassland,
+Grassland - Tall herb communities (H6430),s1a9,Terrestrial,s,Sparsely vegetated land,s1,Inland rock,s1a,Inland rock outcrop and scree habitats,197
+Grassland - Upland acid grassland,g1b,Terrestrial,g,Grassland,g1,Acid grassland,g1b,Upland acid grassland,30
+Grassland - Upland calcareous grassland,g2b,Terrestrial,g,Grassland,g2,Calcareous grassland,g2b,Upland calcareous grassland,40
+Grassland - Upland hay meadows,g3b,Terrestrial,g,Grassland,g3,Neutral grassland,g3b,Upland hay meadows,51
+Heathland and shrub - Blackthorn scrub,h3a,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3a,Blackthorn scrub,109
+Heathland and shrub - Bramble scrub,h3d,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3d,Bramble scrub,118
+Heathland and shrub - Gorse scrub,h3e,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3e,Gorse scrub,119
+Heathland and shrub - Hawthorn scrub,h3f,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3f,Hawthorn scrub,120
+Heathland and shrub - Hazel scrub,h3b,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3b,Hazel scrub,112
+Heathland and shrub - Lowland heathland,h1a,Terrestrial,h,Heathland and shrub,h1,Dwarf shrub heath,h1a,Lowland heathland,92
+Heathland and shrub - Mixed scrub,h3h,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3h,Mixed scrub,122
+Heathland and shrub - Mountain heaths and willow scrub,h1c,Terrestrial,h,Heathland and shrub,h1,Dwarf shrub heath,h1c,Mountain heaths and willow scrub,100
+Heathland and shrub - Rhododendron scrub,h3g,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3g,Rhododendron scrub,121
+Heathland and shrub - Dunes with sea buckthorn (H2160),h3c5,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3c,Sea buckthorn scrub,116
+Heathland and shrub - Other sea buckthorn scrub,h3c6,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3c,Sea buckthorn scrub,117
+Heathland and shrub - Willow scrub,h3j,Terrestrial,h,Heathland and shrub,h3,Dense scrub,h3j,Willow scrub,123
+Heathland and shrub - Upland heathland,h1b,Terrestrial,h,Heathland and shrub,h1,Dwarf shrub heath,h1b,Upland heathland,97
+Lakes - Aquifer fed naturally fluctuating water bodies,r1d,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,r1d,Aquifer fed naturally fluctuating water bodies,231
+Lakes - Ornamental lake or pond,46,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,312
+Lakes - High alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Low alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Marl lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Moderate alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Peat lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Ponds (priority habitat),40,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,306
+Lakes - Ponds (non-priority habitat),41,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,307
+Lakes - Reservoirs,45,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,311
+Lakes - Temporary lakes ponds and pools (H3170),r1f5,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,r1f,Temporary water bodies,237
+Sparsely vegetated land - Calaminarian grasslands,s1c,Terrestrial,s,Sparsely vegetated land,s1,Inland rock,s1c,Calaminarian grasslands,200
+Sparsely vegetated land - Coastal sand dunes,s3a,Terrestrial,s,Sparsely vegetated land,s3,Supralittoral sediment,s3a,Sand dunes,208
+Sparsely vegetated land - Coastal vegetated shingle,s3b,Terrestrial,s,Sparsely vegetated land,s3,Supralittoral sediment,s3b,Coastal vegetated shingle,216
+Sparsely vegetated land - Ruderal/Ephemeral,81,Terrestrial,Various,,,,,,335
+Sparsely vegetated land - Tall forbs,16,Terrestrial,g,Grassland,,,,,292
+Sparsely vegetated land - Inland rock outcrop and scree habitats,s1a,Terrestrial,s,Sparsely vegetated land,s1,Inland rock,s1a,Inland rock outcrop and scree habitats,192
+Sparsely vegetated land - Limestone pavement,s1b,Terrestrial,s,Sparsely vegetated land,s1,Inland rock,s1b,Limestone pavement,198
+Sparsely vegetated land - Maritime cliff and slopes,s2a,Terrestrial,s,Sparsely vegetated land,s2,Supralittoral rock,s2a,Maritime cliff and slopes,204
+Sparsely vegetated land - Other inland rock and scree,s1d,Terrestrial,s,Sparsely vegetated land,s1,Inland rock,s1d,Other inland rock and scree,202
+Urban - Allotments,616,Terrestrial,c,Cropland,,,,,495
+"Urban - Artificial unvegetated, unsealed surface",u1c,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1c,"Artificial unvegetated, unsealed surface",185
+Urban - Bioswale,849,Terrestrial,Various,,,,,,551
+Urban - Intensive green roof,88,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,342
+Urban - Built linear features,u1e,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1e,Built linear features,187
+Urban - Cemeteries and churchyards,90,Terrestrial,Various,,,,,,344
+Urban - Developed land; sealed surface,u1b,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,182
+Urban - Other green roof,89,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,343
+Urban - Facade-bound green wall,843,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,545
+Urban - Ground based green wall,842,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,544
+Urban - Ground level planters,845,Terrestrial,u,Urban,u1,Built-up areas and gardens,,,547
+Urban - Biodiverse green roof,87,Terrestrial,u,Urban,u1,Built-up areas and gardens,u1b,Developed land; sealed surface,341
+Urban - Introduced shrub,847,Terrestrial,u,Urban,u1,Built-up areas and gardens,,,549
+Urban - Open mosaic habitats on previously developed land,80,Terrestrial,Various,,,,,,334
+Urban - Rain garden,850,Terrestrial,Various,,,,,,552
+Urban - Actively worked sand pit quarry or open cast mine,85,Terrestrial,Various,,,,,,339
+Urban - Sustainable drainage system,848,Terrestrial,Various,,,,,,550
+Urban - Unvegetated garden,829,Terrestrial,u,Urban,u1,Built-up areas and gardens,,,531
+Urban - Vacant or derelict land,82,Terrestrial,Various,,,,,,336
+Urban - Bare ground,510,Terrestrial,Various,,,,,,456
+Urban - Vegetated garden,828,Terrestrial,Various,,,,,,530
+Individual trees - Urban tree,NE0014,Terrestrial,,,,,,,
+Individual trees - Rural tree,NE0016,Terrestrial,,,,,,,
+Wetland - Blanket bog,f1a,Terrestrial,f,Wetland,f1,Bog,f1a,Blanket bog,128
+Wetland - Depressions on peat substrates (H7150),56,Terrestrial,Various,,,,,,320
+Wetland - Fens (upland and lowland),f2a/f2c/f2f,Terrestrial,f,Wetland,f2,Fen marsh and swamp,Various,"Lowland fens/Upland flushes, fens and swamps/Other wetlands",
+Wetland - Lowland raised bog,f1b,Terrestrial,f,Wetland,f1,Bog,f1b,Lowland raised bog,131
+Wetland - Oceanic valley mire[1] (D2.1),D2.1,Terrestrial,,,,,,,
+Wetland - Purple moor grass and rush pastures,f2b,Terrestrial,f,Wetland,f2,Fen marsh and swamp,f2b,Purple moor grass and rush pastures,141
+Wetland - Reedbeds,f2e,Terrestrial,f,Wetland,f2,Fen marsh and swamp,f2e,Reedbeds,149
+Wetland - Transition mires and quaking bogs (H7140),f2c8/f2a8,Terrestrial,f,Wetland,f2,Fen marsh and swamp,Various,"Lowland fens/Upland flushes, fens and swamps",
+Woodland and forest - Felled,206,Terrestrial,Various,,,,,,384
+Woodland and forest - Lowland beech and yew woodland,w1c,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1c,Lowland beech and yew woodland,67
+Woodland and forest - Lowland mixed deciduous woodland,w1f,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1f,Lowland mixed deciduous woodland,76
+Woodland and forest - Native pine woodlands,w2a,Terrestrial,w,Woodland and forest,w2,Coniferous woodland,w2a,Native pine woodlands,85
+Woodland and forest - Other coniferous woodland,w2c,Terrestrial,w,Woodland and forest,w2,Coniferous woodland,w2c,Other coniferous woodland,88
+Woodland and forest - Other Scot's pine woodland,w2b,Terrestrial,w,Woodland and forest,w2,Coniferous woodland,w2b,Other Scot's pine woodland,87
+Woodland and forest - Other woodland; broadleaved,w1g,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1g,Other woodland; broadleaved,80
+Woodland and forest - Other woodland; mixed,w1h,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1h,Other woodland; mixed,81
+Woodland and forest - Upland birchwoods,w1e,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1e,Upland birchwoods,75
+Woodland and forest - Upland mixed ashwoods,w1b,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1b,Upland mixed ashwoods,64
+Woodland and forest - Upland oakwood,w1a,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1a,Upland oakwood,62
+Woodland and forest - Wet woodland,w1d,Terrestrial,w,Woodland and forest,w1,Broadleaved and mixed woodland,w1d,Wet woodland,72
+Woodland and forest - Wood-pasture and parkland,26,Terrestrial,Various,,,,,,297
+Woodland and forest - Felled,206,Terrestrial,Various,,,,,,384
+Coastal lagoons - Coastal lagoons,x02,Intertidal,X02/03,Coastal lagoons,,Coastal lagoons,,,
+Rocky shore - High energy littoral rock,a1.1,Intertidal,A1,Rocky shore,,High energy littoral rock,,,
+"Rocky shore - High energy littoral rock - on peat, clay or chalk",A1.1,Intertidal,A1,Rocky shore,,"High energy littoral rock - on bedrock including chalk, peat or clay",,,
+Rocky shore - Moderate energy littoral rock,A1.2,Intertidal,A1,Rocky shore,,Moderate energy littoral rock,,,
+"Rocky shore - Moderate energy littoral rock - on peat, clay or chalk",A1.2 PCC,Intertidal,A1,Rocky shore,,"Moderate energy littoral rock - on bedrock including chalk, peat or clay",,,
+Rocky shore - Low energy littoral rock,A1.3,Intertidal,A1,Rocky shore,,Low energy littoral rock,,,
+"Rocky shore - Low energy littoral rock - on peat, clay or chalk",A1.3 PCC,Intertidal,A1,Rocky shore,,"Low energy littoral rock  - on bedrock including chalk, peat or clay",,,
+Rocky shore - Features of littoral rock,A1.4,Intertidal,A1,Rocky shore,,Features of littoral rock,,,
+"Rocky shore - Features of littoral rock - on peat, clay or chalk",A1.PCC,Intertidal,A1,Rocky shore,,"Features of littoral rock - on bedrock including chalk, peat or clay",,,
+Coastal saltmarsh - Saltmarshes and saline reedbeds,A2.5,Intertidal,A2,Coastal saltmarsh,,Coastal saltmarshes and saline reedbeds,,,
+Coastal saltmarsh - Artificial saltmarshes and saline reedbeds,ART_A2.5,Intertidal,,Coastal saltmarsh,,Artificial saltmarshes and saline reedbeds,,,
+Intertidal sediment - Littoral coarse sediment,A2.1,Intertidal,A2,Intertidal sediment,,Littoral coarse sediment,,,
+Intertidal sediment - Littoral mud,A2.3,Intertidal,A2,Intertidal sediment,,Littoral mud,,,
+Intertidal sediment - Littoral mixed sediments,A2.4,Intertidal,A2,Intertidal sediment,,Littoral mixed sediments,,,
+Intertidal sediment - Littoral seagrass,A2.6,Intertidal,A2,Intertidal sediment,,Littoral sediments dominated by aquatic angiosperms,,,
+"Intertidal sediment - Littoral seagrass on peat, clay or chalk",A2.6 PCC,Intertidal,A2,Intertidal sediment,,"Littoral seagrass  - on peat, clay or chalk",,,
+Intertidal sediment - Littoral biogenic reefs - Mussels,A2.7 M,Intertidal,,Intertidal sediment,, Littoral biogenic reefs - Mussels,,,
+Intertidal sediment - Littoral biogenic reefs - Sabellaria,A2.7 S,Intertidal,A2,Intertidal sediment,,Littoral biogenic reefs - Sabellaria,,,
+Intertidal sediment - Features of littoral sediment,A2.8,Intertidal,A2,Intertidal sediment,,Features of littoral sediment,,,
+Intertidal sediment - Artificial littoral coarse sediment,ART_A2.1,Intertidal,A2,Intertidal sediment,,Artificial littoral coarse sediment,,,
+Intertidal sediment - Artificial littoral mud,ART_A2.3,Intertidal,,Intertidal sediment,,Artificial littoral mud,,,
+Intertidal sediment - Artificial littoral sand,ART_A2.21/A2.22/A2.23,Intertidal,,Intertidal sediment,,Artificial littoral sand,,,
+Intertidal sediment - Artificial littoral muddy sand,ART_A2.24,Intertidal,A2,Intertidal sediment,,Artificial littoral mud,,,
+Intertidal sediment - Artificial littoral mixed sediments,ART_A2.4,Intertidal,A2,Intertidal sediment,,Artificial littoral mixed sediments,,,
+Intertidal sediment - Artificial littoral seagrass,ART_A2.6,Intertidal,A2,Intertidal sediment,,Artificial littoral seagrass,,,
+Intertidal sediment - Artificial littoral biogenic reefs,ART_A2.7,Intertidal,A2,Intertidal sediment,,Artificial littoral biogenic reefs,,,
+Intertidal sediment - Littoral sand,A2.21/A2.22/A2.23,Intertidal,,Intertidal sediment,,Littoral sand,,,
+Intertidal sediment - Littoral muddy sand,A2.24,Intertidal,,Intertidal sediment,,Littoral muddy sand,,,
+Intertidal hard structures - Artificial hard structures,ART_A1,Intertidal,,Intertidal hard structures,,Artificial hard structures,,,
+Intertidal hard structures - Artificial features of hard structures,ART_A1.4,Intertidal,,Intertidal hard structures,,Artificial features of hard structures,,,
+Intertidal hard structures - Artificial hard structures with integrated greening of grey infrastructure (IGGI),ART_A1_IGGI,Intertidal,,Intertidal hard structures,,Artificial hard structures with Integrated Greening of Grey Infrastructure (IGGI),,,
+Watercourse footprint - Watercourse footprint,NE0017,Watercourse footprint,,,,,,,
+Hedgerow - Species-rich native hedgerow with trees - associated with bank or ditch,h2a5,Hedgerow,,,,,,,
+Hedgerow - Species-rich native hedgerow with trees,h2a5,Hedgerow,,,,,,,
+Hedgerow - Species-rich native hedgerow - associated with bank or ditch,h2a,Hedgerow,,,,,,,
+Hedgerow - Native hedgerow with trees - associated with bank or ditch,h2a5,Hedgerow,,,,,,,
+Hedgerow - Species-rich native hedgerow,h2a5,Hedgerow,,,,,,,105
+Hedgerow - Native hedgerow - associated with bank or ditch,h2a,Hedgerow,,,,,,,
+Hedgerow - Native hedgerow with trees,1175,Hedgerow,,,,,,,
+Hedgerow - Ecologically valuable line of trees,1175,Hedgerow,,,,,,,305
+Hedgerow - Ecologically valuable line of trees - associated with bank or ditch,h2a,Hedgerow,,,,,,,
+Hedgerow - Native hedgerow,h2a,Hedgerow,,,,,,,104
+Hedgerow - Line of trees,1174,Hedgerow,,,,,,,304
+Hedgerow - Line of trees - associated with bank or ditch,h2b,Hedgerow,,,,,,,
+Hedgerow - Non-native and ornamental hedgerow,h2b,,,,,,,,107
+Watercourses - Priority habitat,r1,Watercourses,,,,,,,
+Watercourses - Other rivers and streams,r1,Watercourses,,,,,,,244
+Watercourses - Ditches,191,Watercourses,,,,,,,316
+Watercourses - Canals,r1,Watercourses,,,,,,,235
+Watercourses - Culvert,r1,Watercourses,,,,,,,553

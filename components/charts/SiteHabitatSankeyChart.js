@@ -142,7 +142,6 @@ const wrapTextToWidth = (text, maxWidth, fontSize = 12, maxLines = 3) => {
 
 export default function SiteHabitatSankeyChart({ data, habitatType }) {
   const [modalState, setModalState] = useState(false);
-  const [nodeLabels, setNodeLabels] = useState([]);
 
   const sankeyHeight = 350;
 
@@ -177,7 +176,7 @@ export default function SiteHabitatSankeyChart({ data, habitatType }) {
         return `<b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 4)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       } else {
         // Regular link tooltip
-        return `<b>${link.enhancement.toUpperCase()}</b><br><b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>Area: ${formatNumber(value, 4)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
+        return `<b>${link.enhancement.toUpperCase()}</b><br><b>${sourceNode.name}</b> → <b>${targetNode.name}</b><br>Condition: ${sourceNode.condition} → ${targetNode.condition}<br>Distinctiveness: ${reverseDistinctivenessLookup[sourceNode.distinctivenessScore]} → ${reverseDistinctivenessLookup[targetNode.distinctivenessScore]}<br>HUs: ${formatNumber(link.baselineHUs)} →  ${formatNumber(link.HUs)} (Gain ${formatNumber(link.HUs - link.baselineHUs)})<br>Area: ${formatNumber(value, 4)} ${unit === 'areas' || unit === 'trees' ? 'ha' : 'km'}`;
       }
     });
 

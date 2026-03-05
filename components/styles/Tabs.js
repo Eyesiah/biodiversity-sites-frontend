@@ -32,12 +32,11 @@ export const Tabs = {
   Trigger: (props) => (
     <ChakraTabs.Trigger
       _selected={{ color: 'fg', borderColor: 'link', borderBottomWidth: '0px' }}
-      color="gray.500"
       whiteSpace="normal"
       textAlign="center"
-      lineHeight="1.2"
-      minHeight="48px"
-      maxWidth="150px"
+      lineHeight="1.1"
+      height='auto'
+      minWidth="auto"
       py="8px"
       px="12px"
       {...props}

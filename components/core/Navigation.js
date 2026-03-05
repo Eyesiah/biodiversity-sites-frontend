@@ -412,12 +412,15 @@ export default function Navigation() {
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
-          <DropdownMenu category="Stats & More">
+          <DropdownMenu category="Stats & Tools">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Scenario Planning' />
+            <DropdownLink href='/ukhab-lookup' label='UKHab Classification Lookup' />
             <DropdownLink href='/query' label='API Query & Export' />
             <CopyWfsLinkButton />
+          </DropdownMenu>
+          <DropdownMenu category="Help">
             <ModalButton 
               label="About"
               title="About this site"
@@ -430,15 +433,13 @@ export default function Navigation() {
               src="/glossary"
               iframeTitle="Glossary of BGS terms"
             />
+            <ModalButton 
+              label="Feedback"
+              title="Give Feedback"
+              src="/feedback"
+              iframeTitle="Give Feedback"
+            />
           </DropdownMenu>
-          <ModalButton 
-            label="Feedback"
-            title="Give Feedback"
-            src="/feedback"
-            iframeTitle="Give Feedback"
-            buttonComponent="NavLink"
-            modalSize='sm'
-          />
         </MobileMenu>   
         <ColorModeButton />     
       </NavSection>
