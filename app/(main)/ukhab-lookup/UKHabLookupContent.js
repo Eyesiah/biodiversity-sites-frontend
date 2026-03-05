@@ -154,7 +154,7 @@ export default function UKHabLookupContent() {
         <PrimaryCard maxWidth="1000px" margin="20px" mt={6}>
           <VStack spacing={4} align="stretch">
             <Heading as="h3" size="md">
-              UKHab Classification for &quot;{selectedSpecificHabitat}&quot;
+              UKHab Classification for &quot;{selectedSpecificHabitat}&quot; habitat.
             </Heading>
             
             <Box overflowX="auto" display="flex" justifyContent="center">
