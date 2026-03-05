@@ -166,7 +166,7 @@ export default function UKHabLookupContent() {
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 2</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 3</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 4</th>
-                    <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Pdf Page No.</th>
+                    <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>UKHab Pdf Page No.</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -227,7 +227,7 @@ export default function UKHabLookupContent() {
             <Box mt={4}>
               <Text fontSize="sm" color="gray.600">
                 <strong>Note:</strong> This lookup shows the cross-mapping between BNG habitats and UK Habitat Classification codes. It uses the UKHab codes published in the Statutory Metric calculator.
-                Click on Pdf Page No. to view the corresponding definitions in the UKHab document. Not all BNG habitats have a corresponding UKHab entry.
+                Click on UKHab Pdf Page No. to view the corresponding definitions in the UKHab document. Not all BNG habitats have a corresponding UKHab entry.
               </Text>
             </Box>
           </VStack>
