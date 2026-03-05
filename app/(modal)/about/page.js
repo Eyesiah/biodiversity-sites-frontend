@@ -78,6 +78,7 @@ export default function About() {
         <Text>Digital boundaries and reference maps:</Text>
         <Text>© Natural England 2023. Contains OS data © Crown Copyright [and database right] 2023</Text>
         <Text>Contains GeoPlace data © Local Government Information House Limited copyright and database right 2023</Text>
+        <test>UKHab Ltd (2023). UK Habitat Classification Version 2.0.</test>
 
         <Heading as="h2" size="lg">Exports</Heading>
         <Text>The site summary is now available as a WFS map layer on the WFS service <ExternalLink href={WFS_URL}>{WFS_URL}</ExternalLink>.</Text>
