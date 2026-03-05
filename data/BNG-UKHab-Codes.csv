@@ -38,11 +38,11 @@ Heathland and shrub - Willow scrub,h3j,Terrestrial,h,Heathland and shrub,h3,Dens
 Heathland and shrub - Upland heathland,h1b,Terrestrial,h,Heathland and shrub,h1,Dwarf shrub heath,h1b,Upland heathland,97
 Lakes - Aquifer fed naturally fluctuating water bodies,r1d,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,r1d,Aquifer fed naturally fluctuating water bodies,231
 Lakes - Ornamental lake or pond,46,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,312
-Lakes - High alkalinity lakes,Water Framework Directive,Freshwater,,,,,,,219
-Lakes - Low alkalinity lakes,Water Framework Directive,Freshwater,,,,,,,301
-Lakes - Marl lakes,Water Framework Directive,Freshwater,,,,,,,
-Lakes - Moderate alkalinity lakes,Water Framework Directive,Freshwater,,,,,,,
-Lakes - Peat lakes,Water Framework Directive,Freshwater,,,,,,,
+Lakes - High alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Low alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Marl lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Moderate alkalinity lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
+Lakes - Peat lakes,"Water Framework Directive,Freshwater",Freshwater,,,,,,,https://www.legislation.gov.uk/uksi/2017/407/contents
 Lakes - Ponds (priority habitat),40,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,306
 Lakes - Ponds (non-priority habitat),41,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,307
 Lakes - Reservoirs,45,Freshwater,r,Rivers and lakes,r1,Standing open water and canals,,,311

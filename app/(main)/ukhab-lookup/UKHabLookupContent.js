@@ -189,13 +189,31 @@ export default function UKHabLookupContent() {
                       </td>
                       <td style={{ padding: '8px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
                         {result.definitionPage && (
-                          <ExternalLink 
-                            href={`https://bristoltreeforum.org/wp-content/uploads/2026/03/ukhab-v2.01-july-2023-final-2.pdf#page=${result.definitionPage}`}
-                            showIcon={true}
-                            isExternal={true}
-                          >
-                            Page {result.definitionPage}
-                          </ExternalLink>
+                          (() => {
+                            // Check if definitionPage is a URL (contains http/https)
+                            if (result.definitionPage.startsWith('http://') || result.definitionPage.startsWith('https://')) {
+                              return (
+                                <ExternalLink 
+                                  href={result.definitionPage}
+                                  showIcon={true}
+                                  isExternal={true}
+                                >
+                                  View Source
+                                </ExternalLink>
+                              );
+                            } else {
+                              // Handle page numbers
+                              return (
+                                <ExternalLink 
+                                  href={`https://bristoltreeforum.org/wp-content/uploads/2026/03/ukhab-v2.01-july-2023-final-2.pdf#page=${result.definitionPage}`}
+                                  showIcon={true}
+                                  isExternal={true}
+                                >
+                                  Page {result.definitionPage}
+                                </ExternalLink>
+                              );
+                            }
+                          })()
                         )}
                       </td>
                     </tr>

@@ -1,6 +1,6 @@
 "use server"
 
-import { loadUKHabData, getUniqueBNGHabitats, getUKHabCodesForHabitat, getUniqueBroadHabitats, getSpecificHabitatsForBroadHabitat } from '@/components/ukhab-lookup/ukhabData';
+import { loadUKHabData, getUniqueBNGHabitats, getUKHabCodesForHabitat, getUniqueBroadHabitats, getSpecificHabitatsForBroadHabitat } from './ukhabData';
 
 export async function getUKHabData() {
   return {
