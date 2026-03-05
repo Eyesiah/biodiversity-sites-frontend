@@ -166,7 +166,6 @@ export default function UKHabLookupContent() {
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 2</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 3</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 4</th>
-                    <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>UKHab Pdf Page No.</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -187,49 +186,6 @@ export default function UKHabLookupContent() {
                       <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                         {result.level4Label} <span style={{ color: '#666', fontSize: '0.9em' }}>({result.level4Code})</span>
                       </td>
-                      <td style={{ padding: '8px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
-                        {result.definitionPage ? (
-                          (() => {
-                            // Check if definitionPage is a URL (contains http/https)
-                            if (result.definitionPage.startsWith('http://') || result.definitionPage.startsWith('https://')) {
-                              return (
-                                <ExternalLink 
-                                  href={result.definitionPage}
-                                  showIcon={true}
-                                  isExternal={true}
-                                >
-                                  View Source
-                                </ExternalLink>
-                              );
-                            } else {
-                              // Handle page numbers with enhanced PDF linking using named destinations
-                              const pageNumber = result.definitionPage;
-                              const enhancedPdfUrl = `/enhanced-ukhab.pdf`;
-                              
-                              return (
-                                <Link 
-                                  href={`/ukhab-viewer.html?page=${pageNumber}`}
-                                  isExternal
-                                  color="blue.500"
-                                  fontWeight="medium"
-                                  _hover={{ textDecoration: 'underline' }}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    
-                                    // Open in new window with our custom viewer
-                                    const viewerUrl = `/ukhab-viewer.html?page=${pageNumber}`;
-                                    window.open(viewerUrl, '_blank', 'noopener,noreferrer');
-                                  }}
-                                >
-                                  Page {pageNumber}
-                                </Link>
-                              );
-                            }
-                          })()
-                        ) : (
-                          <Text color="gray.500" fontStyle="italic">Not listed</Text>
-                        )}
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -238,8 +194,7 @@ export default function UKHabLookupContent() {
 
             <Box mt={4}>
               <Text fontSize="sm" color="gray.600">
-                <strong>Note:</strong> This lookup shows the cross-mapping between BNG habitats and UK Habitat Classification codes. It uses the UKHab codes published in the Statutory Metric calculator.
-                Click on UKHab Pdf Page No. to view the corresponding definitions in the UKHab document. Not all BNG habitats have a corresponding UKHab entry.
+                <strong>Note:</strong> This lookup shows the cross-mapping between BNG habitats and UK Habitat Classification codes. It uses the UKHab codes published in the Statutory Metric calculator. Not all BNG habitats have a corresponding UKHab entry.
               </Text>
             </Box>
           </VStack>
@@ -263,7 +218,7 @@ export default function UKHabLookupContent() {
             For detailed definitions and descriptions of all UKHab codes, refer to the official document:
           </Text>
           <ExternalLink 
-            href="/enhanced-ukhab.pdf"
+            href="https://www.ukhab.org/ukhab-documentation/"
             showIcon={true}
             isExternal={true}
           >
