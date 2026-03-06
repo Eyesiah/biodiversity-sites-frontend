@@ -1,9 +1,12 @@
-import { GeoJSON, useMap } from 'react-leaflet';
-import React, { useState, useEffect, useRef } from 'react';
+import { useMap, GeoJSON } from 'react-leaflet';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap, SiteMapMarker, getPolys } from '@/components/map/BaseMap';
+import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
+import BodyMapLayer from '@/components/map/BodyMapLayer';
+import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD } from '@/config';
 import { lnrsStyle, adjacentStyle } from '@/components/map/MapStyles'
+import { usePolygonCacheState } from '@/lib/polygonCache';
 
 function MapController({ geoJson }) {
   const map = useMap();
@@ -19,12 +22,17 @@ function MapController({ geoJson }) {
   return null;
 }
 
-const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null, selectedSite = null }) => {
-  const [geoJson, setGeoJson] = useState(null);
-  const [adjacentGeoJson, setAdjacentGeoJson] = useState(null);
-  const [error, setError] = useState(null);
-  const cache = useRef({});
-  const [mapKey, setMapKey] = useState(Date.now());
+// Body type mapping based on geoJsonUrl
+const getBodyType = (geoJsonUrl) => {
+  if (!geoJsonUrl) return null;
+  if (geoJsonUrl.includes('LPA_APR_2023_UK_BUC_V2')) return 'lpa';
+  if (geoJsonUrl.includes('National_Character_Areas_England')) return 'nca';
+  if (geoJsonUrl.includes('LNRS_Area')) return 'lnrs';
+  return null;
+};
+
+const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null, selectedSite = null, onPolygonClick }) => {
+  const { polygonCache, cacheVersion, updatePolygonCache } = usePolygonCacheState();
   const markerRefs = useRef({});
 
   useEffect(() => {
@@ -36,85 +44,62 @@ const PolygonMap = ({ selectedItem, geoJsonUrl, nameProperty, sites = [], style 
     }
   }, [selectedSite]);
 
-  useEffect(() => {
-    let isCancelled = false;
+  // Handle polygon click - find the clicked body and call the callback with the correct field
+  const handlePolygonClick = (bodyName) => {
+    if (onPolygonClick) {
+      // Determine the correct field based on body type
+      const bodyType = getBodyType(geoJsonUrl);
+      let fieldName = nameProperty;
+      
+      if (bodyType === 'lpa') fieldName = 'LPA23NM';
+      else if (bodyType === 'nca') fieldName = 'NCA_Name';
+      else if (bodyType === 'lnrs') fieldName = 'Name';
 
-    const fetchPolygons = async () => {
-      setGeoJson(null);
-      setAdjacentGeoJson(null);
-      setError(null);
+      onPolygonClick(bodyName);
+    }
+  };
 
-      if (!selectedItem || !selectedItem[nameProperty] || geoJsonUrl == null) return;
+  // Handle multiple selected items
+  const itemsToProcess = Array.isArray(selectedItems) ? selectedItems : (selectedItems ? [selectedItems] : []);
+  const bodyType = getBodyType(geoJsonUrl);
 
-      const name = selectedItem[nameProperty];
-
-      // Reset state when starting a new fetch to clear previous polygons
-
-      // Use a different field for the query if the geoJsonUrl indicates it's for LPAs
-      let queryField = nameProperty;
-      if (geoJsonUrl.includes('National_Character_Areas_England')) {
-        queryField = 'NCA_Name';
-      } else if (geoJsonUrl.includes('LPA_APR_2023_UK_BUC_V2')) {
-        queryField = 'LPA23NM';
-      } else if (geoJsonUrl.includes('LNRS_Area')) {
-        queryField = 'Name';
-      }
-
-      const adjacentPromises = (selectedItem.adjacents || []).map(adj => getPolys(geoJsonUrl, queryField, adj.name));
-
-      try {
-        const mainGeoJsonPromise = cache.current[name]
-          ? Promise.resolve(cache.current[name])
-          : getPolys(geoJsonUrl, queryField, name);
-
-        const [mainData, ...adjacentResponses] = await Promise.all([mainGeoJsonPromise, ...adjacentPromises]);
-
-        if (mainData.error || !mainData.features || mainData.features.length === 0) {
-          const errorMessage = mainData.error ? JSON.stringify(mainData.error) : `No polygon data found for the selected item (${name}).`;
-          if (!isCancelled) {
-            setError(errorMessage);
-          }
-          return;
-        }
-
-        if (!isCancelled) {
-          setGeoJson(cache.current[name] = mainData);
-
-          const validAdjacentData = adjacentResponses.filter(data => data && !data.error && data.features && data.features.length > 0);
-          setAdjacentGeoJson(validAdjacentData.length > 0 ? validAdjacentData : null);
-
-          setMapKey(name);
-        }
-      } catch (error) {
-        console.error("Failed to fetch polygon data:", error);
-        if (!isCancelled) {
-          setError("Failed to fetch polygon data. Please check the console for details.");
-          // Ensure state is cleared on error
-          setGeoJson(null);
-          setAdjacentGeoJson(null);
-        }
-      }
-    };
-    fetchPolygons();
-  }, [selectedItem, geoJsonUrl, nameProperty, sites]);
+  if (!bodyType) {
+    return (
+      <div style={{ height: '100%', width: '100%' }}>
+        <BaseMap style={{ height: '100%', width: '100%' }}>
+          {sites && sites.filter(site => site.position != null).map(site => (
+            <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />
+          ))}
+        </BaseMap>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
-      <BaseMap key={mapKey} style={{ height: '100%', width: '100%' }}>
-        {error && (
-          <div style={{ position: 'absolute', top: '10px', left: '50px', zIndex: 1000, backgroundColor: 'white', padding: '10px', borderRadius: '5px', border: '1px solid red' }}>
-            <p style={{ color: 'red', margin: 0 }}>{error}</p>
-          </div>
-        )}
-        {adjacentGeoJson && adjacentGeoJson.map((adjGeoJson, index) => (
-          <GeoJSON
-            key={`${mapKey}-adj-${index}`}
-            data={adjGeoJson}
-            style={adjacentStyle}
-          />
-        ))}
-        {geoJson && <GeoJSON data={geoJson} style={style} />}
-        <MapController geoJson={geoJson} />
+      <BaseMap style={{ height: '100%', width: '100%' }}>
+        {itemsToProcess.map((item, index) => {
+          const bodyName = item[nameProperty];
+          if (!bodyName) return null;
+
+          // Determine if we should show adjacent bodies (only for single item)
+          const showAdjacent = itemsToProcess.length === 1;
+          const adjacents = showAdjacent ? (item.adjacents || []) : [];
+
+          return (
+            <BodyMapLayer
+              key={`${bodyType}-${bodyName}-${index}`}
+              bodyType={bodyType}
+              bodyName={bodyName}
+              enabled={true}
+              polygonCache={polygonCache}
+              updatePolygonCache={updatePolygonCache}
+              onPolygonClick={handlePolygonClick}
+              showAdjacent={showAdjacent}
+              adjacents={adjacents}
+            />
+          );
+        })}
 
         {sites && sites.filter(site => site.position != null).map(site => (
           <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />

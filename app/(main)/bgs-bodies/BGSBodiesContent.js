@@ -85,6 +85,74 @@ export default function BGSBodiesContent({
     setSelectedBody(null);
   }, [activeTab]);
 
+  // Helper function to get bodies that have at least one site
+  const getBodiesWithSites = useCallback((bodies, sites) => {
+    if (!bodies || !sites) return [];
+    
+    // Create a set of site reference numbers for quick lookup
+    const siteRefs = new Set(sites.map(site => site.referenceNumber));
+    
+    return bodies.filter(body => {
+      // Check if the body has any sites (by checking if any site reference matches)
+      if (body.sites && body.sites.length > 0) {
+        return body.sites.some(siteRef => siteRefs.has(siteRef));
+      }
+      return false;
+    });
+  }, []);
+
+  // Handle polygon click on map - find the clicked body and set it as selected
+  const handlePolygonClick = useCallback((clickedBodyName) => {
+    // Find the clicked body from the appropriate data array based on current tab
+    let clickedBody = null;
+    
+    switch (activeTab) {
+      case 'lpa':
+      case 'lpa-chart':
+        clickedBody = lpas.find(body => body.name === clickedBodyName);
+        break;
+      case 'nca':
+      case 'nca-chart':
+        clickedBody = ncas.find(body => body.name === clickedBodyName);
+        break;
+      case 'lnrs':
+      case 'lnrs-chart':
+        clickedBody = lnrs.find(body => body.name === clickedBodyName);
+        break;
+      default:
+        return; // Don't handle clicks in non-polygon modes
+    }
+    
+    if (clickedBody) {
+      // Set the clicked body as selected, which will trigger the existing logic
+      // to show only that body's polygon and its adjacent bodies
+      setSelectedBody(clickedBody);
+    }
+  }, [activeTab, lpas, ncas, lnrs]);
+
+  // Determine which bodies should be displayed on the map
+  const selectedBodiesForMap = useMemo(() => {
+    // If a specific body is selected, show only that body (same as current behavior)
+    if (selectedBody) {
+      return [selectedBody];
+    }
+    
+    // If no specific body is selected, show all bodies for the current tab that have at least one site
+    switch (activeTab) {
+      case 'lpa':
+      case 'lpa-chart':
+        return getBodiesWithSites(lpas, sites);
+      case 'nca':
+      case 'nca-chart':
+        return getBodiesWithSites(ncas, sites);
+      case 'lnrs':
+      case 'lnrs-chart':
+        return getBodiesWithSites(lnrs, sites);
+      default:
+        return [];
+    }
+  }, [selectedBody, activeTab, lpas, ncas, lnrs, sites, getBodiesWithSites]);
+
   // Map configuration based on active tab - must be called before any early returns
   const mapConfig = useMemo(() => {
     switch (activeTab) {
@@ -97,7 +165,7 @@ export default function BGSBodiesContent({
           type: 'polygon',
           geoJsonUrl: ARCGIS_LPA_URL,
           nameProperty: 'name',
-          selectedItem: selectedBody,
+          selectedItems: selectedBodiesForMap,
           style: { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'nca':
@@ -106,7 +174,7 @@ export default function BGSBodiesContent({
           type: 'polygon',
           geoJsonUrl: 'https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query',
           nameProperty: 'name',
-          selectedItem: selectedBody,
+          selectedItems: selectedBodiesForMap,
           style: { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
         };
       case 'lnrs':
@@ -115,13 +183,13 @@ export default function BGSBodiesContent({
           type: 'polygon',
           geoJsonUrl: ARCGIS_LNRS_URL,
           nameProperty: 'name',
-          selectedItem: selectedBody,
+          selectedItems: selectedBodiesForMap,
           style: { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }
         };
       default:
         return { type: 'site', sites: [] };
     }
-  }, [activeTab, selectedBody]);
+  }, [activeTab, selectedBodiesForMap]);
 
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
@@ -229,7 +297,7 @@ export default function BGSBodiesContent({
   return (
     <MapContentLayout
       map={<PolygonMap
-        selectedItem={mapConfig.selectedItem}
+        selectedItems={mapConfig.selectedItems}
         geoJsonUrl={mapConfig.geoJsonUrl}
         nameProperty={mapConfig.nameProperty}
         sites={mapSites}
@@ -237,6 +305,7 @@ export default function BGSBodiesContent({
         disableZoom={disableZoom}
         hoveredSite={hoveredSite}
         selectedSite={selectedSite}
+        onPolygonClick={handlePolygonClick}
       />}
       content={mainContent}
     />
