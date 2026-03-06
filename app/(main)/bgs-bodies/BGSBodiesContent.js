@@ -127,8 +127,9 @@ export default function BGSBodiesContent({
       // Set the clicked body as selected, which will trigger the existing logic
       // to show only that body's polygon and its adjacent bodies
       setSelectedBody(clickedBody);
+      setMapSites(sites.filter(s => clickedBody.sites.includes(s.referenceNumber)));
     }
-  }, [activeTab, lpas, ncas, lnrs]);
+  }, [activeTab, lpas, ncas, lnrs, sites]);
 
   // Determine which bodies should be displayed on the map
   const selectedBodiesForMap = useMemo(() => {
