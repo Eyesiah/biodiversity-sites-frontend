@@ -9,6 +9,7 @@ import { AllocationMapLayer, CalcAllocationMapLayerBounds } from '@/components/m
 import BodyMapLayer from '@/components/map/BodyMapLayer';
 import { SiteAreaMapLayer, CalcSiteAreaMapLayerBounds } from '@/components/map/SiteAreaMapLayer';
 import { CalcBodyMapLayerBounds } from '@/components/map/BodyMapLayer';
+import { usePolygonCacheRef } from '@/lib/polygonCache';
 
 function MapController({ showAllocations, showLPA, showNCA, showLNRS, showLSOA, showSiteArea, selectedSite, polygonCache, cacheVersion, allocations }) {
   const map = useMap();
@@ -120,16 +121,8 @@ const SiteMap = ({
   mapLayer = 'OpenStreetMap',
   allocations = null // Direct allocations to show on map (bypasses selectedSite)
 }) => {
-  const polygonCache = useRef({ lsoa: {}, lnrs: {}, nca: {}, lpa: {}, promises: {} });
-  const [cacheVersion, setCacheVersion] = useState(0);
+  const { polygonCache, cacheVersion, updatePolygonCache } = usePolygonCacheRef();
   const markerRefs = useRef({});
-
-  // Cache updater function to be passed to child components
-  const updatePolygonCache = (bodyType, cacheKey, data) => {
-    if (!polygonCache.current[bodyType]) polygonCache.current[bodyType] = {};
-    polygonCache.current[bodyType][cacheKey] = data;
-    setCacheVersion(v => v + 1);
-  };
 
   useEffect(() => {
     if (selectedSite && openPopups) {
