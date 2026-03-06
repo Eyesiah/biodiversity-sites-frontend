@@ -63,44 +63,36 @@ const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style
   const itemsToProcess = Array.isArray(selectedItems) ? selectedItems : (selectedItems ? [selectedItems] : []);
   const bodyType = getBodyType(geoJsonUrl);
 
-  if (!bodyType) {
-    return (
-      <div style={{ height: '100%', width: '100%' }}>
-        <BaseMap style={{ height: '100%', width: '100%' }}>
-          {sites && sites.filter(site => site.position != null).map(site => (
-            <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />
-          ))}
-        </BaseMap>
-      </div>
-    );
-  }
-
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: '100%', width: '100%' }}>
-        {itemsToProcess.map((item, index) => {
-          const bodyName = item[nameProperty];
-          if (!bodyName) return null;
+        {/* Conditional BodyMapLayers based on itemsToProcess and bodyType */}
+        {itemsToProcess.length > 0 && bodyType && (
+          itemsToProcess.map((item, index) => {
+            const bodyName = item[nameProperty];
+            if (!bodyName) return null;
 
-          // Determine if we should show adjacent bodies (only for single item)
-          const showAdjacent = itemsToProcess.length === 1;
-          const adjacents = showAdjacent ? (item.adjacents || []) : [];
+            // Determine if we should show adjacent bodies (only for single item)
+            const showAdjacent = itemsToProcess.length === 1;
+            const adjacents = showAdjacent ? (item.adjacents || []) : [];
 
-          return (
-            <BodyMapLayer
-              key={`${bodyType}-${bodyName}-${index}`}
-              bodyType={bodyType}
-              bodyName={bodyName}
-              enabled={true}
-              polygonCache={polygonCache}
-              updatePolygonCache={updatePolygonCache}
-              onPolygonClick={handlePolygonClick}
-              showAdjacent={showAdjacent}
-              adjacents={adjacents}
-            />
-          );
-        })}
+            return (
+              <BodyMapLayer
+                key={`${bodyType}-${bodyName}-${index}`}
+                bodyType={bodyType}
+                bodyName={bodyName}
+                enabled={true}
+                polygonCache={polygonCache}
+                updatePolygonCache={updatePolygonCache}
+                onPolygonClick={handlePolygonClick}
+                showAdjacent={showAdjacent}
+                adjacents={adjacents}
+              />
+            );
+          })
+        )}
 
+        {/* Always render sites */}
         {sites && sites.filter(site => site.position != null).map(site => (
           <SiteMapMarker key={site.referenceNumber} site={site} withColorKeys={false} isHovered={hoveredSite && site.referenceNumber === hoveredSite.referenceNumber} markerRefs={markerRefs} />
         ))}
