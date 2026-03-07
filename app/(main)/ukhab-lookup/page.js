@@ -3,7 +3,7 @@ import Footer from '@/components/core/Footer';
 
 export const metadata = {
   title: 'UKHab Classification Lookup',
-  description: 'Cross-reference BNG habitats with the UK Habitat Classification Version 2.0 system',
+  description: 'Cross-reference BNG habitats with the UK Habitat Classification system',
   keywords: ['UKHab', 'UK Habitat Classification', 'BNG habitats', 'habitat codes', 'habitat classification', 'biodiversity', 'habitat mapping'],
   alternates: {
     canonical: 'https://bgs.bristoltrees.space/ukhab-lookup',
