@@ -167,6 +167,7 @@ export default function UKHabLookupContent() {
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 2</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 3</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 4</th>
+                    <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>UKHab Pdf page</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -186,6 +187,9 @@ export default function UKHabLookupContent() {
                       </td>
                       <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                         {result.level4Label} <span style={{ color: '#666', fontSize: '0.9em' }}>({result.level4Code})</span>
+                      </td>
+                      <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                        {result.definitionPage || <span style={{ color: '#999', fontStyle: 'italic' }}>N/A</span>}
                       </td>
                     </tr>
                   ))}
