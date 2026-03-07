@@ -5,6 +5,7 @@ import { Box, VStack, Heading, Text, Button, Link } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import SearchableDropdown from '@/components/ui/SearchableDropdown';
 import ExternalLink from '@/components/ui/ExternalLink';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { getUKHabData, getUKHabCodesForHabitatAction, getBroadHabitatsAction, getSpecificHabitatsAction } from './actions';
 
 export default function UKHabLookupContent() {
@@ -91,7 +92,7 @@ export default function UKHabLookupContent() {
   return (
     <Box p={4}>
       <Heading as="h1" size="lg" mb={4}>
-        UKHab Classification Lookup
+        <GlossaryTooltip term="UKHab">UKHab Classification</GlossaryTooltip> Lookup
       </Heading>
       
       <Text mb={6} color="gray.600">

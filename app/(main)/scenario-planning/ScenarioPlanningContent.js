@@ -8,7 +8,7 @@ import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
 import { TbFileTypeXml } from "react-icons/tb";
-import Tooltip from '@/components/ui/Tooltip';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
