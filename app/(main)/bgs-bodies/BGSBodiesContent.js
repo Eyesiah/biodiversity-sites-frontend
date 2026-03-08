@@ -13,7 +13,7 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
-import { ARCGIS_LPA_URL, ARCGIS_LNRS_URL } from '@/config';
+import { ACTION_SERVER_PATCH } from 'next/dist/client/components/router-reducer/router-reducer-types';
 
 const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
   ssr: false,
@@ -42,7 +42,9 @@ export default function BGSBodiesContent({
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
-  const [filteredBodies, setFilteredBodies] = useState(null); // null means no filter
+  const [filteredBodiesLPA, setFilteredBodiesLPA] = useState(null);
+  const [filteredBodiesNCA, setFilteredBodiesNCA] = useState(null);
+  const [filteredBodiesLNRS, setFilteredBodiesLNRS] = useState(null);
 
   // Refs for content components to enable direct filter setting
   const lpaContentRef = useRef(null);
@@ -90,36 +92,19 @@ export default function BGSBodiesContent({
     }
   }, [sites, activeTab]);
 
-  // Helper function to get bodies that have at least one site
-  const getBodiesWithSites = useCallback((bodies, sites) => {
-    if (!bodies || !sites) return [];
-    
-    // Create a set of site reference numbers for quick lookup
-    const siteRefs = new Set(sites.map(site => site.referenceNumber));
-    
-    return bodies.filter(body => {
-      // Check if the body has any sites (by checking if any site reference matches)
-      if (body.sites && body.sites.length > 0) {
-        return body.sites.some(siteRef => siteRefs.has(siteRef));
-      }
-      return false;
-    });
-  }, []);
-
   // Reset map state when switching tabs
   useEffect(() => {
     setMapSites([]);
     setHoveredSite(null);
     setSelectedSite(null);
     setSelectedBody(null);
-    setFilteredBodies(null); // Clear any filters when switching tabs
   }, [activeTab]);
 
   // Handle polygon click on map - find the clicked body and set it as selected
   const handlePolygonClick = useCallback((clickedBodyName) => {
     // Find the clicked body from the appropriate data array based on current tab
     let clickedBody = null;
-    
+
     switch (activeTab) {
       case 'lpa':
       case 'lpa-chart':
@@ -136,16 +121,16 @@ export default function BGSBodiesContent({
       default:
         return; // Don't handle clicks in non-polygon modes
     }
-    
+
     if (clickedBody) {
       // Set the clicked body as selected, which will trigger the existing logic
       // to show only that body's polygon and its adjacent bodies
       setSelectedBody(clickedBody);
       setMapSites(sites.filter(s => clickedBody.sites.includes(s.referenceNumber)));
-      
+
       // NEW: Use ref-based approach to directly set filter value on the appropriate content component
       console.log(`SETTING FILTER VALUE ${clickedBody.name} via ref`);
-      
+
       // Get the appropriate content ref based on current tab
       let contentRef = null;
       if (activeTab === 'lpa' || activeTab === 'lpa-chart') {
@@ -155,7 +140,7 @@ export default function BGSBodiesContent({
       } else if (activeTab === 'lnrs' || activeTab === 'lnrs-chart') {
         contentRef = lnrsContentRef;
       }
-      
+
       // Call the setFilterValue method on the content component
       if (contentRef && contentRef.current && contentRef.current.setFilterValue) {
         contentRef.current.setFilterValue(clickedBody.name);
@@ -166,18 +151,17 @@ export default function BGSBodiesContent({
   }, [activeTab, lpas, ncas, lnrs, sites]);
 
   // Handle filtered body updates from content components
-  const handleFilteredBodiesChange = useCallback((filteredBodies) => {
+  const handleFilteredBodiesChange = useCallback((newFilteredBodies, setFilteredBodies) => {
     // Update map to show only filtered bodies
     setSelectedBody(null);
     setMapSites([]);
-    
-    // Update filteredBodies state to trigger selectedBodiesForMap recalculation
-    setFilteredBodies(filteredBodies || null);
-    
+
+    setFilteredBodies(newFilteredBodies || null);
+
     // If there are filtered bodies, get their sites
-    if (filteredBodies && filteredBodies.length > 0) {
+    if (newFilteredBodies && newFilteredBodies.length > 0) {
       const filteredSites = [];
-      filteredBodies.forEach(body => {
+      newFilteredBodies.forEach(body => {
         if (body.sites) {
           body.sites.forEach(siteRef => {
             const site = sites.find(s => s.referenceNumber === siteRef);
@@ -198,13 +182,13 @@ export default function BGSBodiesContent({
         return 'rb';
       case 'lpa':
       case 'lpa-chart':
-          return 'lpa';
+        return 'lpa';
       case 'nca':
       case 'nca-chart':
-          return 'nca';
+        return 'nca';
       case 'lnrs':
       case 'lnrs-chart':
-          return 'lnrs';
+        return 'lnrs';
       default:
         return '';
     }
@@ -216,27 +200,30 @@ export default function BGSBodiesContent({
     if (selectedBody) {
       return [selectedBody];
     }
-    
-    // If filtered bodies exist, show only filtered bodies
-    if (filteredBodies && filteredBodies.length > 0) {
-      return filteredBodies;
+
+    const selectBodies = (allBodies, filteredBodies) => {
+      if (filteredBodies && filteredBodies.length != allBodies.length) {
+        return filteredBodies;
+      }
+      return allBodies.filter(body => body.sites && body.sites.length > 0)
     }
-    
-    // Otherwise show all bodies for current tab
+
+    let activeBodies;
     switch (activeTab) {
       case 'lpa':
       case 'lpa-chart':
-        return getBodiesWithSites(lpas, sites);
+        return selectBodies(lpas, filteredBodiesLPA);
       case 'nca':
       case 'nca-chart':
-        return getBodiesWithSites(ncas, sites);
+        return selectBodies(ncas, filteredBodiesNCA);
       case 'lnrs':
       case 'lnrs-chart':
-        return getBodiesWithSites(lnrs, sites);
-      default:
-        return [];
+        return selectBodies(lnrs, filteredBodiesLNRS);
     }
-  }, [selectedBody, filteredBodies, activeTab, lpas, ncas, lnrs, sites, getBodiesWithSites]);
+
+    return [];
+
+  }, [selectedBody, filteredBodiesLPA, filteredBodiesNCA, filteredBodiesLNRS, activeTab, lpas, ncas, lnrs]);
 
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
@@ -293,7 +280,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
-          onSortedItemsChange={handleFilteredBodiesChange}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLPA)}
         />
       </Tabs.Content>
 
@@ -311,7 +298,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
-          onSortedItemsChange={handleFilteredBodiesChange}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesNCA)}
         />
       </Tabs.Content>
 
@@ -329,7 +316,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
-          onSortedItemsChange={handleFilteredBodiesChange}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLNRS)}
         />
       </Tabs.Content>
 
@@ -353,7 +340,7 @@ export default function BGSBodiesContent({
   return (
     <MapContentLayout
       map={<PolygonMap
-        selectedItems={selectedBodiesForMap}
+        bodiesToDisplay={selectedBodiesForMap}
         bodyType={bodyType}
         sites={mapSites}
         disableZoom={disableZoom}
