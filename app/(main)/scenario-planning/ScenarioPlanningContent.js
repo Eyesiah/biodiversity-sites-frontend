@@ -115,6 +115,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   }
 
   useEffect(() => {
+    console.log(`[Client Debug] State updated:`, state);
+    console.log(`[Client Debug] State timeToTargetOffset:`, state.timeToTargetOffset, typeof state.timeToTargetOffset);
     setFormData(state);
     setSizeInput(state.size !== undefined && state.size !== null ? String(state.size) : '0');
   }, [state]);
@@ -122,6 +124,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const handleCalculate = () => {
     if (formRef.current) {
       const formDataToSubmit = new FormData(formRef.current);
+      const timeToTargetOffset = formDataToSubmit.get("timeToTargetOffset");
+      console.log(`[Client Debug] Submitting form with timeToTargetOffset: ${timeToTargetOffset} (type: ${typeof timeToTargetOffset})`);
       startTransition(() => {
         formAction(formDataToSubmit);
       });
@@ -204,6 +208,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
       xml += `      <BaselineCondition>${result.baselineCondition}</BaselineCondition>\n`;
       xml += `      <TargetCondition>${result.targetCondition}</TargetCondition>\n`;
       xml += `      <TimeToTarget>${result.timeToTarget}</TimeToTarget>\n`;
+      xml += `      <EffectiveTimeToTarget>${result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget}</EffectiveTimeToTarget>\n`;
       xml += `      <HUs>${result.HUs.toFixed(2)}</HUs>\n`;
       xml += '    </Result>\n';
     });
@@ -386,7 +391,21 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   <NativeSelect.Field 
                     name="timeToTargetOffset"
                     value={formData.timeToTargetOffset}
-                    onChange={(e) => setFormData({ ...formData, timeToTargetOffset: Number(e.target.value) })}
+                    onChange={(e) => {
+                      const newValue = Number(e.target.value);
+                      console.log(`[Client Debug] Time offset changed: ${e.target.value} -> ${newValue} (type: ${typeof newValue})`);
+                      setFormData({ ...formData, timeToTargetOffset: newValue });
+                      
+                      // Auto-calculate when time offset changes
+                      if (formRef.current && (formData.size > 0 || formData.habitat)) {
+                        const formDataToSubmit = new FormData(formRef.current);
+                        formDataToSubmit.set("timeToTargetOffset", String(newValue));
+                        console.log(`[Client Debug] Auto-calculating with new offset: ${newValue}`);
+                        startTransition(() => {
+                          formAction(formDataToSubmit);
+                        });
+                      }
+                    }}
                   >
                     {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
                       <option key={offset} value={offset}>
@@ -484,6 +503,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Strategic Significance</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Spatial Risk</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Time to Target (years)</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Temporal Multiplier</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HUs</th>
                     </tr>
                   )}
@@ -511,7 +531,12 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.strategicSignificance}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.spatialRisk}</td>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.timeToTarget}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                            {result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget}
+                          </td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                            {result.temporalRisk !== undefined ? result.temporalRisk.toFixed(3) : 'N/A'}
+                          </td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
                             {result.HUs.toFixed(2)}
                           </td>
