@@ -13,9 +13,8 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
-import { ACTION_SERVER_PATCH } from 'next/dist/client/components/router-reducer/router-reducer-types';
 
-const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
+const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -335,7 +334,7 @@ export default function BGSBodiesContent({
 
   return (
     <MapContentLayout
-      map={<PolygonMap
+      map={<BodiesMap
         bodiesToDisplay={selectedBodiesForMap}
         bodyType={bodyType}
         sites={mapSites}
