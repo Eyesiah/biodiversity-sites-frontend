@@ -1,11 +1,10 @@
-import { useMap, GeoJSON } from 'react-leaflet';
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useMap } from 'react-leaflet';
+import React, { useEffect, useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { BaseMap, SiteMapMarker } from '@/components/map/BaseMap';
 import BodyMapLayer from '@/components/map/BodyMapLayer';
-import { ARCGIS_LSOA_URL, ARCGIS_LNRS_URL, ARCGIS_NCA_URL, ARCGIS_LPA_URL, ARCGIS_LSOA_NAME_FIELD } from '@/config';
-import { lnrsStyle, adjacentStyle } from '@/components/map/MapStyles'
+import { lnrsStyle } from '@/components/map/MapStyles'
 import { usePolygonCacheState } from '@/lib/polygonCache';
 
 function MapController({ geoJson }) {
@@ -22,16 +21,8 @@ function MapController({ geoJson }) {
   return null;
 }
 
-// Body type mapping based on geoJsonUrl
-const getBodyType = (geoJsonUrl) => {
-  if (!geoJsonUrl) return null;
-  if (geoJsonUrl.includes('LPA_APR_2023_UK_BUC_V2')) return 'lpa';
-  if (geoJsonUrl.includes('National_Character_Areas_England')) return 'nca';
-  if (geoJsonUrl.includes('LNRS_Area')) return 'lnrs';
-  return null;
-};
 
-const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style = lnrsStyle, hoveredSite = null, selectedSite = null, onPolygonClick }) => {
+const PolygonMap = ({ selectedItems, bodyType, sites = [], hoveredSite = null, selectedSite = null, onPolygonClick }) => {
   const { polygonCache, cacheVersion, updatePolygonCache } = usePolygonCacheState();
   const markerRefs = useRef({});
 
@@ -44,24 +35,8 @@ const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style
     }
   }, [selectedSite]);
 
-  // Handle polygon click - find the clicked body and call the callback with the correct field
-  const handlePolygonClick = (bodyName) => {
-    if (onPolygonClick) {
-      // Determine the correct field based on body type
-      const bodyType = getBodyType(geoJsonUrl);
-      let fieldName = nameProperty;
-      
-      if (bodyType === 'lpa') fieldName = 'LPA23NM';
-      else if (bodyType === 'nca') fieldName = 'NCA_Name';
-      else if (bodyType === 'lnrs') fieldName = 'Name';
-
-      onPolygonClick(bodyName);
-    }
-  };
-
   // Handle multiple selected items
   const itemsToProcess = Array.isArray(selectedItems) ? selectedItems : (selectedItems ? [selectedItems] : []);
-  const bodyType = getBodyType(geoJsonUrl);
 
   return (
     <div style={{ height: '100%', width: '100%' }}>
@@ -69,7 +44,7 @@ const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style
         {/* Conditional BodyMapLayers based on itemsToProcess and bodyType */}
         {itemsToProcess.length > 0 && bodyType && (
           itemsToProcess.map((item, index) => {
-            const bodyName = item[nameProperty];
+            const bodyName = item.name;
             if (!bodyName) return null;
 
             // Determine if we should show adjacent bodies (only for single item)
@@ -84,7 +59,7 @@ const PolygonMap = ({ selectedItems, geoJsonUrl, nameProperty, sites = [], style
                 enabled={true}
                 polygonCache={polygonCache}
                 updatePolygonCache={updatePolygonCache}
-                onPolygonClick={handlePolygonClick}
+                onPolygonClick={onPolygonClick}
                 showAdjacent={showAdjacent}
                 adjacents={adjacents}
               />

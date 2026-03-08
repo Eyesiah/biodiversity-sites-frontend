@@ -187,42 +187,24 @@ export default function BGSBodiesContent({
   }, [selectedBody, activeTab, lpas, ncas, lnrs, sites, getBodiesWithSites]);
 
   // Map configuration based on active tab - must be called before any early returns
-  const mapConfig = useMemo(() => {
+  const bodyType = useMemo(() => {
     switch (activeTab) {
       case 'responsible-bodies':
       case 'rb-chart':
-        return { type: 'site' };
+        return 'rb';
       case 'lpa':
       case 'lpa-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: ARCGIS_LPA_URL,
-          nameProperty: 'name',
-          selectedItems: selectedBodiesForMap,
-          style: { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
-        };
+          return 'lpa';
       case 'nca':
       case 'nca-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: 'https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query',
-          nameProperty: 'name',
-          selectedItems: selectedBodiesForMap,
-          style: { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
-        };
+          return 'nca';
       case 'lnrs':
       case 'lnrs-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: ARCGIS_LNRS_URL,
-          nameProperty: 'name',
-          selectedItems: selectedBodiesForMap,
-          style: { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }
-        };
+          return 'lnrs';
       default:
-        return { type: 'site', sites: [] };
+        return '';
     }
-  }, [activeTab, selectedBodiesForMap]);
+  }, [activeTab]);
 
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
@@ -320,7 +302,7 @@ export default function BGSBodiesContent({
         <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
     </Tabs.Root>
-  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites]);
+  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared]);
 
   // Check for error after all hooks are called
   if (error) {
@@ -336,11 +318,9 @@ export default function BGSBodiesContent({
   return (
     <MapContentLayout
       map={<PolygonMap
-        selectedItems={mapConfig.selectedItems}
-        geoJsonUrl={mapConfig.geoJsonUrl}
-        nameProperty={mapConfig.nameProperty}
+        selectedItems={selectedBodiesForMap}
+        bodyType={bodyType}
         sites={mapSites}
-        style={mapConfig.style}
         disableZoom={disableZoom}
         hoveredSite={hoveredSite}
         selectedSite={selectedSite}
