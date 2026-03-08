@@ -384,32 +384,34 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             {showTimeOffset && (
               <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
-                <NativeSelect.Root flex="2" size="sm">
-                  <NativeSelect.Field 
-                    name="timeToTargetOffset"
-                    value={formData.timeToTargetOffset}
-                    onChange={(e) => {
-                      const newValue = Number(e.target.value);
-                      setFormData({ ...formData, timeToTargetOffset: newValue });
-                      
-                      // Auto-calculate when time offset changes
-                      if (formRef.current && (formData.size > 0 || formData.habitat)) {
-                        const formDataToSubmit = new FormData(formRef.current);
-                        formDataToSubmit.set("timeToTargetOffset", String(newValue));
-                        startTransition(() => {
-                          formAction(formDataToSubmit);
-                        });
-                      }
-                    }}
-                  >
-                    {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
-                      <option key={offset} value={offset}>
-                        {offset > 0 ? `+${offset}` : offset} years
-                      </option>
-                    ))}
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-                </NativeSelect.Root>
+                <Tooltip text="A negative value represents the the credit given for prior habitat improvement. A positive value represents the delay before this habitat is improved.">
+                  <NativeSelect.Root flex="2" size="sm">
+                    <NativeSelect.Field 
+                      name="timeToTargetOffset"
+                      value={formData.timeToTargetOffset}
+                      onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        setFormData({ ...formData, timeToTargetOffset: newValue });
+                        
+                        // Auto-calculate when time offset changes
+                        if (formRef.current && (formData.size > 0 || formData.habitat)) {
+                          const formDataToSubmit = new FormData(formRef.current);
+                          formDataToSubmit.set("timeToTargetOffset", String(newValue));
+                          startTransition(() => {
+                            formAction(formDataToSubmit);
+                          });
+                        }
+                      }}
+                    >
+                      {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
+                        <option key={offset} value={offset}>
+                          {offset > 0 ? `+${offset}` : offset} years
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                </Tooltip>
               </HStack>
             )}
 
