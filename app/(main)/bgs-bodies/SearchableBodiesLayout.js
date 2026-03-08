@@ -33,7 +33,6 @@ export default forwardRef(function SearchableBodiesLayout({
   // Expose imperative methods to parent components
   useImperativeHandle(ref, () => ({
     setFilterValue: (value) => {
-      console.log(`SearchableBodiesLayout received setFilterValue call with: ${value}`);
       // Pass the filter value down to the SearchableTableLayout child
       if (searchableTableLayoutRef.current && searchableTableLayoutRef.current.setFilterValue) {
         searchableTableLayoutRef.current.setFilterValue(value);

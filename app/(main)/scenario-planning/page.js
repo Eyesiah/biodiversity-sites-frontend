@@ -4,7 +4,7 @@ import Footer from '@/components/core/Footer';
 import ScenarioPlanningContent from './ScenarioPlanningContent';
 
 export const metadata = {
-  title: 'Habitat Unit Scenario Planner',
+  title: 'Habitat Unit Planner',
   description: 'Explore potential Habitat Unit outcomes across different target conditions',
   keywords: ['scenario planning', 'habitat unit scenarios', 'BNG scenario', 'biodiversity outcomes', 'habitat enhancement', 'habitat creation', 'BNG planning'],
   alternates: {

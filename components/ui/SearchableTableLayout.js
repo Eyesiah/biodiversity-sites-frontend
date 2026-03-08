@@ -60,7 +60,6 @@ export default forwardRef(function SearchableTableLayout({
   // Expose imperative methods to parent components
   useImperativeHandle(ref, () => ({
     setFilterValue: (value) => {
-      console.log(`Directly setting filter value to: ${value}`);
       setInputValue(value);
       // Focus the input to make it clear the filter was set
       if (inputRef.current) {
