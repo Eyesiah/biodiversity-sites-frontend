@@ -103,7 +103,26 @@ export async function calculateScenarios(prevState, formData) {
 
   const scenarios = [];
 
-  if (improvementType === 'creation') {
+  if (improvementType === 'baseline') {
+    // For baseline: calculate HUs for target habitat at each condition using baseline formula
+    VALID_CONDITIONS.forEach(condition => {
+      const baselineHUs = calculateBaselineHU(
+        size,
+        habitat,
+        condition,
+        strategicSignificance
+      );
+      
+      scenarios.push({
+        habitat: habitat,
+        condition: condition,
+        HUs: baselineHUs || 0,
+        distinctivenessScore: getDistinctivenessScore(habitat),
+        conditionScore: getConditionScore(condition),
+        timeToTarget: 'N/A',
+      });
+    });
+  } else if (improvementType === 'creation') {
     // For creation: calculate HUs for target habitat at each condition
     VALID_CONDITIONS.forEach(targetCondition => {
       const huData = calculateImprovementHU(
