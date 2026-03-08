@@ -1,7 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useMemo } from 'react';
+import { useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
@@ -82,7 +82,20 @@ export function renderAdjacencyTable(nca, allNcas) {
   );
 }
 
-export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
+export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared, onSortedItemsChange }, ref) {
+  // Ref to the SearchableBodiesLayout child component
+  const searchableBodiesLayoutRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      // Pass the filter value down to the SearchableBodiesLayout child
+      if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
+        searchableBodiesLayoutRef.current.setFilterValue(value);
+      }
+    }
+  }), []);
+
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return ncas.map(item => ({
@@ -99,37 +112,40 @@ export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, o
   }
 
   return (
-    <SearchableBodiesLayout
-      bodies={processedBodies}
-      allSites={sites}
-      headers={HEADERS}
-      bodyNameKey="name"
-      siteRefsKey="sites"
-      onSiteHover={onHoveredSiteChange}
-      filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
-      initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
-      summary={(filteredCount, totalCount) => (
-        <Text fontSize="1.2rem">
-          Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='National Character Area (NCA)'>NCAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
-        </Text>
-      )}
-      exportConfig={{
-        onExportCsv: (items) => {
-          const csvData = items.map(item => ({
-            'ID': item.id,
-            'Name': item.name,
-            'Size (ha)': item.size,
-            '# BGS Sites': item.siteCount,
-            '# Adjacent NCAs': item.adjacentsCount,
-          }));
-          const csv = Papa.unparse(csvData);
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          triggerDownload(blob, 'ncas.csv');
-        }
-      }}
-      onExpandedRowChanged={onExpandedRowChanged}
-      modalType="nca"
-      onSiteClick={onSelectedSiteChange}
-    />
-  );
-}
+      <SearchableBodiesLayout
+        ref={searchableBodiesLayoutRef}
+        bodies={processedBodies}
+        allSites={sites}
+        headers={HEADERS}
+        bodyNameKey="name"
+        siteRefsKey="sites"
+        onSiteHover={onHoveredSiteChange}
+        filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
+        initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
+        summary={(filteredCount, totalCount) => (
+          <Text fontSize="1.2rem">
+            Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='National Character Area (NCA)'>NCAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+          </Text>
+        )}
+        exportConfig={{
+          onExportCsv: (items) => {
+            const csvData = items.map(item => ({
+              'ID': item.id,
+              'Name': item.name,
+              'Size (ha)': item.size,
+              '# BGS Sites': item.siteCount,
+              '# Adjacent NCAs': item.adjacentsCount,
+            }));
+            const csv = Papa.unparse(csvData);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, 'ncas.csv');
+          }
+        }}
+        onExpandedRowChanged={onExpandedRowChanged}
+        modalType="nca"
+        onSiteClick={onSelectedSiteChange}
+        onFilterCleared={onFilterCleared}
+        onSortedItemsChange={onSortedItemsChange}
+      />
+    );
+});

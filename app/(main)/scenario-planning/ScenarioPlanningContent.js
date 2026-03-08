@@ -8,6 +8,7 @@ import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
 import { TbFileTypeXml } from "react-icons/tb";
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import Tooltip from '@/components/ui/Tooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
@@ -37,7 +38,7 @@ const initialState = {
   habitat: '',
   baselineHabitat: '',
   baselineCondition: '',
-  improvementType: 'creation',
+  improvementType: 'baseline',
   strategicSignificance: 1,
   spatialRisk: 1,
   timeToTargetOffset: 0,
@@ -121,6 +122,31 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const handleCalculate = () => {
     if (formRef.current) {
       const formDataToSubmit = new FormData(formRef.current);
+      const timeToTargetOffset = formDataToSubmit.get("timeToTargetOffset");
+      startTransition(() => {
+        formAction(formDataToSubmit);
+      });
+    }
+  };
+
+  const handleImprovementTypeChange = (e) => {
+    const newType = e.target.value;
+    setFormData({ ...formData, improvementType: newType });
+    
+    // Check if data has been input and recalculate
+    const hasData = formData.size > 0 || formData.habitat || formData.baselineHabitat;
+    if (hasData) {
+      // Create a new FormData with the updated improvement type
+      const formDataToSubmit = new FormData();
+      formDataToSubmit.set("improvementType", newType);
+      formDataToSubmit.set("size", formData.size);
+      formDataToSubmit.set("habitat", formData.habitat);
+      formDataToSubmit.set("baselineHabitat", formData.baselineHabitat);
+      formDataToSubmit.set("baselineCondition", formData.baselineCondition);
+      formDataToSubmit.set("strategicSignificance", formData.strategicSignificance);
+      formDataToSubmit.set("spatialRisk", formData.spatialRisk);
+      formDataToSubmit.set("timeToTargetOffset", formData.timeToTargetOffset);
+      
       startTransition(() => {
         formAction(formDataToSubmit);
       });
@@ -137,7 +163,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     emptyFormData.set("habitat", "");
     emptyFormData.set("isReset", "true");
     emptyFormData.set("size", "0");
-    emptyFormData.set("improvementType", "creation");
+    emptyFormData.set("improvementType", "baseline");
     emptyFormData.set("strategicSignificance", "1");
     emptyFormData.set("spatialRisk", "1");
     emptyFormData.set("timeToTargetOffset", "0");
@@ -150,6 +176,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   };
 
   const showBaselineFields = formData.improvementType === 'enhancement';
+  const showSpatialRisk = formData.improvementType !== 'baseline';
+  const showTimeOffset = formData.improvementType !== 'baseline';
 
   const handleExportXML = () => {
     if (!state.results || state.results.length === 0) return;
@@ -177,6 +205,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
       xml += `      <BaselineCondition>${result.baselineCondition}</BaselineCondition>\n`;
       xml += `      <TargetCondition>${result.targetCondition}</TargetCondition>\n`;
       xml += `      <TimeToTarget>${result.timeToTarget}</TimeToTarget>\n`;
+      xml += `      <EffectiveTimeToTarget>${result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget}</EffectiveTimeToTarget>\n`;
       xml += `      <HUs>${result.HUs.toFixed(2)}</HUs>\n`;
       xml += '    </Result>\n';
     });
@@ -212,8 +241,9 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <NativeSelect.Field 
                   name="improvementType"
                   value={formData.improvementType}
-                  onChange={(e) => setFormData({ ...formData, improvementType: e.target.value })}
+                  onChange={handleImprovementTypeChange}
                 >
+                  <option value="baseline">Baseline</option>
                   <option value="creation">Creation</option>
                   <option value="enhancement">Enhancement</option>
                 </NativeSelect.Field>
@@ -333,45 +363,58 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </NativeSelect.Root>
             </HStack>
 
-            <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Spatial Risk</Text>
-              <NativeSelect.Root flex="2" size="sm">
-                <NativeSelect.Field 
-                  name="spatialRisk"
-                  value={formData.spatialRisk}
-                  onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })}
-                >
-                  <option value="1">Within (1.0)</option>
-                  <option value="1.2">Adjacent (1.2)</option>
-                  <option value="1.5">Isolated (1.5)</option>
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-            </HStack>
-
-            <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
-              <NativeSelect.Root flex="2" size="sm">
-                <NativeSelect.Field 
-                  name="timeToTargetOffset"
-                  value={formData.timeToTargetOffset}
-                  onChange={(e) => setFormData({ ...formData, timeToTargetOffset: Number(e.target.value) })}
-                >
-                  {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
-                    <option key={offset} value={offset}>
-                      {offset > 0 ? `+${offset}` : offset} years
-                    </option>
-                  ))}
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-            </HStack>
-
-            {state.targetDistinctiveness && (
-              <Text fontSize="sm" color="gray.500">
-                Target Habitat Distinctiveness: {state.targetDistinctiveness}
-              </Text>
+            {showSpatialRisk && (
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Spatial Risk</Text>
+                <NativeSelect.Root flex="2" size="sm">
+                  <NativeSelect.Field 
+                    name="spatialRisk"
+                    value={formData.spatialRisk}
+                    onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })}
+                  >
+                    <option value="1">Within (1.0)</option>
+                    <option value="1.2">Adjacent (1.2)</option>
+                    <option value="1.5">Isolated (1.5)</option>
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
+              </HStack>
             )}
+
+            {showTimeOffset && (
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
+                <Tooltip text="A negative value represents the the credit given for prior habitat improvement. A positive value represents the delay before this habitat is improved.">
+                  <NativeSelect.Root flex="2" size="sm">
+                    <NativeSelect.Field 
+                      name="timeToTargetOffset"
+                      value={formData.timeToTargetOffset}
+                      onChange={(e) => {
+                        const newValue = Number(e.target.value);
+                        setFormData({ ...formData, timeToTargetOffset: newValue });
+                        
+                        // Auto-calculate when time offset changes
+                        if (formRef.current && (formData.size > 0 || formData.habitat)) {
+                          const formDataToSubmit = new FormData(formRef.current);
+                          formDataToSubmit.set("timeToTargetOffset", String(newValue));
+                          startTransition(() => {
+                            formAction(formDataToSubmit);
+                          });
+                        }
+                      }}
+                    >
+                      {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
+                        <option key={offset} value={offset}>
+                          {offset > 0 ? `+${offset}` : offset} years
+                        </option>
+                      ))}
+                    </NativeSelect.Field>
+                    <NativeSelect.Indicator />
+                  </NativeSelect.Root>
+                </Tooltip>
+              </HStack>
+            )}
+
 
             {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
               <Text fontSize="sm" color="gray.500">
@@ -381,6 +424,18 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
             <HStack spacing={4} justify="flex-end" mt={4}>
               <SubmitButton onReset={handleReset} />
+              {state.results && (
+                <Tooltip text="Click to download data as a .XML file">
+                  <Button 
+                    onClick={handleExportXML}
+                    padding="4px"
+                    border="0px solid"
+                    size="15"
+                  >
+                    <TbFileTypeXml size={25} padding={0} />
+                  </Button>
+                </Tooltip>
+              )}
             </HStack>
           </VStack>
         </PrimaryCard>
@@ -394,71 +449,103 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
       {state.results && (
         <PrimaryCard maxWidth="1000px" margin="20px" mt={6}>
-          <VStack spacing={4} align="stretch">
-            <Heading as="h3" size="md">
-              Results
+          <VStack spacing={1} align="stretch">
+            <Heading as="h3" size="lg" mb={0}>
+              {state.habitat ? (
+                state.improvementType === 'enhancement' && state.baselineHabitat ? (
+                  <>
+                    Results for <em>&apos;{state.baselineHabitat}&apos;</em> habitat enhanced to <em>&apos;{state.habitat}&apos;</em> habitat.
+                  </>
+                ) : (
+                  <>
+                    Results for {state.improvementType === 'baseline' ? 'baseline' : state.improvementType === 'creation' ? 'created' : 'enhanced'} <em>&apos;{state.habitat}&apos;</em> habitat.
+                  </>
+                )
+              ) : 'Results'}
             </Heading>
-            
-            {state.summary && (
-              <Box bg="gray.50" p={4} borderRadius="md">
-                <HStack spacing={8}>
-                  <Box>
-                    <Text fontWeight="bold" fontSize="sm">Min HUs</Text>
-                    <Text fontSize="xl">{state.summary.minHUs.toFixed(2)}</Text>
-                  </Box>
-                  <Box>
-                    <Text fontWeight="bold" fontSize="sm">Max HUs</Text>
-                    <Text fontSize="xl">{state.summary.maxHUs.toFixed(2)}</Text>
-                  </Box>
-                  <Box>
-                    <Text fontWeight="bold" fontSize="sm">Average HUs</Text>
-                    <Text fontSize="xl">{state.summary.avgHUs.toFixed(2)}</Text>
-                  </Box>
-                </HStack>
-              </Box>
-            )}
 
-            <HStack justify="flex-end" mt={2}>
-              <Tooltip text="Click to download data as a .XML file">
-                <Button 
-                  onClick={handleExportXML}
-                  padding="4px"
-                  border="0px solid"
-                  size="15"
-                >
-                  <TbFileTypeXml size={25} padding={0} />
-                </Button>
-              </Tooltip>
+            <HStack spacing={2} mb={2}>
+              <Heading as="h4" size="md" fontWeight="bold">
+                Formula used:
+              </Heading>
+              <Text fontSize="sm" color="gray.600" fontStyle="italic">
+                {state.improvementType === 'baseline' 
+                  ? `Habitat Unit (HU) = Size × Distinctiveness × Condition × Strategic Significance`
+                  : state.improvementType === 'creation'
+                  ? `Habitat Unit (HU) = Size × Distinctiveness × Condition × Strategic Significance × Temporal Risk × Difficulty Factor × Spatial Risk`
+                  : `Habitat Unit (HU) = (((Enhanced Size × Enhanced Distinctiveness × Enhanced Condition) - (Enhanced Size × Baseline Distinctiveness × Baseline Condition)) × (Temporal Risk × Difficulty Factor) + (Enhanced Size × Baseline Distinctiveness × Baseline Condition)) × Strategic Significance × Spatial Risk`
+                }
+              </Text>
             </HStack>
 
-            <Box overflowX="auto">
-              <table>
+            <Box overflowX="auto" display="flex" justifyContent="center">
+              <table style={{ borderCollapse: 'collapse', width: 'auto' }}>
                 <thead>
-                  <tr>
-                    <th style={{ padding: '8px', textAlign: 'left' }}>Baseline Habitat</th>
-                    <th style={{ padding: '8px', textAlign: 'left' }}>Baseline Condition</th>
-                    <th style={{ padding: '8px', textAlign: 'left' }}>Target Condition</th>
-                    <th style={{ padding: '8px', textAlign: 'left' }}>Time to Target (years)</th>
-                    <th style={{ padding: '8px', textAlign: 'right' }}>HUs</th>
-                  </tr>
+                  {state.improvementType === 'baseline' ? (
+                    <tr>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Strategic Significance</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HUs</th>
+                    </tr>
+                  ) : (
+                    <tr>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Strategic Significance</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Spatial Risk</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Time to Target (years)</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Temporal Multiplier</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HUs</th>
+                    </tr>
+                  )}
                 </thead>
                 <tbody>
                   {state.results.map((result, index) => (
-                    <tr key={index}>
-                      <td style={{ padding: '8px' }}>{result.baselineHabitat}</td>
-                      <td style={{ padding: '8px', textAlign: 'center' }}>{result.baselineCondition}</td>
-                      <td style={{ padding: '8px' }}>{result.targetCondition}</td>
-                      <td style={{ padding: '8px', textAlign: 'center' }}>{result.timeToTarget}</td>
-                      <td style={{ padding: '8px', textAlign: 'center', fontFamily: 'monospace' }}>
-                        {result.HUs.toFixed(2)}
-                      </td>
+                    <tr key={index} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                      {state.improvementType === 'baseline' ? (
+                        <>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.condition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.strategicSignificance}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                            {result.HUs.toFixed(2)}
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.targetCondition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.strategicSignificance}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.spatialRisk}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                            {result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget}
+                          </td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                            {result.temporalRisk !== undefined ? result.temporalRisk.toFixed(3) : 'N/A'}
+                          </td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                            {result.HUs.toFixed(2)}
+                          </td>
+                        </>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </Box>
 
-            <Box mt={4}>
+            <Box mt={2}>
               <Text fontSize="sm" color="gray.600">
                 <strong>Note:</strong> HUs shown are the total for the given size. 
                 Enhancement scenarios only show combinations where the target condition is better than or equal to baseline.

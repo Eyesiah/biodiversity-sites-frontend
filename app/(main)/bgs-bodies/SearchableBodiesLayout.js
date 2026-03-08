@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { InfoModal } from '@/components/ui/InfoModal';
 
-export default function SearchableBodiesLayout({
+export default forwardRef(function SearchableBodiesLayout({
   bodies,
   allSites,
   headers,
@@ -21,9 +21,25 @@ export default function SearchableBodiesLayout({
   onSiteHover,
   onSiteClick,
   modalType,  // Type for InfoModal: 'lpa', 'lnrs', 'nca', etc.
-}) {
+  onFilterCleared, // Callback when filter is cleared
+  onSortedItemsChange, // Callback when filtered items change
+}, ref) {
   const [expandedRow, setExpandedRow] = useState(null);
   const [modalState, setModalState] = useState({ show: false, type: '', name: '', title: '', size: '' });
+
+  // Ref to the SearchableTableLayout child component
+  const searchableTableLayoutRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      // Pass the filter value down to the SearchableTableLayout child
+      if (searchableTableLayoutRef.current && searchableTableLayoutRef.current.setFilterValue) {
+        searchableTableLayoutRef.current.setFilterValue(value);
+      }
+    }
+  }), []);
+
 
   // Create a Map for O(1) site lookups by referenceNumber
   const sitesMap = useMemo(() => {
@@ -118,40 +134,45 @@ export default function SearchableBodiesLayout({
   return (
     <>
       <SearchableTableLayout
+        ref={searchableTableLayoutRef}
         initialItems={bodies}
         filterPredicate={filterPredicate}
         initialSortConfig={initialSortConfig}
         exportConfig={exportConfig}
         summary={summary}
+        onFilterCleared={onFilterCleared}
+        onSortedItemsChange={onSortedItemsChange}
       >
-        {({ sortedItems, requestSort, getSortIndicator }) => (
-          <PrimaryTable.Root>
-            <PrimaryTable.Header>
-              <PrimaryTable.Row>
-                {headers.map((header) => (
-                  <PrimaryTable.ColumnHeader
-                    key={header.key}
-                    onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
-                    textAlign={header.textAlign}
-                  >
-                    {header.label}
-                    {header.sortable !== false && getSortIndicator(header.key)}
-                  </PrimaryTable.ColumnHeader>
+        {({ sortedItems: tableSortedItems, requestSort, getSortIndicator, inputValue: tableInputValue, setInputValue: tableSetInputValue }) => {
+          return (
+            <PrimaryTable.Root>
+              <PrimaryTable.Header>
+                <PrimaryTable.Row>
+                  {headers.map((header) => (
+                    <PrimaryTable.ColumnHeader
+                      key={header.key}
+                      onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
+                      textAlign={header.textAlign}
+                    >
+                      {header.label}
+                      {header.sortable !== false && getSortIndicator(header.key)}
+                    </PrimaryTable.ColumnHeader>
+                  ))}
+                </PrimaryTable.Row>
+              </PrimaryTable.Header>
+              <PrimaryTable.Body>
+                {tableSortedItems.map((body) => (
+                  <BodyRow
+                    body={body}
+                    key={body[bodyNameKey]}
+                    isOpen={expandedRow == body[bodyNameKey]}
+                    onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
+                  />
                 ))}
-              </PrimaryTable.Row>
-            </PrimaryTable.Header>
-            <PrimaryTable.Body>
-              {sortedItems.map((body) => (
-                <BodyRow
-                  body={body}
-                  key={body[bodyNameKey]}
-                  isOpen={expandedRow == body[bodyNameKey]}
-                  onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
-                />
-              ))}
-            </PrimaryTable.Body>
-          </PrimaryTable.Root>
-        )}
+              </PrimaryTable.Body>
+            </PrimaryTable.Root>
+          );
+        }}
       </SearchableTableLayout>
       {modalType && (
         <InfoModal
@@ -161,4 +182,4 @@ export default function SearchableBodiesLayout({
       )}
     </>
   );
-}
+});

@@ -5,6 +5,7 @@ import { Box, VStack, Heading, Text, Button, Link } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import SearchableDropdown from '@/components/ui/SearchableDropdown';
 import ExternalLink from '@/components/ui/ExternalLink';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { getUKHabData, getUKHabCodesForHabitatAction, getBroadHabitatsAction, getSpecificHabitatsAction } from './actions';
 
 export default function UKHabLookupContent() {
@@ -91,7 +92,7 @@ export default function UKHabLookupContent() {
   return (
     <Box p={4}>
       <Heading as="h1" size="lg" mb={4}>
-        UKHab Classification Lookup
+        <GlossaryTooltip term="UKHab">UKHab Classification</GlossaryTooltip> Lookup
       </Heading>
       
       <Text mb={6} color="gray.600">
@@ -166,6 +167,7 @@ export default function UKHabLookupContent() {
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 2</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 3</th>
                     <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Level 4</th>
+                    <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>UKHab Pdf page</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -185,6 +187,9 @@ export default function UKHabLookupContent() {
                       </td>
                       <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
                         {result.level4Label} <span style={{ color: '#666', fontSize: '0.9em' }}>({result.level4Code})</span>
+                      </td>
+                      <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                        {result.definitionPage || <span style={{ color: '#999', fontStyle: 'italic' }}>N/A</span>}
                       </td>
                     </tr>
                   ))}

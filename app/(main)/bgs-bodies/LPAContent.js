@@ -1,7 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useMemo } from 'react';
+import { useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
@@ -85,7 +85,20 @@ export function renderLpaAdjacencyTable(lpa, allLpas) {
   );
 }
 
-export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
+export default forwardRef(function LPAContent({ lpas, sites, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared, onSortedItemsChange }, ref) {
+  // Ref to the SearchableBodiesLayout child component
+  const searchableBodiesLayoutRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      // Pass the filter value down to the SearchableBodiesLayout child
+      if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
+        searchableBodiesLayoutRef.current.setFilterValue(value);
+      }
+    }
+  }), []);
+
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lpas.map(item => ({
@@ -99,41 +112,44 @@ export default function LPAContent({ lpas, sites, onExpandedRowChanged, onSelect
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
 
   return (
-    <SearchableBodiesLayout
-      bodies={processedBodies}
-      allSites={sites}
-      headers={HEADERS}
-      bodyNameKey="name"
-      siteRefsKey="sites"
-      onSiteHover={onHoveredSiteChange}
-      filterPredicate={(item, term) =>
-        (item.name?.toLowerCase() || '').includes(term) ||
-        (item.id?.toLowerCase() || '').includes(term)
-      }
-      initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
-      summary={(filteredCount, totalCount) => (
-        <Text fontSize="1.2rem">
-          Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='Local Planning Authority (LPA)'>LPAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
-        </Text>
-      )}
-      exportConfig={{
-        onExportCsv: (items) => {
-          const csvData = items.map(item => ({
-            'ID': item.id,
-            'Name': item.name,
-            'Size (ha)': item.size,
-            '# BGS Sites': item.siteCount,
-            '# Allocations': item.allocationsCount,
-            '# Adjacent LPAs': item.adjacentsCount,
-          }));
-          const csv = Papa.unparse(csvData);
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          triggerDownload(blob, 'lpas.csv');
+      <SearchableBodiesLayout
+        ref={searchableBodiesLayoutRef}
+        bodies={processedBodies}
+        allSites={sites}
+        headers={HEADERS}
+        bodyNameKey="name"
+        siteRefsKey="sites"
+        onSiteHover={onHoveredSiteChange}
+        filterPredicate={(item, term) =>
+          (item.name?.toLowerCase() || '').includes(term) ||
+          (item.id?.toLowerCase() || '').includes(term)
         }
-      }}
-      onExpandedRowChanged={onExpandedRowChanged}
-      modalType="lpa"
-      onSiteClick={onSelectedSiteChange}
-    />
-  );
-}
+        initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
+        summary={(filteredCount, totalCount) => (
+          <Text fontSize="1.2rem">
+            Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='Local Planning Authority (LPA)'>LPAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+          </Text>
+        )}
+        exportConfig={{
+          onExportCsv: (items) => {
+            const csvData = items.map(item => ({
+              'ID': item.id,
+              'Name': item.name,
+              'Size (ha)': item.size,
+              '# BGS Sites': item.siteCount,
+              '# Allocations': item.allocationsCount,
+              '# Adjacent LPAs': item.adjacentsCount,
+            }));
+            const csv = Papa.unparse(csvData);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, 'lpas.csv');
+          }
+        }}
+        onExpandedRowChanged={onExpandedRowChanged}
+        modalType="lpa"
+        onSiteClick={onSelectedSiteChange}
+        onFilterCleared={onFilterCleared}
+        onSortedItemsChange={onSortedItemsChange}
+      />
+    );
+});

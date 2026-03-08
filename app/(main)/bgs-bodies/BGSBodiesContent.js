@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
@@ -13,9 +13,8 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
-import { ARCGIS_LPA_URL, ARCGIS_LNRS_URL } from '@/config';
 
-const PolygonMap = dynamic(() => import('@/components/map/PolygonMap'), {
+const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
@@ -28,6 +27,12 @@ export default function BGSBodiesContent({
   sites = [],
   error = null
 }) {
+  // Handle filter clear events from any content component
+  const handleFilterCleared = useCallback(() => {
+    // Reset map state to show all bodies for the current tab
+    setSelectedBody(null);
+    setMapSites([]);
+  }, []);
   const [activeTab, setActiveTab] = useState('responsible-bodies');
 
   // Shared map state
@@ -35,6 +40,14 @@ export default function BGSBodiesContent({
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
+  const [filteredBodiesLPA, setFilteredBodiesLPA] = useState(null);
+  const [filteredBodiesNCA, setFilteredBodiesNCA] = useState(null);
+  const [filteredBodiesLNRS, setFilteredBodiesLNRS] = useState(null);
+
+  // Refs for content components to enable direct filter setting
+  const lpaContentRef = useRef(null);
+  const ncaContentRef = useRef(null);
+  const lnrsContentRef = useRef(null);
 
   const handleExpandedBodyChanged = useCallback((body, sites) => {
     setSelectedBody(body);
@@ -85,43 +98,127 @@ export default function BGSBodiesContent({
     setSelectedBody(null);
   }, [activeTab]);
 
+  // Handle polygon click on map - find the clicked body and set it as selected
+  const handlePolygonClick = useCallback((clickedBodyName) => {
+    // Find the clicked body from the appropriate data array based on current tab
+    let clickedBody = null;
+
+    switch (activeTab) {
+      case 'lpa':
+      case 'lpa-chart':
+        clickedBody = lpas.find(body => body.name === clickedBodyName);
+        break;
+      case 'nca':
+      case 'nca-chart':
+        clickedBody = ncas.find(body => body.name === clickedBodyName);
+        break;
+      case 'lnrs':
+      case 'lnrs-chart':
+        clickedBody = lnrs.find(body => body.name === clickedBodyName);
+        break;
+      default:
+        return; // Don't handle clicks in non-polygon modes
+    }
+
+    if (clickedBody) {
+      // Set the clicked body as selected, which will trigger the existing logic
+      // to show only that body's polygon and its adjacent bodies
+      setSelectedBody(clickedBody);
+      setMapSites(sites.filter(s => clickedBody.sites.includes(s.referenceNumber)));
+
+      // Get the appropriate content ref based on current tab
+      let contentRef = null;
+      if (activeTab === 'lpa' || activeTab === 'lpa-chart') {
+        contentRef = lpaContentRef;
+      } else if (activeTab === 'nca' || activeTab === 'nca-chart') {
+        contentRef = ncaContentRef;
+      } else if (activeTab === 'lnrs' || activeTab === 'lnrs-chart') {
+        contentRef = lnrsContentRef;
+      }
+
+      // Call the setFilterValue method on the content component
+      if (contentRef && contentRef.current && contentRef.current.setFilterValue) {
+        contentRef.current.setFilterValue(clickedBody.name);
+      } else {
+        console.warn('Content ref not available or setFilterValue method not found');
+      }
+    }
+  }, [activeTab, lpas, ncas, lnrs, sites]);
+
+  // Handle filtered body updates from content components
+  const handleFilteredBodiesChange = useCallback((newFilteredBodies, setFilteredBodies) => {
+    // Update map to show only filtered bodies
+    setSelectedBody(null);
+    setMapSites([]);
+
+    setFilteredBodies(newFilteredBodies || null);
+
+    // If there are filtered bodies, get their sites
+    if (newFilteredBodies && newFilteredBodies.length > 0) {
+      const filteredSites = [];
+      newFilteredBodies.forEach(body => {
+        if (body.sites) {
+          body.sites.forEach(siteRef => {
+            const site = sites.find(s => s.referenceNumber === siteRef);
+            if (site) filteredSites.push(site);
+          });
+        }
+      });
+      setMapSites(filteredSites);
+    }
+  }, [sites]);
+
+
   // Map configuration based on active tab - must be called before any early returns
-  const mapConfig = useMemo(() => {
+  const bodyType = useMemo(() => {
     switch (activeTab) {
       case 'responsible-bodies':
       case 'rb-chart':
-        return { type: 'site' };
+        return 'rb';
       case 'lpa':
       case 'lpa-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: ARCGIS_LPA_URL,
-          nameProperty: 'name',
-          selectedItem: selectedBody,
-          style: { color: '#3498db', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
-        };
+        return 'lpa';
       case 'nca':
       case 'nca-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: 'https://services.arcgis.com/JJzESW51TqeY9uat/arcgis/rest/services/National_Character_Areas_England/FeatureServer/0/query',
-          nameProperty: 'name',
-          selectedItem: selectedBody,
-          style: { color: '#8e44ad', weight: 2, opacity: 0.8, fillOpacity: 0.2 }
-        };
+        return 'nca';
       case 'lnrs':
       case 'lnrs-chart':
-        return {
-          type: 'polygon',
-          geoJsonUrl: ARCGIS_LNRS_URL,
-          nameProperty: 'name',
-          selectedItem: selectedBody,
-          style: { color: '#4CAF50', weight: 2, opacity: 0.8, fillOpacity: 0.3 }
-        };
+        return 'lnrs';
       default:
-        return { type: 'site', sites: [] };
+        return '';
     }
-  }, [activeTab, selectedBody]);
+  }, [activeTab]);
+
+  // Calculate selectedBodiesForMap based on current state
+  const selectedBodiesForMap = useMemo(() => {
+    // If a specific body is selected, show only that body
+    if (selectedBody) {
+      return [selectedBody];
+    }
+
+    const selectBodies = (allBodies, filteredBodies) => {
+      if (filteredBodies && filteredBodies.length != allBodies.length) {
+        return filteredBodies;
+      }
+      return allBodies.filter(body => body.sites && body.sites.length > 0)
+    }
+
+    let activeBodies;
+    switch (activeTab) {
+      case 'lpa':
+      case 'lpa-chart':
+        return selectBodies(lpas, filteredBodiesLPA);
+      case 'nca':
+      case 'nca-chart':
+        return selectBodies(ncas, filteredBodiesNCA);
+      case 'lnrs':
+      case 'lnrs-chart':
+        return selectBodies(lnrs, filteredBodiesLNRS);
+    }
+
+    return [];
+
+  }, [selectedBody, filteredBodiesLPA, filteredBodiesNCA, filteredBodiesLNRS, activeTab, lpas, ncas, lnrs]);
 
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
@@ -171,11 +268,14 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="lpa">
         <LPAContent
+          ref={lpaContentRef}
           lpas={lpas}
           sites={sites}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLPA)}
         />
       </Tabs.Content>
 
@@ -185,12 +285,15 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="nca">
         <NCAContent
+          ref={ncaContentRef}
           ncas={ncas}
           sites={sites}
           error={null}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesNCA)}
         />
       </Tabs.Content>
 
@@ -200,12 +303,15 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="lnrs">
         <LNRSContent
+          ref={lnrsContentRef}
           lnrs={lnrs}
           sites={sites}
           error={null}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLNRS)}
         />
       </Tabs.Content>
 
@@ -213,7 +319,7 @@ export default function BGSBodiesContent({
         <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
     </Tabs.Root>
-  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites]);
+  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared, handleFilteredBodiesChange]);
 
   // Check for error after all hooks are called
   if (error) {
@@ -228,15 +334,14 @@ export default function BGSBodiesContent({
 
   return (
     <MapContentLayout
-      map={<PolygonMap
-        selectedItem={mapConfig.selectedItem}
-        geoJsonUrl={mapConfig.geoJsonUrl}
-        nameProperty={mapConfig.nameProperty}
+      map={<BodiesMap
+        bodiesToDisplay={selectedBodiesForMap}
+        bodyType={bodyType}
         sites={mapSites}
-        style={mapConfig.style}
         disableZoom={disableZoom}
         hoveredSite={hoveredSite}
         selectedSite={selectedSite}
+        onPolygonClick={handlePolygonClick}
       />}
       content={mainContent}
     />

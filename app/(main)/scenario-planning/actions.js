@@ -103,7 +103,27 @@ export async function calculateScenarios(prevState, formData) {
 
   const scenarios = [];
 
-  if (improvementType === 'creation') {
+  if (improvementType === 'baseline') {
+    // For baseline: calculate HUs for target habitat at each condition using baseline formula
+    VALID_CONDITIONS.forEach(condition => {
+      const baselineHUs = calculateBaselineHU(
+        size,
+        habitat,
+        condition,
+        strategicSignificance
+      );
+      
+      scenarios.push({
+        habitat: habitat,
+        condition: condition,
+        HUs: baselineHUs || 0,
+        distinctivenessScore: getDistinctivenessScore(habitat),
+        conditionScore: getConditionScore(condition),
+        timeToTarget: 'N/A',
+        effectiveTimeToTarget: 'N/A',
+      });
+    });
+  } else if (improvementType === 'creation') {
     // For creation: calculate HUs for target habitat at each condition
     VALID_CONDITIONS.forEach(targetCondition => {
       const huData = calculateImprovementHU(
@@ -118,7 +138,11 @@ export async function calculateScenarios(prevState, formData) {
         spatialRisk
       );
       
-      const effectiveTimeToTarget = getEffectiveTimeToTarget(huData.timeToTarget, timeToTargetOffset);
+      // Calculate effective time-to-target (net TtoT)
+      const baseTimeToTarget = huData.timeToTarget;
+      const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
+      
+      
       scenarios.push({
         baselineHabitat: 'N/A (Creation)',
         baselineCondition: 'N/A (Creation)',
@@ -127,7 +151,9 @@ export async function calculateScenarios(prevState, formData) {
         baselineHUs: huData.baselineHUs || 0,
         distinctivenessScore: getDistinctivenessScore(habitat),
         conditionScore: getConditionScore(targetCondition),
-        timeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
+        timeToTarget: baseTimeToTarget !== undefined ? String(baseTimeToTarget) : 'N/A',
+        effectiveTimeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
+        temporalRisk: huData.temporalRisk,
       });
     });
   } else {
@@ -147,6 +173,11 @@ export async function calculateScenarios(prevState, formData) {
           spatialRisk
         );
         
+        // Calculate effective time-to-target (net TtoT)
+        const baseTimeToTarget = huData.timeToTarget;
+        const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
+        
+        
         scenarios.push({
           baselineHabitat,
           baselineCondition,
@@ -155,7 +186,9 @@ export async function calculateScenarios(prevState, formData) {
           baselineHUs: huData.baselineHUs || 0,
           distinctivenessScore: getDistinctivenessScore(habitat),
           conditionScore: getConditionScore(targetCondition),
-          timeToTarget: huData.timeToTarget || 'N/A',
+          timeToTarget: baseTimeToTarget !== undefined ? String(baseTimeToTarget) : 'N/A',
+          effectiveTimeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
+          temporalRisk: huData.temporalRisk,
         });
       }
     });

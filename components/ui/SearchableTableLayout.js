@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { useSearchAndSort } from '@/lib/hooks';
 import { Box, InputGroup, Input, Flex } from "@chakra-ui/react"
 import { Button } from '@/components/styles/Button';
@@ -22,7 +22,7 @@ const ExportButtons = ({ exportConfig, items }) => {
   );
 };
 
-export default function SearchableTableLayout({
+export default forwardRef(function SearchableTableLayout({
   initialItems,
   filterPredicate,
   initialSortConfig,
@@ -31,19 +31,20 @@ export default function SearchableTableLayout({
   summary, // Optional summary component/text
   tabs, // New prop for tabbed content: [{ title: string, content: (props) => JSX }, ...]
   children, // Original render prop for non-tabbed content
+  onFilterCleared, // Callback when filter is cleared
   onSortedItemsChange
-}) {
+}, ref) {
   const {
     inputValue,
     setInputValue,
     sortedItems,
     requestSort,
     getSortIndicator,
-    sortConfig
+    sortConfig,
+    isFilterCleared
   } = useSearchAndSort(initialItems, filterPredicate, initialSortConfig);
 
   const prevSortedItemsRef = useRef(null);
-
   useEffect(() => {
     if (onSortedItemsChange) {
       // Only call the callback if the items have actually changed (by comparing length)
@@ -54,7 +55,27 @@ export default function SearchableTableLayout({
     }
   }, [sortedItems, onSortedItemsChange]);
 
+  const inputRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      setInputValue(value);
+      // Focus the input to make it clear the filter was set
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  }), [setInputValue]);
+
   const renderProps = { sortedItems, requestSort, getSortIndicator, inputValue, sortConfig };
+
+  // Detect filter clear and notify parent
+  useEffect(() => {
+    if (isFilterCleared && onFilterCleared) {
+      onFilterCleared();
+    }
+  }, [isFilterCleared, onFilterCleared]);
 
   return (
     <Box width="100%">
@@ -101,6 +122,7 @@ export default function SearchableTableLayout({
               }
             >
               <Input
+                ref={inputRef}
                 type="text"
                 placeholder={placeholder}
                 value={inputValue}
@@ -168,4 +190,4 @@ export default function SearchableTableLayout({
       )}
     </Box>
   );
-}
+});
