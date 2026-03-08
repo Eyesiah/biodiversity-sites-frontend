@@ -82,7 +82,7 @@ export function renderAdjacencyTable(nca, allNcas) {
   );
 }
 
-export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared }, ref) {
+export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared, onSortedItemsChange }, ref) {
   // Ref to the SearchableBodiesLayout child component
   const searchableBodiesLayoutRef = useRef(null);
 
@@ -113,39 +113,40 @@ export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRo
   }
 
   return (
-    <SearchableBodiesLayout
-      ref={searchableBodiesLayoutRef}
-      bodies={processedBodies}
-      allSites={sites}
-      headers={HEADERS}
-      bodyNameKey="name"
-      siteRefsKey="sites"
-      onSiteHover={onHoveredSiteChange}
-      filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
-      initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
-      summary={(filteredCount, totalCount) => (
-        <Text fontSize="1.2rem">
-          Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='National Character Area (NCA)'>NCAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
-        </Text>
-      )}
-      exportConfig={{
-        onExportCsv: (items) => {
-          const csvData = items.map(item => ({
-            'ID': item.id,
-            'Name': item.name,
-            'Size (ha)': item.size,
-            '# BGS Sites': item.siteCount,
-            '# Adjacent NCAs': item.adjacentsCount,
-          }));
-          const csv = Papa.unparse(csvData);
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          triggerDownload(blob, 'ncas.csv');
-        }
-      }}
-      onExpandedRowChanged={onExpandedRowChanged}
-      modalType="nca"
-      onSiteClick={onSelectedSiteChange}
-      onFilterCleared={onFilterCleared}
-    />
-  );
+      <SearchableBodiesLayout
+        ref={searchableBodiesLayoutRef}
+        bodies={processedBodies}
+        allSites={sites}
+        headers={HEADERS}
+        bodyNameKey="name"
+        siteRefsKey="sites"
+        onSiteHover={onHoveredSiteChange}
+        filterPredicate={(item, term) => (item.name?.toLowerCase() || '').includes(term)}
+        initialSortConfig={{ key: 'siteCount', direction: 'descending' }}
+        summary={(filteredCount, totalCount) => (
+          <Text fontSize="1.2rem">
+            Displaying <Text as="strong">{formatNumber(filteredCount, 0)}</Text> of <Text as="strong">{formatNumber(totalCount, 0)}</Text> <GlossaryTooltip term='National Character Area (NCA)'>NCAs</GlossaryTooltip>, covering a total of <Text as="strong">{formatNumber(totalArea, 0)}</Text> hectares.
+          </Text>
+        )}
+        exportConfig={{
+          onExportCsv: (items) => {
+            const csvData = items.map(item => ({
+              'ID': item.id,
+              'Name': item.name,
+              'Size (ha)': item.size,
+              '# BGS Sites': item.siteCount,
+              '# Adjacent NCAs': item.adjacentsCount,
+            }));
+            const csv = Papa.unparse(csvData);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, 'ncas.csv');
+          }
+        }}
+        onExpandedRowChanged={onExpandedRowChanged}
+        modalType="nca"
+        onSiteClick={onSelectedSiteChange}
+        onFilterCleared={onFilterCleared}
+        onSortedItemsChange={onSortedItemsChange}
+      />
+    );
 });

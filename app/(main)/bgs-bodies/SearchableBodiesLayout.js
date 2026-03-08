@@ -22,6 +22,7 @@ export default forwardRef(function SearchableBodiesLayout({
   onSiteClick,
   modalType,  // Type for InfoModal: 'lpa', 'lnrs', 'nca', etc.
   onFilterCleared, // Callback when filter is cleared
+  onSortedItemsChange, // Callback when filtered items change
 }, ref) {
   const [expandedRow, setExpandedRow] = useState(null);
   const [modalState, setModalState] = useState({ show: false, type: '', name: '', title: '', size: '' });
@@ -141,6 +142,7 @@ export default forwardRef(function SearchableBodiesLayout({
         exportConfig={exportConfig}
         summary={summary}
         onFilterCleared={onFilterCleared}
+        onSortedItemsChange={onSortedItemsChange}
       >
         {({ sortedItems: tableSortedItems, requestSort, getSortIndicator, inputValue: tableInputValue, setInputValue: tableSetInputValue }) => {
           return (

@@ -42,6 +42,7 @@ export default function BGSBodiesContent({
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
+  const [filteredBodies, setFilteredBodies] = useState(null); // null means no filter
 
   // Refs for content components to enable direct filter setting
   const lpaContentRef = useRef(null);
@@ -89,14 +90,6 @@ export default function BGSBodiesContent({
     }
   }, [sites, activeTab]);
 
-  // Reset map state when switching tabs
-  useEffect(() => {
-    setMapSites([]);
-    setHoveredSite(null);
-    setSelectedSite(null);
-    setSelectedBody(null);
-  }, [activeTab]);
-
   // Helper function to get bodies that have at least one site
   const getBodiesWithSites = useCallback((bodies, sites) => {
     if (!bodies || !sites) return [];
@@ -112,6 +105,15 @@ export default function BGSBodiesContent({
       return false;
     });
   }, []);
+
+  // Reset map state when switching tabs
+  useEffect(() => {
+    setMapSites([]);
+    setHoveredSite(null);
+    setSelectedSite(null);
+    setSelectedBody(null);
+    setFilteredBodies(null); // Clear any filters when switching tabs
+  }, [activeTab]);
 
   // Handle polygon click on map - find the clicked body and set it as selected
   const handlePolygonClick = useCallback((clickedBodyName) => {
@@ -163,28 +165,30 @@ export default function BGSBodiesContent({
     }
   }, [activeTab, lpas, ncas, lnrs, sites]);
 
-  // Determine which bodies should be displayed on the map
-  const selectedBodiesForMap = useMemo(() => {
-    // If a specific body is selected, show only that body (same as current behavior)
-    if (selectedBody) {
-      return [selectedBody];
-    }
+  // Handle filtered body updates from content components
+  const handleFilteredBodiesChange = useCallback((filteredBodies) => {
+    // Update map to show only filtered bodies
+    setSelectedBody(null);
+    setMapSites([]);
     
-    // If no filter is active, use all bodies for the current tab that have at least one site
-    switch (activeTab) {
-      case 'lpa':
-      case 'lpa-chart':
-        return getBodiesWithSites(lpas, sites);
-      case 'nca':
-      case 'nca-chart':
-        return getBodiesWithSites(ncas, sites);
-      case 'lnrs':
-      case 'lnrs-chart':
-        return getBodiesWithSites(lnrs, sites);
-      default:
-        return [];
+    // Update filteredBodies state to trigger selectedBodiesForMap recalculation
+    setFilteredBodies(filteredBodies || null);
+    
+    // If there are filtered bodies, get their sites
+    if (filteredBodies && filteredBodies.length > 0) {
+      const filteredSites = [];
+      filteredBodies.forEach(body => {
+        if (body.sites) {
+          body.sites.forEach(siteRef => {
+            const site = sites.find(s => s.referenceNumber === siteRef);
+            if (site) filteredSites.push(site);
+          });
+        }
+      });
+      setMapSites(filteredSites);
     }
-  }, [selectedBody, activeTab, lpas, ncas, lnrs, sites, getBodiesWithSites]);
+  }, [sites]);
+
 
   // Map configuration based on active tab - must be called before any early returns
   const bodyType = useMemo(() => {
@@ -205,6 +209,34 @@ export default function BGSBodiesContent({
         return '';
     }
   }, [activeTab]);
+
+  // Calculate selectedBodiesForMap based on current state
+  const selectedBodiesForMap = useMemo(() => {
+    // If a specific body is selected, show only that body
+    if (selectedBody) {
+      return [selectedBody];
+    }
+    
+    // If filtered bodies exist, show only filtered bodies
+    if (filteredBodies && filteredBodies.length > 0) {
+      return filteredBodies;
+    }
+    
+    // Otherwise show all bodies for current tab
+    switch (activeTab) {
+      case 'lpa':
+      case 'lpa-chart':
+        return getBodiesWithSites(lpas, sites);
+      case 'nca':
+      case 'nca-chart':
+        return getBodiesWithSites(ncas, sites);
+      case 'lnrs':
+      case 'lnrs-chart':
+        return getBodiesWithSites(lnrs, sites);
+      default:
+        return [];
+    }
+  }, [selectedBody, filteredBodies, activeTab, lpas, ncas, lnrs, sites, getBodiesWithSites]);
 
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
@@ -261,6 +293,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={handleFilteredBodiesChange}
         />
       </Tabs.Content>
 
@@ -278,6 +311,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={handleFilteredBodiesChange}
         />
       </Tabs.Content>
 
@@ -295,6 +329,7 @@ export default function BGSBodiesContent({
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
           onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={handleFilteredBodiesChange}
         />
       </Tabs.Content>
 
@@ -302,7 +337,7 @@ export default function BGSBodiesContent({
         <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
     </Tabs.Root>
-  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared]);
+  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared, handleFilteredBodiesChange]);
 
   // Check for error after all hooks are called
   if (error) {

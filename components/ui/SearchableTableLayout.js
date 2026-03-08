@@ -43,18 +43,18 @@ export default forwardRef(function SearchableTableLayout({
     sortConfig,
     isFilterCleared
   } = useSearchAndSort(initialItems, filterPredicate, initialSortConfig);
-  const prevSortedItemsRef = useRef(null);
 
+  const prevSortedItemsRef = useRef(null);
   useEffect(() => {
     if (onSortedItemsChange) {
       // Only call the callback if the items have actually changed (by comparing length)
       if (!prevSortedItemsRef.current || prevSortedItemsRef.current.length !== sortedItems.length) {
         prevSortedItemsRef.current = sortedItems;
-      onSortedItemsChange(sortedItems);
-    }
+        onSortedItemsChange(sortedItems);
+      }
     }
   }, [sortedItems, onSortedItemsChange]);
-  
+
   const inputRef = useRef(null);
 
   // Expose imperative methods to parent components
