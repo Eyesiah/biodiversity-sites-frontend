@@ -142,9 +142,6 @@ export async function calculateScenarios(prevState, formData) {
       const baseTimeToTarget = huData.timeToTarget;
       const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
       
-      // Debug logging for creation scenarios
-      console.log(`[Creation Debug] Habitat: ${habitat}, Condition: ${targetCondition}, Offset: ${timeToTargetOffset}`);
-      console.log(`[Creation Debug] Base timeToTarget: ${baseTimeToTarget}, Effective timeToTarget: ${effectiveTimeToTarget}, TemporalRisk: ${huData.temporalRisk}, HUs: ${huData.HUs}`);
       
       scenarios.push({
         baselineHabitat: 'N/A (Creation)',
@@ -180,9 +177,6 @@ export async function calculateScenarios(prevState, formData) {
         const baseTimeToTarget = huData.timeToTarget;
         const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
         
-        // Debug logging for enhancement scenarios
-        console.log(`[Enhancement Debug] Baseline: ${baselineHabitat} (${baselineCondition}), Target: ${habitat} (${targetCondition}), Offset: ${timeToTargetOffset}`);
-        console.log(`[Enhancement Debug] Base timeToTarget: ${baseTimeToTarget}, Effective timeToTarget: ${effectiveTimeToTarget}, TemporalRisk: ${huData.temporalRisk}, HUs: ${huData.HUs}`);
         
         scenarios.push({
           baselineHabitat,

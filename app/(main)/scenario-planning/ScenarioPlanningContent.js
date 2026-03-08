@@ -115,8 +115,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   }
 
   useEffect(() => {
-    console.log(`[Client Debug] State updated:`, state);
-    console.log(`[Client Debug] State timeToTargetOffset:`, state.timeToTargetOffset, typeof state.timeToTargetOffset);
     setFormData(state);
     setSizeInput(state.size !== undefined && state.size !== null ? String(state.size) : '0');
   }, [state]);
@@ -125,7 +123,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     if (formRef.current) {
       const formDataToSubmit = new FormData(formRef.current);
       const timeToTargetOffset = formDataToSubmit.get("timeToTargetOffset");
-      console.log(`[Client Debug] Submitting form with timeToTargetOffset: ${timeToTargetOffset} (type: ${typeof timeToTargetOffset})`);
       startTransition(() => {
         formAction(formDataToSubmit);
       });
@@ -393,14 +390,12 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     value={formData.timeToTargetOffset}
                     onChange={(e) => {
                       const newValue = Number(e.target.value);
-                      console.log(`[Client Debug] Time offset changed: ${e.target.value} -> ${newValue} (type: ${typeof newValue})`);
                       setFormData({ ...formData, timeToTargetOffset: newValue });
                       
                       // Auto-calculate when time offset changes
                       if (formRef.current && (formData.size > 0 || formData.habitat)) {
                         const formDataToSubmit = new FormData(formRef.current);
                         formDataToSubmit.set("timeToTargetOffset", String(newValue));
-                        console.log(`[Client Debug] Auto-calculating with new offset: ${newValue}`);
                         startTransition(() => {
                           formAction(formDataToSubmit);
                         });
