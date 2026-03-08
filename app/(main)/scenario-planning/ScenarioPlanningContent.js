@@ -162,7 +162,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     emptyFormData.set("habitat", "");
     emptyFormData.set("isReset", "true");
     emptyFormData.set("size", "0");
-    emptyFormData.set("improvementType", "creation");
+    emptyFormData.set("improvementType", "baseline");
     emptyFormData.set("strategicSignificance", "1");
     emptyFormData.set("spatialRisk", "1");
     emptyFormData.set("timeToTargetOffset", "0");
