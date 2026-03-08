@@ -1,7 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useMemo } from 'react';
+import { useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import { formatNumber, slugify } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
 import SearchableBodiesLayout from './SearchableBodiesLayout';
@@ -89,7 +89,21 @@ export function renderAdjacencyTable(lnrs, allLnrs) {
   );
 }
 
-export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
+export default forwardRef(function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared }, ref) {
+  // Ref to the SearchableBodiesLayout child component
+  const searchableBodiesLayoutRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      console.log(`LNRSContent received setFilterValue call with: ${value}`);
+      // Pass the filter value down to the SearchableBodiesLayout child
+      if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
+        searchableBodiesLayoutRef.current.setFilterValue(value);
+      }
+    }
+  }), []);
+
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return lnrs.map(item => ({
@@ -107,6 +121,7 @@ export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, 
 
   return (
     <SearchableBodiesLayout
+      ref={searchableBodiesLayoutRef}
       bodies={processedBodies}
       allSites={sites}
       headers={HEADERS}
@@ -139,6 +154,7 @@ export default function LNRSContent({ lnrs, sites, error, onExpandedRowChanged, 
       onExpandedRowChanged={onExpandedRowChanged}
       modalType="lnrs"
       onSiteClick={onSelectedSiteChange}
+      onFilterCleared={onFilterCleared}
     />
   );
-}
+});

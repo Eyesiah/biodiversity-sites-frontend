@@ -1,7 +1,7 @@
 'use client';
 
 import Papa from 'papaparse';
-import { useMemo } from 'react';
+import { useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { triggerDownload } from '@/lib/utils';
@@ -82,7 +82,21 @@ export function renderAdjacencyTable(nca, allNcas) {
   );
 }
 
-export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange }) {
+export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRowChanged, onSelectedSiteChange, onHoveredSiteChange, onFilterCleared }, ref) {
+  // Ref to the SearchableBodiesLayout child component
+  const searchableBodiesLayoutRef = useRef(null);
+
+  // Expose imperative methods to parent components
+  useImperativeHandle(ref, () => ({
+    setFilterValue: (value) => {
+      console.log(`NCAContent received setFilterValue call with: ${value}`);
+      // Pass the filter value down to the SearchableBodiesLayout child
+      if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
+        searchableBodiesLayoutRef.current.setFilterValue(value);
+      }
+    }
+  }), []);
+
   // Pre-process to add siteCount and adjacentsCount (without expanding sites)
   const processedBodies = useMemo(() => {
     return ncas.map(item => ({
@@ -100,6 +114,7 @@ export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, o
 
   return (
     <SearchableBodiesLayout
+      ref={searchableBodiesLayoutRef}
       bodies={processedBodies}
       allSites={sites}
       headers={HEADERS}
@@ -130,6 +145,7 @@ export default function NCAContent({ ncas, sites, error, onExpandedRowChanged, o
       onExpandedRowChanged={onExpandedRowChanged}
       modalType="nca"
       onSiteClick={onSelectedSiteChange}
+      onFilterCleared={onFilterCleared}
     />
   );
-}
+});

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
@@ -28,6 +28,13 @@ export default function BGSBodiesContent({
   sites = [],
   error = null
 }) {
+  // Handle filter clear events from any content component
+  const handleFilterCleared = useCallback(() => {
+    console.log('Filter cleared - resetting map state');
+    // Reset map state to show all bodies for the current tab
+    setSelectedBody(null);
+    setMapSites([]);
+  }, []);
   const [activeTab, setActiveTab] = useState('responsible-bodies');
 
   // Shared map state
@@ -35,6 +42,11 @@ export default function BGSBodiesContent({
   const [hoveredSite, setHoveredSite] = useState(null); // For list tabs
   const [selectedSite, setSelectedSite] = useState(null);
   const [selectedBody, setSelectedBody] = useState(null);
+
+  // Refs for content components to enable direct filter setting
+  const lpaContentRef = useRef(null);
+  const ncaContentRef = useRef(null);
+  const lnrsContentRef = useRef(null);
 
   const handleExpandedBodyChanged = useCallback((body, sites) => {
     setSelectedBody(body);
@@ -128,6 +140,26 @@ export default function BGSBodiesContent({
       // to show only that body's polygon and its adjacent bodies
       setSelectedBody(clickedBody);
       setMapSites(sites.filter(s => clickedBody.sites.includes(s.referenceNumber)));
+      
+      // NEW: Use ref-based approach to directly set filter value on the appropriate content component
+      console.log(`SETTING FILTER VALUE ${clickedBody.name} via ref`);
+      
+      // Get the appropriate content ref based on current tab
+      let contentRef = null;
+      if (activeTab === 'lpa' || activeTab === 'lpa-chart') {
+        contentRef = lpaContentRef;
+      } else if (activeTab === 'nca' || activeTab === 'nca-chart') {
+        contentRef = ncaContentRef;
+      } else if (activeTab === 'lnrs' || activeTab === 'lnrs-chart') {
+        contentRef = lnrsContentRef;
+      }
+      
+      // Call the setFilterValue method on the content component
+      if (contentRef && contentRef.current && contentRef.current.setFilterValue) {
+        contentRef.current.setFilterValue(clickedBody.name);
+      } else {
+        console.warn('Content ref not available or setFilterValue method not found');
+      }
     }
   }, [activeTab, lpas, ncas, lnrs, sites]);
 
@@ -138,7 +170,7 @@ export default function BGSBodiesContent({
       return [selectedBody];
     }
     
-    // If no specific body is selected, show all bodies for the current tab that have at least one site
+    // If no filter is active, use all bodies for the current tab that have at least one site
     switch (activeTab) {
       case 'lpa':
       case 'lpa-chart':
@@ -240,11 +272,13 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="lpa">
         <LPAContent
+          ref={lpaContentRef}
           lpas={lpas}
           sites={sites}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
         />
       </Tabs.Content>
 
@@ -254,12 +288,14 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="nca">
         <NCAContent
+          ref={ncaContentRef}
           ncas={ncas}
           sites={sites}
           error={null}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
         />
       </Tabs.Content>
 
@@ -269,12 +305,14 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="lnrs">
         <LNRSContent
+          ref={lnrsContentRef}
           lnrs={lnrs}
           sites={sites}
           error={null}
           onExpandedRowChanged={handleExpandedBodyChanged}
           onHoveredSiteChange={setHoveredSite}
           onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
         />
       </Tabs.Content>
 
