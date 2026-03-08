@@ -414,7 +414,6 @@ export default function Navigation() {
           </DropdownMenu>
           <DropdownMenu category="Stats & Tools">
             <DropdownLink href='/statistics' label='BGS Statistics' />
-            <DropdownLink href='/HU-calculator' label='Habitat Unit Calculator' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Scenario Planner' />            
             <DropdownLink href='/query' label='API Query & Export' />
             <CopyWfsLinkButton />
