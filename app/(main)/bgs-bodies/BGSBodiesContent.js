@@ -30,7 +30,6 @@ export default function BGSBodiesContent({
 }) {
   // Handle filter clear events from any content component
   const handleFilterCleared = useCallback(() => {
-    console.log('Filter cleared - resetting map state');
     // Reset map state to show all bodies for the current tab
     setSelectedBody(null);
     setMapSites([]);
@@ -127,9 +126,6 @@ export default function BGSBodiesContent({
       // to show only that body's polygon and its adjacent bodies
       setSelectedBody(clickedBody);
       setMapSites(sites.filter(s => clickedBody.sites.includes(s.referenceNumber)));
-
-      // NEW: Use ref-based approach to directly set filter value on the appropriate content component
-      console.log(`SETTING FILTER VALUE ${clickedBody.name} via ref`);
 
       // Get the appropriate content ref based on current tab
       let contentRef = null;

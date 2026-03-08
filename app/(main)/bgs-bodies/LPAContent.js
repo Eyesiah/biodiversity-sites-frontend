@@ -92,7 +92,6 @@ export default forwardRef(function LPAContent({ lpas, sites, onExpandedRowChange
   // Expose imperative methods to parent components
   useImperativeHandle(ref, () => ({
     setFilterValue: (value) => {
-      console.log(`LPAContent received setFilterValue call with: ${value}`);
       // Pass the filter value down to the SearchableBodiesLayout child
       if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
         searchableBodiesLayoutRef.current.setFilterValue(value);

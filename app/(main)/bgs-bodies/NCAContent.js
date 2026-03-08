@@ -89,7 +89,6 @@ export default forwardRef(function NCAContent({ ncas, sites, error, onExpandedRo
   // Expose imperative methods to parent components
   useImperativeHandle(ref, () => ({
     setFilterValue: (value) => {
-      console.log(`NCAContent received setFilterValue call with: ${value}`);
       // Pass the filter value down to the SearchableBodiesLayout child
       if (searchableBodiesLayoutRef.current && searchableBodiesLayoutRef.current.setFilterValue) {
         searchableBodiesLayoutRef.current.setFilterValue(value);
