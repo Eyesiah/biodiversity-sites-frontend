@@ -483,7 +483,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <thead>
                   {state.improvementType === 'baseline' ? (
                     <tr>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
@@ -492,7 +492,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     </tr>
                   ) : (
                     <tr>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Condition</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
@@ -510,7 +510,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     <tr key={index} style={{ borderBottom: '1px solid #e2e8f0' }}>
                       {state.improvementType === 'baseline' ? (
                         <>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.condition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
@@ -521,7 +521,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                         </>
                       ) : (
                         <>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition === 'N/A (Creation)' ? 'N/A' : result.baselineConditionScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.targetCondition}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
