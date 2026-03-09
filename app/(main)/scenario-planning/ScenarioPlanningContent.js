@@ -55,6 +55,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const [sizeInput, setSizeInput] = useState('1');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
   const [targetBroadHabitat, setTargetBroadHabitat] = useState('');
+  const [treeCount, setTreeCount] = useState('');
 
   // Get filtered habitats based on broad habitat selection
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
@@ -330,6 +331,36 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </Box>
             </HStack>
 
+            {/* Tree Count field for Individual trees habitat */}
+            {targetBroadHabitat === 'Individual trees' && (
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Tree Count (0.0041 ha per Small tree)</Text>
+                <Box flex="2">
+                  <Input 
+                    value={treeCount} 
+                    onChange={(e) => {
+                      const count = e.target.value;
+                      setTreeCount(count);
+                      // Calculate size from tree count (Tree Count × 0.0041 = Size in ha)
+                      if (count && !isNaN(count) && parseInt(count) > 0) {
+                        const calculatedSize = (parseInt(count) * 0.0041).toFixed(4);
+                        setSizeInput(calculatedSize);
+                        setFormData({ ...formData, size: calculatedSize });
+                      } else {
+                        setSizeInput('');
+                        setFormData({ ...formData, size: '' });
+                      }
+                    }}
+                    width="100%" 
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Enter number of trees"
+                  />
+                </Box>
+              </HStack>
+            )}
+
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
               <Box flex="2">
@@ -337,13 +368,21 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   name="size" 
                   value={sizeInput}
                   onChange={(e) => {
-                    setSizeInput(e.target.value);
-                    setFormData({ ...formData, size: e.target.value });
+                    const size = e.target.value;
+                    setSizeInput(size);
+                    setFormData({ ...formData, size });
+                    // Calculate tree count from size if this is Individual trees habitat
+                    if (targetBroadHabitat === 'Individual trees' && size && !isNaN(size) && parseFloat(size) > 0) {
+                      const calculatedTreeCount = Math.round(parseFloat(size) / 0.0041);
+                      setTreeCount(calculatedTreeCount.toString());
+                    } else if (!size) {
+                      setTreeCount('');
+                    }
                   }}
                   width="100%" 
                   type="number"
-                  min="0.01"
-                  step="0.01"
+                  min="0"
+                  step="any"
                 />
               </Box>
             </HStack>
