@@ -456,9 +456,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
 
             {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
-              <Text fontSize="sm" color="gray.500">
-                Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}
-              </Text>
+              <VStack spacing={1} align="stretch">
+                <Text fontSize="m" color="gray.500">
+                  Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}.
+                </Text>
+                <Text fontSize="m" color="gray.500">
+                  Target Habitat Distinctiveness: {state.targetDistinctiveness}.
+                </Text>
+              </VStack>
             )}
 
             <HStack spacing={4} justify="flex-end" mt={4}>
