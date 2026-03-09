@@ -251,24 +251,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </NativeSelect.Root>
             </HStack>
 
-            <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
-              <Box flex="2">
-                <Input 
-                  name="size" 
-                  value={sizeInput}
-                  onChange={(e) => {
-                    setSizeInput(e.target.value);
-                    setFormData({ ...formData, size: e.target.value });
-                  }}
-                  width="100%" 
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                />
-              </Box>
-            </HStack>
-
             {showBaselineFields && (
               <>
                 <HStack spacing={4}>
@@ -344,6 +326,24 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   value={formData.habitat}
                   onChange={(value) => setFormData({ ...formData, habitat: value })}
                   disabled={!targetBroadHabitat}
+                />
+              </Box>
+            </HStack>
+
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
+              <Box flex="2">
+                <Input 
+                  name="size" 
+                  value={sizeInput}
+                  onChange={(e) => {
+                    setSizeInput(e.target.value);
+                    setFormData({ ...formData, size: e.target.value });
+                  }}
+                  width="100%" 
+                  type="number"
+                  min="0.01"
+                  step="0.01"
                 />
               </Box>
             </HStack>
