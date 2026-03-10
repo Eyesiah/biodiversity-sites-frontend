@@ -9,6 +9,7 @@ import Button from '@/components/styles/Button';
 import { TbFileTypeXml } from "react-icons/tb";
 import { exportToXml } from '@/lib/utils';
 import Tooltip from '@/components/ui/Tooltip';
+import { getDistinctivenessScore } from '@/lib/habitat';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
@@ -73,6 +74,7 @@ export default function HabitatForm({
   const [formData, setFormData] = useState(initialState);
   const [broadHabitat, setBroadHabitat] = useState('');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
+  const [selectedBaselineHabitat, setSelectedBaselineHabitat] = useState('');
 
   // Get filtered habitats based on broad habitat selection
   const filteredHabitats = broadHabitat ? habitatsByGroup[broadHabitat] || [] : habitats;
@@ -134,6 +136,20 @@ export default function HabitatForm({
   useEffect(() => {
     setFormData(state);
   }, [state]);
+
+  // Filter baseline conditions based on selected habitat distinctiveness
+  const filteredBaselineConditions = conditions.filter(condition => {
+    const distinctiveness = getDistinctivenessScore(selectedBaselineHabitat);
+    const nAOptions = ['n/a other', 'condition assessment n/a'];
+    
+    if (distinctiveness >= 2) {
+      // For habitats with Low distinctiveness or greater (score >= 2), exclude N/A options
+      return !nAOptions.includes(condition.toLowerCase());
+    } else {
+      // For habitats with Very Low distinctiveness (score < 2), include all options
+      return true;
+    }
+  });
 
   const error = state?.error;
   const showBaselineFields = mode === 'calculator' 
@@ -218,7 +234,10 @@ export default function HabitatForm({
                     name="baselineHabitat" 
                     options={filteredBaselineHabitats} 
                     value={formData.baselineHabitat} 
-                    onChange={(value) => setFormData({ ...formData, baselineHabitat: value })} 
+                    onChange={(value) => {
+                      setFormData({ ...formData, baselineHabitat: value });
+                      setSelectedBaselineHabitat(value);
+                    }} 
                     disabled={!baselineBroadHabitat} 
                   />
                 </Box>
@@ -228,7 +247,7 @@ export default function HabitatForm({
                 <Box flex="2">
                   <SearchableDropdown 
                     name="baselineCondition" 
-                    options={conditions} 
+                    options={filteredBaselineConditions} 
                     value={formData.baselineCondition} 
                     onChange={(value) => setFormData({ ...formData, baselineCondition: value })} 
                   />
