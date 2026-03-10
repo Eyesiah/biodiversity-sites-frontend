@@ -147,6 +147,8 @@ export async function calculateScenarios(prevState, formData) {
         baselineHabitat: 'N/A (Creation)',
         baselineCondition: 'N/A (Creation)',
         targetCondition,
+        baselineConditionScore: 0, // No baseline for creation
+        targetConditionScore: getConditionScore(targetCondition),
         HUs: huData.HUs || 0,
         baselineHUs: huData.baselineHUs || 0,
         distinctivenessScore: getDistinctivenessScore(habitat),
@@ -182,6 +184,8 @@ export async function calculateScenarios(prevState, formData) {
           baselineHabitat,
           baselineCondition,
           targetCondition,
+          baselineConditionScore: getConditionScore(baselineCondition),
+          targetConditionScore: getConditionScore(targetCondition),
           HUs: huData.HUs || 0,
           baselineHUs: huData.baselineHUs || 0,
           distinctivenessScore: getDistinctivenessScore(habitat),

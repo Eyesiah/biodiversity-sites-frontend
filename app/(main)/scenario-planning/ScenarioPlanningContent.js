@@ -55,6 +55,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const [sizeInput, setSizeInput] = useState('1');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
   const [targetBroadHabitat, setTargetBroadHabitat] = useState('');
+  const [treeCount, setTreeCount] = useState('');
 
   // Get filtered habitats based on broad habitat selection
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
@@ -251,24 +252,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </NativeSelect.Root>
             </HStack>
 
-            <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
-              <Box flex="2">
-                <Input 
-                  name="size" 
-                  value={sizeInput}
-                  onChange={(e) => {
-                    setSizeInput(e.target.value);
-                    setFormData({ ...formData, size: e.target.value });
-                  }}
-                  width="100%" 
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                />
-              </Box>
-            </HStack>
-
             {showBaselineFields && (
               <>
                 <HStack spacing={4}>
@@ -347,6 +330,62 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 />
               </Box>
             </HStack>
+
+            {/* Tree Count field for Individual trees habitat */}
+            {targetBroadHabitat === 'Individual trees' && (
+              <HStack spacing={4}>
+                <Text flex="1" fontWeight="bold">Tree Count (0.0041 ha per Small tree)</Text>
+                <Box flex="2">
+                  <Input 
+                    value={treeCount} 
+                    onChange={(e) => {
+                      const count = e.target.value;
+                      setTreeCount(count);
+                      // Calculate size from tree count (Tree Count × 0.0041 = Size in ha)
+                      if (count && !isNaN(count) && parseInt(count) > 0) {
+                        const calculatedSize = (parseInt(count) * 0.0041).toFixed(4);
+                        setSizeInput(calculatedSize);
+                        setFormData({ ...formData, size: calculatedSize });
+                      } else {
+                        setSizeInput('');
+                        setFormData({ ...formData, size: '' });
+                      }
+                    }}
+                    width="100%" 
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Enter number of trees"
+                  />
+                </Box>
+              </HStack>
+            )}
+
+            <HStack spacing={4}>
+              <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
+              <Box flex="2">
+                <Input 
+                  name="size" 
+                  value={sizeInput}
+                  onChange={(e) => {
+                    const size = e.target.value;
+                    setSizeInput(size);
+                    setFormData({ ...formData, size });
+                    // Calculate tree count from size if this is Individual trees habitat
+                    if (targetBroadHabitat === 'Individual trees' && size && !isNaN(size) && parseFloat(size) > 0) {
+                      const calculatedTreeCount = Math.round(parseFloat(size) / 0.0041);
+                      setTreeCount(calculatedTreeCount.toString());
+                    } else if (!size) {
+                      setTreeCount('');
+                    }
+                  }}
+                  width="100%" 
+                  type="number"
+                  min="0"
+                  step="any"
+                />
+              </Box>
+            </HStack>
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Strategic Significance</Text>
               <NativeSelect.Root flex="2" size="sm">
@@ -417,9 +456,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
 
             {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
-              <Text fontSize="sm" color="gray.500">
-                Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}
-              </Text>
+              <VStack spacing={1} align="stretch">
+                <Text fontSize="m" color="gray.500">
+                  Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}.
+                </Text>
+                <Text fontSize="m" color="gray.500">
+                  Target Habitat Distinctiveness: {state.targetDistinctiveness}.
+                </Text>
+              </VStack>
             )}
 
             <HStack spacing={4} justify="flex-end" mt={4}>
@@ -483,7 +527,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <thead>
                   {state.improvementType === 'baseline' ? (
                     <tr>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
@@ -492,7 +536,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     </tr>
                   ) : (
                     <tr>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Condition</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
@@ -510,7 +554,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     <tr key={index} style={{ borderBottom: '1px solid #e2e8f0' }}>
                       {state.improvementType === 'baseline' ? (
                         <>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.condition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
@@ -521,7 +565,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                         </>
                       ) : (
                         <>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition === 'N/A (Creation)' ? 'N/A' : result.baselineConditionScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.targetCondition}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
