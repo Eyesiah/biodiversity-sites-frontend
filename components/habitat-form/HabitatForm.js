@@ -137,6 +137,13 @@ export default function HabitatForm({
     setFormData(state);
   }, [state]);
 
+  // Sync selectedBaselineHabitat with formData.baselineHabitat to ensure filtering works
+  useEffect(() => {
+    if (formData.baselineHabitat && formData.baselineHabitat !== selectedBaselineHabitat) {
+      setSelectedBaselineHabitat(formData.baselineHabitat);
+    }
+  }, [formData.baselineHabitat, selectedBaselineHabitat]);
+
   // Filter baseline conditions based on selected habitat distinctiveness (only for enhancement mode)
   const filteredBaselineConditions = conditions.filter(condition => {
     // Only apply filtering when in enhancement mode and a baseline habitat is selected
@@ -145,15 +152,15 @@ export default function HabitatForm({
     }
     
     const distinctiveness = getDistinctivenessScore(selectedBaselineHabitat);
-    const validConditions = ['good', 'fairly good', 'moderate', 'fairly poor', 'poor'];
-    const nAOptions = ['condition assessment n/a', 'n/a - other'];
+    const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
+    const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
     
     if (distinctiveness >= 2) {
       // For habitats with Low or greater distinctiveness (score >= 2), show only valid conditions
-      return validConditions.includes(condition.toLowerCase());
+      return validConditions.includes(condition);
     } else {
       // For habitats with Very Low distinctiveness (score < 2), show only N/A options
-      return nAOptions.includes(condition.toLowerCase());
+      return nAOptions.includes(condition);
     }
   });
 
