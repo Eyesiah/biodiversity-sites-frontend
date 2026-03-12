@@ -1,7 +1,6 @@
 "use client"
 
-import { useActionState, useRef, useState, useEffect } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState, useRef, useState, useEffect, useTransition } from 'react';
 import { Box, Input, NativeSelect, Text, VStack, HStack, Heading } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
@@ -12,21 +11,20 @@ import Tooltip from '@/components/ui/Tooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
-function SubmitButton({ onReset }) {
-  const { pending } = useFormStatus();
+function SubmitButton({ onReset, isPending }) {
   return (
     <>
       <Button 
         onClick={onReset}
-        disabled={pending}
+        disabled={isPending}
       >
         Reset
       </Button>
       <Button 
         type="submit"
-        disabled={pending}
+        disabled={isPending}
       >
-        {pending ? "Calculating..." : "Calculate"}
+        {isPending ? "Calculating..." : "Calculate"}
       </Button>
     </>
   );
@@ -47,8 +45,9 @@ const initialState = {
   error: null,
 };
 
-export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats, distinctivenessScoresMap }) {
+export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats, originalHabitatNamesMap, distinctivenessScoresMap }) {
   const [state, formAction] = useActionState(calculateScenarios, initialState);
+  const [isPending, startTransition] = useTransition();
   const formRef = useRef(null);
   const [sizeInput, setSizeInput] = useState('1');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
@@ -58,6 +57,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const [targetHabitat, setTargetHabitat] = useState('');
   const [treeCount, setTreeCount] = useState('');
   const [currentImprovementType, setCurrentImprovementType] = useState('baseline');
+  const [timeToTargetOffset, setTimeToTargetOffset] = useState('0');
 
   // Get filtered habitats based on broad habitat selection
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
@@ -96,32 +96,42 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     filteredTargetHabitats = targetHabitats.filter(h => allCompatibleHabitats.includes(h));
   }
 
-  useEffect(() => {
-    setSizeInput(state.size !== undefined && state.size !== null ? String(state.size) : '0');
-  }, [state]);
+
+  const handleSubmit = (e) => {
+    // Prevent native form submission which would cause React to reset the form DOM,
+    // clearing all controlled field values after the server action completes.
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
 
   const handleReset = () => {
+    // Reset all local state variables
     setBaselineBroadHabitat('');
     setBaselineHabitat('');
     setBaselineCondition('');
     setTargetBroadHabitat('');
     setTargetHabitat('');
     setTreeCount('');
-    setSizeInput('1');
+    setSizeInput('0'); // Use '0' to match initialState
+    setCurrentImprovementType('baseline'); // Reset improvement type to Baseline
+    setTimeToTargetOffset('0'); // Reset time to target offset to 0
     
-    // Clear results by calling formAction with minimal data
-    const emptyFormData = new FormData();
-    emptyFormData.set("habitat", "");
-    emptyFormData.set("baselineHabitat", "");
-    emptyFormData.set("baselineCondition", "");
-    emptyFormData.set("isReset", "true");
-    emptyFormData.set("size", "0");
-    emptyFormData.set("improvementType", "baseline");
-    emptyFormData.set("strategicSignificance", "1");
-    emptyFormData.set("spatialRisk", "1");
-    emptyFormData.set("timeToTargetOffset", "0");
+    // Reset the form by submitting a reset action
+    const resetFormData = new FormData();
+    resetFormData.set("isReset", "true");
+    resetFormData.set("size", "0");
+    resetFormData.set("improvementType", "baseline");
+    resetFormData.set("strategicSignificance", "1");
+    resetFormData.set("spatialRisk", "1");
+    resetFormData.set("timeToTargetOffset", "0");
     
-    formAction(emptyFormData);
+    // Submit the reset form action
+    formAction(resetFormData);
+    
+    // Reset the form DOM element
     if (formRef.current) {
       formRef.current.reset();
     }
@@ -202,7 +212,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
         Explore potential Habitat Unit (HU) outcomes across different baseline and target conditions.
       </Text>
 
-      <form ref={formRef} action={formAction}>
+      <form ref={formRef} onSubmit={handleSubmit}>
         <PrimaryCard maxWidth="1000px" margin="20px">
           <VStack spacing={4} align="stretch">
             <HStack spacing={4}>
@@ -231,6 +241,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                       value={baselineBroadHabitat}
                       onChange={(e) => {
                         setBaselineBroadHabitat(e.target.value);
+                        setBaselineHabitat('');
+                        setBaselineCondition('');
                       }}
                     >
                       <option value="">Select Broad Habitat</option>
@@ -275,6 +287,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   value={targetBroadHabitat}
                   onChange={(e) => {
                     setTargetBroadHabitat(e.target.value);
+                    setTargetHabitat('');
                   }}
                 >
                   <option value="">Select Broad Habitat</option>
@@ -381,7 +394,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
                 <Tooltip text="A negative value represents the the credit given for prior habitat improvement. A positive value represents the delay before this habitat is improved.">
                   <NativeSelect.Root flex="2" size="sm">
-                    <NativeSelect.Field name="timeToTargetOffset">
+                    <NativeSelect.Field 
+                      name="timeToTargetOffset" 
+                      value={timeToTargetOffset}
+                      onChange={(e) => {
+                        // Update client state immediately for UI responsiveness
+                        setTimeToTargetOffset(e.target.value);
+                      }}
+                    >
                       {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
                         <option key={offset} value={offset}>
                           {offset > 0 ? `+${offset}` : offset} years
@@ -406,7 +426,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             )}
 
             <HStack spacing={4} justify="flex-end" mt={4}>
-              <SubmitButton onReset={handleReset} />
+              <SubmitButton onReset={handleReset} isPending={isPending} />
               {state.results && (
                 <Tooltip text="Click to download data as a .XML file">
                   <Button 

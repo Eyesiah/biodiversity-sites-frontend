@@ -16,7 +16,14 @@ export async function calculateScenarios(prevState, formData) {
   const improvementType = formData.get("improvementType") || 'creation';
   const strategicSignificance = Number(formData.get("strategicSignificance")) || 1;
   const spatialRisk = Number(formData.get("spatialRisk")) || 1;
-  const timeToTargetOffset = Number(formData.get("timeToTargetOffset")) || 0;
+  
+  // Get the timeToTargetOffset value from form data
+  const rawTimeToTargetOffset = formData.get("timeToTargetOffset");
+  
+  // Parse the value, defaulting to 0 if empty or invalid
+  const timeToTargetOffset = rawTimeToTargetOffset !== null && rawTimeToTargetOffset !== undefined && rawTimeToTargetOffset !== '' 
+    ? Number(rawTimeToTargetOffset) 
+    : 0;
 
   // Check if this is a reset (empty habitat with no error flag)
   const isReset = formData.get("isReset") === "true";
