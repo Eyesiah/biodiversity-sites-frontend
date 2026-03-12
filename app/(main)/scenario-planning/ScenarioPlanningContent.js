@@ -445,16 +445,28 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               </HStack>
             )}
 
-            {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
-              <VStack spacing={1} align="stretch">
-                <Text fontSize="m" color="gray.500">
-                  Baseline Habitat Distinctiveness: {state.baselineDistinctiveness}.
-                </Text>
-                <Text fontSize="m" color="gray.500">
-                  Target Habitat Distinctiveness: {state.targetDistinctiveness}.
-                </Text>
-              </VStack>
-            )}
+            {/* Show distinctiveness for all modes as soon as a habitat is selected */}
+            {(targetHabitat || (showBaselineFields && baselineHabitat)) && (() => {
+              const scoreToLabel = { 8: 'Very High', 6: 'High', 4: 'Medium', 2: 'Low', 1: 'Very Low', 0: 'V. Low' };
+              const targetScore = targetHabitat ? distinctivenessScoresMap?.get(targetHabitat.toLowerCase()) : undefined;
+              const baselineScore = baselineHabitat ? distinctivenessScoresMap?.get(baselineHabitat.toLowerCase()) : undefined;
+              const targetLabel = targetScore !== undefined ? `${scoreToLabel[targetScore] ?? targetScore} (score: ${targetScore})` : null;
+              const baselineLabel = baselineScore !== undefined ? `${scoreToLabel[baselineScore] ?? baselineScore} (score: ${baselineScore})` : null;
+              return (
+                <VStack spacing={1} align="stretch">
+                  {showBaselineFields && baselineLabel && (
+                    <Text fontSize="m" color="gray.500">
+                      Baseline Habitat Distinctiveness: {baselineLabel}.
+                    </Text>
+                  )}
+                  {targetLabel && (
+                    <Text fontSize="m" color="gray.500">
+                      Target Habitat Distinctiveness: {targetLabel}.
+                    </Text>
+                  )}
+                </VStack>
+              );
+            })()}
 
             <HStack spacing={4} justify="flex-end" mt={4}>
               <SubmitButton onReset={handleReset} isPending={isPending} />
