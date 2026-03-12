@@ -437,11 +437,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               {state.habitat ? (
                 state.improvementType === 'enhancement' && state.baselineHabitat ? (
                   <>
-                    Results for <em>'{state.baselineHabitat}'</em> habitat enhanced to <em>'{state.habitat}'</em> habitat.
+                    Results for <em>'{state.baselineHabitat}'</em> habitat enhanced to <em>&apos;{state.habitat}&apos;</em> habitat.
                   </>
                 ) : (
                   <>
-                    Results for {state.improvementType === 'baseline' ? 'baseline' : state.improvementType === 'creation' ? 'created' : 'enhanced'} <em>'{state.habitat}'</em> habitat.
+                    Results for {state.improvementType === 'baseline' ? 'baseline' : state.improvementType === 'creation' ? 'created' : 'enhanced'} <em>&apos;{state.habitat}&apos;</em> habitat.
                   </>
                 )
               ) : 'Results'}
