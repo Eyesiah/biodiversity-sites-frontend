@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useRef, useState, useEffect, useTransition } from 'react';
+import { useActionState, useRef, useState, useTransition } from 'react';
 import { Box, Input, NativeSelect, Text, VStack, HStack, Heading } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
@@ -63,13 +63,14 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
   const targetHabitats = targetBroadHabitat ? habitatsByGroup[targetBroadHabitat] || [] : [];
 
-  // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area)
+  // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area).
+  // Use local baselineHabitat state so filtering reacts immediately to user selections.
   let filteredTargetBroadHabitats = broadHabitats;
-  if (currentImprovementType === 'enhancement' && state.baselineHabitat) {
+  if (currentImprovementType === 'enhancement' && baselineHabitat) {
     // Get the baseline habitat's broad group
     let baselineGroup = null;
     for (const [group, habitats] of Object.entries(habitatsByGroup)) {
-      if (habitats.some(h => state.baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
+      if (habitats.some(h => baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
         baselineGroup = group;
         break;
       }
@@ -90,9 +91,10 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     }
   }
 
-  // For enhancement mode, also filter target specific habitats
+  // For enhancement mode, also filter target specific habitats.
+  // Use local baselineHabitat state so filtering reacts immediately to user selections.
   let filteredTargetHabitats = targetHabitats;
-  if (currentImprovementType === 'enhancement' && state.baselineHabitat && allCompatibleHabitats) {
+  if (currentImprovementType === 'enhancement' && baselineHabitat && allCompatibleHabitats) {
     filteredTargetHabitats = targetHabitats.filter(h => allCompatibleHabitats.includes(h));
   }
 
@@ -115,11 +117,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     setTargetBroadHabitat('');
     setTargetHabitat('');
     setTreeCount('');
-    setSizeInput('0'); // Use '0' to match initialState
-    setCurrentImprovementType('baseline'); // Reset improvement type to Baseline
-    setTimeToTargetOffset('0'); // Reset time to target offset to 0
+    setSizeInput('0');
+    setCurrentImprovementType('baseline');
+    setTimeToTargetOffset('0');
     
-    // Reset the form by submitting a reset action
+    // Clear the server state via the action
     const resetFormData = new FormData();
     resetFormData.set("isReset", "true");
     resetFormData.set("size", "0");
@@ -128,10 +130,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     resetFormData.set("spatialRisk", "1");
     resetFormData.set("timeToTargetOffset", "0");
     
-    // Submit the reset form action
-    formAction(resetFormData);
+    startTransition(() => {
+      formAction(resetFormData);
+    });
     
-    // Reset the form DOM element
+    // Reset uncontrolled native inputs (Strategic Significance, Spatial Risk)
     if (formRef.current) {
       formRef.current.reset();
     }
@@ -141,14 +144,16 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const showSpatialRisk = currentImprovementType !== 'baseline';
   const showTimeOffset = currentImprovementType !== 'baseline';
 
-  // Filter baseline conditions based on habitat distinctiveness
+  // Filter baseline conditions based on habitat distinctiveness.
+  // Use local baselineHabitat state (not server state) so filtering reacts immediately
+  // to the user's selection rather than waiting for a server round-trip.
   const filteredBaselineConditions = serverConditions.filter(condition => {
-    if (!showBaselineFields || !state.baselineHabitat) {
+    if (!showBaselineFields || !baselineHabitat) {
       return true;
     }
     
     // Get distinctiveness score from the passed map
-    const distinctiveness = distinctivenessScoresMap?.get(state.baselineHabitat.toLowerCase()) || 0;
+    const distinctiveness = distinctivenessScoresMap?.get(baselineHabitat.toLowerCase()) || 0;
     const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
     const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
     
@@ -162,17 +167,22 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const handleExportXML = () => {
     if (!state.results || state.results.length === 0) return;
 
+    const sizeUnit = targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha';
+
     // Build XML content
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
     xml += '<ScenarioPlanning>\n';
     xml += '  <Inputs>\n';
     xml += `    <ImprovementType>${state.improvementType}</ImprovementType>\n`;
-    xml += `    <Size unit="ha">${state.size}</Size>\n`;
+    xml += `    <Size unit="${sizeUnit}">${state.size}</Size>\n`;
+    xml += `    <TargetBroadHabitat>${targetBroadHabitat || 'N/A'}</TargetBroadHabitat>\n`;
+    xml += `    <TargetHabitat>${state.habitat || 'N/A'}</TargetHabitat>\n`;
+    xml += `    <TargetDistinctiveness>${state.targetDistinctiveness || 'N/A'}</TargetDistinctiveness>\n`;
+    xml += `    <HabitatGroup>${state.habitatGroup || 'N/A'}</HabitatGroup>\n`;
+    xml += `    <BaselineBroadHabitat>${baselineBroadHabitat || 'N/A'}</BaselineBroadHabitat>\n`;
     xml += `    <BaselineHabitat>${state.baselineHabitat || 'N/A'}</BaselineHabitat>\n`;
     xml += `    <BaselineCondition>${state.baselineCondition || 'N/A'}</BaselineCondition>\n`;
     xml += `    <BaselineDistinctiveness>${state.baselineDistinctiveness || 'N/A'}</BaselineDistinctiveness>\n`;
-    xml += `    <TargetHabitat>${state.habitat}</TargetHabitat>\n`;
-    xml += `    <TargetDistinctiveness>${state.targetDistinctiveness || 'N/A'}</TargetDistinctiveness>\n`;
     xml += `    <StrategicSignificance>${state.strategicSignificance || 1}</StrategicSignificance>\n`;
     xml += `    <SpatialRisk>${state.spatialRisk || 1}</SpatialRisk>\n`;
     xml += `    <TimeToTargetOffset>${state.timeToTargetOffset || 0}</TimeToTargetOffset>\n`;
@@ -180,12 +190,23 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
     xml += '  <Results>\n';
     
     state.results.forEach((result, index) => {
-      xml += `    <Result index="${index}">\n`;
-      xml += `      <BaselineHabitat>${result.baselineHabitat}</BaselineHabitat>\n`;
-      xml += `      <BaselineCondition>${result.baselineCondition}</BaselineCondition>\n`;
-      xml += `      <TargetCondition>${result.targetCondition}</TargetCondition>\n`;
-      xml += `      <TimeToTarget>${result.timeToTarget}</TimeToTarget>\n`;
-      xml += `      <EffectiveTimeToTarget>${result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget}</EffectiveTimeToTarget>\n`;
+      const effectiveTtT = result.effectiveTimeToTarget !== 'N/A' ? result.effectiveTimeToTarget : result.timeToTarget;
+      xml += `    <Result index="${index + 1}">\n`;
+      if (state.improvementType === 'baseline') {
+        xml += `      <Condition>${result.condition}</Condition>\n`;
+        xml += `      <ConditionScore>${result.conditionScore}</ConditionScore>\n`;
+      } else {
+        xml += `      <BaselineHabitat>${result.baselineHabitat}</BaselineHabitat>\n`;
+        xml += `      <BaselineCondition>${result.baselineCondition}</BaselineCondition>\n`;
+        xml += `      <BaselineConditionScore>${result.baselineConditionScore}</BaselineConditionScore>\n`;
+        xml += `      <BaselineHUs>${result.baselineHUs !== undefined ? result.baselineHUs.toFixed(2) : 'N/A'}</BaselineHUs>\n`;
+        xml += `      <TargetCondition>${result.targetCondition}</TargetCondition>\n`;
+        xml += `      <TargetConditionScore>${result.conditionScore}</TargetConditionScore>\n`;
+        xml += `      <TimeToTarget>${result.timeToTarget}</TimeToTarget>\n`;
+        xml += `      <EffectiveTimeToTarget>${effectiveTtT}</EffectiveTimeToTarget>\n`;
+        xml += `      <TemporalMultiplier>${result.temporalRisk !== undefined ? result.temporalRisk.toFixed(3) : 'N/A'}</TemporalMultiplier>\n`;
+      }
+      xml += `      <DistinctivenessScore>${result.distinctivenessScore}</DistinctivenessScore>\n`;
       xml += `      <HUs>${result.HUs.toFixed(2)}</HUs>\n`;
       xml += '    </Result>\n';
     });
