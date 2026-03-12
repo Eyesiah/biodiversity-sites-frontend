@@ -335,6 +335,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <Text flex="1" fontWeight="bold" textTransform="capitalize">Target Habitat</Text>
               <Box flex="2">
                 <SearchableDropdown 
+                  key={targetBroadHabitat}
                   options={targetBroadHabitat ? filteredTargetHabitats : serverHabitats} 
                   name="habitat"
                   value={targetHabitat}
