@@ -45,7 +45,7 @@ const initialState = {
   error: null,
 };
 
-export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats, originalHabitatNamesMap, distinctivenessScoresMap }) {
+export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats, originalHabitatNamesMap, distinctivenessScoresMap, conditionAssessmentNAHabitats }) {
   const [state, formAction] = useActionState(calculateScenarios, initialState);
   const [isPending, startTransition] = useTransition();
   const formRef = useRef(null);
@@ -147,20 +147,27 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   // Filter baseline conditions based on habitat distinctiveness.
   // Use local baselineHabitat state (not server state) so filtering reacts immediately
   // to the user's selection rather than waiting for a server round-trip.
+  // Three cases:
+  //   1. Distinctiveness === 0 → only 'N/A - Other'
+  //   2. Distinctiveness > 0 AND habitat is in conditionAssessmentNAHabitats → only 'Condition Assessment N/A'
+  //   3. Distinctiveness > 0 AND not in that set → standard conditions
   const filteredBaselineConditions = serverConditions.filter(condition => {
     if (!showBaselineFields || !baselineHabitat) {
       return true;
     }
     
-    // Get distinctiveness score from the passed map
-    const distinctiveness = distinctivenessScoresMap?.get(baselineHabitat.toLowerCase()) || 0;
-    const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
-    const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
-    
-    if (distinctiveness > 0) {
-      return validConditions.includes(condition);
+    const habitatKey = baselineHabitat.toLowerCase();
+    const distinctiveness = distinctivenessScoresMap?.get(habitatKey) || 0;
+
+    if (distinctiveness === 0) {
+      // Zero-distinctiveness habitats: only 'N/A - Other' is valid
+      return condition === 'N/A - Other';
+    } else if (conditionAssessmentNAHabitats?.has(habitatKey)) {
+      // Habitats where only 'Condition Assessment N/A' applies
+      return condition === 'Condition Assessment N/A';
     } else {
-      return nAOptions.includes(condition);
+      // Standard habitats: only show the five graded conditions
+      return ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'].includes(condition);
     }
   });
 
@@ -282,7 +289,10 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                       options={baselineHabitats} 
                       name="baselineHabitat"
                       value={baselineHabitat}
-                      onChange={(value) => setBaselineHabitat(value)}
+                      onChange={(value) => {
+                        setBaselineHabitat(value);
+                        setBaselineCondition('');
+                      }}
                     />
                   </Box>
                 </HStack>

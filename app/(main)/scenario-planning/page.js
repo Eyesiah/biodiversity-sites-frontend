@@ -1,5 +1,5 @@
 import { calculateScenarios } from './actions';
-import { getAllHabitatsWithOriginalCase, getAllConditions, getAllHabitatGroups, getHabitatsByGroup, getCompatibleHabitatsForEnhancement, getOriginalHabitatNamesMap, getDistinctivenessScoresMap, getOriginalCaseHabitatName } from '@/lib/habitat';
+import { getAllHabitatsWithOriginalCase, getAllConditions, getAllHabitatGroups, getHabitatsByGroup, getCompatibleHabitatsForEnhancement, getOriginalHabitatNamesMap, getDistinctivenessScoresMap, getOriginalCaseHabitatName, getConditionAssessmentNAHabitats } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import ScenarioPlanningContent from './ScenarioPlanningContent';
 
@@ -36,6 +36,7 @@ export default function ScenarioPlanningPage() {
   // Get habitat maps for client-side use
   const originalHabitatNamesMap = getOriginalHabitatNamesMap();
   const distinctivenessScoresMap = getDistinctivenessScoresMap();
+  const conditionAssessmentNAHabitats = getConditionAssessmentNAHabitats();
 
   return (
     <>
@@ -47,6 +48,7 @@ export default function ScenarioPlanningPage() {
         allCompatibleHabitats={allCompatibleHabitats}
         originalHabitatNamesMap={originalHabitatNamesMap}
         distinctivenessScoresMap={distinctivenessScoresMap}
+        conditionAssessmentNAHabitats={conditionAssessmentNAHabitats}
       />
       <Footer lastUpdated={new Date().toISOString()} />
     </>
