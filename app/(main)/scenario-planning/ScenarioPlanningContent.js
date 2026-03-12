@@ -64,29 +64,30 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
   const targetHabitats = targetBroadHabitat ? habitatsByGroup[targetBroadHabitat] || [] : [];
 
   // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area).
-  // Use local baselineHabitat state so filtering reacts immediately to user selections.
+  // Uses baselineBroadHabitat first (reacts immediately on broad habitat selection),
+  // then falls back to deriving the group from the specific baseline habitat if needed.
+  const LINEAR_GROUPS = ['Hedgerow', 'Watercourse', 'Watercourses'];
   let filteredTargetBroadHabitats = broadHabitats;
-  if (currentImprovementType === 'enhancement' && baselineHabitat) {
-    // Get the baseline habitat's broad group
-    let baselineGroup = null;
-    for (const [group, habitats] of Object.entries(habitatsByGroup)) {
-      if (habitats.some(h => baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
-        baselineGroup = group;
-        break;
+  if (currentImprovementType === 'enhancement') {
+    // Prefer the directly-selected broad habitat; derive from specific habitat as fallback
+    let activeBaselineGroup = baselineBroadHabitat || null;
+    if (!activeBaselineGroup && baselineHabitat) {
+      for (const [group, habitats] of Object.entries(habitatsByGroup)) {
+        if (habitats.some(h => baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
+          activeBaselineGroup = group;
+          break;
+        }
       }
     }
-    
-    if (baselineGroup) {
-      const isLinear = ['Hedgerow', 'Watercourse'].includes(baselineGroup);
+
+    if (activeBaselineGroup) {
+      const isLinear = LINEAR_GROUPS.includes(activeBaselineGroup);
       if (isLinear) {
-        // Strict filtering: only allow the exact same broad habitat type for linear habitats
-        filteredTargetBroadHabitats = [baselineGroup];
+        // Linear habitats: only allow the exact same broad habitat type as target
+        filteredTargetBroadHabitats = [activeBaselineGroup];
       } else {
-        // For area habitats, allow any area habitat (not linear)
-        filteredTargetBroadHabitats = broadHabitats.filter(group => {
-          const targetIsLinear = ['Hedgerow', 'Watercourse'].includes(group);
-          return !targetIsLinear;
-        });
+        // Area habitats: exclude all linear broad habitat types from target options
+        filteredTargetBroadHabitats = broadHabitats.filter(group => !LINEAR_GROUPS.includes(group));
       }
     }
   }
