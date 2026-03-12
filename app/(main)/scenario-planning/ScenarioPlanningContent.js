@@ -1,14 +1,13 @@
 "use client"
 
-import { useActionState, useRef, useState, useEffect, startTransition } from 'react';
+import { useActionState, useRef, useState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Box, Input, NativeSelect, Text, VStack, HStack, Heading, Code } from '@chakra-ui/react';
+import { Box, Input, NativeSelect, Text, VStack, HStack, Heading } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import Button from '@/components/styles/Button';
 import dynamic from 'next/dynamic';
 import { calculateScenarios } from './actions';
 import { TbFileTypeXml } from "react-icons/tb";
-import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import Tooltip from '@/components/ui/Tooltip';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
@@ -48,57 +47,39 @@ const initialState = {
   error: null,
 };
 
-export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats }) {
+export default function ScenarioPlanningContent({ habitats: serverHabitats, conditions: serverConditions, broadHabitats, habitatsByGroup, allCompatibleHabitats, distinctivenessScoresMap }) {
   const [state, formAction] = useActionState(calculateScenarios, initialState);
   const formRef = useRef(null);
-  const [formData, setFormData] = useState(initialState);
   const [sizeInput, setSizeInput] = useState('1');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
+  const [baselineHabitat, setBaselineHabitat] = useState('');
+  const [baselineCondition, setBaselineCondition] = useState('');
   const [targetBroadHabitat, setTargetBroadHabitat] = useState('');
+  const [targetHabitat, setTargetHabitat] = useState('');
   const [treeCount, setTreeCount] = useState('');
+  const [currentImprovementType, setCurrentImprovementType] = useState('baseline');
 
   // Get filtered habitats based on broad habitat selection
   const baselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : [];
   const targetHabitats = targetBroadHabitat ? habitatsByGroup[targetBroadHabitat] || [] : [];
 
   // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area)
-  // This ensures Hedgerow baselines only show Hedgerow targets, Watercourse only show Watercourse, etc.
   let filteredTargetBroadHabitats = broadHabitats;
-  const currentImprovementType = formData.improvementType;
-  
-  if (currentImprovementType === 'enhancement') {
-    // Get the baseline habitat's broad group - check specific habitat first, then broad habitat dropdown
+  if (currentImprovementType === 'enhancement' && state.baselineHabitat) {
+    // Get the baseline habitat's broad group
     let baselineGroup = null;
-    
-    // First try to find from specific baseline habitat selection
-    const currentBaselineHabitat = formData.baselineHabitat;
-    if (currentBaselineHabitat) {
-      for (const [group, habitats] of Object.entries(habitatsByGroup)) {
-        if (habitats.some(h => currentBaselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
-          baselineGroup = group;
-          break;
-        }
+    for (const [group, habitats] of Object.entries(habitatsByGroup)) {
+      if (habitats.some(h => state.baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
+        baselineGroup = group;
+        break;
       }
     }
     
-    // If not found, try using the baseline broad habitat dropdown
-    if (!baselineGroup && baselineBroadHabitat) {
-      baselineGroup = baselineBroadHabitat;
-    }
-    
-    // If we found the baseline group, filter target broad habitats to only show compatible ones
     if (baselineGroup) {
-      // For linear habitats (Hedgerow, Watercourses), only allow same habitat type
-      // For area habitats, allow any other area habitat
-      const isLinear = ['Hedgerow', 'Watercourses'].includes(baselineGroup);
-      
+      const isLinear = ['Hedgerow', 'Watercourse'].includes(baselineGroup);
       if (isLinear) {
         // Strict filtering: only allow the exact same broad habitat type for linear habitats
         filteredTargetBroadHabitats = [baselineGroup];
-        // Clear target broad habitat if it doesn't match
-        if (targetBroadHabitat && targetBroadHabitat !== baselineGroup) {
-          setTargetBroadHabitat(baselineGroup);
-        }
       } else {
         // For area habitats, allow any area habitat (not linear)
         filteredTargetBroadHabitats = broadHabitats.filter(group => {
@@ -111,74 +92,62 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
 
   // For enhancement mode, also filter target specific habitats
   let filteredTargetHabitats = targetHabitats;
-  if (formData.improvementType === 'enhancement' && formData.baselineHabitat && allCompatibleHabitats) {
+  if (currentImprovementType === 'enhancement' && state.baselineHabitat && allCompatibleHabitats) {
     filteredTargetHabitats = targetHabitats.filter(h => allCompatibleHabitats.includes(h));
   }
 
   useEffect(() => {
-    setFormData(state);
     setSizeInput(state.size !== undefined && state.size !== null ? String(state.size) : '0');
   }, [state]);
 
-  const handleCalculate = () => {
-    if (formRef.current) {
-      const formDataToSubmit = new FormData(formRef.current);
-      const timeToTargetOffset = formDataToSubmit.get("timeToTargetOffset");
-      startTransition(() => {
-        formAction(formDataToSubmit);
-      });
-    }
-  };
-
-  const handleImprovementTypeChange = (e) => {
-    const newType = e.target.value;
-    setFormData({ ...formData, improvementType: newType });
-    
-    // Check if data has been input and recalculate
-    const hasData = formData.size > 0 || formData.habitat || formData.baselineHabitat;
-    if (hasData) {
-      // Create a new FormData with the updated improvement type
-      const formDataToSubmit = new FormData();
-      formDataToSubmit.set("improvementType", newType);
-      formDataToSubmit.set("size", formData.size);
-      formDataToSubmit.set("habitat", formData.habitat);
-      formDataToSubmit.set("baselineHabitat", formData.baselineHabitat);
-      formDataToSubmit.set("baselineCondition", formData.baselineCondition);
-      formDataToSubmit.set("strategicSignificance", formData.strategicSignificance);
-      formDataToSubmit.set("spatialRisk", formData.spatialRisk);
-      formDataToSubmit.set("timeToTargetOffset", formData.timeToTargetOffset);
-      
-      startTransition(() => {
-        formAction(formDataToSubmit);
-      });
-    }
-  };
-
   const handleReset = () => {
-    setFormData(initialState);
-    setSizeInput('0');
     setBaselineBroadHabitat('');
+    setBaselineHabitat('');
+    setBaselineCondition('');
     setTargetBroadHabitat('');
+    setTargetHabitat('');
+    setTreeCount('');
+    setSizeInput('1');
+    
     // Clear results by calling formAction with minimal data
     const emptyFormData = new FormData();
     emptyFormData.set("habitat", "");
+    emptyFormData.set("baselineHabitat", "");
+    emptyFormData.set("baselineCondition", "");
     emptyFormData.set("isReset", "true");
     emptyFormData.set("size", "0");
     emptyFormData.set("improvementType", "baseline");
     emptyFormData.set("strategicSignificance", "1");
     emptyFormData.set("spatialRisk", "1");
     emptyFormData.set("timeToTargetOffset", "0");
-    startTransition(() => {
-      formAction(emptyFormData);
-    });
+    
+    formAction(emptyFormData);
     if (formRef.current) {
       formRef.current.reset();
     }
   };
 
-  const showBaselineFields = formData.improvementType === 'enhancement';
-  const showSpatialRisk = formData.improvementType !== 'baseline';
-  const showTimeOffset = formData.improvementType !== 'baseline';
+  const showBaselineFields = currentImprovementType === 'enhancement';
+  const showSpatialRisk = currentImprovementType !== 'baseline';
+  const showTimeOffset = currentImprovementType !== 'baseline';
+
+  // Filter baseline conditions based on habitat distinctiveness
+  const filteredBaselineConditions = serverConditions.filter(condition => {
+    if (!showBaselineFields || !state.baselineHabitat) {
+      return true;
+    }
+    
+    // Get distinctiveness score from the passed map
+    const distinctiveness = distinctivenessScoresMap?.get(state.baselineHabitat.toLowerCase()) || 0;
+    const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
+    const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
+    
+    if (distinctiveness > 0) {
+      return validConditions.includes(condition);
+    } else {
+      return nAOptions.includes(condition);
+    }
+  });
 
   const handleExportXML = () => {
     if (!state.results || state.results.length === 0) return;
@@ -241,8 +210,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <NativeSelect.Root flex="2" size="sm">
                 <NativeSelect.Field 
                   name="improvementType"
-                  value={formData.improvementType}
-                  onChange={handleImprovementTypeChange}
+                  value={currentImprovementType}
+                  onChange={(e) => setCurrentImprovementType(e.target.value)}
                 >
                   <option value="baseline">Baseline</option>
                   <option value="creation">Creation</option>
@@ -258,10 +227,10 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   <Text flex="1" fontWeight="bold">Baseline Broad Habitat</Text>
                   <NativeSelect.Root flex="2" size="sm">
                     <NativeSelect.Field 
+                      name="baselineBroadHabitat"
                       value={baselineBroadHabitat}
                       onChange={(e) => {
                         setBaselineBroadHabitat(e.target.value);
-                        setFormData({ ...formData, baselineHabitat: '' });
                       }}
                     >
                       <option value="">Select Broad Habitat</option>
@@ -272,27 +241,27 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     <NativeSelect.Indicator />
                   </NativeSelect.Root>
                 </HStack>
+
                 <HStack spacing={4}>
                   <Text flex="1" fontWeight="bold">Baseline Habitat</Text>
                   <Box flex="2">
                     <SearchableDropdown 
                       options={baselineHabitats} 
                       name="baselineHabitat"
-                      value={formData.baselineHabitat}
-                      onChange={(value) => setFormData({ ...formData, baselineHabitat: value })}
-                      disabled={!baselineBroadHabitat}
+                      value={baselineHabitat}
+                      onChange={(value) => setBaselineHabitat(value)}
                     />
                   </Box>
                 </HStack>
-                
+
                 <HStack spacing={4}>
                   <Text flex="1" fontWeight="bold">Baseline Condition</Text>
                   <Box flex="2">
                     <SearchableDropdown 
-                      options={serverConditions} 
+                      options={filteredBaselineConditions} 
                       name="baselineCondition"
-                      value={formData.baselineCondition}
-                      onChange={(value) => setFormData({ ...formData, baselineCondition: value })}
+                      value={baselineCondition}
+                      onChange={(value) => setBaselineCondition(value)}
                     />
                   </Box>
                 </HStack>
@@ -306,7 +275,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   value={targetBroadHabitat}
                   onChange={(e) => {
                     setTargetBroadHabitat(e.target.value);
-                    setFormData({ ...formData, habitat: '' });
                   }}
                 >
                   <option value="">Select Broad Habitat</option>
@@ -319,13 +287,13 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
             </HStack>
 
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Target Habitat</Text>
+              <Text flex="1" fontWeight="bold" textTransform="capitalize">Target Habitat</Text>
               <Box flex="2">
                 <SearchableDropdown 
                   options={targetBroadHabitat ? filteredTargetHabitats : serverHabitats} 
                   name="habitat"
-                  value={formData.habitat}
-                  onChange={(value) => setFormData({ ...formData, habitat: value })}
+                  value={targetHabitat}
+                  onChange={(value) => setTargetHabitat(value)}
                   disabled={!targetBroadHabitat}
                 />
               </Box>
@@ -341,14 +309,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     onChange={(e) => {
                       const count = e.target.value;
                       setTreeCount(count);
-                      // Calculate size from tree count (Tree Count × 0.0041 = Size in ha)
                       if (count && !isNaN(count) && parseInt(count) > 0) {
                         const calculatedSize = (parseInt(count) * 0.0041).toFixed(4);
                         setSizeInput(calculatedSize);
-                        setFormData({ ...formData, size: calculatedSize });
                       } else {
                         setSizeInput('');
-                        setFormData({ ...formData, size: '' });
                       }
                     }}
                     width="100%" 
@@ -370,8 +335,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   onChange={(e) => {
                     const size = e.target.value;
                     setSizeInput(size);
-                    setFormData({ ...formData, size });
-                    // Calculate tree count from size if this is Individual trees habitat
                     if (targetBroadHabitat === 'Individual trees' && size && !isNaN(size) && parseFloat(size) > 0) {
                       const calculatedTreeCount = Math.round(parseFloat(size) / 0.0041);
                       setTreeCount(calculatedTreeCount.toString());
@@ -386,14 +349,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 />
               </Box>
             </HStack>
+            
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Strategic Significance</Text>
               <NativeSelect.Root flex="2" size="sm">
-                <NativeSelect.Field 
-                  name="strategicSignificance"
-                  value={formData.strategicSignificance}
-                  onChange={(e) => setFormData({ ...formData, strategicSignificance: e.target.value })}
-                >
+                <NativeSelect.Field name="strategicSignificance">
                   <option value="1">Low (1.0)</option>
                   <option value="1.5">Medium (1.5)</option>
                   <option value="2">High (2.0)</option>
@@ -406,11 +366,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Spatial Risk</Text>
                 <NativeSelect.Root flex="2" size="sm">
-                  <NativeSelect.Field 
-                    name="spatialRisk"
-                    value={formData.spatialRisk}
-                    onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })}
-                  >
+                  <NativeSelect.Field name="spatialRisk">
                     <option value="1">Within (1.0)</option>
                     <option value="1.2">Adjacent (1.2)</option>
                     <option value="1.5">Isolated (1.5)</option>
@@ -425,23 +381,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
                 <Tooltip text="A negative value represents the the credit given for prior habitat improvement. A positive value represents the delay before this habitat is improved.">
                   <NativeSelect.Root flex="2" size="sm">
-                    <NativeSelect.Field 
-                      name="timeToTargetOffset"
-                      value={formData.timeToTargetOffset}
-                      onChange={(e) => {
-                        const newValue = Number(e.target.value);
-                        setFormData({ ...formData, timeToTargetOffset: newValue });
-                        
-                        // Auto-calculate when time offset changes
-                        if (formRef.current && (formData.size > 0 || formData.habitat)) {
-                          const formDataToSubmit = new FormData(formRef.current);
-                          formDataToSubmit.set("timeToTargetOffset", String(newValue));
-                          startTransition(() => {
-                            formAction(formDataToSubmit);
-                          });
-                        }
-                      }}
-                    >
+                    <NativeSelect.Field name="timeToTargetOffset">
                       {Array.from({ length: 63 }, (_, i) => i - 31).map(offset => (
                         <option key={offset} value={offset}>
                           {offset > 0 ? `+${offset}` : offset} years
@@ -453,7 +393,6 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                 </Tooltip>
               </HStack>
             )}
-
 
             {state.baselineDistinctiveness && state.improvementType === 'enhancement' && (
               <VStack spacing={1} align="stretch">
@@ -498,11 +437,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               {state.habitat ? (
                 state.improvementType === 'enhancement' && state.baselineHabitat ? (
                   <>
-                    Results for <em>&apos;{state.baselineHabitat}&apos;</em> habitat enhanced to <em>&apos;{state.habitat}&apos;</em> habitat.
+                    Results for <em>'{state.baselineHabitat}'</em> habitat enhanced to <em>'{state.habitat}'</em> habitat.
                   </>
                 ) : (
                   <>
-                    Results for {state.improvementType === 'baseline' ? 'baseline' : state.improvementType === 'creation' ? 'created' : 'enhanced'} <em>&apos;{state.habitat}&apos;</em> habitat.
+                    Results for {state.improvementType === 'baseline' ? 'baseline' : state.improvementType === 'creation' ? 'created' : 'enhanced'} <em>'{state.habitat}'</em> habitat.
                   </>
                 )
               ) : 'Results'}

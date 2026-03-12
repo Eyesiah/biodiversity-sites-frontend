@@ -155,7 +155,7 @@ export default function HabitatForm({
     const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
     const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
     
-    if (distinctiveness >= 2) {
+    if (distinctiveness > 0) {
       // For habitats with Low or greater distinctiveness (score >= 2), show only valid conditions
       return validConditions.includes(condition);
     } else {

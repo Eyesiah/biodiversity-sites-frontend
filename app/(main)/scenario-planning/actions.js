@@ -1,6 +1,6 @@
 "use server"
 
-import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget, getHabitatDistinctiveness, checkTradingRules } from "@/lib/habitat";
+import { calculateImprovementHU, calculateBaselineHU, getConditionScore, getDistinctivenessScore, getHabitatGroup, getEffectiveTimeToTarget, getHabitatDistinctiveness, checkTradingRules, getOriginalCaseHabitatName } from "@/lib/habitat";
 
 // Condition order from lowest to highest
 const CONDITION_ORDER = ['Poor', 'Fairly Poor', 'Moderate', 'Fairly Good', 'Good'];
@@ -101,6 +101,10 @@ export async function calculateScenarios(prevState, formData) {
     }
   }
 
+  // Convert habitat names to their original case from CSV
+  const originalCaseHabitat = getOriginalCaseHabitatName(habitat);
+  const originalCaseBaselineHabitat = baselineHabitat ? getOriginalCaseHabitatName(baselineHabitat) : null;
+
   const scenarios = [];
 
   if (improvementType === 'baseline') {
@@ -181,7 +185,7 @@ export async function calculateScenarios(prevState, formData) {
         
         
         scenarios.push({
-          baselineHabitat,
+          baselineHabitat: originalCaseBaselineHabitat,
           baselineCondition,
           targetCondition,
           baselineConditionScore: getConditionScore(baselineCondition),
@@ -211,8 +215,8 @@ export async function calculateScenarios(prevState, formData) {
 
   return {
     size,
-    habitat,
-    baselineHabitat,
+    habitat: originalCaseHabitat,
+    baselineHabitat: originalCaseBaselineHabitat,
     baselineCondition,
     improvementType,
     strategicSignificance,
