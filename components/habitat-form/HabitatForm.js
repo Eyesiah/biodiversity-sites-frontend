@@ -1,7 +1,7 @@
 "use client"
 
 import { useFormStatus } from 'react-dom';
-import { useActionState, useState, useEffect } from 'react';
+import { useActionState, useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Input, NativeSelect, Text, VStack, HStack, Code } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -9,10 +9,11 @@ import Button from '@/components/styles/Button';
 import { TbFileTypeXml } from "react-icons/tb";
 import { exportToXml } from '@/lib/utils';
 import Tooltip from '@/components/ui/Tooltip';
+import { getDistinctivenessScore } from '@/lib/habitat';
 
 const SearchableDropdown = dynamic(() => import('@/components/ui/SearchableDropdown'), { ssr: false });
 
-// Common initial state for the calculator form
+// Initial state for the calculator form
 export const calculatorInitialState = {
   size: 0,
   habitat: '',
@@ -27,24 +28,6 @@ export const calculatorInitialState = {
   error: null,
 };
 
-// Common initial state for scenario planning form
-export const scenarioPlanningInitialState = {
-  size: '1',
-  habitat: '',
-  baselineHabitat: '',
-  baselineCondition: '',
-  improvementType: 'creation',
-  strategicSignificance: 1,
-  spatialRisk: 1,
-  timeToTargetOffset: 0,
-  results: null,
-  summary: null,
-  habitatGroup: null,
-  baselineDistinctiveness: null,
-  targetDistinctiveness: null,
-  error: null,
-};
-
 function SubmitButton({ label = "Calculate" }) {
   const { pending } = useFormStatus();
   return (
@@ -55,16 +38,18 @@ function SubmitButton({ label = "Calculate" }) {
 }
 
 /**
- * Shared habitat form component for both HU Calculator and Scenario Planning
+ * Habitat Unit calculator form component.
+ *
+ * NOTE: This component is currently not imported by any page. ScenarioPlanningContent
+ * maintains its own inline form. This component targets the HU calculator use-case only.
  */
-export default function HabitatForm({ 
-  mode = 'calculator',
-  formAction, 
-  initialState, 
-  habitats, 
-  conditions, 
-  broadHabitats, 
-  habitatsByGroup, 
+export default function HabitatForm({
+  formAction,
+  initialState,
+  habitats,
+  conditions,
+  broadHabitats,
+  habitatsByGroup,
   allCompatibleHabitats,
   submitButtonLabel = "Calculate",
   showResults = true
@@ -74,82 +59,77 @@ export default function HabitatForm({
   const [broadHabitat, setBroadHabitat] = useState('');
   const [baselineBroadHabitat, setBaselineBroadHabitat] = useState('');
 
+  // Increment this counter whenever the result changes to reset controlled selects
+  // (avoids serialising the entire result object as a React key)
+  const resultRevision = useRef(0);
+  const prevResult = useRef(state.result);
+  if (state.result !== prevResult.current) {
+    resultRevision.current += 1;
+    prevResult.current = state.result;
+  }
+
   // Get filtered habitats based on broad habitat selection
   const filteredHabitats = broadHabitat ? habitatsByGroup[broadHabitat] || [] : habitats;
   const filteredBaselineHabitats = baselineBroadHabitat ? habitatsByGroup[baselineBroadHabitat] || [] : habitats;
 
-  // For enhancement mode, filter target broad habitats based on baseline habitat's category (linear vs area)
+  const isEnhancement = formData.improvementType === 'enhanced';
+
+  // For enhancement mode, filter target broad habitats based on baseline habitat's category
+  // (linear habitats can only enhance to same linear type; area habitats stay within area)
   let filteredTargetBroadHabitats = broadHabitats;
-  const isEnhancement = mode === 'calculator' 
-    ? formData.improvementType === 'enhanced' 
-    : formData.improvementType === 'enhancement';
-    
   if (isEnhancement) {
-    // Get the baseline habitat's broad group - check specific habitat first, then broad habitat dropdown
+    // Derive baseline group from the habitatsByGroup map using strict equality
     let baselineGroup = null;
-    
-    // First try to find from specific baseline habitat selection
     if (formData.baselineHabitat) {
       for (const [group, habs] of Object.entries(habitatsByGroup)) {
-        if (habs.some(h => formData.baselineHabitat.toLowerCase().includes(h.toLowerCase()))) {
+        if (habs.some(h => h.toLowerCase() === formData.baselineHabitat.toLowerCase())) {
           baselineGroup = group;
           break;
         }
       }
     }
-    
-    // If not found, try using the baseline broad habitat dropdown
     if (!baselineGroup && baselineBroadHabitat) {
       baselineGroup = baselineBroadHabitat;
     }
-    
+
     if (baselineGroup) {
-      // For linear habitats (Hedgerow, Watercourses), only allow same habitat type
-      // For area habitats, allow any other area habitat
       const isLinear = ['Hedgerow', 'Watercourses'].includes(baselineGroup);
-      
       if (isLinear) {
-        // Strict filtering: only allow the exact same broad habitat type for linear habitats
         filteredTargetBroadHabitats = [baselineGroup];
-        // Clear target broad habitat if it doesn't match
         if (broadHabitat && broadHabitat !== baselineGroup) {
           setBroadHabitat(baselineGroup);
         }
       } else {
-        // For area habitats, allow any area habitat (not linear)
-        filteredTargetBroadHabitats = broadHabitats.filter(group => {
-          const targetIsLinear = ['Hedgerow', 'Watercourses'].includes(group);
-          return !targetIsLinear;
-        });
+        filteredTargetBroadHabitats = broadHabitats.filter(g => !['Hedgerow', 'Watercourses'].includes(g));
       }
     }
   }
 
-  // For enhancement mode, filter target specific habitats
-  let targetHabitatsForEnhancement = filteredHabitats;
-  if (isEnhancement && formData.baselineHabitat && allCompatibleHabitats) {
-    targetHabitatsForEnhancement = filteredHabitats.filter(h => allCompatibleHabitats.includes(h));
-  }
+  // For enhancement mode, filter specific target habitats by compatibility
+  const targetHabitatsForEnhancement =
+    isEnhancement && formData.baselineHabitat && allCompatibleHabitats
+      ? filteredHabitats.filter(h => allCompatibleHabitats.includes(h))
+      : filteredHabitats;
+
+  // Filter baseline conditions by the baseline habitat's distinctiveness score.
+  // For habitats with score > 0: show the five graded conditions only.
+  // For Very Low (score 0): show only N/A options.
+  const filteredBaselineConditions = conditions.filter(condition => {
+    if (!isEnhancement || !formData.baselineHabitat) {
+      return true;
+    }
+    const distinctiveness = getDistinctivenessScore(formData.baselineHabitat);
+    const validConditions = ['Good', 'Fairly Good', 'Moderate', 'Fairly Poor', 'Poor'];
+    const nAOptions = ['Condition Assessment N/A', 'N/A - Other'];
+    return distinctiveness > 0 ? validConditions.includes(condition) : nAOptions.includes(condition);
+  });
 
   useEffect(() => {
     setFormData(state);
   }, [state]);
 
+  const showBaselineFields = isEnhancement;
   const error = state?.error;
-  const showBaselineFields = mode === 'calculator' 
-    ? formData.improvementType === 'enhanced'
-    : formData.improvementType === 'enhancement';
-    
-  const improvementTypeOptions = mode === 'calculator' 
-    ? [
-        { value: 'baseline', label: 'Baseline' },
-        { value: 'creation', label: 'Creation' },
-        { value: 'enhanced', label: 'Enhanced' },
-      ]
-    : [
-        { value: 'creation', label: 'Creation' },
-        { value: 'enhancement', label: 'Enhancement' },
-      ];
 
   return (
     <form action={formActionInternal}>
@@ -163,40 +143,41 @@ export default function HabitatForm({
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Improvement Type</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field 
-                name="improvementType" 
-                value={formData.improvementType} 
-                onChange={(e) => setFormData({ ...formData, improvementType: e.target.value })} 
-                key={JSON.stringify(mode === 'calculator' ? state.result : state.results)}
+              <NativeSelect.Field
+                name="improvementType"
+                value={formData.improvementType}
+                onChange={(e) => setFormData({ ...formData, improvementType: e.target.value })}
+                key={resultRevision.current}
               >
-                {improvementTypeOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
+                <option value="baseline">Baseline</option>
+                <option value="creation">Creation</option>
+                <option value="enhanced">Enhanced</option>
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
+
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Size (ha/km)</Text>
             <Box flex="2">
-              <Input 
-                name="size" 
-                value={formData.size} 
-                onChange={(e) => setFormData({ ...formData, size: e.target.value })} 
-                width="100%" 
+              <Input
+                name="size"
+                value={formData.size}
+                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
+                width="100%"
                 type="number"
                 min="0.01"
                 step="0.01"
               />
             </Box>
           </HStack>
-          
+
           {showBaselineFields && (
             <>
               <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Baseline Broad Habitat</Text>
                 <NativeSelect.Root flex="2" size="sm">
-                  <NativeSelect.Field 
+                  <NativeSelect.Field
                     value={baselineBroadHabitat}
                     onChange={(e) => {
                       setBaselineBroadHabitat(e.target.value);
@@ -214,33 +195,33 @@ export default function HabitatForm({
               <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Baseline Habitat</Text>
                 <Box flex="2">
-                  <SearchableDropdown 
-                    name="baselineHabitat" 
-                    options={filteredBaselineHabitats} 
-                    value={formData.baselineHabitat} 
-                    onChange={(value) => setFormData({ ...formData, baselineHabitat: value })} 
-                    disabled={!baselineBroadHabitat} 
+                  <SearchableDropdown
+                    name="baselineHabitat"
+                    options={filteredBaselineHabitats}
+                    value={formData.baselineHabitat}
+                    onChange={(value) => setFormData({ ...formData, baselineHabitat: value })}
+                    disabled={!baselineBroadHabitat}
                   />
                 </Box>
               </HStack>
               <HStack spacing={4}>
                 <Text flex="1" fontWeight="bold">Baseline Condition</Text>
                 <Box flex="2">
-                  <SearchableDropdown 
-                    name="baselineCondition" 
-                    options={conditions} 
-                    value={formData.baselineCondition} 
-                    onChange={(value) => setFormData({ ...formData, baselineCondition: value })} 
+                  <SearchableDropdown
+                    name="baselineCondition"
+                    options={filteredBaselineConditions}
+                    value={formData.baselineCondition}
+                    onChange={(value) => setFormData({ ...formData, baselineCondition: value })}
                   />
                 </Box>
               </HStack>
             </>
           )}
-          
+
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Target Broad Habitat</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field 
+              <NativeSelect.Field
                 value={broadHabitat}
                 onChange={(e) => {
                   setBroadHabitat(e.target.value);
@@ -255,90 +236,71 @@ export default function HabitatForm({
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
+
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Target Habitat</Text>
             <Box flex="2">
-              <SearchableDropdown 
-                name="habitat" 
-                options={targetHabitatsForEnhancement} 
-                value={formData.habitat} 
-                onChange={(value) => setFormData({ ...formData, habitat: value })} 
-                disabled={!broadHabitat} 
+              <SearchableDropdown
+                name="habitat"
+                options={targetHabitatsForEnhancement}
+                value={formData.habitat}
+                onChange={(value) => setFormData({ ...formData, habitat: value })}
+                disabled={!broadHabitat}
               />
             </Box>
           </HStack>
-          
-          {mode === 'calculator' && (
-            <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Target Condition</Text>
-              <Box flex="2">
-                <SearchableDropdown 
-                  name="condition" 
-                  options={conditions} 
-                  value={formData.condition} 
-                  onChange={(value) => setFormData({ ...formData, condition: value })} 
-                />
-              </Box>
-            </HStack>
-          )}
-          
+
+          <HStack spacing={4}>
+            <Text flex="1" fontWeight="bold">Target Condition</Text>
+            <Box flex="2">
+              <SearchableDropdown
+                name="condition"
+                options={conditions}
+                value={formData.condition}
+                onChange={(value) => setFormData({ ...formData, condition: value })}
+              />
+            </Box>
+          </HStack>
+
           <HStack spacing={4}>
             <Text flex="1" fontWeight="bold">Strategic Significance</Text>
             <NativeSelect.Root flex="2" size="sm">
-              <NativeSelect.Field 
-                name="strategicSignificance" 
-                value={formData.strategicSignificance} 
-                onChange={(e) => setFormData({ ...formData, strategicSignificance: e.target.value })} 
-                key={JSON.stringify(mode === 'calculator' ? state.result : state.results)}
+              {/* Low=1, Medium=1.1, High=1.5 as per BNG metric calculator */}
+              <NativeSelect.Field
+                name="strategicSignificance"
+                value={formData.strategicSignificance}
+                onChange={(e) => setFormData({ ...formData, strategicSignificance: e.target.value })}
+                key={resultRevision.current}
               >
-                {mode === 'calculator' ? (
-                  <>
-                    <option value={1}>Low</option>
-                    <option value={1.1}>Medium</option>
-                    <option value={1.5}>High</option>
-                  </>
-                ) : (
-                  <>
-                    <option value="1">Low (1.0)</option>
-                    <option value="1.5">Medium (1.5)</option>
-                    <option value="2">High (2.0)</option>
-                  </>
-                )}
+                <option value={1}>Low</option>
+                <option value={1.1}>Medium</option>
+                <option value={1.5}>High</option>
               </NativeSelect.Field>
               <NativeSelect.Indicator />
             </NativeSelect.Root>
           </HStack>
-          
+
           {formData.improvementType !== 'baseline' && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Spatial Risk</Text>
+              {/* Within=1, Neighbouring=0.75, Outside=0.5 as per BNG metric calculator */}
               <NativeSelect.Root flex="2" size="sm">
-                <NativeSelect.Field 
-                  name="spatialRisk" 
-                  value={formData.spatialRisk} 
-                  onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })} 
-                  key={JSON.stringify(mode === 'calculator' ? state.result : state.results)}
+                <NativeSelect.Field
+                  name="spatialRisk"
+                  value={formData.spatialRisk}
+                  onChange={(e) => setFormData({ ...formData, spatialRisk: e.target.value })}
+                  key={resultRevision.current}
                 >
-                  {mode === 'calculator' ? (
-                    <>
-                      <option value={1}>Within</option>
-                      <option value={0.75}>Neighbouring</option>
-                      <option value={0.5}>Outside</option>
-                    </>
-                  ) : (
-                    <>
-                      <option value="1">Within (1.0)</option>
-                      <option value="1.2">Adjacent (1.2)</option>
-                      <option value="1.5">Isolated (1.5)</option>
-                    </>
-                  )}
+                  <option value={1}>Within</option>
+                  <option value={0.75}>Neighbouring</option>
+                  <option value={0.5}>Outside</option>
                 </NativeSelect.Field>
                 <NativeSelect.Indicator />
               </NativeSelect.Root>
             </HStack>
           )}
-          
-          {(formData.improvementType === 'creation' || formData.improvementType === 'enhanced' || formData.improvementType === 'enhancement') && (
+
+          {(formData.improvementType === 'creation' || formData.improvementType === 'enhanced') && (
             <HStack spacing={4}>
               <Text flex="1" fontWeight="bold">Time to Target Offset (years)</Text>
               <NativeSelect.Root flex="2" size="sm">
@@ -367,7 +329,7 @@ export default function HabitatForm({
             }}>
               Reset
             </Button>
-            
+
             {showResults && formData.result && (
               <>
                 <Tooltip text="Click to download data as a .XML file">
@@ -381,7 +343,6 @@ export default function HabitatForm({
                         1.1: 'Medium',
                         1.5: 'High'
                       };
-
                       const inputData = {
                         improvementType: formData.improvementType,
                         size: formData.size,
@@ -399,11 +360,12 @@ export default function HabitatForm({
                           timeToTargetOffset: formData.timeToTargetOffset,
                         }),
                       };
-                      const exportData = {
-                        inputs: inputData,
-                        result: formData.result,
-                      };
-                      exportToXml(exportData, 'HabitatUnitCalculation', 'calculation', 'hu-calculation.xml');
+                      exportToXml(
+                        { inputs: inputData, result: formData.result },
+                        'HabitatUnitCalculation',
+                        'calculation',
+                        'hu-calculation.xml'
+                      );
                     }}
                   >
                     <TbFileTypeXml size={25} padding={0} />

@@ -71,7 +71,6 @@ Urban,Introduced shrub,Low,Not Possible,Not Possible,Not Possible,Not Possible,N
 Urban,Open mosaic habitats on previously developed land,High,Not Possible,Not Possible,0,2,4,7,10,Not Possible,Not Possible,Not Possible,Not Possible,2,4,7,10,2,5,8,3,4,3,Not Possible
 Urban,Rain garden,Low,Not Possible,Not Possible,1,1,1,1,1,Not Possible,Not Possible,Not Possible,Not Possible,1,1,1,1,1,1,1,1,1,1,Not Possible
 Urban,Actively worked sand pit quarry or open cast mine,Low,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible
-Urban,Urban tree,Medium,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,8,16,24,30+,8,16,24,8,16,8,Not Possible
 Urban,Sustainable drainage system,Low,Not Possible,Not Possible,1,2,3,4,5,Not Possible,Not Possible,Not Possible,Not Possible,1,2,3,5,1,2,3,1,2,1,Not Possible
 Urban,Unvegetated garden,V.Low,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible
 Urban,Vacant or derelict land,Low,Not Possible,Not Possible,1,1,1,1,1,Not Possible,Not Possible,Not Possible,Not Possible,1,1,1,1,1,1,1,1,1,1,Not Possible
@@ -131,6 +130,7 @@ Intertidal hard structures,Artificial features of hard structures,Low,Not Possib
 Intertidal hard structures,Artificial hard structures with integrated greening of grey infrastructure (IGGI),Medium,Not Possible,Not Possible,1,2,4,8,13,Not Possible,Not Possible,Not Possible,Not Possible,2,4,6,11,2,4,9,2,7,5,Not Possible
 Watercourse footprint,Watercourse footprint,V.low,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible
 Individual trees,Rural tree,Medium,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,8,16,24,30+,8,16,24,8,16,8,Not Possible
+Individual trees,Urban tree,Medium,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,Not Possible,8,16,24,30+,8,16,24,8,16,8,Not Possible
 Hedgerow,Species-rich native hedgerow with trees - associated with bank or ditch,V.High,,,,,,,,,,,,,6,,10,,,,,4,,
 Hedgerow,Species-rich native hedgerow with trees,High,,,,,,,,,,,,,6,,10,,,,,4,,
 Hedgerow,Species-rich native hedgerow - associated with bank or ditch,High,,,,,,,,,,,,,3,,5,,,,,2,,
