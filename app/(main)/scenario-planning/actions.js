@@ -16,95 +16,68 @@ export async function calculateScenarios(prevState, formData) {
   const improvementType = formData.get("improvementType") || 'creation';
   const strategicSignificance = Number(formData.get("strategicSignificance")) || 1;
   const spatialRisk = Number(formData.get("spatialRisk")) || 1;
-  
-  // Get the timeToTargetOffset value from form data
-  const rawTimeToTargetOffset = formData.get("timeToTargetOffset");
-  
-  // Parse the value, defaulting to 0 if empty or invalid
-  const timeToTargetOffset = rawTimeToTargetOffset !== null && rawTimeToTargetOffset !== undefined && rawTimeToTargetOffset !== '' 
-    ? Number(rawTimeToTargetOffset) 
-    : 0;
 
-  // Check if this is a reset (empty habitat with no error flag)
-  const isReset = formData.get("isReset") === "true";
-  
+  // Number(null|undefined|'') all give NaN; NaN || 0 safely gives 0
+  const timeToTargetOffset = Number(formData.get("timeToTargetOffset")) || 0;
+
+  // Common fields shared by every return value — merge in overrides as needed
+  const buildState = (overrides) => ({
+    size,
+    habitat: habitat || '',
+    baselineHabitat: baselineHabitat || '',
+    baselineCondition: baselineCondition || '',
+    improvementType,
+    strategicSignificance,
+    spatialRisk,
+    timeToTargetOffset,
+    results: null,
+    summary: null,
+    habitatGroup: null,
+    baselineDistinctiveness: null,
+    targetDistinctiveness: null,
+    error: null,
+    ...overrides,
+  });
+
   if (!habitat) {
-    return {
-      size: Number(size) || 0,
-      habitat: '',
-      baselineHabitat: baselineHabitat || '',
-      baselineCondition: baselineCondition || '',
-      improvementType: improvementType || 'creation',
-      strategicSignificance,
-      spatialRisk,
-      timeToTargetOffset,
-      results: null,
-      summary: null,
-      habitatGroup: null,
+    return buildState({
       baselineDistinctiveness: baselineHabitat ? getHabitatDistinctiveness(baselineHabitat) : null,
-      targetDistinctiveness: null,
-      error: isReset ? null : 'Please select a habitat'
-    };
+      error: 'Please select a habitat',
+    });
   }
+
+  // Pre-compute lookups used in multiple places below
+  const habitatGroup = getHabitatGroup(habitat);
+  const targetDistinctiveness = getHabitatDistinctiveness(habitat);
+  const baselineDistinctiveness = baselineHabitat ? getHabitatDistinctiveness(baselineHabitat) : null;
 
   // For enhancement, require baseline habitat and condition
   if (improvementType === 'enhancement') {
     if (!baselineHabitat) {
-      return {
-        size,
-        habitat,
-        baselineHabitat,
-        baselineCondition,
-        improvementType,
-        strategicSignificance,
-        spatialRisk,
-        timeToTargetOffset,
-        results: null,
-        summary: null,
-        habitatGroup: getHabitatGroup(habitat),
-        baselineDistinctiveness: null,
-        targetDistinctiveness: getHabitatDistinctiveness(habitat),
-        error: 'Please select a baseline habitat for enhancement'
-      };
+      return buildState({
+        habitatGroup,
+        targetDistinctiveness,
+        error: 'Please select a baseline habitat for enhancement',
+      });
     }
     if (!baselineCondition) {
-      return {
-        size,
-        habitat,
-        baselineHabitat,
-        baselineCondition,
-        improvementType,
-        strategicSignificance,
-        spatialRisk,
-        timeToTargetOffset,
-        results: null,
-        summary: null,
-        habitatGroup: getHabitatGroup(habitat),
-        baselineDistinctiveness: getHabitatDistinctiveness(baselineHabitat),
-        targetDistinctiveness: getHabitatDistinctiveness(habitat),
-        error: 'Please select a baseline condition for enhancement'
-      };
+      return buildState({
+        habitatGroup,
+        baselineDistinctiveness,
+        targetDistinctiveness,
+        error: 'Please select a baseline condition for enhancement',
+      });
     }
-    
+
     // Check trading rules
     const tradingCheck = checkTradingRules(baselineHabitat, habitat);
     if (!tradingCheck.allowed) {
-      return {
-        size,
-        habitat,
-        baselineHabitat,
-        baselineCondition,
-        improvementType,
-        strategicSignificance,
-        spatialRisk,
-        timeToTargetOffset,
-        results: null,
-        summary: null,
-        habitatGroup: getHabitatGroup(habitat),
-        baselineDistinctiveness: getHabitatDistinctiveness(baselineHabitat),
-        targetDistinctiveness: getHabitatDistinctiveness(habitat),
-        error: tradingCheck.reason
-      };
+      return buildState({
+        habitatGroup,
+        baselineDistinctiveness,
+        targetDistinctiveness,
+        error: tradingCheck.reason,
+      });
     }
   }
 
@@ -112,128 +85,97 @@ export async function calculateScenarios(prevState, formData) {
   const originalCaseHabitat = getOriginalCaseHabitatName(habitat);
   const originalCaseBaselineHabitat = baselineHabitat ? getOriginalCaseHabitatName(baselineHabitat) : null;
 
+  // Hoist per-habitat values that are constant across all condition iterations
+  const distinctivenessScore = getDistinctivenessScore(habitat);
+  const baselineConditionScore = baselineCondition ? getConditionScore(baselineCondition) : 0;
+
   const scenarios = [];
 
   if (improvementType === 'baseline') {
-    // For baseline: calculate HUs for target habitat at each condition using baseline formula
+    // Calculate HUs for target habitat at each condition using the baseline formula
     VALID_CONDITIONS.forEach(condition => {
-      const baselineHUs = calculateBaselineHU(
-        size,
+      const HUs = calculateBaselineHU(size, habitat, condition, strategicSignificance) || 0;
+      scenarios.push({
         habitat,
         condition,
-        strategicSignificance
-      );
-      
-      scenarios.push({
-        habitat: habitat,
-        condition: condition,
-        HUs: baselineHUs || 0,
-        distinctivenessScore: getDistinctivenessScore(habitat),
+        HUs,
+        distinctivenessScore,
         conditionScore: getConditionScore(condition),
         timeToTarget: 'N/A',
         effectiveTimeToTarget: 'N/A',
       });
     });
   } else if (improvementType === 'creation') {
-    // For creation: calculate HUs for target habitat at each condition
+    // Calculate HUs for target habitat at each condition
     VALID_CONDITIONS.forEach(targetCondition => {
       const huData = calculateImprovementHU(
-        size,
-        habitat,
-        targetCondition,
-        'creation',
-        null, // baselineHabitat - null for creation
-        null, // baselineCondition
-        timeToTargetOffset,
-        strategicSignificance,
-        spatialRisk
+        size, habitat, targetCondition, 'creation',
+        null, null,
+        timeToTargetOffset, strategicSignificance, spatialRisk
       );
-      
-      // Calculate effective time-to-target (net TtoT)
       const baseTimeToTarget = huData.timeToTarget;
       const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
-      
-      
+      const conditionScore = getConditionScore(targetCondition);
       scenarios.push({
         baselineHabitat: 'N/A (Creation)',
         baselineCondition: 'N/A (Creation)',
         targetCondition,
-        baselineConditionScore: 0, // No baseline for creation
-        targetConditionScore: getConditionScore(targetCondition),
+        baselineConditionScore: 0,
+        targetConditionScore: conditionScore,
         HUs: huData.HUs || 0,
         baselineHUs: huData.baselineHUs || 0,
-        distinctivenessScore: getDistinctivenessScore(habitat),
-        conditionScore: getConditionScore(targetCondition),
+        distinctivenessScore,
+        conditionScore,
         timeToTarget: baseTimeToTarget !== undefined ? String(baseTimeToTarget) : 'N/A',
         effectiveTimeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
         temporalRisk: huData.temporalRisk,
       });
     });
   } else {
-    // For enhancement: use selected baseline habitat and condition, calculate for all better target conditions
+    // Enhancement: calculate for all target conditions >= baseline condition
     VALID_CONDITIONS.forEach(targetCondition => {
-      // Only calculate if target condition is better than or equal to baseline
-      if (getConditionScore(targetCondition) >= getConditionScore(baselineCondition)) {
-        const huData = calculateImprovementHU(
-          size,
-          habitat,
-          targetCondition,
-          'enhanced',
-          baselineHabitat,
-          baselineCondition,
-          timeToTargetOffset,
-          strategicSignificance,
-          spatialRisk
-        );
-        
-        // Calculate effective time-to-target (net TtoT)
-        const baseTimeToTarget = huData.timeToTarget;
-        const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
-        
-        
-        scenarios.push({
-          baselineHabitat: originalCaseBaselineHabitat,
-          baselineCondition,
-          targetCondition,
-          baselineConditionScore: getConditionScore(baselineCondition),
-          targetConditionScore: getConditionScore(targetCondition),
-          HUs: huData.HUs || 0,
-          baselineHUs: huData.baselineHUs || 0,
-          distinctivenessScore: getDistinctivenessScore(habitat),
-          conditionScore: getConditionScore(targetCondition),
-          timeToTarget: baseTimeToTarget !== undefined ? String(baseTimeToTarget) : 'N/A',
-          effectiveTimeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
-          temporalRisk: huData.temporalRisk,
-        });
-      }
+      const conditionScore = getConditionScore(targetCondition);
+      if (conditionScore < baselineConditionScore) return;
+
+      const huData = calculateImprovementHU(
+        size, habitat, targetCondition, 'enhanced',
+        baselineHabitat, baselineCondition,
+        timeToTargetOffset, strategicSignificance, spatialRisk
+      );
+      const baseTimeToTarget = huData.timeToTarget;
+      const effectiveTimeToTarget = getEffectiveTimeToTarget(baseTimeToTarget, timeToTargetOffset);
+      scenarios.push({
+        baselineHabitat: originalCaseBaselineHabitat,
+        baselineCondition,
+        targetCondition,
+        baselineConditionScore,
+        targetConditionScore: conditionScore,
+        HUs: huData.HUs || 0,
+        baselineHUs: huData.baselineHUs || 0,
+        distinctivenessScore,
+        conditionScore,
+        timeToTarget: baseTimeToTarget !== undefined ? String(baseTimeToTarget) : 'N/A',
+        effectiveTimeToTarget: effectiveTimeToTarget !== undefined ? String(effectiveTimeToTarget) : 'N/A',
+        temporalRisk: huData.temporalRisk,
+      });
     });
   }
 
   // Calculate summary stats
   const huValues = scenarios.map(r => r.HUs);
-  const minHUs = Math.min(...huValues);
-  const maxHUs = Math.max(...huValues);
-  const avgHUs = huValues.reduce((a, b) => a + b, 0) / huValues.length;
+  const summary = {
+    minHUs: Math.min(...huValues),
+    maxHUs: Math.max(...huValues),
+    avgHUs: huValues.reduce((a, b) => a + b, 0) / huValues.length,
+  };
 
-  const summary = { minHUs, maxHUs, avgHUs };
-  const habitatGroup = getHabitatGroup(habitat);
-  const targetDistinctiveness = getHabitatDistinctiveness(habitat);
-  const baselineDistinctiveness = baselineHabitat ? getHabitatDistinctiveness(baselineHabitat) : null;
-
-  return {
-    size,
+  return buildState({
     habitat: originalCaseHabitat,
     baselineHabitat: originalCaseBaselineHabitat,
-    baselineCondition,
-    improvementType,
-    strategicSignificance,
-    spatialRisk,
-    timeToTargetOffset,
     results: scenarios,
     summary,
     habitatGroup,
     baselineDistinctiveness,
     targetDistinctiveness,
-    error: null
-  };
+  });
 }
