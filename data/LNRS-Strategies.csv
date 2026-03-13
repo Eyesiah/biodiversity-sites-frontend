@@ -11,7 +11,7 @@ LNRS ID,LNRS Name,URL
 42,Devon,
 44,Dorset,https://www.dorsetcouncil.gov.uk/nature-recovery
 48,East Sussex and Brighton & Hove,
-29,Gloucestershire,
+29,Gloucestershire,https://www.gloucestershire.gov.uk/planning-and-environment/ecology-and-landscape/gloucestershire-local-nature-recovery-strategy/
 34,Greater Essex,https://www.essex.gov.uk/about-council/plans-and-strategies/environment-and-planning/local-nature-recovery-strategy
 16,Greater Lincolnshire,
 39,Greater London,https://www.london.gov.uk/programmes-strategies/environment-and-climate-change/parks-green-spaces-and-biodiversity/local-nature-recovery-strategy
@@ -24,11 +24,11 @@ LNRS ID,LNRS Name,URL
 40,Kent and Medway,https://www.makingspacefornaturekent.org.uk/
 6,Lancashire,https://www.lancashire.gov.uk/council/strategies-policies-plans/environmental/local-nature-recovery-strategy/
 19,"Leicestershire, Leicester and Rutland",https://www.leicestershire.gov.uk/environment-and-planning/local-nature-recovery-strategy/leicestershire-leicester-and-rutland-local-nature-recovery-strategy
-10,Liverpool City Region,
+10,Liverpool City Region,https://www.liverpoolcityregion-ca.gov.uk/local-nature-recovery-strategy
 27,Norfolk,https://www.norfolk.gov.uk/article/39010/What-a-Local-Nature-Recovery-Strategy-is
 25,North Northamptonshire,https://www.northnorthants.gov.uk/conservation-and-protection/local-nature-recovery-strategy
 1,North of Tyne,
-7,North Yorkshire and York,
+7,North Yorkshire and York,https://www.northyorks.gov.uk/local-nature-recovery-strategy-documents
 15,Nottinghamshire and Nottingham,https://nottsnaturerecovery.co.uk/index.php
 30,Oxfordshire,https://www.oxfordshire.gov.uk/residents/environment-and-planning/local-nature-recovery-strategy-lnrs
 17,Shropshire and Telford & Wrekin,
@@ -46,4 +46,4 @@ LNRS ID,LNRS Name,URL
 47,West Sussex,
 8,West Yorkshire,
 36,Wiltshire and Swindon,https://www.wiltshire.gov.uk/local-nature-recovery-strategy
-21,Worcestershire,
+21,Worcestershire,https://www.worcestershire.gov.uk/council-services/planning-and-developments/environmental-policy/worcestershire-local-nature-recovery-strategy-lnrs
