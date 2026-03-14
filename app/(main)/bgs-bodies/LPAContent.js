@@ -8,12 +8,37 @@ import SearchableBodiesLayout from './SearchableBodiesLayout';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { InfoButton } from '@/components/styles/InfoButton';
 import { DataTable } from '@/components/styles/DataTable';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Link, Text } from '@chakra-ui/react';
 
 // Headers configuration for LPA table
 const HEADERS = [
   { key: 'id', label: 'ID' },
   { key: 'name', label: 'Name' },
+  {
+    key: 'planningPortalSortKey',
+    label: 'Planning Portal',
+    render: (lpa) => {
+      const entries = lpa.planningPortalUrls;
+      if (!entries || entries.length === 0) return null;
+      return (
+        <Box display="flex" flexDirection="column" gap="0.2rem">
+          {entries.map(({ url, town }, idx) => (
+            <Link
+              key={idx}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              color="blue.500"
+              fontSize="sm"
+              _hover={{ textDecoration: 'underline' }}
+            >
+              {town || 'Open Planning Portal'}
+            </Link>
+          ))}
+        </Box>
+      );
+    },
+  },
   { key: 'size', label: 'Size (ha)', textAlign: 'right', format: (val) => formatNumber(val, 0) },
   { key: 'siteCount', label: '# BGS Sites', textAlign: 'center' },
   { key: 'allocationsCount', label: '# Allocations', textAlign: 'center' },
@@ -99,14 +124,21 @@ export default forwardRef(function LPAContent({ lpas, sites, onExpandedRowChange
     }
   }), []);
 
-  // Pre-process to add siteCount and adjacentsCount (without expanding sites)
+  // Pre-process to add siteCount, adjacentsCount, planningPortalUrls, and planningPortalSortKey
   const processedBodies = useMemo(() => {
-    return lpas.map(item => ({
-      ...item,
-      siteCount: item.sites?.length || 0,
-      allocationsCount: item.allocationsCount || 0,
-      adjacentsCount: item.adjacents?.length || 0
-    }));
+    return lpas.map(item => {
+      const urls = item.planningPortalUrls || [];
+      // Sort key: first entry's town label (or 'Open Planning Portal'), empty string if no portal
+      const sortKey = urls.length > 0 ? (urls[0].town || 'Open Planning Portal') : '';
+      return {
+        ...item,
+        siteCount: item.sites?.length || 0,
+        allocationsCount: item.allocationsCount || 0,
+        adjacentsCount: item.adjacents?.length || 0,
+        planningPortalUrls: urls,
+        planningPortalSortKey: sortKey,
+      };
+    });
   }, [lpas]);
 
   const totalArea = useMemo(() => lpas.reduce((sum, lpa) => sum + lpa.size, 0), [lpas]);
@@ -135,6 +167,7 @@ export default forwardRef(function LPAContent({ lpas, sites, onExpandedRowChange
             const csvData = items.map(item => ({
               'ID': item.id,
               'Name': item.name,
+              'Planning Portal': (item.planningPortalUrls || []).map(({ url }) => url).join('; '),
               'Size (ha)': item.size,
               '# BGS Sites': item.siteCount,
               '# Allocations': item.allocationsCount,

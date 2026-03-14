@@ -49,6 +49,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.durham.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -71,7 +77,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000003",
@@ -87,6 +94,12 @@
         "id": "E60000007",
         "name": "Stockton-on-Tees LPA",
         "size": 205981843.26280212
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.hartlepool.gov.uk/portal/servlets/ApplicationSearchServlet",
+        "town": ""
       }
     ]
   },
@@ -110,7 +123,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000005",
@@ -157,6 +171,12 @@
         "name": "Scottish Borders LPA",
         "size": 4739460752.94783
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.northumberland.gov.uk/online-applications/search.do?action=simple#",
+        "town": ""
+      }
     ]
   },
   {
@@ -184,7 +204,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000007",
@@ -221,6 +242,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.developmentmanagement.stockton.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -253,6 +280,12 @@
         "name": "Sunderland LPA",
         "size": 138905864.03764343
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://public.gateshead.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -280,6 +313,12 @@
         "name": "South Tyneside LPA",
         "size": 62813297.56944275
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://portal.newcastle.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
     ]
   },
   {
@@ -301,6 +340,12 @@
         "id": "E60000011",
         "name": "South Tyneside LPA",
         "size": 62813297.56944275
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://idoxpublicaccess.northtyneside.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -329,6 +374,12 @@
         "name": "Sunderland LPA",
         "size": 138905864.03764343
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.southtyneside.info/Northgate/PlanningExplorer/GeneralSearch.aspx",
+        "town": ""
+      }
     ]
   },
   {
@@ -350,6 +401,12 @@
         "id": "E60000011",
         "name": "South Tyneside LPA",
         "size": 62813297.56944275
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://online-applications.sunderland.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -393,6 +450,12 @@
         "name": "South Ribble LPA",
         "size": 115314707.36582947
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.blackburn.gov.uk/Northgate/PlanningExplorer/ApplicationSearch.aspx",
+        "town": ""
+      }
     ]
   },
   {
@@ -410,7 +473,8 @@
         "name": "Wyre LPA",
         "size": 285788573.36846924
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000015",
@@ -467,7 +531,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000016",
@@ -509,6 +574,12 @@
         "name": "Wrexham LPA",
         "size": 503635776.2539215
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.cheshirewestandchester.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -540,6 +611,12 @@
         "id": "E60000050",
         "name": "St. Helens LPA",
         "size": 135748431.24194336
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://webapp.halton.gov.uk/planningapps/",
+        "town": ""
       }
     ]
   },
@@ -583,6 +660,12 @@
         "name": "St. Helens LPA",
         "size": 135748431.24194336
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://online.warrington.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
     ]
   },
   {
@@ -615,7 +698,8 @@
         "name": "Chorley LPA",
         "size": 202431172.01864624
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000026",
@@ -652,7 +736,8 @@
         "name": "Rossendale LPA",
         "size": 137087415.78858948
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000027",
@@ -699,7 +784,8 @@
         "name": "Trafford LPA",
         "size": 106039791.40284729
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000028",
@@ -736,7 +822,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000029",
@@ -767,6 +854,12 @@
         "id": "E60000069",
         "name": "Calderdale LPA",
         "size": 362995136.0867157
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.rochdale.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -805,6 +898,12 @@
         "name": "Wigan LPA",
         "size": 187520744.56532288
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://salfordcitycouncil.my.site.com/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
     ]
   },
   {
@@ -836,6 +935,12 @@
         "id": "E60000324",
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.stockport.gov.uk/PlanningData-live/search.do",
+        "town": ""
       }
     ]
   },
@@ -869,7 +974,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000033",
@@ -895,6 +1001,12 @@
         "id": "E60000030",
         "name": "Salford LPA",
         "size": 97262002.09199524
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.trafford.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -933,7 +1045,8 @@
         "name": "St. Helens LPA",
         "size": 135748431.24194336
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000035",
@@ -964,6 +1077,12 @@
         "id": "E60000069",
         "name": "Calderdale LPA",
         "size": 362995136.0867157
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.burnley.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -997,6 +1116,12 @@
         "name": "West Lancashire LPA",
         "size": 346610390.352829
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.chorley.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1024,7 +1149,8 @@
         "name": "Wyre LPA",
         "size": 285788573.36846924
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000038",
@@ -1050,6 +1176,12 @@
         "id": "E60000043",
         "name": "Rossendale LPA",
         "size": 137087415.78858948
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.hyndburnbc.gov.uk/Northgate/ES/Presentation/Planning/OnlinePlanning/OnlinePlanningSearch#",
+        "town": ""
       }
     ]
   },
@@ -1083,6 +1215,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.lancaster.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1115,6 +1253,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.pendle.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1142,7 +1286,8 @@
         "name": "Wyre LPA",
         "size": 285788573.36846924
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000042",
@@ -1194,7 +1339,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000043",
@@ -1231,7 +1377,8 @@
         "name": "Calderdale LPA",
         "size": 362995136.0867157
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000044",
@@ -1268,7 +1415,8 @@
         "name": "West Lancashire LPA",
         "size": 346610390.352829
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000045",
@@ -1305,7 +1453,8 @@
         "name": "St. Helens LPA",
         "size": 135748431.24194336
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000046",
@@ -1336,6 +1485,12 @@
         "id": "E60000042",
         "name": "Ribble Valley LPA",
         "size": 585187853.6425476
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpa.wyreforestdc.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1369,7 +1524,8 @@
         "name": "St. Helens LPA",
         "size": 135748431.24194336
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000048",
@@ -1390,6 +1546,12 @@
         "id": "E60000049",
         "name": "Sefton LPA",
         "size": 153247411.78507233
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://lar.liverpool.gov.uk/planning/index.html?fa=search",
+        "town": ""
       }
     ]
   },
@@ -1412,6 +1574,12 @@
         "id": "E60000048",
         "name": "Liverpool LPA",
         "size": 111394721.8453598
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.sefton.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1445,6 +1613,12 @@
         "name": "Knowsley LPA",
         "size": 87154678.6096878
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.sthelens.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1456,6 +1630,12 @@
         "id": "E60000016",
         "name": "Cheshire West and Chester LPA",
         "size": 914272936.5888062
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://online.wirral.gov.uk/planning/index.html?fa=search",
+        "town": ""
       }
     ]
   },
@@ -1489,6 +1669,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://newplanningaccess.eastriding.gov.uk/newplanningaccess/",
+        "town": ""
+      }
     ]
   },
   {
@@ -1501,7 +1687,8 @@
         "name": "East Riding of Yorkshire LPA",
         "size": 2414556594.265686
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000054",
@@ -1523,7 +1710,8 @@
         "name": "West Lindsey LPA",
         "size": 1157000999.1429138
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000055",
@@ -1555,7 +1743,8 @@
         "name": "Bassetlaw LPA",
         "size": 639150539.6366882
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000056",
@@ -1572,7 +1761,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000064",
@@ -1608,6 +1798,12 @@
         "id": "E60000324",
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningexplorer.barnsley.gov.uk/Home/AdvanceSearch",
+        "town": ""
       }
     ]
   },
@@ -1651,6 +1847,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.doncaster.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1688,6 +1890,12 @@
         "name": "Bassetlaw LPA",
         "size": 639150539.6366882
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.rotherham.gov.uk/fastweblive/results.asp",
+        "town": ""
+      }
     ]
   },
   {
@@ -1714,6 +1922,12 @@
         "id": "E60000324",
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningapps.sheffield.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1752,7 +1966,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000069",
@@ -1793,6 +2008,12 @@
         "id": "E60000070",
         "name": "Kirklees LPA",
         "size": 362982191.65075684
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://portal.calderdale.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1836,7 +2057,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000071",
@@ -1862,6 +2084,12 @@
         "id": "E60000336",
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.leeds.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1895,6 +2123,12 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.wakefield.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -1916,6 +2150,12 @@
         "id": "E60000084",
         "name": "South Derbyshire LPA",
         "size": 337287839.06056976
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://eplanning.derby.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -1944,6 +2184,12 @@
         "name": "Oadby and Wigston LPA",
         "size": 23179246.889717102
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://leicestershire.planning-register.co.uk/Search/Advanced",
+        "town": ""
+      }
     ]
   },
   {
@@ -1970,6 +2216,12 @@
         "id": "E60000112",
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.nottinghamshire.gov.uk/planning-and-environment/planning-applications/commenting-on-planning-applications",
+        "town": ""
       }
     ]
   },
@@ -2002,6 +2254,12 @@
         "id": "E60000332",
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.rutland.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -2050,6 +2308,12 @@
         "name": "Broxtowe LPA",
         "size": 80779405.09384155
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.ambervalley.gov.uk/planning/development-management/view-a-planning-application/",
+        "town": ""
+      }
     ]
   },
   {
@@ -2092,7 +2356,8 @@
         "name": "Mansfield LPA",
         "size": 76413546.21289062
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000079",
@@ -2108,6 +2373,12 @@
         "id": "E60000083",
         "name": "North East Derbyshire LPA",
         "size": 251477956.71614075
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.chesterfield.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -2140,6 +2411,12 @@
         "id": "E60000324",
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.derbyshiredales.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -2178,6 +2455,12 @@
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://register.civicacx.co.uk/erewash/planning",
+        "town": ""
+      }
     ]
   },
   {
@@ -2205,7 +2488,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000083",
@@ -2247,7 +2531,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000084",
@@ -2289,7 +2574,8 @@
         "name": "Lichfield LPA",
         "size": 332101290.1981201
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000085",
@@ -2326,7 +2612,8 @@
         "name": "Rugby LPA",
         "size": 353318724.8667221
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000086",
@@ -2368,7 +2655,8 @@
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000087",
@@ -2420,7 +2708,8 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000088",
@@ -2457,7 +2746,8 @@
         "name": "Rugby LPA",
         "size": 353318724.8667221
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000089",
@@ -2494,7 +2784,8 @@
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000090",
@@ -2536,6 +2827,12 @@
         "name": "North Warwickshire LPA",
         "size": 284705394.1651764
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://plans.nwleics.gov.uk/public-access/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -2557,6 +2854,12 @@
         "id": "E60000087",
         "name": "Harborough LPA",
         "size": 593758850.499443
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.oadby-wigston.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -2580,7 +2883,8 @@
         "name": "South Holland LPA",
         "size": 752149580.7329407
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000093",
@@ -2607,7 +2911,8 @@
         "name": "West Lindsey LPA",
         "size": 1157000999.1429138
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000094",
@@ -2624,7 +2929,8 @@
         "name": "West Lindsey LPA",
         "size": 1157000999.1429138
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000095",
@@ -2666,7 +2972,8 @@
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000096",
@@ -2702,6 +3009,12 @@
         "id": "E60000179",
         "name": "King's Lynn and West Norfolk LPA",
         "size": 1438288032.8887634
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.sholland.gov.uk/OcellaWeb/planningSearch",
+        "town": ""
       }
     ]
   },
@@ -2745,7 +3058,8 @@
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000098",
@@ -2786,6 +3100,12 @@
         "id": "E60000111",
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://westlindsey-publicportal.statmap.co.uk/horizoNext/publicportal",
+        "town": ""
       }
     ]
   },
@@ -2829,6 +3149,12 @@
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.ashfield.gov.uk/planning-applications/search-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -2871,6 +3197,12 @@
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.bassetlaw.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -2903,6 +3235,12 @@
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.broxtowe.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -2929,6 +3267,12 @@
         "id": "E60000112",
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pawam.gedling.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -2957,7 +3301,8 @@
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000111",
@@ -3009,6 +3354,12 @@
         "name": "Rushcliffe LPA",
         "size": 408856668.3164978
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.newark-sherwooddc.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -3056,7 +3407,8 @@
         "name": "Newark and Sherwood LPA",
         "size": 651945712.4531555
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000113",
@@ -3092,6 +3444,12 @@
         "id": "W43000024",
         "name": "Monmouthshire LPA",
         "size": 701275549.578743
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.herefordshire.gov.uk/planning-and-building-control/planning-search",
+        "town": ""
       }
     ]
   },
@@ -3155,7 +3513,8 @@
         "name": "Powys LPA",
         "size": 4300546365.063709
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000115",
@@ -3177,7 +3536,8 @@
         "name": "Staffordshire Moorlands LPA",
         "size": 370011686.74915314
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000116",
@@ -3198,6 +3558,12 @@
         "id": "E60000122",
         "name": "Stafford LPA",
         "size": 597711885.4065552
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://secure.telford.gov.uk/planning/search-reference.aspx",
+        "town": ""
       }
     ]
   },
@@ -3225,6 +3591,12 @@
         "id": "E60000135",
         "name": "Walsall LPA",
         "size": 104476918.80527496
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/cannock/search-applications/",
+        "town": ""
       }
     ]
   },
@@ -3262,6 +3634,12 @@
         "id": "E60000324",
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.eaststaffsbc.gov.uk/Northgate/PlanningExplorer/KeywordsSearch.aspx",
+        "town": ""
       }
     ]
   },
@@ -3315,7 +3693,8 @@
         "name": "Walsall LPA",
         "size": 104476918.80527496
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000120",
@@ -3346,6 +3725,12 @@
         "id": "E60000123",
         "name": "Staffordshire Moorlands LPA",
         "size": 370011686.74915314
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.newcastle-staffs.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -3399,6 +3784,12 @@
         "name": "Wyre Forest LPA",
         "size": 195832161.16136932
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.sstaffs.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -3451,7 +3842,8 @@
         "name": "Staffordshire Moorlands LPA",
         "size": 370011686.74915314
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000123",
@@ -3488,7 +3880,8 @@
         "name": "Peak District National Park LPA",
         "size": 1439139848.2352448
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000124",
@@ -3505,7 +3898,8 @@
         "name": "North Warwickshire LPA",
         "size": 284705394.1651764
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000125",
@@ -3552,7 +3946,8 @@
         "name": "Solihull LPA",
         "size": 177512622.1042099
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000126",
@@ -3578,6 +3973,12 @@
         "id": "E60000131",
         "name": "Coventry LPA",
         "size": 98375899.62016296
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://customer.nuneatonandbedworth.gov.uk/en/AchieveForms/?form_uri=sandbox-publish://AF-Process-bb4f1551-25f7-4c9d-9504-359555b4764c/AF-Stage-52bb890a-7580-4889-8b19-31d27fd8a3bd/definition.json",
+        "town": ""
       }
     ]
   },
@@ -3626,7 +4027,8 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000128",
@@ -3683,7 +4085,8 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000129",
@@ -3710,7 +4113,8 @@
         "name": "Solihull LPA",
         "size": 177512622.1042099
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000130",
@@ -3752,6 +4156,12 @@
         "name": "Bromsgrove LPA",
         "size": 217442931.5537567
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://eplanning.birmingham.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx",
+        "town": ""
+      }
     ]
   },
   {
@@ -3783,6 +4193,12 @@
         "id": "E60000134",
         "name": "Solihull LPA",
         "size": 177512622.1042099
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planandregulatory.coventry.gov.uk/planning/index.html?fa=search",
+        "town": ""
       }
     ]
   },
@@ -3816,6 +4232,12 @@
         "name": "Bromsgrove LPA",
         "size": 217442931.5537567
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www5.dudley.gov.uk/swiftlg/apas/run/Wphappcriteria.display",
+        "town": ""
+      }
     ]
   },
   {
@@ -3842,6 +4264,12 @@
         "id": "E60000136",
         "name": "Wolverhampton LPA",
         "size": 69092245.1561737
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://webcaps.sandwell.gov.uk/publicaccess/search.do",
+        "town": ""
       }
     ]
   },
@@ -3880,6 +4308,12 @@
         "name": "Bromsgrove LPA",
         "size": 217442931.5537567
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.solihull.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -3917,7 +4351,8 @@
         "name": "Wolverhampton LPA",
         "size": 69092245.1561737
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000136",
@@ -3943,6 +4378,12 @@
         "id": "E60000135",
         "name": "Walsall LPA",
         "size": 104476918.80527496
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningonline.wolverhampton.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -3991,7 +4432,8 @@
         "name": "Wyre Forest LPA",
         "size": 195832161.16136932
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000138",
@@ -4033,7 +4475,8 @@
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000139",
@@ -4055,7 +4498,8 @@
         "name": "Wychavon LPA",
         "size": 663035083.266159
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000140",
@@ -4071,6 +4515,12 @@
         "id": "E60000141",
         "name": "Wychavon LPA",
         "size": 663035083.266159
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://plan.worcester.gov.uk/Search/Advanced",
+        "town": ""
       }
     ]
   },
@@ -4119,6 +4569,12 @@
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://plan.wychavon.gov.uk/",
+        "town": ""
+      }
     ]
   },
   {
@@ -4151,7 +4607,8 @@
         "name": "Wychavon LPA",
         "size": 663035083.266159
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000143",
@@ -4177,6 +4634,12 @@
         "id": "E60000332",
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.bexley.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -4230,6 +4693,12 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://plantech.centralbedfordshire.gov.uk/PLANTECH/DCWebPages/AcolNetCGI.gov",
+        "town": ""
+      }
     ]
   },
   {
@@ -4247,7 +4716,8 @@
         "name": "North Hertfordshire LPA",
         "size": 374318548.8089371
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000146",
@@ -4284,6 +4754,12 @@
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planpa.peterborough.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -4301,7 +4777,8 @@
         "name": "Rochford LPA",
         "size": 170699442.6897812
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000148",
@@ -4328,6 +4805,12 @@
         "name": "Havering LPA",
         "size": 112988758.28109741
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://regs.thurrock.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
     ]
   },
   {
@@ -4339,6 +4822,12 @@
         "id": "E60000153",
         "name": "South Cambridgeshire LPA",
         "size": 902388544.4748306
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://applications.greatercambridgeplanning.org/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -4372,7 +4861,8 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000151",
@@ -4404,7 +4894,8 @@
         "name": "King's Lynn and West Norfolk LPA",
         "size": 1438288032.8887634
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000152",
@@ -4446,7 +4937,8 @@
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000153",
@@ -4493,6 +4985,12 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://applications.greatercambridgeplanning.org/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -4524,6 +5022,12 @@
         "id": "E60000163",
         "name": "Rochford LPA",
         "size": 170699442.6897812
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.basildon.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -4567,6 +5071,12 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.braintree.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -4599,6 +5109,12 @@
         "name": "Havering LPA",
         "size": 112988758.28109741
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.brentwood.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -4626,7 +5142,8 @@
         "name": "Rochford LPA",
         "size": 170699442.6897812
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000158",
@@ -4668,6 +5185,12 @@
         "name": "Uttlesford LPA",
         "size": 640589026.7086105
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.chelmsford.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -4694,6 +5217,12 @@
         "id": "E60000183",
         "name": "Babergh LPA",
         "size": 594999174.9673462
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.colchester.gov.uk/planning-search-results/",
+        "town": ""
       }
     ]
   },
@@ -4752,6 +5281,12 @@
         "name": "Waltham Forest LPA",
         "size": 38685778.52371979
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://eppingforestdc.my.site.com/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
     ]
   },
   {
@@ -4769,7 +5304,8 @@
         "name": "East Hertfordshire LPA",
         "size": 475616170.8280258
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000162",
@@ -4796,7 +5332,8 @@
         "name": "Rochford LPA",
         "size": 170699442.6897812
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000163",
@@ -4828,6 +5365,12 @@
         "name": "Maldon LPA",
         "size": 361831314.5147705
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://maps.rochford.gov.uk/DevelopmentControl.aspx?RequestType=ParseTemplate&template=DevelopmentControlAdvancedSearch.tmplt",
+        "town": ""
+      }
     ]
   },
   {
@@ -4844,6 +5387,12 @@
         "id": "E60000183",
         "name": "Babergh LPA",
         "size": 594999174.9673462
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://idox.tendringdc.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -4882,7 +5431,8 @@
         "name": "North Hertfordshire LPA",
         "size": 374318548.8089371
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000166",
@@ -4909,7 +5459,8 @@
         "name": "Enfield LPA",
         "size": 82009539.24199677
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000167",
@@ -4935,6 +5486,12 @@
         "id": "E60000331",
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.dacorum.gov.uk/publicaccess/search.do",
+        "town": ""
       }
     ]
   },
@@ -4978,6 +5535,12 @@
         "name": "Welwyn Hatfield LPA",
         "size": 129862335.02001953
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.eastherts.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5020,7 +5583,8 @@
         "name": "Harrow LPA",
         "size": 50199006.39803314
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000170",
@@ -5067,6 +5631,12 @@
         "name": "Welwyn Hatfield LPA",
         "size": 129862335.02001953
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa2.north-herts.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5109,7 +5679,8 @@
         "name": "Welwyn Hatfield LPA",
         "size": 129862335.02001953
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000172",
@@ -5126,7 +5697,8 @@
         "name": "North Hertfordshire LPA",
         "size": 374318548.8089371
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000173",
@@ -5168,6 +5740,12 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www3.threerivers.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5189,6 +5767,12 @@
         "id": "E60000173",
         "name": "Three Rivers LPA",
         "size": 88633930.19438934
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.watford.gov.uk/publicaccess/search.do",
+        "town": ""
       }
     ]
   },
@@ -5227,7 +5811,8 @@
         "name": "Enfield LPA",
         "size": 82009539.24199677
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000176",
@@ -5264,7 +5849,8 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000177",
@@ -5296,6 +5882,12 @@
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://info.southnorfolkandbroadland.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5313,7 +5905,8 @@
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000179",
@@ -5350,6 +5943,12 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://online.west-norfolk.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5377,7 +5976,8 @@
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000181",
@@ -5398,6 +5998,12 @@
         "id": "E60000326",
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.norwich.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -5436,6 +6042,12 @@
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://info.southnorfolkandbroadland.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5473,7 +6085,8 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000184",
@@ -5505,6 +6118,12 @@
         "name": "The Broads Authority LPA",
         "size": 303136659.9776764
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.eastsuffolk.gov.uk/online-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -5526,6 +6145,12 @@
         "id": "E60000186",
         "name": "Mid Suffolk LPA",
         "size": 870322313.0723877
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://ppc.ipswich.gov.uk/appnsearch.asp",
+        "town": ""
       }
     ]
   },
@@ -5564,7 +6189,8 @@
         "name": "West Suffolk LPA",
         "size": 1035308882.9910889
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000187",
@@ -5606,7 +6232,8 @@
         "name": "Mid Suffolk LPA",
         "size": 870322313.0723877
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000188",
@@ -5642,6 +6269,12 @@
         "id": "E60000205",
         "name": "Brent LPA",
         "size": 41455884.55490112
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://accountforms.camden.gov.uk/planning-search/",
+        "town": ""
       }
     ]
   },
@@ -5685,6 +6318,12 @@
         "name": "Westminster LPA",
         "size": 21849561.42706299
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.planning2.cityoflondon.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5722,7 +6361,8 @@
         "name": "London Legacy Development Corporation LPA",
         "size": 4944268.403923035
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000191",
@@ -5764,6 +6404,12 @@
         "name": "Old Oak and Park Royal Development Corporation LPA",
         "size": 6621453.304367065
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://public-access.lbhf.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -5801,7 +6447,8 @@
         "name": "Waltham Forest LPA",
         "size": 38685778.52371979
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000193",
@@ -5828,7 +6475,8 @@
         "name": "Haringey LPA",
         "size": 30383897.611206055
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000194",
@@ -5860,7 +6508,8 @@
         "name": "Old Oak and Park Royal Development Corporation LPA",
         "size": 6621453.304367065
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000195",
@@ -5902,7 +6551,8 @@
         "name": "Merton LPA",
         "size": 37568794.1656189
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000196",
@@ -5924,7 +6574,8 @@
         "name": "Greenwich LPA",
         "size": 46430598.39830017
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000197",
@@ -5956,7 +6607,8 @@
         "name": "London Legacy Development Corporation LPA",
         "size": 4944268.403923035
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000198",
@@ -5987,6 +6639,12 @@
         "id": "E60000206",
         "name": "Bromley LPA",
         "size": 150120883.00443268
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.southwark.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -6020,7 +6678,8 @@
         "name": "London Legacy Development Corporation LPA",
         "size": 4944268.403923035
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000200",
@@ -6062,7 +6721,8 @@
         "name": "Richmond upon Thames LPA",
         "size": 58135383.077804565
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000201",
@@ -6099,6 +6759,12 @@
         "name": "Brent LPA",
         "size": 41455884.55490112
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://idoxpa.westminster.gov.uk/online-applications",
+        "town": ""
+      }
     ]
   },
   {
@@ -6120,6 +6786,12 @@
         "id": "E60000217",
         "name": "Redbridge LPA",
         "size": 56183869.93210602
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://online-befirst.lbbd.gov.uk/planning/index.html?fa=search",
+        "town": ""
       }
     ]
   },
@@ -6158,7 +6830,8 @@
         "name": "Harrow LPA",
         "size": 50199006.39803314
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000204",
@@ -6185,7 +6858,8 @@
         "name": "Sevenoaks LPA",
         "size": 370839850.1431961
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000205",
@@ -6231,6 +6905,12 @@
         "id": "E60000330",
         "name": "Old Oak and Park Royal Development Corporation LPA",
         "size": 6621453.304367065
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.brent.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -6279,7 +6959,8 @@
         "name": "Tandridge LPA",
         "size": 248646329.70829773
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000207",
@@ -6315,6 +6996,12 @@
         "id": "E60000278",
         "name": "Tandridge LPA",
         "size": 248646329.70829773
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess3.croydon.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -6352,6 +7039,12 @@
         "id": "E60000330",
         "name": "Old Oak and Park Royal Development Corporation LPA",
         "size": 6621453.304367065
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pam.ealing.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -6395,6 +7088,12 @@
         "name": "Waltham Forest LPA",
         "size": 38685778.52371979
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningandbuildingcontrol.enfield.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -6417,7 +7116,8 @@
         "name": "Bromley LPA",
         "size": 150120883.00443268
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000211",
@@ -6454,7 +7154,8 @@
         "name": "Hillingdon LPA",
         "size": 116299819.56694794
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000212",
@@ -6486,7 +7187,8 @@
         "name": "Redbridge LPA",
         "size": 56183869.93210602
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000213",
@@ -6528,7 +7230,8 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000214",
@@ -6560,7 +7263,8 @@
         "name": "Spelthorne LPA",
         "size": 50805944.49750519
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000215",
@@ -6602,7 +7306,8 @@
         "name": "Mole Valley LPA",
         "size": 258211913.9621582
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000216",
@@ -6634,7 +7339,8 @@
         "name": "Sutton LPA",
         "size": 44089242.464660645
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000217",
@@ -6666,7 +7372,8 @@
         "name": "Waltham Forest LPA",
         "size": 38685778.52371979
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000218",
@@ -6703,7 +7410,8 @@
         "name": "Spelthorne LPA",
         "size": 50805944.49750519
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000219",
@@ -6735,7 +7443,8 @@
         "name": "Reigate and Banstead LPA",
         "size": 128652076.05200958
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000220",
@@ -6777,7 +7486,8 @@
         "name": "London Legacy Development Corporation LPA",
         "size": 4944268.403923035
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000221",
@@ -6804,6 +7514,12 @@
         "name": "Surrey Heath LPA",
         "size": 95373186.04276276
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planapp.bracknell-forest.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -6826,13 +7542,15 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000223",
     "name": "Isle of Wight LPA",
     "size": 378823717.58686256,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000224",
@@ -6859,7 +7577,8 @@
         "name": "Tonbridge and Malling LPA",
         "size": 241611241.51622772
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000225",
@@ -6891,6 +7610,12 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.be.milton-keynes.gov.uk/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
     ]
   },
   {
@@ -6918,7 +7643,8 @@
         "name": "Winchester LPA",
         "size": 393425715.6993294
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000227",
@@ -6940,7 +7666,8 @@
         "name": "South Oxfordshire LPA",
         "size": 678338544.3076477
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000228",
@@ -6967,6 +7694,12 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/slough/search-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -6989,7 +7722,8 @@
         "name": "Test Valley LPA",
         "size": 624584564.7543678
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000230",
@@ -7030,6 +7764,12 @@
         "id": "E60000299",
         "name": "Wiltshire LPA",
         "size": 3224109643.8582535
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.westberks.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7073,7 +7813,8 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000232",
@@ -7120,6 +7861,12 @@
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.wokingham.gov.uk/FastWebPL/search.asp",
+        "town": ""
+      }
     ]
   },
   {
@@ -7137,7 +7884,8 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000238",
@@ -7148,6 +7896,12 @@
         "id": "E60000240",
         "name": "Rother LPA",
         "size": 514568821.7541504
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.hastings.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7175,6 +7929,12 @@
         "id": "E60000325",
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpa.lewes-eastbourne.gov.uk/online-applications/",
+        "town": ""
       }
     ]
   },
@@ -7207,6 +7967,12 @@
         "id": "E60000264",
         "name": "Tunbridge Wells LPA",
         "size": 331259511.69155884
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planweb01.rother.gov.uk/OcellaWeb/planningSearch",
+        "town": ""
       }
     ]
   },
@@ -7255,6 +8021,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.wealden.gov.uk/advsearch.aspx",
+        "town": ""
+      }
     ]
   },
   {
@@ -7292,7 +8064,8 @@
         "name": "Winchester LPA",
         "size": 393425715.6993294
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000243",
@@ -7334,6 +8107,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpublicaccess.easthants.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7366,6 +8145,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.eastleigh.gov.uk/s/public-register",
+        "town": ""
+      }
     ]
   },
   {
@@ -7393,6 +8178,12 @@
         "name": "Winchester LPA",
         "size": 393425715.6993294
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.fareham.gov.uk/casetrackerplanning/",
+        "town": ""
+      }
     ]
   },
   {
@@ -7410,7 +8201,8 @@
         "name": "Fareham LPA",
         "size": 73199934.7711029
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000247",
@@ -7452,7 +8244,8 @@
         "name": "Waverley LPA",
         "size": 345722663.1075516
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000248",
@@ -7483,6 +8276,12 @@
         "id": "E60000325",
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpublicaccess.havant.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7521,6 +8320,12 @@
         "name": "New Forest National Park LPA",
         "size": 552186818.8909454
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.newforest.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7547,6 +8352,12 @@
         "id": "E60000279",
         "name": "Waverley LPA",
         "size": 345722663.1075516
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.rushmoor.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7595,6 +8406,12 @@
         "name": "New Forest National Park LPA",
         "size": 552186818.8909454
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://view-applications.testvalley.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7642,6 +8459,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningapps.winchester.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7679,7 +8502,8 @@
         "name": "Tunbridge Wells LPA",
         "size": 331259511.69155884
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000254",
@@ -7711,6 +8535,12 @@
         "name": "Thanet LPA",
         "size": 104573277.71372223
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.canterbury.gov.uk/planning-and-building/search-and-comment-planning-applications",
+        "town": ""
+      }
     ]
   },
   {
@@ -7738,6 +8568,12 @@
         "name": "Ebbsfleet Development Corporation LPA",
         "size": 8288371.693695068
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.dartford.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7760,7 +8596,8 @@
         "name": "Thanet LPA",
         "size": 104573277.71372223
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000257",
@@ -7786,6 +8623,12 @@
         "id": "E60000256",
         "name": "Dover LPA",
         "size": 313181431.0529785
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.publicaccess.fenland.gov.uk/publicaccess/search.do",
+        "town": ""
       }
     ]
   },
@@ -7819,6 +8662,12 @@
         "name": "Ebbsfleet Development Corporation LPA",
         "size": 8288371.693695068
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://plan.gravesham.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7850,6 +8699,12 @@
         "id": "E60000264",
         "name": "Tunbridge Wells LPA",
         "size": 331259511.69155884
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.midkent.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7898,6 +8753,12 @@
         "name": "Tandridge LPA",
         "size": 248646329.70829773
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.sevenoaks.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -7925,7 +8786,8 @@
         "name": "Maidstone LPA",
         "size": 393212991.142189
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000262",
@@ -7941,6 +8803,12 @@
         "id": "E60000256",
         "name": "Dover LPA",
         "size": 313181431.0529785
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.thanet.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -7974,7 +8842,8 @@
         "name": "Tunbridge Wells LPA",
         "size": 331259511.69155884
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000264",
@@ -8010,6 +8879,12 @@
         "id": "E60000263",
         "name": "Tonbridge and Malling LPA",
         "size": 241611241.51622772
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://twbcpa.midkent.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -8053,6 +8928,12 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningregister.cherwell.gov.uk/",
+        "town": ""
+      }
     ]
   },
   {
@@ -8074,6 +8955,12 @@
         "id": "E60000268",
         "name": "Vale of White Horse LPA",
         "size": 579206978.281723
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://public.oxford.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
       }
     ]
   },
@@ -8116,6 +9003,12 @@
         "id": "E60000331",
         "name": "Buckinghamshire LPA",
         "size": 1564981645.166008
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://data.southoxon.gov.uk/ccm/support/Main.jsp?MODULE=ApplicationCriteria&TYPE=Application",
+        "town": ""
       }
     ]
   },
@@ -8164,6 +9057,12 @@
         "name": "Cotswold LPA",
         "size": 1166027195.406662
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://data.whitehorsedc.gov.uk/java/support/Main.jsp?MODULE=ApplicationRef&TYPE=Application",
+        "town": ""
+      }
     ]
   },
   {
@@ -8190,6 +9089,12 @@
         "id": "E60000309",
         "name": "Cotswold LPA",
         "size": 1166027195.406662
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.westoxon.gov.uk/online-applications//search.do",
+        "town": ""
       }
     ]
   },
@@ -8233,6 +9138,12 @@
         "name": "Woking LPA",
         "size": 63481246.64274597
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://emaps.elmbridge.gov.uk/ebc_planning.aspx?requesttype=parseTemplate&template=SimpleSearchTab.tmplt",
+        "town": ""
+      }
     ]
   },
   {
@@ -8259,6 +9170,12 @@
         "id": "E60000274",
         "name": "Reigate and Banstead LPA",
         "size": 128652076.05200958
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://eplanning.epsom-ewell.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -8297,7 +9214,8 @@
         "name": "Woking LPA",
         "size": 63481246.64274597
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000273",
@@ -8344,7 +9262,8 @@
         "name": "Horsham LPA",
         "size": 436939127.32987595
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000274",
@@ -8381,6 +9300,12 @@
         "name": "Crawley LPA",
         "size": 45440013.502464294
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.reigate-banstead.gov.uk/info/20085/planning_applications/956/viewing_planning_applications",
+        "town": ""
+      }
     ]
   },
   {
@@ -8412,6 +9337,12 @@
         "id": "E60000280",
         "name": "Woking LPA",
         "size": 63481246.64274597
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.runnymede.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx",
+        "town": ""
       }
     ]
   },
@@ -8455,7 +9386,8 @@
         "name": "Runnymede LPA",
         "size": 78419630.08956146
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000277",
@@ -8497,7 +9429,8 @@
         "name": "Woking LPA",
         "size": 63481246.64274597
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000278",
@@ -8539,7 +9472,8 @@
         "name": "Mid Sussex LPA",
         "size": 296148123.3024597
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000279",
@@ -8586,7 +9520,8 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000280",
@@ -8613,6 +9548,12 @@
         "name": "Surrey Heath LPA",
         "size": 95373186.04276276
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://caps.woking.gov.uk/online-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -8635,7 +9576,8 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000282",
@@ -8656,6 +9598,12 @@
         "id": "E60000325",
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.arun.gov.uk/planning-application-search",
+        "town": ""
       }
     ]
   },
@@ -8694,7 +9642,8 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000284",
@@ -8725,6 +9674,12 @@
         "id": "E60000286",
         "name": "Mid Sussex LPA",
         "size": 296148123.3024597
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningregister.crawley.gov.uk/#AdvancedSearchTab",
+        "town": ""
       }
     ]
   },
@@ -8763,6 +9718,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://public-access.horsham.gov.uk/public-access/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -8800,6 +9761,12 @@
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.midsussex.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -8821,6 +9788,12 @@
         "id": "E60000325",
         "name": "South Downs National Park LPA",
         "size": 1650881260.7761307
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.adur-worthing.gov.uk/online-applications/",
+        "town": ""
       }
     ]
   },
@@ -8854,6 +9827,12 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.bathnes.gov.uk/webforms/planning/#advancedSearch",
+        "town": ""
+      }
     ]
   },
   {
@@ -8875,6 +9854,12 @@
         "id": "E60000321",
         "name": "New Forest National Park LPA",
         "size": 552186818.8909454
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.bcpcouncil.gov.uk/planning-and-building-control/search-and-comment-on-planning-applications",
+        "town": ""
       }
     ]
   },
@@ -8898,6 +9883,12 @@
         "name": "South Gloucestershire LPA",
         "size": 520654116.3457527
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.bristol.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -8914,6 +9905,12 @@
         "id": "E60000307",
         "name": "West Devon LPA",
         "size": 632031380.7531595
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.cornwall.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -8947,13 +9944,20 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.dorsetcouncil.gov.uk/",
+        "town": ""
+      }
     ]
   },
   {
     "id": "E60000293",
     "name": "Isles of Scilly LPA",
     "size": 12990531.352733195,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000294",
@@ -8975,7 +9979,8 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000295",
@@ -8987,7 +9992,8 @@
         "name": "South Hams LPA",
         "size": 729074241.6091843
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000296",
@@ -9024,6 +10030,12 @@
         "name": "Stroud LPA",
         "size": 476216457.0175934
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://developments.southglos.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -9046,7 +10058,8 @@
         "name": "Cotswold LPA",
         "size": 1166027195.406662
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000298",
@@ -9062,6 +10075,12 @@
         "id": "E60000305",
         "name": "Teignbridge LPA",
         "size": 418348000.47094727
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.torbay.gov.uk/view/search.do",
+        "town": ""
       }
     ]
   },
@@ -9125,6 +10144,12 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://development.wiltshire.gov.uk/pr/s/?tabset-167f1=3",
+        "town": ""
+      }
     ]
   },
   {
@@ -9157,7 +10182,8 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000301",
@@ -9173,6 +10199,12 @@
         "id": "E60000305",
         "name": "Teignbridge LPA",
         "size": 418348000.47094727
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.exeter.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -9221,6 +10253,12 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.middevon.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -9248,7 +10286,8 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000304",
@@ -9280,7 +10319,8 @@
         "name": "Dartmoor National Park LPA",
         "size": 956427644.9558249
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000305",
@@ -9317,6 +10357,12 @@
         "name": "Dartmoor National Park LPA",
         "size": 956427644.9558249
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.teignbridge.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -9343,6 +10389,12 @@
         "id": "E60000307",
         "name": "West Devon LPA",
         "size": 632031380.7531595
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.torridge.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -9376,6 +10428,12 @@
         "name": "Dartmoor National Park LPA",
         "size": 956427644.9558249
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://westdevon.planning-register.co.uk/",
+        "town": ""
+      }
     ]
   },
   {
@@ -9393,7 +10451,8 @@
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000309",
@@ -9450,7 +10509,8 @@
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000310",
@@ -9487,7 +10547,8 @@
         "name": "Monmouthshire LPA",
         "size": 701275549.578743
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000311",
@@ -9503,6 +10564,12 @@
         "id": "E60000313",
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.gloucester.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -9535,6 +10602,12 @@
         "id": "E60000313",
         "name": "Tewkesbury LPA",
         "size": 415311231.49544525
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.stroud.gov.uk/online-applications/search.do",
+        "town": ""
       }
     ]
   },
@@ -9578,7 +10651,8 @@
         "name": "Stroud LPA",
         "size": 476216457.0175934
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000318",
@@ -9605,7 +10679,8 @@
         "name": "West Devon LPA",
         "size": 632031380.7531595
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000319",
@@ -9627,6 +10702,12 @@
         "name": "Somerset LPA",
         "size": 2964538286.319067
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/exmoor/search-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -9643,6 +10724,12 @@
         "id": "E60000335",
         "name": "Westmorland and Furness LPA",
         "size": 1895507277.4682922
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/ldnpa/search-applications/",
+        "town": ""
       }
     ]
   },
@@ -9671,6 +10758,12 @@
         "name": "Wiltshire LPA",
         "size": 3224109643.8582535
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/nfnpa/search-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -9687,6 +10780,12 @@
         "id": "E60000336",
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "http://planning.northyorkmoors.org.uk/northgate/PlanningExplorer/GeneralSearch.aspx",
+        "town": ""
       }
     ]
   },
@@ -9709,6 +10808,12 @@
         "id": "S44000026",
         "name": "Scottish Borders LPA",
         "size": 4739460752.94783
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://nnpa.planning-register.co.uk/Search/Advanced",
+        "town": ""
       }
     ]
   },
@@ -9776,6 +10881,12 @@
         "id": "E60000123",
         "name": "Staffordshire Moorlands LPA",
         "size": 370011686.74915314
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://portal.peakdistrict.gov.uk/",
+        "town": ""
       }
     ]
   },
@@ -9859,6 +10970,12 @@
         "name": "Worthing LPA",
         "size": 23111610.74327469
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpublicaccess.southdowns.gov.uk/online-applications/search.do",
+        "town": ""
+      }
     ]
   },
   {
@@ -9896,6 +11013,12 @@
         "name": "East Suffolk LPA",
         "size": 1249874584.3183289
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.broads-authority.gov.uk/online-applications/",
+        "town": ""
+      }
     ]
   },
   {
@@ -9928,7 +11051,8 @@
         "name": "North Yorkshire LPA",
         "size": 5115269425.595596
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000328",
@@ -9945,7 +11069,8 @@
         "name": "Gravesham LPA",
         "size": 96722040.344841
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000329",
@@ -9972,7 +11097,8 @@
         "name": "Waltham Forest LPA",
         "size": 38685778.52371979
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000330",
@@ -9999,7 +11125,8 @@
         "name": "Ealing LPA",
         "size": 52506409.56642914
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000331",
@@ -10061,6 +11188,20 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.aylesburyvaledc.gov.uk/online-applications/search.do",
+        "town": "Aylesbury Vale"
+      },
+      {
+        "url": "https://pa-csb.buckinghamshire.gov.uk/online-applications/search.do",
+        "town": "Chiltern and South Bucks"
+      },
+      {
+        "url": "https://publicaccess.wycombe.gov.uk/idoxpa-web/search.do",
+        "town": "Wycombe"
+      }
     ]
   },
   {
@@ -10108,7 +11249,8 @@
         "name": "West Northamptonshire LPA",
         "size": 1380210275.1375275
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000333",
@@ -10150,6 +11292,12 @@
         "name": "North Northamptonshire LPA",
         "size": 988193680.3193588
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://wnc.planning-register.co.uk/Search/Advanced",
+        "town": ""
+      }
     ]
   },
   {
@@ -10186,6 +11334,12 @@
         "id": "S44000026",
         "name": "Scottish Borders LPA",
         "size": 4739460752.94783
+      }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www.cumberland.gov.uk/planning-and-building-control/search-planning-applications",
+        "town": ""
       }
     ]
   },
@@ -10224,7 +11378,8 @@
         "name": "Cumberland LPA",
         "size": 1982231186.286026
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "E60000336",
@@ -10311,6 +11466,36 @@
         "name": "Yorkshire Dales National Park LPA",
         "size": 2185305011.919403
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.hambleton.gov.uk/online-applications/",
+        "town": "Hambleton"
+      },
+      {
+        "url": "https://publicaccess.cravendc.gov.uk/online-applications/",
+        "town": "Craven"
+      },
+      {
+        "url": "https://planningregister.ryedale.gov.uk/caonline-applications/",
+        "town": "Rydale"
+      },
+      {
+        "url": "https://uniformonline.harrogate.gov.uk/online-applications/",
+        "town": "Harrowgate"
+      },
+      {
+        "url": "https://planning.richmondshire.gov.uk/online-applications/search.do",
+        "town": "Richmondshire"
+      },
+      {
+        "url": "https://planning.scarborough.gov.uk/online-applications/",
+        "town": "Scarborough"
+      },
+      {
+        "url": "https://public.selby.gov.uk/online-applications/",
+        "town": "Selby"
+      }
     ]
   },
   {
@@ -10358,6 +11543,16 @@
         "name": "Exmoor National Park LPA",
         "size": 688078206.0691338
       }
+    ],
+    "planningPortalUrls": [
+      {
+        "url": "https://www3.somersetwestandtaunton.gov.uk/asp/webpages/plan/plapplookup.asp",
+        "town": "Taunton Deane"
+      },
+      {
+        "url": "https://www1.somersetwestandtaunton.gov.uk/online-applications/",
+        "town": "Somerset West and Taunton"
+      }
     ]
   },
   {
@@ -10390,7 +11585,8 @@
         "name": "Mid Ulster LPA",
         "size": 1955673992.3913002
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000002",
@@ -10412,7 +11608,8 @@
         "name": "Newry, Mourne and Down LPA",
         "size": 1676421531.0152817
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000003",
@@ -10439,7 +11636,8 @@
         "name": "Newry, Mourne and Down LPA",
         "size": 1676421531.0152817
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000004",
@@ -10461,7 +11659,8 @@
         "name": "Lisburn and Castlereagh LPA",
         "size": 510853423.9814491
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000005",
@@ -10483,7 +11682,8 @@
         "name": "Mid Ulster LPA",
         "size": 1955673992.3913002
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000006",
@@ -10505,7 +11705,8 @@
         "name": "Mid Ulster LPA",
         "size": 1955673992.3913002
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000007",
@@ -10522,7 +11723,8 @@
         "name": "Mid Ulster LPA",
         "size": 1955673992.3913002
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000008",
@@ -10554,7 +11756,8 @@
         "name": "Newry, Mourne and Down LPA",
         "size": 1676421531.0152817
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000009",
@@ -10576,7 +11779,8 @@
         "name": "Mid Ulster LPA",
         "size": 1955673992.3913002
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000010",
@@ -10613,7 +11817,8 @@
         "name": "Mid and East Antrim LPA",
         "size": 1058009323.5862083
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "N13000011",
@@ -10635,7 +11840,8 @@
         "name": "Lisburn and Castlereagh LPA",
         "size": 510853423.9814491
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000001",
@@ -10647,7 +11853,8 @@
         "name": "Aberdeenshire LPA",
         "size": 4869676202.100616
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000002",
@@ -10674,7 +11881,8 @@
         "name": "Cairngorms National Park LPA",
         "size": 4525492158.837051
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000003",
@@ -10701,7 +11909,8 @@
         "name": "Cairngorms National Park LPA",
         "size": 4525492158.837051
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000004",
@@ -10728,7 +11937,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000005",
@@ -10755,7 +11965,8 @@
         "name": "West Lothian LPA",
         "size": 428982720.5444031
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000006",
@@ -10782,7 +11993,8 @@
         "name": "Stirling LPA",
         "size": 1074293974.7981415
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000007",
@@ -10814,7 +12026,8 @@
         "name": "South Lanarkshire LPA",
         "size": 1774369463.3016968
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000008",
@@ -10831,7 +12044,8 @@
         "name": "Perth and Kinross LPA",
         "size": 4636186675.491013
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000009",
@@ -10863,7 +12077,8 @@
         "name": "South Lanarkshire LPA",
         "size": 1774369463.3016968
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000010",
@@ -10890,7 +12105,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000011",
@@ -10912,7 +12128,8 @@
         "name": "Scottish Borders LPA",
         "size": 4739460752.94783
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000012",
@@ -10944,7 +12161,8 @@
         "name": "South Lanarkshire LPA",
         "size": 1774369463.3016968
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000013",
@@ -10971,7 +12189,8 @@
         "name": "West Lothian LPA",
         "size": 428982720.5444031
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000014",
@@ -10988,7 +12207,8 @@
         "name": "Perth and Kinross LPA",
         "size": 4636186675.491013
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000015",
@@ -11025,7 +12245,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000016",
@@ -11052,7 +12273,8 @@
         "name": "Cairngorms National Park LPA",
         "size": 4525492158.837051
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000017",
@@ -11069,7 +12291,8 @@
         "name": "Renfrewshire LPA",
         "size": 269241652.5480499
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000018",
@@ -11091,7 +12314,8 @@
         "name": "Scottish Borders LPA",
         "size": 4739460752.94783
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000019",
@@ -11113,13 +12337,15 @@
         "name": "Cairngorms National Park LPA",
         "size": 4525492158.837051
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000020",
     "name": "Na h-Eileanan Siar LPA",
     "size": 3004431904.778704,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000021",
@@ -11151,7 +12377,8 @@
         "name": "South Ayrshire LPA",
         "size": 1220917649.757248
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000022",
@@ -11188,13 +12415,15 @@
         "name": "West Lothian LPA",
         "size": 428982720.5444031
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000023",
     "name": "Orkney Islands LPA",
     "size": 974775313.4648743,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000024",
@@ -11246,7 +12475,8 @@
         "name": "Loch Lomond and the Trossachs National Park LPA",
         "size": 1856089667.8013763
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000025",
@@ -11278,7 +12508,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000026",
@@ -11330,13 +12561,15 @@
         "name": "West Lothian LPA",
         "size": 428982720.5444031
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000027",
     "name": "Shetland Islands LPA",
     "size": 1389778377.5455933,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000028",
@@ -11358,7 +12591,8 @@
         "name": "North Ayrshire LPA",
         "size": 878407182.9796677
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000029",
@@ -11400,7 +12634,8 @@
         "name": "West Lothian LPA",
         "size": 428982720.5444031
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000030",
@@ -11442,7 +12677,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000031",
@@ -11474,7 +12710,8 @@
         "name": "Perth and Kinross LPA",
         "size": 4636186675.491013
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000032",
@@ -11501,7 +12738,8 @@
         "name": "West Dunbartonshire LPA",
         "size": 123045647.3483429
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000033",
@@ -11538,7 +12776,8 @@
         "name": "Loch Lomond and the Trossachs National Park LPA",
         "size": 1856089667.8013763
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "S44000034",
@@ -11570,13 +12809,15 @@
         "name": "South Lanarkshire LPA",
         "size": 1774369463.3016968
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000001",
     "name": "Isle of Anglesey LPA",
     "size": 711697096.4127884,
-    "adjacents": []
+    "adjacents": [],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000002",
@@ -11603,7 +12844,8 @@
         "name": "Powys LPA",
         "size": 4300546365.063709
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000003",
@@ -11635,7 +12877,8 @@
         "name": "Ceredigion LPA",
         "size": 1786056598.3211555
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000004",
@@ -11657,7 +12900,8 @@
         "name": "Denbighshire LPA",
         "size": 838167275.8496704
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000005",
@@ -11694,7 +12938,8 @@
         "name": "Powys LPA",
         "size": 4300546365.063709
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000006",
@@ -11716,7 +12961,8 @@
         "name": "Wrexham LPA",
         "size": 503635776.2539215
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000007",
@@ -11748,7 +12994,8 @@
         "name": "Powys LPA",
         "size": 4300546365.063709
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000008",
@@ -11805,7 +13052,8 @@
         "name": "Neath Port Talbot LPA",
         "size": 445297766.3290024
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000009",
@@ -11837,7 +13085,8 @@
         "name": "Carmarthenshire LPA",
         "size": 2151037405.3805733
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000010",
@@ -11859,7 +13108,8 @@
         "name": "Carmarthenshire LPA",
         "size": 2151037405.3805733
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000011",
@@ -11881,7 +13131,8 @@
         "name": "Carmarthenshire LPA",
         "size": 2151037405.3805733
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000012",
@@ -11923,7 +13174,8 @@
         "name": "Neath Port Talbot LPA",
         "size": 445297766.3290024
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000013",
@@ -11980,7 +13232,8 @@
         "name": "Monmouthshire LPA",
         "size": 701275549.578743
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000014",
@@ -11997,7 +13250,8 @@
         "name": "Neath Port Talbot LPA",
         "size": 445297766.3290024
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000015",
@@ -12034,7 +13288,8 @@
         "name": "Rhondda Cynon Taf LPA",
         "size": 370263820.02604675
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000016",
@@ -12056,7 +13311,8 @@
         "name": "Rhondda Cynon Taf LPA",
         "size": 370263820.02604675
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000017",
@@ -12078,7 +13334,8 @@
         "name": "Rhondda Cynon Taf LPA",
         "size": 370263820.02604675
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000018",
@@ -12105,7 +13362,8 @@
         "name": "Newport LPA",
         "size": 191248034.87116623
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000019",
@@ -12147,7 +13405,8 @@
         "name": "Caerphilly LPA",
         "size": 278047706.6415062
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000020",
@@ -12169,7 +13428,8 @@
         "name": "Caerphilly LPA",
         "size": 278047706.6415062
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000021",
@@ -12211,7 +13471,8 @@
         "name": "Newport LPA",
         "size": 191248034.87116623
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000022",
@@ -12233,7 +13494,8 @@
         "name": "Torfaen LPA",
         "size": 124880990.6297226
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000023",
@@ -12265,7 +13527,8 @@
         "name": "Newport LPA",
         "size": 191248034.87116623
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000024",
@@ -12297,7 +13560,8 @@
         "name": "Newport LPA",
         "size": 191248034.87116623
       }
-    ]
+    ],
+    "planningPortalUrls": []
   },
   {
     "id": "W43000025",
@@ -12324,6 +13588,7 @@
         "name": "Monmouthshire LPA",
         "size": 701275549.578743
       }
-    ]
+    ],
+    "planningPortalUrls": []
   }
 ]
