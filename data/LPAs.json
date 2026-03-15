@@ -78,7 +78,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.darlington.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000003",
@@ -124,7 +129,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/middlesbrough",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000005",
@@ -205,7 +215,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.redcar-cleveland.gov.uk/Search/Planning/Advanced",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000007",
@@ -474,7 +489,12 @@
         "size": 285788573.36846924
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://idoxpa.blackpool.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000015",
@@ -532,7 +552,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.cheshireeast.gov.uk/planning/view_a_planning_application/view_a_planning_application.aspx",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000016",
@@ -699,7 +724,12 @@
         "size": 202431172.01864624
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://paplanning.bolton.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000026",
@@ -737,7 +767,12 @@
         "size": 137087415.78858948
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.bury.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000027",
@@ -785,7 +820,12 @@
         "size": 106039791.40284729
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.manchester.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000028",
@@ -823,7 +863,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpa.oldham.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000029",
@@ -975,7 +1020,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.tameside.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000033",
@@ -1046,7 +1096,12 @@
         "size": 135748431.24194336
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.wigan.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000035",
@@ -1150,7 +1205,12 @@
         "size": 285788573.36846924
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.fylde.gov.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000038",
@@ -1287,7 +1347,12 @@
         "size": 285788573.36846924
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://selfservice.preston.gov.uk/service/planning/ApplicationSearch.aspx",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000042",
@@ -1340,7 +1405,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://webportal.ribblevalley.gov.uk/planningApplication/search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000043",
@@ -1378,7 +1448,12 @@
         "size": 362995136.0867157
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.rossendale.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000044",
@@ -1416,7 +1491,12 @@
         "size": 346610390.352829
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.southribble.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000045",
@@ -1454,7 +1534,12 @@
         "size": 135748431.24194336
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.westlancs.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000046",
@@ -1525,7 +1610,12 @@
         "size": 135748431.24194336
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planapp.knowsley.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000048",
@@ -1688,7 +1778,12 @@
         "size": 2414556594.265686
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.hullcc.gov.uk/padcbc/publicaccess-live/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000054",
@@ -1711,7 +1806,12 @@
         "size": 1157000999.1429138
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planninganddevelopment.nelincs.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000055",
@@ -1744,7 +1844,12 @@
         "size": 639150539.6366882
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://apps.northlincs.gov.uk/?page=4",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000056",
@@ -1762,7 +1867,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningaccess.york.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000064",
@@ -1967,7 +2077,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.bradford.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000069",
@@ -2058,7 +2173,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.kirklees.gov.uk/beta/planning-applications/search-for-planning-applications/default.aspx",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000071",
@@ -2357,7 +2477,12 @@
         "size": 76413546.21289062
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.bolsover.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000079",
@@ -2489,7 +2614,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "http://planning.highpeak.gov.uk/portal/servlets/ApplicationSearchServlet",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000083",
@@ -2532,7 +2662,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planapps-online.ne-derbyshire.gov.uk/online-applications/search.do?action=advanced",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000084",
@@ -2575,7 +2710,12 @@
         "size": 332101290.1981201
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.southderbyshire.gov.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000085",
@@ -2613,7 +2753,12 @@
         "size": 353318724.8667221
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.blaby.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000086",
@@ -2656,7 +2801,12 @@
         "size": 408856668.3164978
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningexplorer.charnwood.gov.uk/Assure/ES/Presentation/Planning/OnLinePlanning/OnlinePlanningSearch",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000087",
@@ -2709,7 +2859,12 @@
         "size": 1380210275.1375275
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa2.harborough.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000088",
@@ -2747,7 +2902,12 @@
         "size": 353318724.8667221
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.hinckley-bosworth.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000089",
@@ -2785,7 +2945,12 @@
         "size": 408856668.3164978
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.melton.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000090",
@@ -2912,7 +3077,12 @@
         "size": 1157000999.1429138
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.e-lindsey.gov.uk/article/6075/Search-View-and-Comment-on-Applications",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000094",
@@ -2930,7 +3100,12 @@
         "size": 1157000999.1429138
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.lincoln.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000095",
@@ -2973,7 +3148,12 @@
         "size": 651945712.4531555
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningonline.n-kesteven.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000096",
@@ -3059,7 +3239,12 @@
         "size": 988193680.3193588
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://prod.publicaccess.southkesteven.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000098",
@@ -3302,7 +3487,12 @@
         "size": 651945712.4531555
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.mansfield.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000111",
@@ -3408,7 +3598,12 @@
         "size": 651945712.4531555
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningon-line.rushcliffe.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000113",
@@ -3514,7 +3709,12 @@
         "size": 4300546365.063709
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.shropshire.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000115",
@@ -3537,7 +3737,12 @@
         "size": 370011686.74915314
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://development.stoke.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000116",
@@ -3694,7 +3899,12 @@
         "size": 104476918.80527496
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.lichfielddc.gov.uk/online-applications/search.do?action=simple",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000120",
@@ -3843,7 +4053,12 @@
         "size": 370011686.74915314
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www12.staffordbc.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000123",
@@ -3881,7 +4096,12 @@
         "size": 1439139848.2352448
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "http://publicaccess.staffsmoorlands.gov.uk/portal/servlets/ApplicationSearchServlet",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000124",
@@ -3899,7 +4119,12 @@
         "size": 284705394.1651764
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.tamworth.gov.uk/northgate/planningexplorer/generalsearch.aspx",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000125",
@@ -3947,7 +4172,12 @@
         "size": 177512622.1042099
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.northwarks.gov.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000126",
@@ -4028,7 +4258,12 @@
         "size": 1380210275.1375275
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/rugby",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000128",
@@ -4086,7 +4321,12 @@
         "size": 1380210275.1375275
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://apps.stratford.gov.uk/eplanningv2",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000129",
@@ -4114,7 +4354,12 @@
         "size": 177512622.1042099
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.warwickdc.gov.uk/info/20374/planning_applications/249/view_or_comment_on_a_planning_application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000130",
@@ -4352,7 +4597,12 @@
         "size": 69092245.1561737
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.walsall.gov.uk/swift/apas/run/wphappcriteria.display",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000136",
@@ -4433,7 +4683,12 @@
         "size": 195832161.16136932
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.bromsgroveandredditch.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000138",
@@ -4476,7 +4731,12 @@
         "size": 415311231.49544525
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://plan.malvernhills.gov.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000139",
@@ -4499,7 +4759,12 @@
         "size": 663035083.266159
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.bromsgroveandredditch.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000140",
@@ -4608,7 +4873,12 @@
         "size": 663035083.266159
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpa.wyreforestdc.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000143",
@@ -4717,7 +4987,12 @@
         "size": 374318548.8089371
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.luton.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000146",
@@ -4778,7 +5053,12 @@
         "size": 170699442.6897812
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.southend.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000148",
@@ -4862,7 +5142,12 @@
         "size": 1035308882.9910889
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.eastcambs.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000151",
@@ -4895,7 +5180,12 @@
         "size": 1438288032.8887634
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.publicaccess.fenland.gov.uk/publicaccess/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000152",
@@ -4938,7 +5228,12 @@
         "size": 988193680.3193588
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.huntingdonshire.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000153",
@@ -5143,7 +5438,12 @@
         "size": 170699442.6897812
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.castlepoint.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000158",
@@ -5305,7 +5605,12 @@
         "size": 475616170.8280258
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningonline.harlow.gov.uk/online-applications/search.do?action=simple",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000162",
@@ -5333,7 +5638,12 @@
         "size": 170699442.6897812
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.maldon.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000163",
@@ -5432,7 +5742,12 @@
         "size": 374318548.8089371
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.uttlesford.gov.uk/online-applications/search.do?",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000166",
@@ -5460,7 +5775,12 @@
         "size": 82009539.24199677
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.broxbourne.gov.uk/LPAssure/ES/Presentation/Planning/OnlinePlanning/OnlinePlanningSearch",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000167",
@@ -5584,7 +5904,12 @@
         "size": 50199006.39803314
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www6.hertsmere.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000170",
@@ -5680,7 +6005,12 @@
         "size": 129862335.02001953
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningapplications.stalbans.gov.uk/planning",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000172",
@@ -5698,7 +6028,12 @@
         "size": 374318548.8089371
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.stevenage.gov.uk/online-applications/search.do?action=simple",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000173",
@@ -5812,7 +6147,12 @@
         "size": 82009539.24199677
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.welhat.gov.uk/Search/Basic",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000176",
@@ -5850,7 +6190,12 @@
         "size": 1035308882.9910889
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicportal.breckland.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000177",
@@ -5906,7 +6251,12 @@
         "size": 303136659.9776764
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.great-yarmouth.gov.uk/OcellaWeb/planningSearch",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000179",
@@ -5977,7 +6327,12 @@
         "size": 303136659.9776764
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://idoxpa.north-norfolk.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000181",
@@ -6086,7 +6441,12 @@
         "size": 1035308882.9910889
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.baberghmidsuffolk.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000184",
@@ -6190,7 +6550,12 @@
         "size": 1035308882.9910889
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.baberghmidsuffolk.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000187",
@@ -6233,7 +6598,12 @@
         "size": 870322313.0723877
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.westsuffolk.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000188",
@@ -6362,7 +6732,12 @@
         "size": 4944268.403923035
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://developmentandhousing.hackney.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000191",
@@ -6448,7 +6823,12 @@
         "size": 38685778.52371979
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicregister.haringey.gov.uk/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000193",
@@ -6476,7 +6856,12 @@
         "size": 30383897.611206055
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/islington/search-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000194",
@@ -6509,7 +6894,12 @@
         "size": 6621453.304367065
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.rbkc.gov.uk/planningsearch",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000195",
@@ -6552,7 +6942,12 @@
         "size": 37568794.1656189
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.lambeth.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000196",
@@ -6575,7 +6970,12 @@
         "size": 46430598.39830017
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.lewisham.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000197",
@@ -6608,7 +7008,12 @@
         "size": 4944268.403923035
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.newham.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000198",
@@ -6679,7 +7084,12 @@
         "size": 4944268.403923035
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://development.towerhamlets.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000200",
@@ -6722,7 +7132,12 @@
         "size": 58135383.077804565
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.wandsworth.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000201",
@@ -6831,7 +7246,12 @@
         "size": 50199006.39803314
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.barnet.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000204",
@@ -6859,7 +7279,12 @@
         "size": 370839850.1431961
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.bexley.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000205",
@@ -6960,7 +7385,12 @@
         "size": 248646329.70829773
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningaccess.bromley.gov.uk/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000207",
@@ -7117,7 +7547,12 @@
         "size": 150120883.00443268
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.royalgreenwich.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000211",
@@ -7155,7 +7590,12 @@
         "size": 116299819.56694794
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningandbuilding.hounslow.gov.uk/NECSWS/ES/Presentation/Planning/OnlinePlanning/OnlinePlanningSearch#",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000212",
@@ -7188,7 +7628,12 @@
         "size": 56183869.93210602
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.havering.gov.uk/planning-3/planning-searches/2",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000213",
@@ -7231,7 +7676,12 @@
         "size": 1564981645.166008
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.hillingdon.gov.uk/OcellaWeb/planningSearch",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000214",
@@ -7264,7 +7714,12 @@
         "size": 50805944.49750519
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningandbuilding.hounslow.gov.uk/NECSWS/ES/Presentation/Planning/OnlinePlanning/OnlinePlanningSearch#",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000215",
@@ -7307,7 +7762,12 @@
         "size": 258211913.9621582
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.kingston.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000216",
@@ -7340,7 +7800,12 @@
         "size": 44089242.464660645
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://rspandlp.merton.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000217",
@@ -7373,7 +7838,12 @@
         "size": 38685778.52371979
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://my.redbridge.gov.uk/planning",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000218",
@@ -7411,7 +7881,12 @@
         "size": 50805944.49750519
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.richmond.gov.uk/richmond/search-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000219",
@@ -7444,7 +7919,12 @@
         "size": 128652076.05200958
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningregister.sutton.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000220",
@@ -7487,7 +7967,12 @@
         "size": 4944268.403923035
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://placehub.walthamforest.gov.uk/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000221",
@@ -7543,14 +8028,24 @@
         "size": 1650881260.7761307
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.brighton-hove.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000223",
     "name": "Isle of Wight LPA",
     "size": 378823717.58686256,
     "adjacents": [],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.iow.gov.uk/article/1399/Planning-applications",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000224",
@@ -7578,7 +8073,12 @@
         "size": 241611241.51622772
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess1.medway.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000225",
@@ -7644,7 +8144,12 @@
         "size": 393425715.6993294
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.portsmouth.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000227",
@@ -7667,7 +8172,12 @@
         "size": 678338544.3076477
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicregister.reading.gov.uk/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000228",
@@ -7723,7 +8233,12 @@
         "size": 624584564.7543678
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpublicaccess.southampton.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000230",
@@ -7814,7 +8329,12 @@
         "size": 1564981645.166008
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.rbwm.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000232",
@@ -7885,7 +8405,12 @@
         "size": 1650881260.7761307
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planningpa.lewes-eastbourne.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000238",
@@ -8065,7 +8590,12 @@
         "size": 393425715.6993294
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.basingstoke.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000243",
@@ -8202,7 +8732,12 @@
         "size": 73199934.7711029
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.gosport.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000247",
@@ -8245,7 +8780,12 @@
         "size": 345722663.1075516
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.hart.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000248",
@@ -8503,7 +9043,12 @@
         "size": 331259511.69155884
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://abcportal.ashford.gov.uk/pr/s/register-view?c__r=Arcus_BE_Public_Register",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000254",
@@ -8597,7 +9142,12 @@
         "size": 104573277.71372223
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.dover.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000257",
@@ -8787,7 +9337,12 @@
         "size": 393212991.142189
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.midkent.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000262",
@@ -8843,7 +9398,12 @@
         "size": 331259511.69155884
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.tmbc.gov.uk/planning/planning-view-comment-planning-applications",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000264",
@@ -9215,7 +9775,12 @@
         "size": 63481246.64274597
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.guildford.gov.uk/online-applications//login.jsp",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000273",
@@ -9263,7 +9828,12 @@
         "size": 436939127.32987595
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://molevalley-publicportal.statmap.co.uk/horizonext",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000274",
@@ -9387,7 +9957,12 @@
         "size": 78419630.08956146
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.spelthorne.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000277",
@@ -9430,7 +10005,12 @@
         "size": 63481246.64274597
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.surreyheath.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000278",
@@ -9473,7 +10053,12 @@
         "size": 296148123.3024597
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://tdcplanningsearch.tandridge.gov.uk/#TDCInfo",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000279",
@@ -9521,7 +10106,12 @@
         "size": 1650881260.7761307
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning360.waverley.gov.uk:4443/planning",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000280",
@@ -9577,7 +10167,12 @@
         "size": 1650881260.7761307
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.adur-worthing.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000282",
@@ -9643,7 +10238,12 @@
         "size": 1650881260.7761307
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.chichester.gov.uk/online-applications/search.do?action=simple&searchType=Application",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000284",
@@ -9957,7 +10557,12 @@
     "name": "Isles of Scilly LPA",
     "size": 12990531.352733195,
     "adjacents": [],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://www.scilly.gov.uk/planning-development/planning-applications",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000294",
@@ -9980,7 +10585,12 @@
         "size": 2964538286.319067
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.n-somerset.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000295",
@@ -9993,7 +10603,12 @@
         "size": 729074241.6091843
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.plymouth.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000296",
@@ -10059,7 +10674,12 @@
         "size": 1166027195.406662
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://pa.swindon.gov.uk/publicaccess/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000298",
@@ -10183,7 +10803,12 @@
         "size": 2964538286.319067
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.eastdevon.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000301",
@@ -10287,7 +10912,12 @@
         "size": 2964538286.319067
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.northdevon.gov.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000304",
@@ -10320,7 +10950,12 @@
         "size": 956427644.9558249
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://southhams.planning-register.co.uk/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000305",
@@ -10452,7 +11087,12 @@
         "size": 415311231.49544525
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.cheltenham.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000309",
@@ -10510,7 +11150,12 @@
         "size": 415311231.49544525
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.cotswold.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000310",
@@ -10548,7 +11193,12 @@
         "size": 701275549.578743
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.fdean.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000311",
@@ -10652,7 +11302,12 @@
         "size": 476216457.0175934
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://tewkesbury-central.oncreate.app/w/webpage/apptracker-search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000318",
@@ -10680,7 +11335,12 @@
         "size": 632031380.7531595
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://dartmoor-online.tascomi.com/planning/index.html?fa=search",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000319",
@@ -11052,7 +11712,12 @@
         "size": 5115269425.595596
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/yorkshiredales/search-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000328",
@@ -11070,7 +11735,12 @@
         "size": 96722040.344841
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://applications.ebbsfleetdc.org.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000329",
@@ -11126,7 +11796,12 @@
         "size": 52506409.56642914
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://planning.agileapplications.co.uk/opdc/search-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000331",
@@ -11250,7 +11925,12 @@
         "size": 1380210275.1375275
       }
     ],
-    "planningPortalUrls": []
+    "planningPortalUrls": [
+      {
+        "url": "https://publicaccess.northnorthants.gov.uk/online-applications/",
+        "town": ""
+      }
+    ]
   },
   {
     "id": "E60000333",
