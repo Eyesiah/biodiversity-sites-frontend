@@ -3,13 +3,14 @@ import React from 'react';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { FiExternalLink } from 'react-icons/fi';
 
-const ExternalLink = ({ href, children, className, showIcon = true }) => {
+const ExternalLink = ({ href, children, className, showIcon = true, ...rest }) => {
   return (
     <ChakraLink 
       href={href} 
       className={className}
       target="_blank" 
       rel="noopener noreferrer"
+      {...rest}
       color="link"
       textDecoration={showIcon ? "underline" : "none"}
       _hover={{ color: "linkHover" }}
