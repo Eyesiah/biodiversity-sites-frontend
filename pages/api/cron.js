@@ -37,8 +37,10 @@ async function handler(req, res) {
     const statsCollection = db.collection('statistics');
 
     const timestamp = new Date();
+    const version = process.env.APP_VERSION;
     await statsCollection.insertOne({
       timestamp,
+      version,
       ...summary,
       newSites
     });

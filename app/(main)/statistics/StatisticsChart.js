@@ -1,10 +1,11 @@
 'use client'
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Heading, Box, Text } from "@chakra-ui/react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Brush } from 'recharts';
+import { Heading, Box, Text, Flex, IconButton } from "@chakra-ui/react";
 import Button from '@/components/styles/Button';
 import Papa from 'papaparse';
 import { GrDocumentCsv } from "react-icons/gr";
+import { FaSearchPlus, FaSearchMinus, FaUndo } from "react-icons/fa";
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -127,6 +128,7 @@ export const StatsChart = ({stats, dataKeys, strokeColors, names, title}) => {
           <YAxis tickFormatter={(value) => value.toLocaleString()} />
           <Tooltip isAnimationActive={false} content={<CustomTooltip />} />
           <Legend />
+          <Brush dataKey="timestamp" height={20} stroke="#8884d8" tickFormatter={(unixTime) => new Date(unixTime).toLocaleDateString('en-GB')} tick={{ fontSize: 10 }} />
           {dataKeys.map((dataKey, i) => (
             <Line connectNulls key={dataKey} type="monotone" dataKey={dataKey} stroke={strokeColors[i]} name={names[i]} activeDot={{ r: 8 }} strokeWidth={3} dot={{ r: 0 }} />
           ))}
