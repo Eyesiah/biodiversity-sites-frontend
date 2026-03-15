@@ -15,6 +15,7 @@ import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
 import { toaster } from '@/components/ui/toaster';
+import Tooltip from '@/components/ui/Tooltip';
 import LPAs from '@/data/LPAs.json';
 
 // Build a lookup map from LPA name → planningPortalUrls[]
@@ -74,9 +75,11 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
               label="Planning Reference"
               value={
                 singlePortalUrl ? (
-                  <ExternalLink href={singlePortalUrl} onClick={handlePlanningRefClick}>
-                    {summary.ref}
-                  </ExternalLink>
+                  <Tooltip text="Opens the LPA planning portal in a new tab. The planning reference will be copied to your clipboard ready to paste.">
+                    <ExternalLink href={singlePortalUrl} onClick={handlePlanningRefClick}>
+                      {summary.ref}
+                    </ExternalLink>
+                  </Tooltip>
                 ) : (
                   summary.ref
                 )
