@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { DetailRow } from '@/components/data/DetailRow'
 import { formatNumber } from '@/lib/format'
 import { VStack, Box, Separator, Text, Heading } from "@chakra-ui/react";
+import ExternalLink from '@/components/ui/ExternalLink';
 
 const InfoModalRow = ({ label, value }) => (
   <DetailRow label={label} value={value} textColor="veryLightGray" />
@@ -75,11 +76,32 @@ export const InfoModal = ({ modalState, onClose }) => {
 
     if (type === 'lpa' && data.lpa) {
       const { lpa } = data;
+      const portalUrls = lpa.planningPortalUrls || [];
       return (
         <dl>
           <InfoModalRow label="ID" value={lpa.id} />
           <InfoModalRow label="Area (ha)" value={formatNumber(lpa.size, 0)} />
           <InfoModalRow label="# BGS Sites" value={lpa.siteCount} />
+          {portalUrls.length > 0 && (
+            <Box
+              display="flex"
+              flexDirection="column"
+              padding="0.1rem 0"
+              borderBottom="1px solid"
+              borderColor="subtleBorder"
+            >
+              <Text as="dt" fontWeight="bold" color="veryLightGray" margin="0">
+                Planning Portal
+              </Text>
+              <Box display="flex" flexDirection="column" gap="0.2rem" mt="0.2rem">
+                {portalUrls.map(({ url, town }, idx) => (
+                  <ExternalLink key={idx} href={url}>
+                    {town || 'Open Planning Portal'}
+                  </ExternalLink>
+                ))}
+              </Box>
+            </Box>
+          )}
           <InfoModalRow label="# Adjacent LPAs" value={lpa.adjacents?.length || 0} />
           {lpa.adjacents?.length > 0 && (
             <Box mt={4}>

@@ -14,6 +14,11 @@ import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
+import { toaster } from '@/components/ui/toaster';
+import LPAs from '@/data/LPAs.json';
+
+// Build a lookup map from LPA name → planningPortalUrls[]
+const lpaPortalMap = new Map(LPAs.map(lpa => [lpa.name, lpa.planningPortalUrls || []]));
 
 // Dynamic import for SiteMap to avoid SSR issues with Leaflet
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -41,6 +46,21 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
     setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, size: size });
   };
 
+  const portalUrls = lpaPortalMap.get(summary.lpaName) || [];
+  const singlePortalUrl = portalUrls.length === 1 ? portalUrls[0].url : null;
+
+  const handlePlanningRefClick = () => {
+    if (singlePortalUrl && summary.ref) {
+      navigator.clipboard.writeText(summary.ref).catch(() => {});
+      toaster.create({
+        title: `Planning reference copied: ${summary.ref}`,
+        description: `Paste it into the portal to search for this application.`,
+        type: 'success',
+        duration: 6000,
+      });
+    }
+  };
+
   if (allocations.length == 0) {
     return <Text>No Allocations</Text>
   }
@@ -50,7 +70,18 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
       <Stack direction={['column', 'row']} width='100%'>
         <PrimaryCard>
           <Box>
-            <DetailRow label="Planning Reference" value={summary.ref} />
+            <DetailRow
+              label="Planning Reference"
+              value={
+                singlePortalUrl ? (
+                  <ExternalLink href={singlePortalUrl} onClick={handlePlanningRefClick}>
+                    {summary.ref}
+                  </ExternalLink>
+                ) : (
+                  summary.ref
+                )
+              }
+            />
             <DetailRow label="Planning Address" value={summary.address} />
 
             <DetailRow label="Location (Lat/Long)" value={(summary.latitude && summary.longitude) ? `${summary.latitude.toFixed(5)}, ${summary.longitude.toFixed(5)}` : '??'} />
