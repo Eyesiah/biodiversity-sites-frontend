@@ -48,10 +48,9 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
   };
 
   const portalUrls = lpaPortalMap.get(summary.lpaName) || [];
-  const singlePortalUrl = portalUrls.length === 1 ? portalUrls[0].url : null;
 
   const handlePlanningRefClick = () => {
-    if (singlePortalUrl && summary.ref) {
+    if (summary.ref) {
       navigator.clipboard.writeText(summary.ref).catch(() => {});
       toaster.create({
         title: `Planning reference copied: ${summary.ref}`,
@@ -61,6 +60,8 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
       });
     }
   };
+
+  const portalTooltipText = "Opens the LPA planning portal in a new tab. The planning reference will be copied to your clipboard ready to paste.";
 
   if (allocations.length == 0) {
     return <Text>No Allocations</Text>
@@ -74,12 +75,21 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
             <DetailRow
               label="Planning Reference"
               value={
-                singlePortalUrl ? (
-                  <Tooltip text="Opens the LPA planning portal in a new tab. The planning reference will be copied to your clipboard ready to paste.">
-                    <ExternalLink href={singlePortalUrl} onClick={handlePlanningRefClick}>
-                      {summary.ref}
-                    </ExternalLink>
-                  </Tooltip>
+                portalUrls.length > 0 ? (
+                  <Box display="flex" flexDirection="column" gap="0.2rem">
+                    <Tooltip text={portalTooltipText}>
+                      <span>{summary.ref}</span>
+                    </Tooltip>
+                    <Box textAlign="left">
+                      {portalUrls.map(({ url, town }, idx) => (
+                        <Box key={idx} display="block" mt="0.1rem">
+                          <ExternalLink href={url} onClick={handlePlanningRefClick} fontSize="sm">
+                            {town || 'Open Planning Portal'}
+                          </ExternalLink>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
                 ) : (
                   summary.ref
                 )
