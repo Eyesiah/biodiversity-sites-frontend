@@ -251,7 +251,8 @@ const ModalButton = ({
   src, 
   iframeTitle, 
   buttonComponent = 'DropdownMenuItem',
-  modalSize
+  modalSize,
+  iframeHeight = '80vh',
 }) => {
   const [showModal, setShowModal] = useState(false);
 
@@ -273,10 +274,42 @@ const ModalButton = ({
           as="iframe"
           src={src}
           width="100%"
-          height="80vh"
+          height={iframeHeight}
           border="none"
           title={iframeTitle}
         />
+      </Modal>
+    </>
+  );
+};
+
+const DonationModalButton = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <NavLink onClick={() => setShowModal(true)}>
+        Make a Donation
+      </NavLink>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        title="Please support our work"
+        size="md"
+      >
+        <Box bg="bg" color="fg" padding="1rem" borderRadius="md">
+          <Text marginBottom="1rem">
+            This website and its source code are available free for you to use.
+          </Text>
+          <Text marginBottom="1.5rem">
+            If you found the site helpful, please support our work by making a donation.
+          </Text>
+          <Box display="flex" justifyContent="center">
+            <ExternalLink href="https://bristoltreeforum.org/make-a-donation/" fontWeight="bold" fontSize="1.3rem">
+              Make a Donation
+            </ExternalLink>
+          </Box>
+        </Box>
       </Modal>
     </>
   );
@@ -436,9 +469,12 @@ export default function Navigation() {
               title="Give Feedback"
               src="/feedback"
               iframeTitle="Give Feedback"
+              modalSize="md"
+              iframeHeight="220px"
             />
           </DropdownMenu>
-        </MobileMenu>   
+          <DonationModalButton />
+        </MobileMenu>
         <ColorModeButton />     
       </NavSection>
     </NavContainer>
