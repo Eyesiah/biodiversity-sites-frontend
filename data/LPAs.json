@@ -11867,19 +11867,19 @@
     "planningPortalUrls": [
       {
         "url": "https://publicaccess.aylesburyvaledc.gov.uk/online-applications/search.do",
-        "town": "Aylesbury Vale"
+        "town": "1. Aylesbury Vale"
       },
       {
         "url": "https://pa-csb.buckinghamshire.gov.uk/online-applications/search.do",
-        "town": "Chiltern and South Bucks"
+        "town": "2. Chiltern and South Bucks"
       },
       {
         "url": "https://publicaccess.wycombe.gov.uk/idoxpa-web/search.do",
-        "town": "Wycombe"
+        "town": "3. Wycombe"
       },
       {
         "url": "https://publicaccess.buckinghamshire.gov.uk/online-applications/",
-        "town": "Consolidated (after 8 August 2025)"
+        "town": "4. Applications after 8 August 2025"
       }
     ]
   },
@@ -12154,23 +12154,23 @@
     "planningPortalUrls": [
       {
         "url": "https://planning.hambleton.gov.uk/online-applications/",
-        "town": "Hambleton"
+        "town": "1. Hambleton - including Bedale, Easingwold, Northallerton, Stokesley, Thirsk"
       },
       {
         "url": "https://publicaccess.northyorks.gov.uk/online-applications/",
-        "town": "Harrogate, Scarborough and Craven"
+        "town": "2. Craven, Harrogate, Scarborough - including Boroughbridge, Filey, Grassington, Knaresborough, Masham, Pateley Bridge, Ripon, Settle and Skipton, Whitby"
       },
       {
         "url": "https://planningregister.ryedale.gov.uk/caonline-applications/",
-        "town": "Rydale"
+        "town": "3. Rydale - including Helmsley, Malton, Norton, Pickering"
       },      
       {
         "url": "https://planning.richmondshire.gov.uk/online-applications/search.do",
-        "town": "Richmondshire"
+        "town": "4. Richmondshire - including Catterick, Hawes, Ingleton, Leyburn, Richmond"
       },
       {
         "url": "https://public.selby.gov.uk/online-applications/",
-        "town": "Selby"
+        "town": "5. Selby - including Sherburn in Elmet, Tadcaster"
       }
     ]
   },
@@ -12223,11 +12223,11 @@
     "planningPortalUrls": [
       {
         "url": "https://www3.somersetwestandtaunton.gov.uk/asp/webpages/plan/plapplookup.asp",
-        "town": "Taunton Deane"
+        "town": "1. Taunton Deane"
       },
       {
         "url": "https://www1.somersetwestandtaunton.gov.uk/online-applications/",
-        "town": "Somerset West and Taunton"
+        "town": "2. Somerset West and Taunton"
       }
     ]
   },
