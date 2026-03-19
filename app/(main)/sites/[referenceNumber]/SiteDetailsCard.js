@@ -17,7 +17,8 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
   const [showBgsModal, setShowBgsModal] = useState(false);
 
-  const hasBgsLinks = !!(site.bgsReferenceUrl || site.bgsWebsite);
+  const hasBgsLinks = !!(site.bgsReferenceUrl || site.bgsWebsite || site.miscUrls);
+  const miscUrlList = site.miscUrls ? site.miscUrls.split(',').map(u => u.trim()).filter(Boolean) : [];
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -112,17 +113,27 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
             {site.bgsWebsite && (
               <Box>
                 <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Website:</Text>
-                <ExternalLink href={site.bgsWebsite}>{site.bgsWebsite}</ExternalLink>
+                <ExternalLink href={site.bgsWebsite} wordBreak="break-all">{site.bgsWebsite}</ExternalLink>
               </Box>
             )}
             {site.bgsReferenceUrl && (
               <Box>
                 <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Planning Application:</Text>
-                <ExternalLink href={site.bgsReferenceUrl}>
+                <ExternalLink href={site.bgsReferenceUrl} wordBreak="break-all">
                   {site.bgsReference || site.bgsReferenceUrl}
                 </ExternalLink>
               </Box>
-            )}            
+            )}
+            {miscUrlList.length > 0 && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>Miscellaneous Links:</Text>
+                <VStack align="stretch" spacing={1}>
+                  {miscUrlList.map((url, idx) => (
+                    <ExternalLink key={idx} href={url} wordBreak="break-all">{url}</ExternalLink>
+                  ))}
+                </VStack>
+              </Box>
+            )}
           </VStack>
         </Modal>
       </Stack>

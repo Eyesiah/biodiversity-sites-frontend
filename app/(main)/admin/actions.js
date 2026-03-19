@@ -10,6 +10,7 @@ export async function addSiteName(prevState, formData) {
   const bgsReference = formData.get("bgsReference");
   const bgsReferenceUrl = formData.get("bgsReferenceUrl");
   const bgsWebsite = formData.get("bgsWebsite");
+  const miscUrls = formData.get("miscUrls");
   const action = formData.get("action"); // 'add', 'clearSiteName' or 'markNotFound'
 
   // Extract reference number from dropdown option (format: "REF123 - Site Name" or "REF123")
@@ -27,6 +28,7 @@ export async function addSiteName(prevState, formData) {
       bgsReference: bgsReference,
       bgsReferenceUrl: bgsReferenceUrl,
       bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Invalid API key. Access denied.'
     };
@@ -41,6 +43,7 @@ export async function addSiteName(prevState, formData) {
       bgsReference: bgsReference,
       bgsReferenceUrl: bgsReferenceUrl,
       bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Reference number is required.'
     };
@@ -72,6 +75,7 @@ export async function addSiteName(prevState, formData) {
         bgsReference: '',
         bgsReferenceUrl: '',
         bgsWebsite: '',
+        miscUrls: '',
         message: `Marked site ${referenceNumber} as "name not found"`,
         error: null
       };
@@ -84,6 +88,7 @@ export async function addSiteName(prevState, formData) {
             bgsReference: null,
             bgsReferenceUrl: null,
             bgsWebsite: null,
+            miscUrls: null,
             updatedAt: new Date()
           }
         },
@@ -97,6 +102,7 @@ export async function addSiteName(prevState, formData) {
         bgsReference: '',
         bgsReferenceUrl: '',
         bgsWebsite: '',
+        miscUrls: '',
         message: `Cleared BGS data fields for site ${referenceNumber}`,
         error: null
       };
@@ -112,6 +118,7 @@ export async function addSiteName(prevState, formData) {
             bgsReference: bgsReference || null,
             bgsReferenceUrl: bgsReferenceUrl || null,
             bgsWebsite: bgsWebsite || null,
+            miscUrls: miscUrls || null,
             updatedAt: new Date()
           }
         },
@@ -125,6 +132,7 @@ export async function addSiteName(prevState, formData) {
         bgsReference: '',
         bgsReferenceUrl: '',
         bgsWebsite: '',
+        miscUrls: '',
         message: `Successfully updated data for site ${referenceNumber}`,
         error: null
       };
@@ -138,6 +146,7 @@ export async function addSiteName(prevState, formData) {
       bgsReference: bgsReference,
       bgsReferenceUrl: bgsReferenceUrl,
       bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Failed to save changes. Please try again.'
     };

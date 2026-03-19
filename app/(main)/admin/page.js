@@ -31,6 +31,7 @@ async function getSiteNamesData() {
         bgsReference: record.bgsReference || null,
         bgsReferenceUrl: record.bgsReferenceUrl || null,
         bgsWebsite: record.bgsWebsite || null,
+        miscUrls: record.miscUrls || null,
       });
     });
 
@@ -66,6 +67,7 @@ export default async function AdminPage({}) {
       bgsReference: siteData?.bgsReference || null,
       bgsReferenceUrl: siteData?.bgsReferenceUrl || null,
       bgsWebsite: siteData?.bgsWebsite || null,
+      miscUrls: siteData?.miscUrls || null,
     };
   }).sort((a, b) => a.value.localeCompare(b.value));
 
