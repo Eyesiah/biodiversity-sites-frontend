@@ -11,6 +11,7 @@ import { PrimaryCard } from '@/components/styles/PrimaryCard';
 import { Box, Text, VStack, Stack, Checkbox, Flex, HStack } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import Tooltip from '@/components/ui/Tooltip';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
@@ -39,14 +40,15 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
               label={
                 hasBgsLinks ? (
                   <HStack spacing={2} align="center">
-                    <span>BGS Reference</span>
+                    <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
                     <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>
-                    Open External Web links...
+                      Open External Web links...
                     </InfoButton>
                   </HStack>
-                ) : "BGS Reference"
+                ) : (
+                  <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
+                )
               }
-              glossaryTerm="BGS Reference"
               value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>}
             />
             <DetailRow
