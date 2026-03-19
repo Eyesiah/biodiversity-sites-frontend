@@ -154,17 +154,17 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               <Input name="siteName" value={currentSiteName} onChange={(e) => setCurrentSiteName(e.target.value)} flex="1" placeholder="Enter site name" />
             </HStack>
             <HStack spacing={4}>
-              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Planning App Reference</Text>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Website</Text>
+              <Input name="bgsWebsite" value={bgsWebsite} onChange={(e) => setBgsWebsite(e.target.value)} flex="1" placeholder="Enter BGS website URL" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Planning App Reference</Text>
               <Input name="bgsReference" value={bgsReference} onChange={(e) => setBgsReference(e.target.value)} flex="1" placeholder="Enter BGS planning application reference" />
             </HStack>
             <HStack spacing={4}>
-              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Planning App URL</Text>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Planning App URL</Text>
               <Input name="bgsReferenceUrl" value={bgsReferenceUrl} onChange={(e) => setBgsReferenceUrl(e.target.value)} flex="1" placeholder="Enter BGS planning application URL" />
-            </HStack>
-            <HStack spacing={4}>
-              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Website</Text>
-              <Input name="bgsWebsite" value={bgsWebsite} onChange={(e) => setBgsWebsite(e.target.value)} flex="1" placeholder="Enter BGS website URL" />
-            </HStack>
+            </HStack>            
             <HStack spacing={4}>
               <Text w="240px" flexShrink={0} fontWeight="bold">Miscellaneous URLs</Text>
               <Input name="miscUrls" value={miscUrls} onChange={(e) => setMiscUrls(e.target.value)} flex="1" placeholder="Enter URLs separated by commas" />
