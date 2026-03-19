@@ -109,6 +109,12 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
         <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
         <Modal show={showBgsModal} onClose={() => setShowBgsModal(false)} title="BGS Links" size="md">
           <VStack align="stretch" spacing={3} pt={2}>
+            {site.bgsWebsite && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Website:</Text>
+                <ExternalLink href={site.bgsWebsite}>{site.bgsWebsite}</ExternalLink>
+              </Box>
+            )}
             {site.bgsReferenceUrl && (
               <Box>
                 <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Planning Application:</Text>
@@ -116,13 +122,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                   {site.bgsReference || site.bgsReferenceUrl}
                 </ExternalLink>
               </Box>
-            )}
-            {site.bgsWebsite && (
-              <Box>
-                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Website:</Text>
-                <ExternalLink href={site.bgsWebsite}>{site.bgsWebsite}</ExternalLink>
-              </Box>
-            )}
+            )}            
           </VStack>
         </Modal>
       </Stack>

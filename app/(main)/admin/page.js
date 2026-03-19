@@ -71,7 +71,7 @@ export default async function AdminPage({}) {
 
   const tabs = [
     {
-      title: 'Manage Site Names',
+      title: 'Manage BGS Data',
       content: () => {
         return (
           <AdminSiteNameForm
