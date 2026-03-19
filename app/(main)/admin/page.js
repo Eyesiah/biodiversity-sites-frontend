@@ -27,7 +27,10 @@ async function getSiteNamesData() {
     nameRecords.forEach(record => {
       nameMap.set(record._id, {
         name: record.name,
-        nameNotFound: record.nameNotFound || false
+        nameNotFound: record.nameNotFound || false,
+        bgsReference: record.bgsReference || null,
+        bgsReferenceUrl: record.bgsReferenceUrl || null,
+        bgsWebsite: record.bgsWebsite || null,
       });
     });
 
@@ -59,7 +62,10 @@ export default async function AdminPage({}) {
       label: displayText,
       map: site.landBoundary,
       hasName,
-      isMarkedNotFound
+      isMarkedNotFound,
+      bgsReference: siteData?.bgsReference || null,
+      bgsReferenceUrl: siteData?.bgsReferenceUrl || null,
+      bgsWebsite: siteData?.bgsWebsite || null,
     };
   }).sort((a, b) => a.value.localeCompare(b.value));
 

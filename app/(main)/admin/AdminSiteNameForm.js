@@ -15,6 +15,9 @@ const initialState = {
   apiKey: '',
   referenceNumber: '',
   siteName: '',
+  bgsReference: '',
+  bgsReferenceUrl: '',
+  bgsWebsite: '',
   message: null,
   error: null,
 };
@@ -35,6 +38,9 @@ export default function AdminSiteNameForm({ referenceOptions }) {
   const [hideNoMap, setHideNoMap] = useState(false);
   const [selectedReference, setSelectedReference] = useState('');
   const [currentSiteName, setCurrentSiteName] = useState('');
+  const [bgsReference, setBgsReference] = useState('');
+  const [bgsReferenceUrl, setBgsReferenceUrl] = useState('');
+  const [bgsWebsite, setBgsWebsite] = useState('');
 
   // Apply client-side filtering with memoization
   const filteredOptions = useMemo(() => {
@@ -63,20 +69,26 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       // Extract reference number from selected value
       const referenceNumber = selectedValue.includes(' - ') ? selectedValue.split(' - ')[0] : selectedValue;
 
-      // Find the option data to get the existing name
+      // Find the option data to populate existing fields
       const optionData = referenceOptions.find(option => option.value === referenceNumber);
       if (optionData && optionData.hasName) {
-        // Find the name from the original data
         const nameData = referenceOptions.find(opt => opt.value === referenceNumber);
         setCurrentSiteName(nameData ? (nameData.hasName ? nameData.label.split(' - ')[1] : '') : '');
       } else {
         setCurrentSiteName('');
       }
 
+      setBgsReference(optionData?.bgsReference || '');
+      setBgsReferenceUrl(optionData?.bgsReferenceUrl || '');
+      setBgsWebsite(optionData?.bgsWebsite || '');
+
       setSelectedReference(referenceNumber);
     } else {
       setSelectedReference('');
       setCurrentSiteName('');
+      setBgsReference('');
+      setBgsReferenceUrl('');
+      setBgsWebsite('');
     }
   };
 
@@ -118,12 +130,12 @@ export default function AdminSiteNameForm({ referenceOptions }) {
         <PrimaryCard maxWidth="1000px" margin="20px">
           <VStack spacing={4} align="stretch">
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">API Key</Text>
-              <Input name="apiKey" type="password" defaultValue={state.apiKey} flex="2" placeholder="Enter admin API key" required />
+              <Text w="240px" flexShrink={0} fontWeight="bold">API Key</Text>
+              <Input name="apiKey" type="password" defaultValue={state.apiKey} flex="1" placeholder="Enter admin API key" required />
             </HStack>
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Reference Number</Text>
-              <Box flex="2">
+              <Text w="240px" flexShrink={0} fontWeight="bold">Reference Number</Text>
+              <Box flex="1">
                 <SearchableDropdown
                   name="referenceNumber"
                   options={dropdownOptions}
@@ -134,15 +146,27 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               </Box>
             </HStack>
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Site Name</Text>
-              <Input name="siteName" value={currentSiteName} onChange={(e) => setCurrentSiteName(e.target.value)} flex="2" placeholder="Enter site name" />
+              <Text w="240px" flexShrink={0} fontWeight="bold">Site Name</Text>
+              <Input name="siteName" value={currentSiteName} onChange={(e) => setCurrentSiteName(e.target.value)} flex="1" placeholder="Enter site name" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Planning App Reference</Text>
+              <Input name="bgsReference" value={bgsReference} onChange={(e) => setBgsReference(e.target.value)} flex="1" placeholder="Enter BGS planning application reference" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Planning App URL</Text>
+              <Input name="bgsReferenceUrl" value={bgsReferenceUrl} onChange={(e) => setBgsReferenceUrl(e.target.value)} flex="1" placeholder="Enter BGS planning application URL" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">BGS Website</Text>
+              <Input name="bgsWebsite" value={bgsWebsite} onChange={(e) => setBgsWebsite(e.target.value)} flex="1" placeholder="Enter BGS website URL" />
             </HStack>
             <HStack spacing={4}>
               <SubmitButton name="action" value="add">
-                Add Site Name
+                Add Data
               </SubmitButton>
               <SubmitButton name="action" value="clearSiteName" colorScheme="orange">
-                Clear Site Name
+                Clear Data
               </SubmitButton>
               <SubmitButton name="action" value="markNotFound" colorScheme="orange">
                 Mark as Not Found

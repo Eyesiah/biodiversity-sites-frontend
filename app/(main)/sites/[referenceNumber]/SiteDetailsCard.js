@@ -6,13 +6,17 @@ import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
 import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/ui/InfoModal';
+import Modal from '@/components/ui/Modal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
-import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
+import { Box, Text, VStack, Stack, Checkbox, Flex, HStack } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import Tooltip from '@/components/ui/Tooltip';
 
 export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
+  const [showBgsModal, setShowBgsModal] = useState(false);
+
+  const hasBgsLinks = !!(site.bgsReferenceUrl || site.bgsWebsite);
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -31,7 +35,20 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
       <Stack direction={['column', 'row']} width='100%'>
         <PrimaryCard>
           <Box>
-            <DetailRow label="BGS Reference" glossaryTerm="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
+            <DetailRow
+              label={
+                hasBgsLinks ? (
+                  <HStack spacing={2} align="center">
+                    <span>BGS Reference</span>
+                    <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>
+                    More information...
+                    </InfoButton>
+                  </HStack>
+                ) : "BGS Reference"
+              }
+              glossaryTerm="BGS Reference"
+              value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>}
+            />
             <DetailRow
               label="Responsible Body"
               glossaryTerm="Responsible Body"
@@ -88,6 +105,24 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
           </Box>
         </PrimaryCard>
         <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
+        <Modal show={showBgsModal} onClose={() => setShowBgsModal(false)} title="BGS Links" size="md">
+          <VStack align="stretch" spacing={3} pt={2}>
+            {site.bgsReferenceUrl && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Planning Application:</Text>
+                <ExternalLink href={site.bgsReferenceUrl}>
+                  {site.bgsReference || site.bgsReferenceUrl}
+                </ExternalLink>
+              </Box>
+            )}
+            {site.bgsWebsite && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Website:</Text>
+                <ExternalLink href={site.bgsWebsite}>{site.bgsWebsite}</ExternalLink>
+              </Box>
+            )}
+          </VStack>
+        </Modal>
       </Stack>
       <PrimaryCard>
         <Box>
