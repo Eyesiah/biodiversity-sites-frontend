@@ -35,6 +35,7 @@ function SubmitButton({ children, ...props }) {
 export default function AdminSiteNameForm({ referenceOptions }) {
   const [state, formAction] = useActionState(addSiteName, initialState);
   const [showOnlyWithoutNames, setShowOnlyWithoutNames] = useState(false);
+  const [showOnlyWithoutData, setShowOnlyWithoutData] = useState(false);
   const [hideNotFound, setHideNotFound] = useState(false);
   const [hideNoMap, setHideNoMap] = useState(false);
   const [selectedReference, setSelectedReference] = useState('');
@@ -50,6 +51,11 @@ export default function AdminSiteNameForm({ referenceOptions }) {
     if (showOnlyWithoutNames) {
       filtered = filtered.filter(option => !option.hasName);
     }
+    if (showOnlyWithoutData) {
+      filtered = filtered.filter(option =>
+        !option.bgsReference && !option.bgsReferenceUrl && !option.bgsWebsite && !option.miscUrls
+      );
+    }
     if (hideNotFound) {
       filtered = filtered.filter(option => !option.isMarkedNotFound);
     }
@@ -57,7 +63,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       filtered = filtered.filter(option => option.map != null);
     }
     return filtered;
-  }, [referenceOptions, showOnlyWithoutNames, hideNotFound, hideNoMap]);
+  }, [referenceOptions, showOnlyWithoutNames, showOnlyWithoutData, hideNotFound, hideNoMap]);
 
   // Convert filtered options to the format expected by SearchableDropdown (array of strings)
   const dropdownOptions = useMemo(() =>
@@ -102,24 +108,23 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       <PrimaryCard maxWidth="1000px" margin="20px">
         <VStack spacing={4} align="stretch">
           <Text fontWeight="bold" fontSize="lg">Filters</Text>
-          <HStack spacing={6}>
-            <Checkbox.Root
-              onCheckedChange={setShowOnlyWithoutNames}
-            >
+          <HStack spacing={6} wrap="wrap">
+            <Checkbox.Root onCheckedChange={setShowOnlyWithoutData}>
+              <Checkbox.HiddenInput />
+              <Checkbox.Control />
+              <Checkbox.Label>Show only sites without data</Checkbox.Label>
+            </Checkbox.Root>
+            <Checkbox.Root onCheckedChange={setShowOnlyWithoutNames}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Show only sites without names</Checkbox.Label>
-            </Checkbox.Root>
-            <Checkbox.Root
-              onCheckedChange={setHideNotFound}
-            >
+            </Checkbox.Root>            
+            <Checkbox.Root onCheckedChange={setHideNotFound}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Hide sites marked Not-Found</Checkbox.Label>
             </Checkbox.Root>
-            <Checkbox.Root
-              onCheckedChange={setHideNoMap}
-            >
+            <Checkbox.Root onCheckedChange={setHideNoMap}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Hide sites without site boundaries</Checkbox.Label>
