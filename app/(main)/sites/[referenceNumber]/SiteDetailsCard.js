@@ -43,7 +43,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                   <HStack spacing={2} align="center">
                     <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
                     <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>
-                      Open External Web links...
+                      Open website & other links...
                     </InfoButton>
                   </HStack>
                 ) : (
