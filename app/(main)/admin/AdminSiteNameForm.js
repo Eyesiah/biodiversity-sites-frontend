@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import { addSiteName } from './actions';
-import { useActionState, useState, useMemo } from 'react';
+import { useActionState, useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, Text, VStack, HStack, Checkbox } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -44,6 +44,12 @@ export default function AdminSiteNameForm({ referenceOptions }) {
   const [bgsReferenceUrl, setBgsReferenceUrl] = useState('');
   const [bgsWebsite, setBgsWebsite] = useState('');
   const [miscUrls, setMiscUrls] = useState('');
+  const [displayMessage, setDisplayMessage] = useState(null);
+
+  // Sync server action message to local displayMessage state
+  useEffect(() => {
+    setDisplayMessage(state.message);
+  }, [state.message]);
 
   // Apply client-side filtering with memoization
   const filteredOptions = useMemo(() => {
@@ -92,6 +98,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       setMiscUrls(optionData?.miscUrls || '');
 
       setSelectedReference(referenceNumber);
+      setDisplayMessage(null);
     } else {
       setSelectedReference('');
       setCurrentSiteName('');
@@ -99,6 +106,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       setBgsReferenceUrl('');
       setBgsWebsite('');
       setMiscUrls('');
+      setDisplayMessage(null);
     }
   };
 
@@ -184,9 +192,9 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               <SubmitButton name="action" value="markNotFound" colorScheme="orange">
                 Mark as Not Found
               </SubmitButton>
-              {state.message && (
+              {displayMessage && (
                 <Box flex="2" p={4} bg="green.50" borderRadius="md">
-                  <Text color="green.700">{state.message}</Text>
+                  <Text color="green.700">{displayMessage}</Text>
                 </Box>
               )}
               {state.error && (
