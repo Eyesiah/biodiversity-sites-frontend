@@ -42,9 +42,6 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                 hasBgsLinks ? (
                   <HStack spacing={2} align="center">
                     <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
-                    <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>
-                      Open website & other links...
-                    </InfoButton>
                   </HStack>
                 ) : (
                   <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
@@ -69,9 +66,10 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
               }
             />
             <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
-            <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
-            {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
-
+            {site.latitude && site.longitude && <DetailRow label="Location & Maps" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}{` (Lat/Long: ${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)})`}</>} />}
+            <Tooltip text="Please email us at BGS_Suggestions@bristoltreeforum.org to suggest Links or a Name for this site."><DetailRow label="External Links" value={<>
+              {site.bgsWebsite && <ExternalLink href={site.bgsWebsite}>Project Website</ExternalLink>} {site.bgsReferenceUrl && <ExternalLink href={site.bgsReferenceUrl}>Site Planning Application</ExternalLink>} {miscUrlList.length > 0 && <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>More...</InfoButton>}
+            </>} /></Tooltip>
             <DetailRow label="Site Area" glossaryTerm="Size (ha)" value={(
               <Tooltip text="The circle displayed on the map represents the site area. For a more accurate map of exactly where the site is, see the Boundary Map (if available).">
                 {`${formatNumber(site.siteSize || 0)} ha`}
