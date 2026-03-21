@@ -2,7 +2,7 @@
 
 import { useFormStatus } from 'react-dom';
 import { addSiteName } from './actions';
-import { useActionState, useState, useMemo } from 'react';
+import { useActionState, useState, useMemo, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, Text, VStack, HStack, Checkbox } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -15,6 +15,10 @@ const initialState = {
   apiKey: '',
   referenceNumber: '',
   siteName: '',
+  bgsReference: '',
+  bgsReferenceUrl: '',
+  bgsWebsite: '',
+  miscUrls: '',
   message: null,
   error: null,
 };
@@ -31,16 +35,32 @@ function SubmitButton({ children, ...props }) {
 export default function AdminSiteNameForm({ referenceOptions }) {
   const [state, formAction] = useActionState(addSiteName, initialState);
   const [showOnlyWithoutNames, setShowOnlyWithoutNames] = useState(false);
+  const [showOnlyWithoutData, setShowOnlyWithoutData] = useState(false);
   const [hideNotFound, setHideNotFound] = useState(false);
   const [hideNoMap, setHideNoMap] = useState(false);
   const [selectedReference, setSelectedReference] = useState('');
   const [currentSiteName, setCurrentSiteName] = useState('');
+  const [bgsReference, setBgsReference] = useState('');
+  const [bgsReferenceUrl, setBgsReferenceUrl] = useState('');
+  const [bgsWebsite, setBgsWebsite] = useState('');
+  const [miscUrls, setMiscUrls] = useState('');
+  const [displayMessage, setDisplayMessage] = useState(null);
+
+  // Sync server action message to local displayMessage state
+  useEffect(() => {
+    setDisplayMessage(state.message);
+  }, [state.message]);
 
   // Apply client-side filtering with memoization
   const filteredOptions = useMemo(() => {
     let filtered = referenceOptions;
     if (showOnlyWithoutNames) {
       filtered = filtered.filter(option => !option.hasName);
+    }
+    if (showOnlyWithoutData) {
+      filtered = filtered.filter(option =>
+        !option.bgsReference && !option.bgsReferenceUrl && !option.bgsWebsite && !option.miscUrls
+      );
     }
     if (hideNotFound) {
       filtered = filtered.filter(option => !option.isMarkedNotFound);
@@ -49,7 +69,7 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       filtered = filtered.filter(option => option.map != null);
     }
     return filtered;
-  }, [referenceOptions, showOnlyWithoutNames, hideNotFound, hideNoMap]);
+  }, [referenceOptions, showOnlyWithoutNames, showOnlyWithoutData, hideNotFound, hideNoMap]);
 
   // Convert filtered options to the format expected by SearchableDropdown (array of strings)
   const dropdownOptions = useMemo(() =>
@@ -63,20 +83,30 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       // Extract reference number from selected value
       const referenceNumber = selectedValue.includes(' - ') ? selectedValue.split(' - ')[0] : selectedValue;
 
-      // Find the option data to get the existing name
+      // Find the option data to populate existing fields
       const optionData = referenceOptions.find(option => option.value === referenceNumber);
       if (optionData && optionData.hasName) {
-        // Find the name from the original data
         const nameData = referenceOptions.find(opt => opt.value === referenceNumber);
         setCurrentSiteName(nameData ? (nameData.hasName ? nameData.label.split(' - ')[1] : '') : '');
       } else {
         setCurrentSiteName('');
       }
 
+      setBgsReference(optionData?.bgsReference || '');
+      setBgsReferenceUrl(optionData?.bgsReferenceUrl || '');
+      setBgsWebsite(optionData?.bgsWebsite || '');
+      setMiscUrls(optionData?.miscUrls || '');
+
       setSelectedReference(referenceNumber);
+      setDisplayMessage(null);
     } else {
       setSelectedReference('');
       setCurrentSiteName('');
+      setBgsReference('');
+      setBgsReferenceUrl('');
+      setBgsWebsite('');
+      setMiscUrls('');
+      setDisplayMessage(null);
     }
   };
 
@@ -86,24 +116,23 @@ export default function AdminSiteNameForm({ referenceOptions }) {
       <PrimaryCard maxWidth="1000px" margin="20px">
         <VStack spacing={4} align="stretch">
           <Text fontWeight="bold" fontSize="lg">Filters</Text>
-          <HStack spacing={6}>
-            <Checkbox.Root
-              onCheckedChange={setShowOnlyWithoutNames}
-            >
+          <HStack spacing={6} wrap="wrap">
+            <Checkbox.Root onCheckedChange={setShowOnlyWithoutData}>
+              <Checkbox.HiddenInput />
+              <Checkbox.Control />
+              <Checkbox.Label>Show only sites without data</Checkbox.Label>
+            </Checkbox.Root>
+            <Checkbox.Root onCheckedChange={setShowOnlyWithoutNames}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Show only sites without names</Checkbox.Label>
-            </Checkbox.Root>
-            <Checkbox.Root
-              onCheckedChange={setHideNotFound}
-            >
+            </Checkbox.Root>            
+            <Checkbox.Root onCheckedChange={setHideNotFound}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Hide sites marked Not-Found</Checkbox.Label>
             </Checkbox.Root>
-            <Checkbox.Root
-              onCheckedChange={setHideNoMap}
-            >
+            <Checkbox.Root onCheckedChange={setHideNoMap}>
               <Checkbox.HiddenInput />
               <Checkbox.Control />
               <Checkbox.Label>Hide sites without site boundaries</Checkbox.Label>
@@ -118,12 +147,12 @@ export default function AdminSiteNameForm({ referenceOptions }) {
         <PrimaryCard maxWidth="1000px" margin="20px">
           <VStack spacing={4} align="stretch">
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">API Key</Text>
-              <Input name="apiKey" type="password" defaultValue={state.apiKey} flex="2" placeholder="Enter admin API key" required />
+              <Text w="240px" flexShrink={0} fontWeight="bold">API Key</Text>
+              <Input name="apiKey" type="password" defaultValue={state.apiKey} flex="1" placeholder="Enter admin API key" required />
             </HStack>
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Reference Number</Text>
-              <Box flex="2">
+              <Text w="240px" flexShrink={0} fontWeight="bold">Reference Number</Text>
+              <Box flex="1">
                 <SearchableDropdown
                   name="referenceNumber"
                   options={dropdownOptions}
@@ -134,22 +163,38 @@ export default function AdminSiteNameForm({ referenceOptions }) {
               </Box>
             </HStack>
             <HStack spacing={4}>
-              <Text flex="1" fontWeight="bold">Site Name</Text>
-              <Input name="siteName" value={currentSiteName} onChange={(e) => setCurrentSiteName(e.target.value)} flex="2" placeholder="Enter site name" />
+              <Text w="240px" flexShrink={0} fontWeight="bold">Site Name</Text>
+              <Input name="siteName" value={currentSiteName} onChange={(e) => setCurrentSiteName(e.target.value)} flex="1" placeholder="Enter site name" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Website</Text>
+              <Input name="bgsWebsite" value={bgsWebsite} onChange={(e) => setBgsWebsite(e.target.value)} flex="1" placeholder="Enter BGS website URL" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Planning App Reference</Text>
+              <Input name="bgsReference" value={bgsReference} onChange={(e) => setBgsReference(e.target.value)} flex="1" placeholder="Enter BGS planning application reference" />
+            </HStack>
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Planning App URL</Text>
+              <Input name="bgsReferenceUrl" value={bgsReferenceUrl} onChange={(e) => setBgsReferenceUrl(e.target.value)} flex="1" placeholder="Enter BGS planning application URL" />
+            </HStack>            
+            <HStack spacing={4}>
+              <Text w="240px" flexShrink={0} fontWeight="bold">Miscellaneous URLs</Text>
+              <Input name="miscUrls" value={miscUrls} onChange={(e) => setMiscUrls(e.target.value)} flex="1" placeholder="Enter URLs separated by commas" />
             </HStack>
             <HStack spacing={4}>
               <SubmitButton name="action" value="add">
-                Add Site Name
+                Add Data
               </SubmitButton>
               <SubmitButton name="action" value="clearSiteName" colorScheme="orange">
-                Clear Site Name
+                Clear Data
               </SubmitButton>
               <SubmitButton name="action" value="markNotFound" colorScheme="orange">
                 Mark as Not Found
               </SubmitButton>
-              {state.message && (
+              {displayMessage && (
                 <Box flex="2" p={4} bg="green.50" borderRadius="md">
-                  <Text color="green.700">{state.message}</Text>
+                  <Text color="green.700">{displayMessage}</Text>
                 </Box>
               )}
               {state.error && (

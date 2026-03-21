@@ -13,7 +13,7 @@ export const metadata = {
   description: 'Administrative functions for managing site data.'
 };
 
-async function getSiteNamesData() {
+async function getExtraSiteDetails() {
   try {
     const client = await clientPromise;
     const db = client.db(MONGODB_DATABASE_NAME);
@@ -27,7 +27,11 @@ async function getSiteNamesData() {
     nameRecords.forEach(record => {
       nameMap.set(record._id, {
         name: record.name,
-        nameNotFound: record.nameNotFound || false
+        nameNotFound: record.nameNotFound || false,
+        bgsReference: record.bgsReference || null,
+        bgsReferenceUrl: record.bgsReferenceUrl || null,
+        bgsWebsite: record.bgsWebsite || null,
+        miscUrls: record.miscUrls || null,
       });
     });
 
@@ -41,7 +45,7 @@ async function getSiteNamesData() {
 export default async function AdminPage({}) {
   // Fetch all sites to get reference numbers
   const sites = await fetchAllSites();
-  const nameMap = await getSiteNamesData();
+  const nameMap = await getExtraSiteDetails();
 
   // Create reference number options with names
   const referenceOptions = sites.map(site => {
@@ -59,13 +63,17 @@ export default async function AdminPage({}) {
       label: displayText,
       map: site.landBoundary,
       hasName,
-      isMarkedNotFound
+      isMarkedNotFound,
+      bgsReference: siteData?.bgsReference || null,
+      bgsReferenceUrl: siteData?.bgsReferenceUrl || null,
+      bgsWebsite: siteData?.bgsWebsite || null,
+      miscUrls: siteData?.miscUrls || null,
     };
   }).sort((a, b) => a.value.localeCompare(b.value));
 
   const tabs = [
     {
-      title: 'Manage Site Names',
+      title: 'Manage BGS Data',
       content: () => {
         return (
           <AdminSiteNameForm

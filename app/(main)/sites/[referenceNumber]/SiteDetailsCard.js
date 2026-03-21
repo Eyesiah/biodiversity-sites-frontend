@@ -6,13 +6,19 @@ import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
 import { useState, useMemo } from 'react';
 import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/ui/InfoModal';
+import Modal from '@/components/ui/Modal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
-import { Box, Text, VStack, Stack, Checkbox, Flex } from '@chakra-ui/react';
+import { Box, Text, VStack, Stack, Checkbox, Flex, HStack } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import Tooltip from '@/components/ui/Tooltip';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 
 export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
+  const [showBgsModal, setShowBgsModal] = useState(false);
+
+  const hasBgsLinks = !!(site.bgsReferenceUrl || site.bgsWebsite || site.miscUrls);
+  const miscUrlList = site.miscUrls ? site.miscUrls.split(',').map(u => u.trim()).filter(Boolean) : [];
 
   const medianAllocationDistance = useMemo(() => {
     if (!site.allocations || site.allocations.length === 0) return null;
@@ -31,7 +37,18 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
       <Stack direction={['column', 'row']} width='100%'>
         <PrimaryCard>
           <Box>
-            <DetailRow label="BGS Reference" glossaryTerm="BGS Reference" value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>} />
+            <DetailRow
+              label={
+                hasBgsLinks ? (
+                  <HStack spacing={2} align="center">
+                    <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
+                  </HStack>
+                ) : (
+                  <GlossaryTooltip term="BGS Reference"><span>BGS Reference</span></GlossaryTooltip>
+                )
+              }
+              value={<ExternalLink href={`https://environment.data.gov.uk/biodiversity-net-gain/search/${site.referenceNumber}`}>{site.referenceNumber}</ExternalLink>}
+            />
             <DetailRow
               label="Responsible Body"
               glossaryTerm="Responsible Body"
@@ -49,9 +66,10 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
               }
             />
             <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
-            <DetailRow label="Location (Lat/Long)" value={(site.latitude && site.longitude) ? `${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)}` : '??'} />
-            {site.latitude && site.longitude && <DetailRow label="Map" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>View on Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}</>} />}
-
+            {site.latitude && site.longitude && <DetailRow label="Location & Maps" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}{` (Lat/Long: ${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)})`}</>} />}
+            <Tooltip text="Please email us at BGS_Suggestions@bristoltreeforum.org to suggest Links or a Name for this site."><DetailRow label="External Links" value={<>
+              {site.bgsWebsite && <ExternalLink href={site.bgsWebsite}>Project Website</ExternalLink>} {site.bgsReferenceUrl && <ExternalLink href={site.bgsReferenceUrl}>Site Planning Application</ExternalLink>} {miscUrlList.length > 0 && <InfoButton onClick={() => setShowBgsModal(true)} fontSize="sm" color="fg" opacity={0.75}>More...</InfoButton>}
+            </>} /></Tooltip>
             <DetailRow label="Site Area" glossaryTerm="Size (ha)" value={(
               <Tooltip text="The circle displayed on the map represents the site area. For a more accurate map of exactly where the site is, see the Boundary Map (if available).">
                 {`${formatNumber(site.siteSize || 0)} ha`}
@@ -88,6 +106,34 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
           </Box>
         </PrimaryCard>
         <InfoModal modalState={modalState} onClose={() => setModalState({ show: false, type: null, name: null, title: '' })} />
+        <Modal show={showBgsModal} onClose={() => setShowBgsModal(false)} title="BGS Links" size="md">
+          <VStack align="stretch" spacing={3} pt={2}>
+            {site.bgsWebsite && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Website:</Text>
+                <ExternalLink href={site.bgsWebsite} wordBreak="break-all">{site.bgsWebsite}</ExternalLink>
+              </Box>
+            )}
+            {site.bgsReferenceUrl && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>BGS Planning Application:</Text>
+                <ExternalLink href={site.bgsReferenceUrl} wordBreak="break-all">
+                  {site.bgsReference || site.bgsReferenceUrl}
+                </ExternalLink>
+              </Box>
+            )}
+            {miscUrlList.length > 0 && (
+              <Box>
+                <Text fontWeight="bold" color="veryLightGray" mb={1}>Miscellaneous Links:</Text>
+                <VStack align="stretch" spacing={1}>
+                  {miscUrlList.map((url, idx) => (
+                    <ExternalLink key={idx} href={url} wordBreak="break-all">{url}</ExternalLink>
+                  ))}
+                </VStack>
+              </Box>
+            )}
+          </VStack>
+        </Modal>
       </Stack>
       <PrimaryCard>
         <Box>

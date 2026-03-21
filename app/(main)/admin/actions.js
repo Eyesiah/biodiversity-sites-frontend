@@ -7,7 +7,11 @@ export async function addSiteName(prevState, formData) {
   const apiKey = formData.get("apiKey");
   let referenceNumber = formData.get("referenceNumber");
   const siteName = formData.get("siteName");
-  const action = formData.get("action"); // 'add' or 'markNotFound'
+  const bgsReference = formData.get("bgsReference");
+  const bgsReferenceUrl = formData.get("bgsReferenceUrl");
+  const bgsWebsite = formData.get("bgsWebsite");
+  const miscUrls = formData.get("miscUrls");
+  const action = formData.get("action"); // 'add', 'clearSiteName' or 'markNotFound'
 
   // Extract reference number from dropdown option (format: "REF123 - Site Name" or "REF123")
   if (referenceNumber && referenceNumber.includes(' - ')) {
@@ -21,6 +25,10 @@ export async function addSiteName(prevState, formData) {
       apiKey: apiKey,
       referenceNumber: referenceNumber,
       siteName: siteName,
+      bgsReference: bgsReference,
+      bgsReferenceUrl: bgsReferenceUrl,
+      bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Invalid API key. Access denied.'
     };
@@ -32,6 +40,10 @@ export async function addSiteName(prevState, formData) {
       apiKey: apiKey,
       referenceNumber: referenceNumber,
       siteName: siteName,
+      bgsReference: bgsReference,
+      bgsReferenceUrl: bgsReferenceUrl,
+      bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Reference number is required.'
     };
@@ -60,41 +72,23 @@ export async function addSiteName(prevState, formData) {
         apiKey: apiKey, // Keep API key
         referenceNumber: '',
         siteName: '',
+        bgsReference: '',
+        bgsReferenceUrl: '',
+        bgsWebsite: '',
+        miscUrls: '',
         message: `Marked site ${referenceNumber} as "name not found"`,
         error: null
       };
     } else if (action === 'clearSiteName') {
-      // Mark site as not found - set flag and clear any existing name
-      await collection.deleteOne(
-        { _id: referenceNumber },
-      );
-
-      return {
-        apiKey: apiKey, // Keep API key
-        referenceNumber: '',
-        siteName: '',
-        message: `Cleared site ${referenceNumber} name`,
-        error: null
-      };
-     
-    } else {
-      // Add/update site name
-      if (!siteName) {
-        return {
-          apiKey: apiKey,
-          referenceNumber: referenceNumber,
-          siteName: siteName,
-          message: null,
-          error: 'Site name is required.'
-        };
-      }
-
+      // Clear the BGS data fields, preserving the site name and nameNotFound flag
       await collection.updateOne(
         { _id: referenceNumber },
         {
           $set: {
-            name: siteName,
-            nameNotFound: false,
+            bgsReference: null,
+            bgsReferenceUrl: null,
+            bgsWebsite: null,
+            miscUrls: null,
             updatedAt: new Date()
           }
         },
@@ -105,16 +99,54 @@ export async function addSiteName(prevState, formData) {
         apiKey: apiKey, // Keep API key
         referenceNumber: '',
         siteName: '',
-        message: `Successfully added/updated name for site ${referenceNumber}: "${siteName}"`,
+        bgsReference: '',
+        bgsReferenceUrl: '',
+        bgsWebsite: '',
+        miscUrls: '',
+        message: `Cleared BGS data fields for site ${referenceNumber}`,
+        error: null
+      };
+     
+    } else {
+      // Add/update site data
+      await collection.updateOne(
+        { _id: referenceNumber },
+        {
+          $set: {
+            name: siteName || null,
+            nameNotFound: false,
+            bgsReference: bgsReference || null,
+            bgsReferenceUrl: bgsReferenceUrl || null,
+            bgsWebsite: bgsWebsite || null,
+            miscUrls: miscUrls || null,
+            updatedAt: new Date()
+          }
+        },
+        { upsert: true }
+      );
+
+      return {
+        apiKey: apiKey, // Keep API key
+        referenceNumber: '',
+        siteName: '',
+        bgsReference: '',
+        bgsReferenceUrl: '',
+        bgsWebsite: '',
+        miscUrls: '',
+        message: `Successfully updated data for site ${referenceNumber}`,
         error: null
       };
     }
   } catch (error) {
-    console.error('Error updating site name:', error);
+    console.error('Error updating site data:', error);
     return {
       apiKey: apiKey,
       referenceNumber: referenceNumber,
       siteName: siteName,
+      bgsReference: bgsReference,
+      bgsReferenceUrl: bgsReferenceUrl,
+      bgsWebsite: bgsWebsite,
+      miscUrls: miscUrls,
       message: null,
       error: 'Failed to save changes. Please try again.'
     };
