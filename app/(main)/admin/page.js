@@ -13,7 +13,7 @@ export const metadata = {
   description: 'Administrative functions for managing site data.'
 };
 
-async function getSiteNamesData() {
+async function getExtraSiteDetails() {
   try {
     const client = await clientPromise;
     const db = client.db(MONGODB_DATABASE_NAME);
@@ -45,7 +45,7 @@ async function getSiteNamesData() {
 export default async function AdminPage({}) {
   // Fetch all sites to get reference numbers
   const sites = await fetchAllSites();
-  const nameMap = await getSiteNamesData();
+  const nameMap = await getExtraSiteDetails();
 
   // Create reference number options with names
   const referenceOptions = sites.map(site => {
