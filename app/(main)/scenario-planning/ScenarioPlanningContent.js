@@ -214,9 +214,12 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
         xml += `      <EffectiveTimeToTarget>${effectiveTtT}</EffectiveTimeToTarget>\n`;
         xml += `      <TemporalMultiplier>${result.temporalRisk !== undefined ? result.temporalRisk.toFixed(3) : 'N/A'}</TemporalMultiplier>\n`;
       }
-      xml += `      <DistinctivenessScore>${result.distinctivenessScore}</DistinctivenessScore>\n`;
-      xml += `      <HUs>${result.HUs.toFixed(2)}</HUs>\n`;
-      xml += '    </Result>\n';
+        xml += `      <DistinctivenessScore>${result.distinctivenessScore}</DistinctivenessScore>\n`;
+        xml += `      <HUs>${result.HUs.toFixed(2)}</HUs>\n`;
+        if (state.improvementType === 'enhancement') {
+          xml += `      <HUGain>${result.baselineHUs !== undefined ? (result.HUs - result.baselineHUs).toFixed(2) : 'N/A'}</HUGain>\n`;
+        }
+        xml += '    </Result>\n';
     });
     
     xml += '  </Results>\n';
@@ -533,7 +536,7 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                     <tr>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Distinctiveness</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Strategic Significance</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HUs</th>
@@ -541,15 +544,17 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                   ) : (
                     <tr>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline Condition Score</th>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Condition</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Size ({targetBroadHabitat === 'Hedgerow' || targetBroadHabitat === 'Watercourses' ? 'km' : 'ha'})</th>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Distinctiveness</th>
+                      {state.improvementType === 'enhancement' && <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Baseline HUs</th>}
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Condition</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Condition Score</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Target Distinctiveness</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Strategic Significance</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Spatial Risk</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Time to Target (years)</th>
                       <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>Temporal Multiplier</th>
-                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HUs</th>
+                      <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>New HUs</th>
+                      {state.improvementType === 'enhancement' && <th style={{ padding: '8px', textAlign: 'center', borderBottom: '2px solid #e2e8f0', border: '1px solid #e2e8f0', fontWeight: 'bold' }}>HU Gain</th>}
                     </tr>
                   )}
                 </thead>
@@ -570,10 +575,15 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                       ) : (
                         <>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.baselineCondition === 'N/A (Creation)' ? 'N/A' : result.baselineConditionScore}</td>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.targetCondition}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>{state.size}</td>
-                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
+                          {state.improvementType === 'enhancement' && (
+                            <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                              {result.baselineHUs !== undefined ? result.baselineHUs.toFixed(2) : 'N/A'}
+                            </td>
+                          )}
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.targetCondition}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.conditionScore}</td>
+                          <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{result.distinctivenessScore}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.strategicSignificance}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>{state.spatialRisk}</td>
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
@@ -585,6 +595,11 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
                           <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
                             {result.HUs.toFixed(2)}
                           </td>
+                          {state.improvementType === 'enhancement' && (
+                            <td style={{ padding: '8px', border: '1px solid #e2e8f0', textAlign: 'center', fontFamily: 'monospace' }}>
+                              {result.baselineHUs !== undefined ? (result.HUs - result.baselineHUs).toFixed(2) : 'N/A'}
+                            </td>
+                          )}
                         </>
                       )}
                     </tr>
