@@ -109,7 +109,7 @@ export default function RootLayout({ children }) {
         <Provider>
           <Script
             strategy="afterInteractive"
-            src="/api/umami/script"
+            src="/umami/script.js"
             data-website-id={umamiWebsiteId}
           />
           <Script
