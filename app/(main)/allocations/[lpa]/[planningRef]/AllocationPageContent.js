@@ -16,10 +16,6 @@ import InfoButton from '@/components/styles/InfoButton'
 import { DetailRow, BodyDetailRow } from "@/components/data/DetailRow"
 import { toaster } from '@/components/ui/toaster';
 import Tooltip from '@/components/ui/Tooltip';
-import LPAs from '@/data/LPAs.json';
-
-// Build a lookup map from LPA name → planningPortalUrls[]
-const lpaPortalMap = new Map(LPAs.map(lpa => [lpa.name, lpa.planningPortalUrls || []]));
 
 // Dynamic import for SiteMap to avoid SSR issues with Leaflet
 const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
@@ -27,7 +23,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
   loading: () => <p>Loading map...</p>
 });
 
-export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) => {
+export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates, portalUrls }) => {
 
   const [modalState, setModalState] = useState({ show: false, type: null, name: null, title: '', data: null, size: 'md' });
 
@@ -47,11 +43,9 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
     setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, size: size });
   };
 
-  const portalUrls = lpaPortalMap.get(summary.lpaName) || [];
-
   const handlePlanningRefClick = () => {
     if (summary.ref) {
-      navigator.clipboard.writeText(summary.ref).catch(() => {});
+      navigator.clipboard.writeText(summary.ref).catch(() => { });
       toaster.create({
         title: `Planning reference copied: ${summary.ref}`,
         description: `Paste it into the portal to search for this application.`,
@@ -75,24 +69,17 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
             <DetailRow
               label="Planning Reference"
               value={
-                portalUrls.length > 0 ? (
-                  <Box display="flex" flexDirection="column" gap="0.2rem">
-                    <Tooltip text={portalTooltipText}>
-                      <span>{summary.ref}</span>
+                <>
+                  {summary.ref}
+                  {portalUrls && portalUrls.length > 0 && ' '}
+                  {portalUrls && portalUrls.map(({ url, town }, idx) => (
+                    <Tooltip key={idx} text={portalTooltipText}>
+                      <ExternalLink href={url} onClick={handlePlanningRefClick}>
+                        {town || 'Open Planning Portal'}
+                      </ExternalLink>
                     </Tooltip>
-                    <Box textAlign="left">
-                      {portalUrls.map(({ url, town }, idx) => (
-                        <Box key={idx} display="block" mt="0.1rem">
-                          <ExternalLink href={url} onClick={handlePlanningRefClick} fontSize="sm">
-                            {town || 'Open Planning Portal'}
-                          </ExternalLink>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                ) : (
-                  summary.ref
-                )
+                  ))}
+                </>
               }
             />
             <DetailRow label="Planning Address" value={summary.address} />
@@ -133,7 +120,7 @@ export const PlanningDetailsCard = ({ summary, allocations, bodyLayerStates }) =
   )
 }
 
-export default function AllocationPageContent({ allocations, sites, summary }) {
+export default function AllocationPageContent({ allocations, sites, summary, portalUrls }) {
   const [hoveredSite, setHoveredSite] = useState(null);
   const [showLPA, setShowLPA] = useState(false);
   const [showNCA, setShowNCA] = useState(false);
@@ -203,12 +190,12 @@ export default function AllocationPageContent({ allocations, sites, summary }) {
           openPopups={true}
           mapLayer={'OpenStreetMap'}
           allocations={allocations}
-          selectedSite={{lpaName: summary.lpaName, ncaName: summary.ncaName, lsoa: summary.lsoa}}
+          selectedSite={{ lpaName: summary.lpaName, ncaName: summary.ncaName, lsoa: summary.lsoa }}
         />
       }
       content={
         <>
-          <PlanningDetailsCard summary={summary} allocations={allocations} bodyLayerStates={{ showLPA, setShowLPA, showNCA, setShowNCA, showLSOA, setShowLSOA }} />
+          <PlanningDetailsCard summary={summary} allocations={allocations} portalUrls={portalUrls} bodyLayerStates={{ showLPA, setShowLPA, showNCA, setShowNCA, showLSOA, setShowLSOA }} />
           <Tabs.Root lazyMount defaultValue={0} width="100%">
             <Tabs.List>
               {tabs.map((tab, index) => (
