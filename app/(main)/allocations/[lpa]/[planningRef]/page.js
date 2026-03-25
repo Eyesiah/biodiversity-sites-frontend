@@ -1,8 +1,10 @@
 import { fetchAllocationWithSiteData, fetchAllAllocationsForStaticParams, getUnslugifiedValues } from '@/lib/api';
 import AllocationPageContent from './AllocationPageContent';
 import Footer from '@/components/core/Footer';
+import fs from 'fs';
+import path from 'path';
 
-export const revalidate = 86400; // 24 hours
+export const revalidate = 604800; // 7 days
 
 export async function generateStaticParams() {
   const allocations = await fetchAllAllocationsForStaticParams();
@@ -37,12 +39,19 @@ export default async function AllocationPage({ params }) {
   
   const lastUpdated = Date.now();
 
+  const lpaJsonPath = path.join(process.cwd(), 'data', 'LPAs.json');
+  const lpaJsonData = fs.readFileSync(lpaJsonPath, 'utf-8');
+  const allLpas = JSON.parse(lpaJsonData);
+  const matchingLPA = allLpas.find(lpa => lpa.name.toLowerCase() == decodedLpa);
+  const portalUrls = matchingLPA?.planningPortalUrls || [];
+
   return (
     <>
       <AllocationPageContent 
         allocations={allocations} 
         sites={sites} 
         summary={summary}
+        portalUrls={portalUrls}
       />
       <Footer lastUpdated={lastUpdated} />
     </>
