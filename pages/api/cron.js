@@ -1,6 +1,7 @@
 import clientPromise from '@/lib/mongodb';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
+import { MONGODB_DATABASE_NAME } from '@/config';
 
 async function handler(req, res) {
   // Protect the endpoint with a secret
@@ -12,7 +13,7 @@ async function handler(req, res) {
   try {
     // init the db connection
     const client = await clientPromise;
-    const db = client.db();
+    const db = client.db(MONGODB_DATABASE_NAME);
 
     // Fetch the data from the external API
     const allSites = await fetchAllSites();
