@@ -6,6 +6,7 @@ import ChartItem from '@/components/styles/ChartItem';
 import { ContentLayout } from '@/components/styles/ContentLayout';
 import SiteRegisterAdditionTable from './SiteRegisterAdditionTable';
 import { calculateTreeCount } from '@/lib/tree-utils';
+import { MONGODB_DATABASE_NAME } from '@/config';
 
 export const revalidate = 86400; // 24 hours
 
@@ -20,9 +21,8 @@ export const metadata = {
 
 export default async function StatisticsPage() {
 
-  const lastUpdated = Date.now();
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db(MONGODB_DATABASE_NAME);
 
   if (db == null) {
     return <h1>{'Error: Unable to access the stats database.'}</h1>;
