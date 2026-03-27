@@ -1,5 +1,5 @@
 import { fetchAllSites } from '@/lib/api';
-import { getHabitatDistinctiveness } from '@/lib/habitat';
+import { getHabitatDistinctiveness, getHabitatGroup } from '@/lib/habitat';
 import Footer from '@/components/core/Footer';
 import HabitatAnalysisContent from './HabitatAnalysisContent'
 import { slugify } from '@/lib/format'
@@ -25,6 +25,7 @@ export default async function HabitatAnalysis() {
   // Helper to initialize a habitat entry
   const initHabitat = (habitatName, module) => ({
     habitat: habitatName,
+    broadHabitat: getHabitatGroup(habitatName),
     distinctiveness: getHabitatDistinctiveness(habitatName),
     baseline: 0,
     baselineParcels: 0,

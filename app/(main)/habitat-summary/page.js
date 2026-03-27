@@ -1,7 +1,7 @@
 import { fetchAllSites } from '@/lib/api';
 import SearchableHabitatLists from './SearchableHabitatLists';
 import Footer from '@/components/core/Footer';
-import { collateAllHabitats } from '@/lib/habitat';
+import { collateAllHabitats, getHabitatGroup } from '@/lib/habitat';
 import { processSitesForListView } from '@/lib/sites';
 import { HABITAT_UNIT_TYPES } from '@/config'
 
@@ -75,7 +75,10 @@ export default async function HabitatSummaryPage() {
   const improvementHabitats = Object.values(collatedImprovements).flat().map(h => ({ ...h, isImprovement: true }));
   const habitats = [...baselineHabitats, ...improvementHabitats];
 
-  habitats.forEach(h => delete h.subRows);
+  habitats.forEach(h => {
+    delete h.subRows;
+    h.broadHabitat = getHabitatGroup(h.type);
+  });
 
   const processedSites = processSitesForListView(allSites);
   const sitesMap = processedSites.reduce((acc, site) => {
