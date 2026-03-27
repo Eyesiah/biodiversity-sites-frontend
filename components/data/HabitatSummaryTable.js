@@ -98,6 +98,10 @@ export const HabitatSummaryTable = ({ site }) => {
     allocationHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
     allocationWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
     allocationIndividualTrees = (improvements.trees || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
+    // Use proportional allocated HUs (allocatedHUs = HUs × allocated fraction, computed in collateHabitats)
+    allocationAreaHUs = (improvements.areas || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
+    allocationHedgerowHUs = (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
+    allocationWatercourseHUs = (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
   }
 
   const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || allocationIndividualTrees > 0 || site.allocations != null;
