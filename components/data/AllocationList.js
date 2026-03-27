@@ -67,16 +67,16 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
       <PrimaryTable.Root>
         <PrimaryTable.Header>
           <PrimaryTable.Row>
-            <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS Reference</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS reference</PrimaryTable.ColumnHeader>
             {displayPlanningRef && <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>}
             {displayPlanningRef && <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>}
             <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}><GlossaryTooltip term='Local Planning Authority (LPA)'>LPA</GlossaryTooltip></PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}><GlossaryTooltip term='National Character Area (NCA)'>NCA</GlossaryTooltip></PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
-              <GlossaryTooltip term='Spatial Risk'>Spatial Risk</GlossaryTooltip>
+              <GlossaryTooltip term='Spatial Risk'>Spatial risk</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('imd')} {...getSortProps('imd', sortConfig)}>
-              <GlossaryTooltip term='IMD Transfer'>IMD Transfer</GlossaryTooltip>
+              <GlossaryTooltip term='IMD Transfer'>IMD transfer</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('d')} {...getSortProps('d', sortConfig)}>
               <GlossaryTooltip term='Distance'>Distance (km)</GlossaryTooltip>
