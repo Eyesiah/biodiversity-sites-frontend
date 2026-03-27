@@ -77,16 +77,13 @@ export const HabitatSummaryTable = ({ site }) => {
   if (site.allocations != null) {
     // use the allocations themselves
     allocationArea = allocations.reduce((acc, a) => {
-      return acc + (a.habitats?.areas?.filter(ha => ha.type !== 'Urban tree' && ha.type !== 'Rural tree').reduce((acc, ha) => acc + ha.size, 0) || 0);
+      return acc + (a.habitats?.areas?.reduce((acc, ha) => acc + ha.size, 0) || 0);
     }, 0);
     allocationHedgerow = allocations.reduce((acc, a) => {
       return acc + (a.habitats?.hedgerows?.reduce((acc, ha) => acc + ha.size, 0) || 0);
     }, 0);
     allocationWatercourse = allocations.reduce((acc, a) => {
       return acc + (a.habitats?.watercourses?.reduce((acc, ha) => acc + ha.size, 0) || 0);
-    }, 0);
-    allocationIndividualTrees = allocations.reduce((acc, a) => {
-      return acc + (a.habitats?.areas?.filter(ha => ha.type === 'Urban tree' || ha.type === 'Rural tree').reduce((acc, ha) => acc + ha.size, 0) || 0);
     }, 0);
 
     allocationAreaHUs = allocations.reduce((acc, a) => acc + a.areaUnits, 0);
@@ -97,15 +94,20 @@ export const HabitatSummaryTable = ({ site }) => {
     allocationArea = (improvements.areas || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
     allocationHedgerow = (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
     allocationWatercourse = (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
-    allocationIndividualTrees = (improvements.trees || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
     // Use proportional allocated HUs (allocatedHUs = HUs × allocated fraction, computed in collateHabitats)
     allocationAreaHUs = (improvements.areas || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
     allocationHedgerowHUs = (improvements.hedgerows || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
     allocationWatercourseHUs = (improvements.watercourses || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
   }
 
+  // Individual trees allocation size and HUs are always derived from improvement trees' allocated data,
+  // since processSiteHabitatData populates allocatedSize on improvement trees and there is no separate
+  // treeUnits field on the allocation API object.
+  allocationIndividualTrees = (improvements.trees || []).reduce((acc, h) => acc + (h.allocatedArea || 0), 0);
+  const allocationTreesHUs = (improvements.trees || []).reduce((acc, h) => acc + (h.allocatedHUs || 0), 0);
+
   const hasAllocs = allocationArea > 0 || allocationHedgerow > 0 || allocationWatercourse > 0 || allocationIndividualTrees > 0 || site.allocations != null;
-  const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0;
+  const hasAllocHUs = allocationAreaHUs > 0 || allocationHedgerowHUs > 0 || allocationWatercourseHUs > 0 || allocationTreesHUs > 0;
   const hasIndividualTrees = baselineIndividualTrees > 0 || improvementTrees > 0 || allocationIndividualTrees > 0;
   const hasArea = baselineArea > 0 || improvementArea > 0 || allocationArea > 0;
   const hasHedgerow = baselineHedgerow > 0 || improvementHedgerow > 0 || allocationHedgerow > 0;
@@ -183,8 +185,8 @@ export const HabitatSummaryTable = ({ site }) => {
             <DataTable.NumericCell>{formatNumber(enhancedTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUGain, 2)}</DataTable.NumericCell>
-            {hasAllocHUs && <DataTable.NumericCell>{formatNumber(0)}</DataTable.NumericCell>}
-            {hasAllocHUs && <DataTable.NumericCell>N/A</DataTable.NumericCell>}
+            {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationTreesHUs)}</DataTable.NumericCell>}
+            {hasAllocHUs && <DataTable.NumericCell>{improvementTreesHUs > 0 ? formatNumber((allocationTreesHUs / improvementTreesHUs) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
           </DataTable.Row>}
           {hasHedgerow && <DataTable.Row>
             <DataTable.Cell>Hedgerows</DataTable.Cell>
