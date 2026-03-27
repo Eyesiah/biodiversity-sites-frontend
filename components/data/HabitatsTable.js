@@ -22,6 +22,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
 
   const mainRow = (
     <>
+      <DataTable.Cell textAlign="center">{habitat.broadHabitat}</DataTable.Cell>
       <DataTable.Cell>{habitat.type}</DataTable.Cell>
       <DataTable.Cell textAlign="center">{habitat.distinctiveness || '[Unknown Habitat Type]'}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
@@ -87,7 +88,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
     <CollapsibleRow
       mainRow={mainRow}
       collapsibleContent={collapsibleContent}
-      colSpan={5}
+      colSpan={20}
       onToggle={onHabitatToggle}
       isOpen={isHabitatOpen}
       tableType="data"
@@ -126,6 +127,9 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
         <DataTable.Root>
           <DataTable.Header>
             <DataTable.Row>
+              <DataTable.ColumnHeader onClick={() => requestSort('broadHabitat')} textAlign="center">
+                <GlossaryTooltip term='Broad habitat'>Broad habitat</GlossaryTooltip>{getSortIndicator('broadHabitat')}
+              </DataTable.ColumnHeader>
               <DataTable.ColumnHeader onClick={() => requestSort('type')}>
                 <GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip>{getSortIndicator('type')}
               </DataTable.ColumnHeader>
@@ -134,7 +138,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               </DataTable.ColumnHeader>
               {hasSites && (
                 <DataTable.ColumnHeader onClick={() => requestSort('sites.length')}>
-                  <GlossaryTooltip term='BGS Sites'># BGS Sites</GlossaryTooltip>{getSortIndicator('sites.length')}
+                  <GlossaryTooltip term='BGS Sites'># BGS sites</GlossaryTooltip>{getSortIndicator('sites.length')}
                 </DataTable.ColumnHeader>
               )}
               <DataTable.ColumnHeader onClick={() => requestSort('parcels')}>
@@ -153,7 +157,7 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               </DataTable.ColumnHeader>
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('HUGain')}>
-                  <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>Gain</GlossaryTooltip>{getSortIndicator('HUGain')}
+                  <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>gain</GlossaryTooltip>{getSortIndicator('HUGain')}
                 </DataTable.ColumnHeader>
               )}
             </DataTable.Row>
