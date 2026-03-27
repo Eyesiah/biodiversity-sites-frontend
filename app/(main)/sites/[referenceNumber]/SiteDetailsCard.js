@@ -138,9 +138,6 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
       <PrimaryCard>
         <Box>
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
             padding="0.1rem 0"
             borderBottom="1px solid"
             borderColor="subtleBorder"
@@ -150,18 +147,11 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
               fontWeight="bold"
               color="fg"
               margin="0"
-              paddingRight="1rem"
+              marginBottom="0.5rem"
             >
-              Habitat<br />Summary
+              Habitat Summary
             </Box>
-            <Box
-              as="dd"
-              margin="0"
-              flex="1"
-              minWidth="0"
-              display="flex"
-              justifyContent="flex-end"
-            >
+            <Box as="dd" margin="0">
               <HabitatSummaryTable site={site} />
             </Box>
           </Box>
