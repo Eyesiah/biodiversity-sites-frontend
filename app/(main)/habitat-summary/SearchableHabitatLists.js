@@ -18,7 +18,7 @@ const SiteMap = dynamic(() => import('@/components/map/SiteMap'), {
 // Component for displaying habitat summary
 const HabitatSummaryCard = ({data}) => (
   <DataSection>
-    <SectionTitle>Habitat Summary</SectionTitle>
+    <SectionTitle textAlign="left">Habitat Summary</SectionTitle>
     <HabitatSummaryTable site={ data } />
   </DataSection>
 );
