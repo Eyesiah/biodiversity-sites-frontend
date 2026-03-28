@@ -126,22 +126,22 @@ export const HabitatSummaryTable = ({ site }) => {
 
   return (
     <Box overflowX="auto" display="flex" justifyContent="center">
-      <DataTable.Root width="auto" margin="0" style={{ border: "3px solid #878080" }}>
+      <DataTable.Root width="auto" margin="0" style={{ border: "2px solid #878080" }}>
         <DataTable.Header>
           <DataTable.Row>
             <DataTable.ColumnHeader fontSize={headerFontSize} rowSpan={2}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize} rowSpan={2}># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={4 + (hasAllocs ? 2 : 0)} textAlign="center" style={{ borderLeft: "3px solid #878080" }}>Size</DataTable.ColumnHeader>
-            <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={5 + (hasAllocHUs ? 2 : 0)} textAlign="center" style={{ borderLeft: "3px solid #878080" }}>Habitat Units</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={4 + (hasAllocs ? 2 : 0)} textAlign="center" style={{ borderLeft: "2px solid #878080" }}>Size</DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={5 + (hasAllocHUs ? 2 : 0)} textAlign="center" style={{ borderLeft: "2px solid #878080" }}>Habitat Units</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
-            <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "3px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improvements</GlossaryTooltip></DataTable.ColumnHeader>
             {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocation'>Allocations</GlossaryTooltip></DataTable.ColumnHeader>}
             {hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
-            <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "3px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
+            <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improvements</GlossaryTooltip></DataTable.ColumnHeader>
@@ -154,13 +154,13 @@ export const HabitatSummaryTable = ({ site }) => {
           {hasArea && <DataTable.Row>
             <DataTable.Cell>Areas</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineArea, 2)} ha</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedArea, 2)} ha</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementArea, 2)} ha</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationArea, 2)} ha</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementArea > 0 ? formatNumber((allocationArea / improvementArea) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineAreaHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdAreaHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedAreaHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementAreaHUs, 2)}</DataTable.NumericCell>
@@ -171,7 +171,7 @@ export const HabitatSummaryTable = ({ site }) => {
           {hasIndividualTrees && <DataTable.Row>
             <DataTable.Cell>Individual trees</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>
               {formatTreeCountWithTooltip(baselineIndividualTrees)}
             </DataTable.NumericCell>
             <DataTable.NumericCell>
@@ -189,7 +189,7 @@ export const HabitatSummaryTable = ({ site }) => {
               </DataTable.NumericCell>
             )}
             {hasAllocs && <DataTable.NumericCell>{improvementTrees > 0 ? formatNumber((allocationIndividualTrees / improvementTrees) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineIndividualTreesHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedTreesHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementTreesHUs, 2)}</DataTable.NumericCell>
@@ -200,13 +200,13 @@ export const HabitatSummaryTable = ({ site }) => {
           {hasHedgerow && <DataTable.Row>
             <DataTable.Cell>Hedgerows</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineHedgerow, 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedHedgerow, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerow, 2)} km</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationHedgerow, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementHedgerow > 0 ? formatNumber((allocationHedgerow / improvementHedgerow) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineHedgerowHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineHedgerowHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdHedgerowHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedHedgerowHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementHedgerowHUs, 2)}</DataTable.NumericCell>
@@ -217,13 +217,13 @@ export const HabitatSummaryTable = ({ site }) => {
           {hasWatercourse && <DataTable.Row>
             <DataTable.Cell>Watercourses</DataTable.Cell>
             <DataTable.NumericCell>{formatNumber(baselineWatercourseParcels, 0)}</DataTable.NumericCell>
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineWatercourse, 2)} km</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedWatercourse, 2)} km</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourse, 2)} km</DataTable.NumericCell>
             {hasAllocs && <DataTable.NumericCell>{formatNumber(allocationWatercourse, 2)} km</DataTable.NumericCell>}
             {hasAllocs && <DataTable.NumericCell>{improvementWatercourse > 0 ? formatNumber((allocationWatercourse / improvementWatercourse) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
-            <DataTable.NumericCell style={{ borderLeft: "3px solid #878080" }}>{formatNumber(baselineWatercourseHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineWatercourseHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdWatercourseHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedWatercourseHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(improvementWatercourseHUs, 2)}</DataTable.NumericCell>
@@ -231,16 +231,16 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{improvementWatercourseHUs > 0 ? formatNumber((allocationWatercourseHUs / improvementWatercourseHUs) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
           </DataTable.Row>}
-          <DataTable.Row fontWeight="bold" bg="tableTotalsBg" style={{ borderTop: "3px solid #878080" }}>
+          <DataTable.Row fontWeight="bold" bg="tableTotalsBg" style={{ borderTop: "2px solid #878080" }}>
             <DataTable.Cell fontWeight="bold">Totals</DataTable.Cell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalParcels, 0)}</DataTable.NumericCell>
-            <DataTable.Cell style={{ borderLeft: "3px solid #878080" }} />
+            <DataTable.Cell style={{ borderLeft: "2px solid #878080" }} />
             <DataTable.Cell />
             <DataTable.Cell />
             <DataTable.Cell />
             {hasAllocs && <DataTable.Cell />}
             {hasAllocs && <DataTable.Cell />}
-            <DataTable.NumericCell fontWeight="bold" style={{ borderLeft: "3px solid #878080" }}>{formatNumber(totalBaselineHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell fontWeight="bold" style={{ borderLeft: "2px solid #878080" }}>{formatNumber(totalBaselineHUs)}</DataTable.NumericCell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalCreatedHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalEnhancedHUs, 2)}</DataTable.NumericCell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalImprovementHUs, 2)}</DataTable.NumericCell>
