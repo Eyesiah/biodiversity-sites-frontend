@@ -113,6 +113,15 @@ export const HabitatSummaryTable = ({ site }) => {
   const hasHedgerow = baselineHedgerow > 0 || improvementHedgerow > 0 || allocationHedgerow > 0;
   const hasWatercourse = baselineWatercourse > 0 || improvementWatercourse > 0 || allocationWatercourse > 0;
 
+  // Totals (only summing rows that are actually rendered)
+  const totalParcels = (hasArea ? baselineAreaParcels : 0) + (hasIndividualTrees ? baselineIndividualTreesParcels : 0) + (hasHedgerow ? baselineHedgerowParcels : 0) + (hasWatercourse ? baselineWatercourseParcels : 0);
+  const totalBaselineHUs = (hasArea ? baselineAreaHUs : 0) + (hasIndividualTrees ? baselineIndividualTreesHUs : 0) + (hasHedgerow ? baselineHedgerowHUs : 0) + (hasWatercourse ? baselineWatercourseHUs : 0);
+  const totalCreatedHUs = (hasArea ? createdAreaHUs : 0) + (hasIndividualTrees ? createdTreesHUs : 0) + (hasHedgerow ? createdHedgerowHUs : 0) + (hasWatercourse ? createdWatercourseHUs : 0);
+  const totalEnhancedHUs = (hasArea ? enhancedAreaHUs : 0) + (hasIndividualTrees ? enhancedTreesHUs : 0) + (hasHedgerow ? enhancedHedgerowHUs : 0) + (hasWatercourse ? enhancedWatercourseHUs : 0);
+  const totalImprovementHUs = (hasArea ? improvementAreaHUs : 0) + (hasIndividualTrees ? improvementTreesHUs : 0) + (hasHedgerow ? improvementHedgerowHUs : 0) + (hasWatercourse ? improvementWatercourseHUs : 0);
+  const totalHUGain = (hasArea ? improvementAreaHUGain : 0) + (hasIndividualTrees ? improvementTreesHUGain : 0) + (hasHedgerow ? improvementHedgerowHUGain : 0) + (hasWatercourse ? improvementWatercourseHUGain : 0);
+  const totalAllocationHUs = (hasAllocHUs && hasArea ? allocationAreaHUs : 0) + (hasAllocHUs && hasIndividualTrees ? allocationTreesHUs : 0) + (hasAllocHUs && hasHedgerow ? allocationHedgerowHUs : 0) + (hasAllocHUs && hasWatercourse ? allocationWatercourseHUs : 0);
+
   const headerFontSize = '14px';
 
   return (
@@ -222,6 +231,23 @@ export const HabitatSummaryTable = ({ site }) => {
             {hasAllocHUs && <DataTable.NumericCell>{formatNumber(allocationWatercourseHUs)}</DataTable.NumericCell>}
             {hasAllocHUs && <DataTable.NumericCell>{improvementWatercourseHUs > 0 ? formatNumber((allocationWatercourseHUs / improvementWatercourseHUs) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
           </DataTable.Row>}
+          <DataTable.Row fontWeight="bold" bg="tableTotalsBg">
+            <DataTable.Cell fontWeight="bold">Totals</DataTable.Cell>
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalParcels, 0)}</DataTable.NumericCell>
+            <DataTable.Cell />
+            <DataTable.Cell />
+            <DataTable.Cell />
+            <DataTable.Cell />
+            {hasAllocs && <DataTable.Cell />}
+            {hasAllocs && <DataTable.Cell />}
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalBaselineHUs)}</DataTable.NumericCell>
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalCreatedHUs, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalEnhancedHUs, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalImprovementHUs, 2)}</DataTable.NumericCell>
+            <DataTable.NumericCell fontWeight="bold">{formatNumber(totalHUGain, 2)}</DataTable.NumericCell>
+            {hasAllocHUs && <DataTable.NumericCell fontWeight="bold">{formatNumber(totalAllocationHUs)}</DataTable.NumericCell>}
+            {hasAllocHUs && <DataTable.NumericCell fontWeight="bold">{totalImprovementHUs > 0 ? formatNumber((totalAllocationHUs / totalImprovementHUs) * 100, 2) + '%' : 'N/A'}</DataTable.NumericCell>}
+          </DataTable.Row>
         </DataTable.Body>
       </DataTable.Root>
     </Box>
