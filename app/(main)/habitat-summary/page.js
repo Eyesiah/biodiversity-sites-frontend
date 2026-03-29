@@ -52,6 +52,22 @@ export default async function HabitatSummaryPage() {
 
     totalSize += site.siteSize;
 
+    // Ensure individual trees are split from areas (handles sites with older data schema
+    // where trees may still be stored in habitats.areas rather than habitats.trees)
+    for (const habitatGroup of [site.habitats, site.improvements]) {
+      if (!habitatGroup) continue;
+      if (habitatGroup.areas) {
+        const treesFromAreas = habitatGroup.areas.filter(h => getHabitatGroup(h.type) === 'Individual trees');
+        if (treesFromAreas.length > 0) {
+          habitatGroup.areas = habitatGroup.areas.filter(h => getHabitatGroup(h.type) !== 'Individual trees');
+          habitatGroup.trees = [...(habitatGroup.trees || []), ...treesFromAreas];
+        }
+      }
+      if (habitatGroup.trees) {
+        habitatGroup.trees.forEach(h => { h.module = 'Tree'; });
+      }
+    }
+
     if (site.habitats) {
       for (const unit of HABITAT_UNIT_TYPES) {
         if (site.habitats[unit]) {
