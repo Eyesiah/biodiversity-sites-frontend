@@ -33,6 +33,8 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
       {isImprovement && <DataTable.NumericCell>{habitat.allocated && habitat.allocated > 0 ? `${formatNumber(100 * habitat.allocated)}%` : ''}</DataTable.NumericCell>}
       <DataTable.NumericCell>{habitat.HUs && habitat.HUs > 0 ? formatNumber(habitat.HUs) : ''}</DataTable.NumericCell>
       {isImprovement && <DataTable.NumericCell>{habitat.HUGain && habitat.HUGain > 0 ? formatNumber(habitat.HUGain) : ''}</DataTable.NumericCell>}
+      {isImprovement && <DataTable.NumericCell>{habitat.allocatedHUs && habitat.allocatedHUs > 0 ? formatNumber(habitat.allocatedHUs) : ''}</DataTable.NumericCell>}
+      {isImprovement && <DataTable.NumericCell>{habitat.allocatedHUs && habitat.allocatedHUs > 0 && habitat.HUs > 0 ? formatNumber((habitat.allocatedHUs / habitat.HUs) * 100) + '%' : ''}</DataTable.NumericCell>}
     </>
   );
 
@@ -158,6 +160,16 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
               {isImprovement && (
                 <DataTable.ColumnHeader onClick={() => requestSort('HUGain')}>
                   <GlossaryTooltip term='Habitat Unit (HU)'>HU</GlossaryTooltip> <GlossaryTooltip term='HU Gain'>gain</GlossaryTooltip>{getSortIndicator('HUGain')}
+                </DataTable.ColumnHeader>
+              )}
+              {isImprovement && (
+                <DataTable.ColumnHeader onClick={() => requestSort('allocatedHUs')}>
+                  <GlossaryTooltip term='Allocation'>Alloc.</GlossaryTooltip> <GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip>{getSortIndicator('allocatedHUs')}
+                </DataTable.ColumnHeader>
+              )}
+              {isImprovement && (
+                <DataTable.ColumnHeader onClick={() => requestSort('allocatedHUs')}>
+                  % <GlossaryTooltip term='Allocation'>Alloc.</GlossaryTooltip> <GlossaryTooltip term='Habitat Unit (HU)'>HUs</GlossaryTooltip>
                 </DataTable.ColumnHeader>
               )}
             </DataTable.Row>
