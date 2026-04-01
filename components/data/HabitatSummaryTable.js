@@ -43,10 +43,15 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
   const baselineHedgerowSites = new Set((habitats.hedgerows || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
   const baselineWatercourseSites = new Set((habitats.watercourses || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
 
-  const improvementAreaSites = new Set((improvements.areas || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
-  const improvementTreesSites = new Set((improvements.trees || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
-  const improvementHedgerowSites = new Set((improvements.hedgerows || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
-  const improvementWatercourseSites = new Set((improvements.watercourses || []).flatMap(h => (h.sites || []).map(s => s.r))).size;
+  const createdAreaSites = new Set((improvements.areas || []).flatMap(h => (h.createdSites || []).map(s => s.r))).size;
+  const createdTreesSites = new Set((improvements.trees || []).flatMap(h => (h.createdSites || []).map(s => s.r))).size;
+  const createdHedgerowSites = new Set((improvements.hedgerows || []).flatMap(h => (h.createdSites || []).map(s => s.r))).size;
+  const createdWatercourseSites = new Set((improvements.watercourses || []).flatMap(h => (h.createdSites || []).map(s => s.r))).size;
+
+  const enhancedAreaSites = new Set((improvements.areas || []).flatMap(h => (h.enhancedSites || []).map(s => s.r))).size;
+  const enhancedTreesSites = new Set((improvements.trees || []).flatMap(h => (h.enhancedSites || []).map(s => s.r))).size;
+  const enhancedHedgerowSites = new Set((improvements.hedgerows || []).flatMap(h => (h.enhancedSites || []).map(s => s.r))).size;
+  const enhancedWatercourseSites = new Set((improvements.watercourses || []).flatMap(h => (h.enhancedSites || []).map(s => s.r))).size;
 
   const totalBaselineSites = new Set([
     ...habitats.areas.flatMap(h => (h.sites || []).map(s => s.r)),
@@ -55,11 +60,18 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
     ...(habitats.watercourses || []).flatMap(h => (h.sites || []).map(s => s.r)),
   ]).size;
 
-  const totalImprovementSites = new Set([
-    ...(improvements.areas || []).flatMap(h => (h.sites || []).map(s => s.r)),
-    ...(improvements.trees || []).flatMap(h => (h.sites || []).map(s => s.r)),
-    ...(improvements.hedgerows || []).flatMap(h => (h.sites || []).map(s => s.r)),
-    ...(improvements.watercourses || []).flatMap(h => (h.sites || []).map(s => s.r)),
+  const totalCreatedSites = new Set([
+    ...(improvements.areas || []).flatMap(h => (h.createdSites || []).map(s => s.r)),
+    ...(improvements.trees || []).flatMap(h => (h.createdSites || []).map(s => s.r)),
+    ...(improvements.hedgerows || []).flatMap(h => (h.createdSites || []).map(s => s.r)),
+    ...(improvements.watercourses || []).flatMap(h => (h.createdSites || []).map(s => s.r)),
+  ]).size;
+
+  const totalEnhancedSites = new Set([
+    ...(improvements.areas || []).flatMap(h => (h.enhancedSites || []).map(s => s.r)),
+    ...(improvements.trees || []).flatMap(h => (h.enhancedSites || []).map(s => s.r)),
+    ...(improvements.hedgerows || []).flatMap(h => (h.enhancedSites || []).map(s => s.r)),
+    ...(improvements.watercourses || []).flatMap(h => (h.enhancedSites || []).map(s => s.r)),
   ]).size;
 
   const baselineAreaHUs = habitats.areas.reduce((acc, h) => acc + h.HUs, 0);
@@ -167,14 +179,15 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
         <DataTable.Header>
           <DataTable.Row>
             <DataTable.ColumnHeader fontSize={headerFontSize} rowSpan={2}><GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip></DataTable.ColumnHeader>
-            {showSites && <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={2} textAlign="center" style={{ borderLeft: "2px solid #878080" }}># Sites</DataTable.ColumnHeader>}
+            {showSites && <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={3} textAlign="center" style={{ borderLeft: "2px solid #878080" }}># Sites</DataTable.ColumnHeader>}
             <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={3} textAlign="center" style={{ borderLeft: "2px solid #878080" }}># <GlossaryTooltip term='Parcel'>Parcels</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={3 + (hasAllocs ? 2 : 0)} textAlign="center" style={{ borderLeft: "2px solid #878080" }}>Size</DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize} colSpan={4 + (hasAllocHUs ? 2 : 0)} textAlign="center" style={{ borderLeft: "2px solid #878080" }}>Habitat Units</DataTable.ColumnHeader>
           </DataTable.Row>
           <DataTable.Row>
             {showSites && <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>}
-            {showSites && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Improved</GlossaryTooltip></DataTable.ColumnHeader>}
+            {showSites && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>}
+            {showSites && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>}
             <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>
@@ -195,7 +208,8 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
           {hasArea && <DataTable.Row>
             <DataTable.Cell>Areas</DataTable.Cell>
             {showSites && <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineAreaSites, 0)}</DataTable.NumericCell>}
-            {showSites && <DataTable.NumericCell>{formatNumber(improvementAreaSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(createdAreaSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(enhancedAreaSites, 0)}</DataTable.NumericCell>}
             <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineAreaParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdAreaParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedAreaParcels, 0)}</DataTable.NumericCell>
@@ -214,7 +228,8 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
           {hasIndividualTrees && <DataTable.Row>
             <DataTable.Cell>Individual trees</DataTable.Cell>
             {showSites && <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineTreesSites, 0)}</DataTable.NumericCell>}
-            {showSites && <DataTable.NumericCell>{formatNumber(improvementTreesSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(createdTreesSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(enhancedTreesSites, 0)}</DataTable.NumericCell>}
             <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdIndividualTreesParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedIndividualTreesParcels, 0)}</DataTable.NumericCell>
@@ -243,7 +258,8 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
           {hasHedgerow && <DataTable.Row>
             <DataTable.Cell>Hedgerows</DataTable.Cell>
             {showSites && <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineHedgerowSites, 0)}</DataTable.NumericCell>}
-            {showSites && <DataTable.NumericCell>{formatNumber(improvementHedgerowSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(createdHedgerowSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(enhancedHedgerowSites, 0)}</DataTable.NumericCell>}
             <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineHedgerowParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdHedgerowParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedHedgerowParcels, 0)}</DataTable.NumericCell>
@@ -262,7 +278,8 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
           {hasWatercourse && <DataTable.Row>
             <DataTable.Cell>Watercourses</DataTable.Cell>
             {showSites && <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineWatercourseSites, 0)}</DataTable.NumericCell>}
-            {showSites && <DataTable.NumericCell>{formatNumber(improvementWatercourseSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(createdWatercourseSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell>{formatNumber(enhancedWatercourseSites, 0)}</DataTable.NumericCell>}
             <DataTable.NumericCell style={{ borderLeft: "2px solid #878080" }}>{formatNumber(baselineWatercourseParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(createdWatercourseParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell>{formatNumber(enhancedWatercourseParcels, 0)}</DataTable.NumericCell>
@@ -281,7 +298,8 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
           <DataTable.Row fontWeight="bold" bg="tableTotalsBg" style={{ borderTop: "2px solid #878080" }}>
             <DataTable.Cell fontWeight="bold">Totals</DataTable.Cell>
             {showSites && <DataTable.NumericCell fontWeight="bold" style={{ borderLeft: "2px solid #878080" }}>{formatNumber(totalBaselineSites, 0)}</DataTable.NumericCell>}
-            {showSites && <DataTable.NumericCell fontWeight="bold">{formatNumber(totalImprovementSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell fontWeight="bold">{formatNumber(totalCreatedSites, 0)}</DataTable.NumericCell>}
+            {showSites && <DataTable.NumericCell fontWeight="bold">{formatNumber(totalEnhancedSites, 0)}</DataTable.NumericCell>}
             <DataTable.NumericCell fontWeight="bold" style={{ borderLeft: "2px solid #878080" }}>{formatNumber(totalBaselineParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalCreatedParcels, 0)}</DataTable.NumericCell>
             <DataTable.NumericCell fontWeight="bold">{formatNumber(totalEnhancedParcels, 0)}</DataTable.NumericCell>
