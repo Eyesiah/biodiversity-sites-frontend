@@ -52,7 +52,8 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
   const filterPredicate = useCallback((habitat, searchTerm) => {
     const lowercasedTerm = searchTerm.toLowerCase();
     return habitat.type.toLowerCase().includes(lowercasedTerm) ||
-      (habitat.broadHabitat && habitat.broadHabitat.toLowerCase().includes(lowercasedTerm));
+      (habitat.broadHabitat && habitat.broadHabitat.toLowerCase().includes(lowercasedTerm)) ||
+      (habitat.distinctiveness && habitat.distinctiveness.toLowerCase().includes(lowercasedTerm));
   }, []);
 
   const handleExportXML = (items) => {
@@ -190,7 +191,7 @@ export default function SearchableHabitatLists({ allHabitats, sites }) {
           initialItems={allHabitats}
           filterPredicate={filterPredicate}
           initialSortConfig={{ key: 'type', direction: 'ascending' }}
-          placeholder="Search by habitat or broad habitat..."
+          placeholder="Search by habitat, broad habitat or distinctiveness..."
           exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
           summary={SummaryComponent}
           tabs={tabs}

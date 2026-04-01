@@ -239,13 +239,14 @@ export default function HabitatAnalysisContent({ habitats }) {
     <SearchableTableLayout
       initialItems={habitats}
       initialSortConfig={{ key: 'habitat', direction: 'ascending' }}
-      placeholder="Search by habitat or broad habitat..."
+      placeholder="Search by habitat, broad habitat or distinctiveness..."
       exportConfig={{ onExportCsv: handleExport }}
       tabs={tabs}
       filterPredicate={(item, term) => {
         const lowerTerm = term.toLowerCase();
         return item.habitat.toLowerCase().includes(lowerTerm) ||
-          (item.broadHabitat && item.broadHabitat.toLowerCase().includes(lowerTerm));
+          (item.broadHabitat && item.broadHabitat.toLowerCase().includes(lowerTerm)) ||
+          (item.distinctiveness && item.distinctiveness.toLowerCase().includes(lowerTerm));
       }}
     />
   )
