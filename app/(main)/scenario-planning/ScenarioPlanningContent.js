@@ -404,8 +404,8 @@ export default function ScenarioPlanningContent({ habitats: serverHabitats, cond
               <NativeSelect.Root flex="2" size="sm">
                 <NativeSelect.Field name="strategicSignificance">
                   <option value="1">Low (1.0)</option>
-                  <option value="1.5">Medium (1.5)</option>
-                  <option value="2">High (2.0)</option>
+                  <option value="1.1">Medium (1.1)</option>
+                  <option value="1.5">High (1.5)</option>
                 </NativeSelect.Field>
                 <NativeSelect.Indicator />
               </NativeSelect.Root>
