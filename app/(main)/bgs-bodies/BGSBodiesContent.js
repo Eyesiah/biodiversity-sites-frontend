@@ -232,6 +232,12 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="rb-chart">
           Responsible Bodies Chart
         </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs">
+          LNRS List
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs-chart">
+          LNRS Chart
+        </Tabs.Trigger>
         <Tabs.Trigger value="lpa">
           LPA List
         </Tabs.Trigger>
@@ -243,12 +249,6 @@ export default function BGSBodiesContent({
         </Tabs.Trigger>
         <Tabs.Trigger value="nca-chart">
           NCA Chart
-        </Tabs.Trigger>
-        <Tabs.Trigger value="lnrs">
-          LNRS List
-        </Tabs.Trigger>
-        <Tabs.Trigger value="lnrs-chart">
-          LNRS Chart
         </Tabs.Trigger>
       </Tabs.List>
 
@@ -264,6 +264,24 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="rb-chart">
         <ResponsibleBodyMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+
+      <Tabs.Content value="lnrs">
+        <LNRSContent
+          ref={lnrsContentRef}
+          lnrs={lnrs}
+          sites={sites}
+          error={null}
+          onExpandedRowChanged={handleExpandedBodyChanged}
+          onHoveredSiteChange={setHoveredSite}
+          onSelectedSiteChange={setSelectedSite}
+          onFilterCleared={handleFilterCleared}
+          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLNRS)}
+        />
+      </Tabs.Content>
+
+      <Tabs.Content value="lnrs-chart">
+        <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
 
       <Tabs.Content value="lpa">
@@ -299,24 +317,6 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="nca-chart">
         <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
-      </Tabs.Content>
-
-      <Tabs.Content value="lnrs">
-        <LNRSContent
-          ref={lnrsContentRef}
-          lnrs={lnrs}
-          sites={sites}
-          error={null}
-          onExpandedRowChanged={handleExpandedBodyChanged}
-          onHoveredSiteChange={setHoveredSite}
-          onSelectedSiteChange={setSelectedSite}
-          onFilterCleared={handleFilterCleared}
-          onSortedItemsChange={(bodies) => handleFilteredBodiesChange(bodies, setFilteredBodiesLNRS)}
-        />
-      </Tabs.Content>
-
-      <Tabs.Content value="lnrs-chart">
-        <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
     </Tabs.Root>
   ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared, handleFilteredBodiesChange]);
