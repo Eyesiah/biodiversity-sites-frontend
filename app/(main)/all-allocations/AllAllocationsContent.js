@@ -331,7 +331,7 @@ export default function AllAllocationsContent({ allocations }) {
       exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON, onExportCsv: handleExportCSV }}
       summary={(filteredCount, totalCount) => (
         <Box textAlign='center'>
-          <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</Text>
+          <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{formatNumber(summaryData.uniquePlanningRefs,0)}</strong> out of <strong>{formatNumber(summaryData.totalUniquePlanningRefs,0)}</strong> planning applications.</Text>
         </Box>
       )}
       onSortedItemsChange={handleSortedItemsChange}
