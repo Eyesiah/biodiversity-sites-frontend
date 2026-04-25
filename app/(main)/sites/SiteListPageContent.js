@@ -7,6 +7,7 @@ import SiteList from '@/components/data/SiteList';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
+import Papa from 'papaparse';
 import { Box, Text, SimpleGrid } from '@chakra-ui/react';
 import { ContentStack } from '@/components/styles/ContentStack'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, ScatterChart, Scatter, Line } from 'recharts';
@@ -479,9 +480,28 @@ export default function SiteListPageContent({ sites }) {
     setSelectedSite(site);
   };
 
-  const handleExport = async () => {
-    const response = await fetch('api/query/sites/csv');
-    const blob = await response.blob();
+  const handleExport = (items) => {
+    const data = (items || []).map(s => ({
+      'reference-number': s.referenceNumber,
+      'name': s.name || '',
+      'responsible-body': Array.isArray(s.responsibleBodies) ? s.responsibleBodies.join(', ') : (s.responsibleBodies || ''),
+      'LPA': s.lpaName || '',
+      'NCA': s.ncaName || '',
+      'LNRS': s.lnrsName || '',
+      'area-ha': s.siteSize || 0,
+      'imd-decile': s.imdDecile ?? '',
+      'number-allocations': s.allocationsCount || 0,
+      'baseline-HU': s.baselineHUs != null ? formatNumber(s.baselineHUs, 4) : '',
+      'created-HU': s.createdHUs != null ? formatNumber(s.createdHUs, 4) : '',
+      'enhanced-HU': s.enhancedHUs != null ? formatNumber(s.enhancedHUs, 4) : '',
+      'total-HU-gain': s.huGain != null ? formatNumber(s.huGain, 4) : '',
+      'baseline-area-ha': s.baselineAreaSize != null ? formatNumber(s.baselineAreaSize, 4) : '',
+      'improvement-area-ha': s.improvementAreaSize != null ? formatNumber(s.improvementAreaSize, 4) : '',
+      'latitude': s.position ? formatNumber(s.position[0], 6) : '',
+      'longitude': s.position ? formatNumber(s.position[1], 6) : '',
+    }));
+    const csv = Papa.unparse(data);
+    const blob = new Blob([csv], { type: 'text/csv' });
     triggerDownload(blob, 'bgs-sites.csv');
   };
 

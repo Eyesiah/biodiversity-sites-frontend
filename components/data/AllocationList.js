@@ -27,8 +27,9 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
         </Link>
       </PrimaryTable.Cell>}
       {displayPlanningRef && <PrimaryTable.Cell>{alloc.pn}</PrimaryTable.Cell>}
+      <PrimaryTable.Cell>{Array.isArray(alloc.rb) ? alloc.rb.join(', ') : (alloc.rb || '')}</PrimaryTable.Cell>
       <PrimaryTable.Cell>{alloc.lpa}</PrimaryTable.Cell>
-      <PrimaryTable.Cell>{alloc.nca}</PrimaryTable.Cell>
+      <PrimaryTable.Cell>{alloc.lnrs}</PrimaryTable.Cell>
       <PrimaryTable.Cell>{`${alloc.sr?.cat || 'N/A'}${alloc.sr?.cat != 'Outside' ? ` (${alloc.sr?.from})` : ''}`}</PrimaryTable.Cell>
       <PrimaryTable.CenteredNumericCell>{imdTransfer}</PrimaryTable.CenteredNumericCell>
       <PrimaryTable.CenteredNumericCell>
@@ -44,7 +45,7 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
     return <CollapsibleRow
       mainRow={mainRow}
       collapsibleContent={<AllocationHabitats habitats={[...alloc.habitats.areas, ...alloc.habitats.hedgerows, ...alloc.habitats.watercourses, ...alloc.habitats.trees]} />}
-      colSpan={8}
+      colSpan={displayPlanningRef ? 12 : 10}
     />
   } else {
     return <DataFetchingCollapsibleRow
@@ -52,7 +53,7 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
       dataUrl={alloc.srn && alloc.pr ? `/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}` : null}
       renderDetails={details => <AllocationHabitats habitats={details} />}
       dataExtractor={json => json}
-      colSpan={8}
+      colSpan={displayPlanningRef ? 12 : 10}
     />
   }
 };
@@ -70,8 +71,9 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
             <PrimaryTable.ColumnHeader onClick={() => requestSort('srn')} {...getSortProps('srn', sortConfig)}>BGS reference</PrimaryTable.ColumnHeader>
             {displayPlanningRef && <PrimaryTable.ColumnHeader onClick={() => requestSort('pr')} {...getSortProps('pr', sortConfig)}>Planning ref.</PrimaryTable.ColumnHeader>}
             {displayPlanningRef && <PrimaryTable.ColumnHeader onClick={() => requestSort('pn')} {...getSortProps('pn', sortConfig)}>Planning address</PrimaryTable.ColumnHeader>}
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('rb')} {...getSortProps('rb', sortConfig)}><GlossaryTooltip term='Responsible Body'>Responsible Bodies</GlossaryTooltip></PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('lpa')} {...getSortProps('lpa', sortConfig)}><GlossaryTooltip term='Local Planning Authority (LPA)'>LPA</GlossaryTooltip></PrimaryTable.ColumnHeader>
-            <PrimaryTable.ColumnHeader onClick={() => requestSort('nca')} {...getSortProps('nca', sortConfig)}><GlossaryTooltip term='National Character Area (NCA)'>NCA</GlossaryTooltip></PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('lnrs')} {...getSortProps('lnrs', sortConfig)}><GlossaryTooltip term='Local Nature Recovery Strategy (LNRS) site'>LNRS</GlossaryTooltip></PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('sr.cat')} {...getSortProps('sr.cat', sortConfig)}>
               <GlossaryTooltip term='Spatial Risk'>Spatial risk</GlossaryTooltip>
             </PrimaryTable.ColumnHeader>
@@ -88,7 +90,7 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
         </PrimaryTable.Header>
         <PrimaryTable.Body>
           <PrimaryTable.Row fontWeight="bold" bg={totalsBg}>
-            <PrimaryTable.Cell colSpan={displayPlanningRef ? 6 : 4} textAlign="center" sx={{ border: `3px solid ${totalsBorder}` }}>Totals</PrimaryTable.Cell>
+            <PrimaryTable.Cell colSpan={displayPlanningRef ? 7 : 5} textAlign="center" sx={{ border: `3px solid ${totalsBorder}` }}>Totals</PrimaryTable.Cell>
             <PrimaryTable.CenteredNumericCell sx={{ border: `3px solid ${totalsBorder}` }}>
               {summaryData.meanIMD !== null ? `${formatNumber(summaryData.meanIMD, 1)} → ${formatNumber(summaryData.meanSiteIMD, 1)} (mean)` : 'N/A'}
             </PrimaryTable.CenteredNumericCell>

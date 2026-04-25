@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { formatNumber, calcMedian, calcMean } from '@/lib/format';
 import { bootstrapMedianCI } from '@/lib/Stats';
 import { XMLBuilder } from 'fast-xml-parser';
+import Papa from 'papaparse';
 import { triggerDownload } from '@/lib/utils';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { FilteredAllocationsPieChart } from '@/components/charts/FilteredHabitatPieChart'
@@ -46,14 +47,16 @@ const CustomIMDTooltip = ({ active, payload, label }) => {
 const filterPredicate = (alloc, searchTerm) => {
   const lowercasedTerm = searchTerm.toLowerCase();
   const spatialRiskString = alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`.toLowerCase() : '';
+  const rbString = Array.isArray(alloc.rb) ? alloc.rb.join(', ').toLowerCase() : (alloc.rb?.toLowerCase() || '');
   return (
     (alloc.srn?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.siteName?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.pr?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.lpa?.toLowerCase() || '').includes(lowercasedTerm) ||
-    (alloc.nca?.toLowerCase() || '').includes(lowercasedTerm) ||
+    (alloc.lnrs?.toLowerCase() || '').includes(lowercasedTerm) ||
     (alloc.pn?.toLowerCase() || '').includes(lowercasedTerm) ||
-    spatialRiskString.includes(lowercasedTerm)
+    spatialRiskString.includes(lowercasedTerm) ||
+    rbString.includes(lowercasedTerm)
   );
 }
 
@@ -70,6 +73,32 @@ export default function AllAllocationsContent({ allocations }) {
     const jsonDataStr = JSON.stringify({ allocations: items }, null, 2);
     const blob = new Blob([jsonDataStr], { type: 'application/json' });
     triggerDownload(blob, 'bgs-allocations.json');
+  };
+
+  const handleExportCSV = (items) => {
+    // Sort by BGS site reference so allocations are grouped by site
+    const sorted = [...items].sort((a, b) => (a.srn || '').localeCompare(b.srn || ''));
+
+    const csvData = sorted.map(alloc => ({
+      'BGS Reference': alloc.srn ?? '',
+      'Site Name': alloc.siteName ?? '',
+      'Responsible Bodies': Array.isArray(alloc.rb) ? alloc.rb.join('; ') : (alloc.rb ?? ''),
+      'Planning Reference': alloc.pr ?? '',
+      'Planning Address': alloc.pn ?? '',
+      'LPA': alloc.lpa ?? '',
+      'LNRS': alloc.lnrs ?? '',
+      'Spatial Risk': alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}` : '',
+      'Allocation IMD Decile': alloc.imd ?? '',
+      'Site IMD Decile': alloc.simd ?? '',
+      'Distance (km)': typeof alloc.d === 'number' ? formatNumber(alloc.d, 2) : (alloc.d ?? ''),
+      'Area HUs': alloc.au && alloc.au > 0 ? formatNumber(alloc.au, 4) : '',
+      'Hedgerow HUs': alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu, 4) : '',
+      'Watercourse HUs': alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu, 4) : '',
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    triggerDownload(blob, 'bgs-allocations.csv');
   };
 
   const calcSummaryData = useCallback((filteredAllocations) => {
@@ -298,11 +327,11 @@ export default function AllAllocationsContent({ allocations }) {
       initialItems={allocations}
       filterPredicate={filterPredicate}
       initialSortConfig={{ key: 'srn', direction: 'ascending' }}
-      placeholder="Filter by BGS Ref, Site Name, Planning Ref, Planning Address, LPA, NCA or Spatial Risk ..."
-      exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON }}
+      placeholder="Filter by BGS Ref, Site Name, Responsible Body, Planning Ref, Planning Address, LPA, LNRS or Spatial Risk ..."
+      exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON, onExportCsv: handleExportCSV }}
       summary={(filteredCount, totalCount) => (
         <Box textAlign='center'>
-          <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{summaryData.uniquePlanningRefs}</strong> out of <strong>{summaryData.totalUniquePlanningRefs}</strong> planning applications.</Text>
+          <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{formatNumber(summaryData.uniquePlanningRefs,0)}</strong> out of <strong>{formatNumber(summaryData.totalUniquePlanningRefs,0)}</strong> planning applications.</Text>
         </Box>
       )}
       onSortedItemsChange={handleSortedItemsChange}
