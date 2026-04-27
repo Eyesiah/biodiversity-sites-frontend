@@ -79,24 +79,62 @@ export default function AllAllocationsContent({ allocations }) {
     // Sort by BGS site reference so allocations are grouped by site
     const sorted = [...items].sort((a, b) => (a.srn || '').localeCompare(b.srn || ''));
 
-    const csvData = sorted.map(alloc => ({
-      'BGS Reference': alloc.srn ?? '',
-      'Site Name': alloc.siteName ?? '',
-      'Responsible Bodies': Array.isArray(alloc.rb) ? alloc.rb.join('; ') : (alloc.rb ?? ''),
-      'Planning Reference': alloc.pr ?? '',
-      'Planning Address': alloc.pn ?? '',
-      'LPA': alloc.lpa ?? '',
-      'LNRS': alloc.lnrs ?? '',
-      'Spatial Risk': alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}` : '',
-      'Allocation IMD Decile': alloc.imd ?? '',
-      'Site IMD Decile': alloc.simd ?? '',
-      'Distance (km)': typeof alloc.d === 'number' ? formatNumber(alloc.d, 2) : (alloc.d ?? ''),
-      'Area HUs': alloc.au && alloc.au > 0 ? formatNumber(alloc.au, 4) : '',
-      'Hedgerow HUs': alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu, 4) : '',
-      'Watercourse HUs': alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu, 4) : '',
-    }));
+    const csvData = sorted.flatMap(alloc => {
+      // Flatten all habitats across all modules for this allocation
+      const allHabitats = [];
+      if (alloc.habitats) {
+        for (const unit of ['areas', 'trees', 'hedgerows', 'watercourses']) {
+          if (alloc.habitats[unit]) {
+            allHabitats.push(...alloc.habitats[unit]);
+          }
+        }
+      }
 
-    const csv = Papa.unparse(csvData);
+      const baseRow = {
+        'BGS Reference': alloc.srn ?? '',
+        'Site Name': alloc.siteName ?? '',
+        'Responsible Bodies': Array.isArray(alloc.rb) ? alloc.rb.join('; ') : (alloc.rb ?? ''),
+        'Planning Reference': alloc.pr ?? '',
+        'Planning Address': alloc.pn ?? '',
+        'LPA': alloc.lpa ?? '',
+        'LNRS': alloc.lnrs ?? '',
+        'Spatial Risk': alloc.sr ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}` : '',
+        'Allocation IMD Decile': alloc.imd ?? '',
+        'Site IMD Decile': alloc.simd ?? '',
+        'Distance (km)': typeof alloc.d === 'number' ? formatNumber(alloc.d, 2) : (alloc.d ?? ''),
+        'Area HUs': alloc.au && alloc.au > 0 ? formatNumber(alloc.au, 4) : '',
+        'Hedgerow HUs': alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu, 4) : '',
+        'Watercourse HUs': alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu, 4) : '',
+      };
+
+      if (allHabitats.length === 0) {
+        // No habitat detail available — emit a single row with empty habitat fields
+        return [{ ...baseRow, 'Broad Habitat': '', 'Habitat Type': '', 'Module': '', 'Condition': '', 'Habitat Size': '' }];
+      }
+
+      // One row per habitat, repeating the allocation-level fields
+      return allHabitats.map(habitat => ({
+        ...baseRow,
+        'Broad Habitat': habitat.broadHabitat ?? '',
+        'Habitat Type': habitat.type ?? '',
+        'Module': habitat.module ?? '',
+        'Condition': habitat.condition ?? '',
+        'Habitat Size': habitat.size != null ? formatNumber(habitat.size, 4) : '',
+      }));
+    });
+
+    // Deduplicate: the same planning application's habitat list is repeated across
+    // every BGS site linked to that application. Keep only the first occurrence of
+    // each unique (Planning Reference + Module + Habitat Type + Condition + Size).
+    const seen = new Set();
+    const dedupedCsvData = csvData.filter(row => {
+      const key = `${row['Planning Reference']}|${row['Module']}|${row['Habitat Type']}|${row['Condition']}|${row['Habitat Size']}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    const csv = Papa.unparse(dedupedCsvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     triggerDownload(blob, 'bgs-allocations.csv');
   };
