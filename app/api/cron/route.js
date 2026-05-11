@@ -5,6 +5,9 @@ import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
+export const maxDuration = 300; // Sets timeout to 5 minutes (300 seconds)
+export const dynamic = 'force-dynamic';
+
 export async function GET(request) {
   // Protect the endpoint with a secret
   const authorization = request.headers.get('authorization');
