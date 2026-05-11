@@ -1,13 +1,15 @@
+import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import clientPromise from '@/lib/mongodb';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
-async function handler(req, res) {
+export async function GET(request) {
   // Protect the endpoint with a secret
-  const { authorization } = req.headers;
+  const authorization = request.headers.get('authorization');
   if (authorization !== `Bearer ${process.env.CRON_SECRET}`) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
   try {
@@ -46,9 +48,9 @@ async function handler(req, res) {
       newSites
     });
 
-    res.revalidate('/statistics');
+    revalidatePath('/statistics');
 
-    res.status(200).json({
+    return NextResponse.json({
       message: 'Statistics updated successfully.',
       summary,
     });
@@ -56,8 +58,7 @@ async function handler(req, res) {
     console.error('Cron job failed:', error);
     // Pass the error message from the fetchAllSites call if it exists
     const errorMessage = error.message || 'Internal Server Error';
-    res.status(500).json({ message: errorMessage });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
 
-export default handler;
