@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useCallback, useRef, Fragment } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { read, utils } from 'xlsx';
-import { parseFile } from '../../../src/parsers/parseFile';
+import { parseFile, tradingSummaries as computeTradingSummaries, headlineResults as computeHeadlineResults } from '@abitat/bng/browser';
 import {
   Box, Text, VStack, HStack, Heading, Badge, Tabs, Spinner, SimpleGrid,
 } from '@chakra-ui/react';
@@ -158,45 +158,6 @@ function extractStartData(workbook) {
   return extractSheetRows(workbook, 'Start');
 }
 
-/**
- * Read a trading summary sheet and return only rows that contain actual data.
- * Keeps rows where at least one cell (beyond the first label column) is a
- * non-zero, non-blank value, OR where the row looks like a summary/total row.
- */
-function extractTradingRows(workbook, sheetName) {
-  const allRows = extractSheetRows(workbook, sheetName);
-  if (allRows.length === 0) return [];
-
-  // Always keep the first row (column headers) regardless of content
-  const headerRow = allRows[0];
-  const dataRows = allRows.slice(1).filter((row) => {
-    if (!Array.isArray(row)) return false;
-    // Always keep summary/total rows
-    const rowText = row.map((c) => String(c ?? '').toLowerCase()).join(' ');
-    if (rowText.includes('total') || rowText.includes('shortfall') || rowText.includes('surplus')) {
-      return true;
-    }
-    // Keep rows where at least one cell after the first is a non-zero numeric value
-    return row.slice(1).some((cell) => {
-      const s = String(cell ?? '').trim();
-      if (s === '' || s === '0' || s === '0.0' || s === '0.00') return false;
-      return !isNaN(parseFloat(s));
-    });
-  });
-
-  // Only return header + data if there is at least one data row
-  return dataRows.length > 0 ? [headerRow, ...dataRows] : [];
-}
-
-/** Split an array into chunks of `size` elements. */
-function chunkArray(arr, size) {
-  const result = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
-  }
-  return result;
-}
-
 function countFeatureRows(features) {
   return Object.values(features).reduce(
     (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0),
@@ -307,10 +268,10 @@ function SectionBlock({ title, rows, columns }) {
 }
 
 // ============================================================
-// START SHEET TABLE
+// START SHEET TABLE (flat display of raw sheet data)
 // ============================================================
 
-function StartDataTable({ rows, hasHeader = false, grouped = false }) {
+function StartDataTable({ rows }) {
   if (!rows || rows.length === 0) {
     return (
       <Text color="fg.muted" fontStyle="italic" fontSize="sm">
@@ -324,498 +285,240 @@ function StartDataTable({ rows, hasHeader = false, grouped = false }) {
     10
   );
 
-  const headerRow = hasHeader ? rows[0] : null;
-  const bodyRows = hasHeader ? rows.slice(1) : rows;
-
-  const renderDataCell = (cellStr, colIdx, isLabelRow, extraProps = {}) => {
-    const isNumeric =
-      cellStr !== '' &&
-      !isNaN(parseFloat(cellStr)) &&
-      isFinite(cellStr.replace(/,/g, ''));
-    const isPercent = /^-?[\d,.]+%$/.test(cellStr.trim());
-    const isNegativePercent = isPercent && cellStr.trim().startsWith('-');
-    const isNegative = (isNumeric && parseFloat(cellStr) < 0) || isNegativePercent;
-    const isCentred = isNumeric || isPercent;
-    return (
-      <DataTable.Cell
-        key={colIdx}
-        textAlign={isCentred ? 'center' : 'left'}
-        fontFamily={isCentred ? 'mono' : undefined}
-        color={isNegative ? 'red.600' : undefined}
-        fontWeight={
-          isLabelRow && colIdx === 0
-            ? '800'
-            : !isNumeric && cellStr && colIdx <= 1
-            ? '500'
-            : 'normal'
-        }
-        {...extraProps}
-      >
-        {isNumeric ? fmt2dp(cellStr) : cellStr}
-      </DataTable.Cell>
-    );
-  };
-
-  const renderBodyRow = (row, rowIdx) => {
-    const cells = Array.from({ length: maxCols }, (_, colIdx) => {
-      const val = row[colIdx];
-      return val !== null && val !== undefined ? String(val).trim() : '';
-    });
-    const isLabelRow = cells[0] !== '' && cells[1] === '' && cells[2] === '';
-    return (
-      <DataTable.Row key={rowIdx}>
-        {cells.map((cellStr, colIdx) => renderDataCell(cellStr, colIdx, isLabelRow))}
-      </DataTable.Row>
-    );
-  };
-
-  // ── Grouped mode: wrap each section in a bordered card ──────────
-  if (grouped) {
-    const getCells = (row) =>
-      Array.from({ length: maxCols }, (_, i) => {
-        const v = row[i];
-        return v != null ? String(v).trim() : '';
-      });
-
-    // Split body rows into sections by detecting label rows
-    const sections = [];
-    let currentSection = null;
-
-    for (const row of bodyRows) {
-      const cells = getCells(row);
-      const isLabelRow = cells[0] !== '' && cells[1] === '' && cells[2] === '';
-
-      if (isLabelRow) {
-        if (currentSection) sections.push(currentSection);
-        currentSection = { title: cells[0], rows: [] };
-      } else if (currentSection) {
-        currentSection.rows.push(cells);
-      } else {
-        // Data before any section header — attach to an unnamed section
-        if (!sections.length) sections.push({ title: null, rows: [] });
-        sections[sections.length - 1].rows.push(cells);
-      }
-    }
-    if (currentSection) sections.push(currentSection);
-
-    return (
-      <VStack gap={4} align="start" width="100%">
-        {sections.map((section, sIdx) => (
-          <Box
-            key={sIdx}
-            border="1px solid"
-            borderColor="border"
-            borderRadius="md"
-            overflow="hidden"
-            width="100%"
-          >
-            {section.title && (
-              <Box bg="brand.500" px={3} py={2}>
-                <Text color="white" fontWeight="700" fontSize="sm">
-                  {section.title}
-                </Text>
-              </Box>
-            )}
-            {section.rows.length > 0 && (() => {
-              // Compute active columns across the whole section
-              const sectionColSet = new Set();
-              for (const cells of section.rows) {
-                cells.forEach((cellStr, i) => {
-                  if (cellStr !== '') sectionColSet.add(i);
-                });
-              }
-              const sectionActiveCols = [...sectionColSet].sort((a, b) => a - b);
-
-              // Remove spacer rows — rows with no content in any section-active column
-              const meaningfulRows = section.rows.filter((cells) =>
-                sectionActiveCols.some((colIdx) => (cells[colIdx] ?? '') !== '')
-              );
-
-              if (meaningfulRows.length === 0) return null;
-
-              // Merge an incomplete last chunk (< 3 rows) into the previous
-              // chunk so the watercourse/final row is never isolated.
-              const rawChunks = chunkArray(meaningfulRows, 3);
-              const mergedChunks =
-                rawChunks.length > 1 &&
-                rawChunks[rawChunks.length - 1].length < 4
-                  ? [
-                      ...rawChunks.slice(0, -2),
-                      [
-                        ...rawChunks[rawChunks.length - 2],
-                        ...rawChunks[rawChunks.length - 1],
-                      ],
-                    ]
-                  : rawChunks;
-
-              return (
-                <VStack gap={0} p={2}>
-                  {mergedChunks.map((chunk, chunkIdx) => {
-                    // First chunk: use only its own data columns (may be 1 col).
-                    // All subsequent chunks: use the full section columns so every
-                    // non-first chunk is guaranteed to show all 4 value columns.
-                    let activeCols;
-                    if (chunkIdx === 0) {
-                      const chunkColSet = new Set();
-                      for (const cells of chunk) {
-                        cells.forEach((cellStr, i) => {
-                          if (cellStr !== '') chunkColSet.add(i);
-                        });
-                      }
-                      activeCols = [...chunkColSet].sort((a, b) => a - b);
-                    } else {
-                      activeCols = sectionActiveCols;
-                    }
-
-                    return (
-                      <Box
-                        key={chunkIdx}
-                        borderStyle="double"
-                        borderWidth="3px"
-                        borderColor="border"
-                        borderRadius="sm"
-                        overflow="hidden"
-                        width="100%"
-                        mt={chunkIdx > 0 ? 2 : 0}
-                      >
-                        <TableContainer>
-                          <DataTable.Root tableLayout="fixed" width="100%">
-                            <DataTable.Body>
-                              {chunk.map((cells, rowIdx) => (
-                                <DataTable.Row key={rowIdx}>
-                                  {activeCols.map((colIdx, activeIdx) => {
-                                    const colProps =
-                                      activeIdx === 0 && activeCols.length > 1
-                                        ? { width: '280px' }
-                                        : activeIdx === 1 && activeCols.length > 1
-                                        ? { width: '150px' }
-                                        : activeIdx === 2 && activeCols.length > 2
-                                        ? { width: '150px' }
-                                        : activeIdx === 3 && activeCols.length > 3
-                                        ? { width: '150px' }
-                                        : {};
-                                    return renderDataCell(
-                                      cells[colIdx] ?? '',
-                                      colIdx,
-                                      colIdx === 0,
-                                      colProps
-                                    );
-                                  })}
-                                </DataTable.Row>
-                              ))}
-                            </DataTable.Body>
-                          </DataTable.Root>
-                        </TableContainer>
-                      </Box>
-                    );
-                  })}
-                </VStack>
-              );
-            })()}
-          </Box>
-        ))}
-      </VStack>
-    );
-  }
-
-  // ── Flat mode (default) ──────────────────────────────────────────
-  return (
-    <TableContainer>
-      <DataTable.Root>
-        {hasHeader && headerRow && (
-          <DataTable.Header>
-            <DataTable.Row>
-              {Array.from({ length: maxCols }, (_, colIdx) => {
-                const val = headerRow[colIdx];
-                const cellStr = val !== null && val !== undefined ? String(val).trim() : '';
-                return (
-                  <DataTable.ColumnHeader key={colIdx}>
-                    {cellStr}
-                  </DataTable.ColumnHeader>
-                );
-              })}
-            </DataTable.Row>
-          </DataTable.Header>
-        )}
-        <DataTable.Body>
-          {bodyRows.map((row, rowIdx) => renderBodyRow(row, rowIdx))}
-        </DataTable.Body>
-      </DataTable.Root>
-    </TableContainer>
-  );
-}
-
-// ============================================================
-// HEADLINE RESULTS DISPLAY
-// Section titles span multiple unit-type rows via rowSpan,
-// matching the original metric sheet layout.
-// ============================================================
-
-function HeadlineResultsDisplay({ rows }) {
-  if (!rows || rows.length === 0) {
-    return (
-      <Text color="fg.muted" fontStyle="italic" fontSize="sm">
-        No data found in the Headline Results sheet.
-      </Text>
-    );
-  }
-
-  const maxCols = Math.min(
-    Math.max(...rows.map((r) => (Array.isArray(r) ? r.length : 0))),
-    10
-  );
-
-  // Build string cell arrays
-  const allCells = rows.map((row) =>
-    Array.from({ length: maxCols }, (_, i) => {
-      const v = row[i];
-      return v != null ? String(v).trim() : '';
-    })
-  );
-
-  // Find active columns excluding col 0 (the title column)
-  const colSet = new Set();
-  for (const cells of allCells) {
-    cells.forEach((cellStr, i) => {
-      if (i > 0 && cellStr !== '') colSet.add(i);
-    });
-  }
-  const valueCols = [...colSet].sort((a, b) => a - b);
-
-  // Group rows: a new group starts when cells[0] is non-empty
-  const groups = [];
-  let currentGroup = null;
-  for (const cells of allCells) {
-    if (cells[0] !== '') {
-      if (currentGroup) groups.push(currentGroup);
-      currentGroup = { rows: [cells] };
-    } else if (currentGroup) {
-      currentGroup.rows.push(cells);
-    } else {
-      if (!groups.length) groups.push({ rows: [] });
-      groups[groups.length - 1].rows.push(cells);
-    }
-  }
-  if (currentGroup) groups.push(currentGroup);
-
-  const renderValueCell = (cellStr, colIdx, bold = false) => {
-    const isNumeric = cellStr !== '' && !isNaN(parseFloat(cellStr)) && isFinite(cellStr.replace(/,/g, ''));
-    const isPercent = /^-?[\d,.]+%$/.test(cellStr.trim());
-    const isNegativePercent = isPercent && cellStr.trim().startsWith('-');
-    const isNegative = (isNumeric && parseFloat(cellStr) < 0) || isNegativePercent;
-    const isCentred = isNumeric || isPercent;
-    return (
-      <DataTable.Cell
-        key={colIdx}
-        textAlign={isCentred ? 'center' : 'left'}
-        fontFamily={isCentred ? 'mono' : undefined}
-        color={isNegative ? 'red.600' : undefined}
-        fontWeight={bold ? '700' : 'normal'}
-        fontSize="0.875rem"
-      >
-        {isNumeric ? fmt2dp(cellStr) : cellStr}
-      </DataTable.Cell>
-    );
-  };
-
-  // Flatten all group rows into a single list with group metadata for styling
-  const flatRows = groups.flatMap((group) => {
-    const titleText = group.rows[0] ? group.rows[0][0] : '';
-    const isFinal = titleText.toLowerCase().includes('final result');
-    return group.rows.map((cells, rIdx) => ({
-      cells,
-      isFirstInGroup: rIdx === 0,
-      isFinal,
-      groupIdx: groups.indexOf(group),
-    }));
-  });
-
   return (
     <TableContainer>
       <DataTable.Root>
         <DataTable.Body>
-          {flatRows.map((item, globalIdx) => {
-            // Every 3rd row gets a thick bottom border, with manual adjustments
-            // for rows 34→35, 37→38 and the 7th-last / 8th-last rows.
-            const total = flatRows.length;
-            const isEvery3rd =
-              ((globalIdx + 1) % 3 === 0 &&
-                globalIdx !== 33 &&
-                globalIdx !== 36 &&
-                globalIdx !== total - 8 &&
-                globalIdx !== total - 11) ||
-              globalIdx === 34 ||
-              globalIdx === 37 ||
-              globalIdx === total - 7 ||
-              globalIdx === total - 10;
-            return (
-              <DataTable.Row
-                key={globalIdx}
-                borderTop={item.isFirstInGroup && item.groupIdx > 0 ? '2px solid' : undefined}
-                borderTopColor="subtleBorder"
-                borderBottom={isEvery3rd ? '3px solid' : undefined}
-                borderBottomColor={isEvery3rd ? 'border' : undefined}
-                bg={item.isFinal ? 'rgba(184,161,98,0.12)' : undefined}
-              >
-                {valueCols.map((colIdx) =>
-                  renderValueCell(item.cells[colIdx] ?? '', colIdx, item.isFinal)
-                )}
-              </DataTable.Row>
-            );
-          })}
-        </DataTable.Body>
-      </DataTable.Root>
-    </TableContainer>
-  );
-}
-
-// ============================================================
-// TRADING DATA SECTION
-// Column headers shown once; each distinctiveness band gets a
-// branded sub-header row; summary rows styled at the bottom.
-// ============================================================
-
-function TradingDataSection({ rows, habitatGroup = '' }) {
-  if (!rows || rows.length < 2) {
-    return (
-      <Text color="fg.muted" fontStyle="italic" fontSize="sm">
-        No trading data found.
-      </Text>
-    );
-  }
-
-  const maxCols = Math.min(
-    Math.max(...rows.map((r) => (Array.isArray(r) ? r.length : 0))),
-    12
-  );
-
-  // Row 0 = column headers
-  const headerCells = Array.from({ length: maxCols }, (_, i) => {
-    const v = rows[0][i];
-    return v != null ? String(v).trim() : '';
-  });
-
-  // Parse remaining rows into typed groups
-  const parsedRows = rows.slice(1).map((row) => {
-    const cells = Array.from({ length: maxCols }, (_, i) => {
-      const v = row[i];
-      return v != null ? String(v).trim() : '';
-    });
-    const first = cells[0].toLowerCase();
-    const isSummary =
-      first.includes('total') ||
-      first.includes('shortfall') ||
-      first.includes('surplus');
-    const isNumericFirst =
-      cells[0] !== '' &&
-      !isNaN(parseFloat(cells[0])) &&
-      isFinite(cells[0].replace(/,/g, ''));
-    // A group-header row: non-empty, non-numeric first cell, not a summary
-    const isGroupHeader = cells[0] !== '' && !isNumericFirst && !isSummary;
-    return { cells, isGroupHeader, isSummary };
-  });
-
-  const renderCells = (cells, bold = false) =>
-    cells.map((cellStr, colIdx) => {
-      const isNumeric =
-        cellStr !== '' &&
-        !isNaN(parseFloat(cellStr)) &&
-        isFinite(cellStr.replace(/,/g, ''));
-      const isNegative = isNumeric && parseFloat(cellStr) < 0;
-      return (
-        <DataTable.Cell
-          key={colIdx}
-          textAlign={isNumeric ? 'center' : 'left'}
-          fontFamily={isNumeric ? 'mono' : undefined}
-          fontWeight={bold ? '700' : 'normal'}
-          color={isNegative ? 'red.600' : undefined}
-        >
-          {isNumeric ? fmt2dp(cellStr) : cellStr}
-        </DataTable.Cell>
-      );
-    });
-
-  let groupIndex = -1;
-
-  return (
-    <TableContainer>
-      <DataTable.Root>
-        <DataTable.Header>
-          <DataTable.Row>
-            {/* Skip column 0 — it's the distinctiveness label column */}
-            {headerCells.slice(1).map((label, i) => (
-              <DataTable.ColumnHeader key={i} fontWeight="700">{label}</DataTable.ColumnHeader>
-            ))}
-          </DataTable.Row>
-        </DataTable.Header>
-        <DataTable.Body>
-          {parsedRows.map((parsed, rowIdx) => {
-            if (parsed.isGroupHeader) {
-              groupIndex++;
-              const dataCols = maxCols - 1;
-              return (
-                <Fragment key={rowIdx}>
-                  {/* Full-width green row showing the distinctiveness type name */}
-                  <DataTable.Row>
-                    <DataTable.Cell
-                      colSpan={dataCols}
-                      bg="brand.500"
-                      color="white"
-                      fontWeight="700"
-                      fontSize="0.9rem"
-                      py={2}
-                      borderTop={groupIndex > 0 ? '3px solid' : undefined}
-                      borderTopColor="border"
-                    >
-                      {habitatGroup ? `${habitatGroup} — ${parsed.cells[0]}` : parsed.cells[0]}
-                    </DataTable.Cell>
-                  </DataTable.Row>
-                  {/* Data row — skip first cell (the distinctiveness name shown above) */}
-                  <DataTable.Row>
-                    {parsed.cells.slice(1).map((cellStr, i) => {
-                      const isNumeric =
-                        cellStr !== '' &&
-                        !isNaN(parseFloat(cellStr)) &&
-                        isFinite(cellStr.replace(/,/g, ''));
-                      const isNegative = isNumeric && parseFloat(cellStr) < 0;
-                      return (
-                        <DataTable.Cell
-                          key={i}
-                          textAlign={isNumeric ? 'center' : 'left'}
-                          fontFamily={isNumeric ? 'mono' : undefined}
-                          color={isNegative ? 'red.600' : undefined}
-                        >
-                          {isNumeric ? fmt2dp(cellStr) : cellStr}
-                        </DataTable.Cell>
-                      );
-                    })}
-                  </DataTable.Row>
-                </Fragment>
-              );
-            }
-
-            if (parsed.isSummary) {
-              return (
-                <DataTable.Row
-                  key={rowIdx}
-                  borderTop="3px solid"
-                  borderTopColor="border"
-                >
-                  {renderCells(parsed.cells.slice(1), true)}
-                </DataTable.Row>
-              );
-            }
-
-            // Regular sub-row — skip first cell
+          {rows.map((row, rowIdx) => {
+            const cells = Array.from({ length: maxCols }, (_, colIdx) => {
+              const val = row[colIdx];
+              return val !== null && val !== undefined ? String(val).trim() : '';
+            });
+            const isLabelRow = cells[0] !== '' && cells[1] === '' && cells[2] === '';
             return (
               <DataTable.Row key={rowIdx}>
-                {renderCells(parsed.cells.slice(1))}
+                {cells.map((cellStr, colIdx) => {
+                  const isNumeric = cellStr !== '' && !isNaN(parseFloat(cellStr)) && isFinite(cellStr.replace(/,/g, ''));
+                  const isPercent = /^-?[\d,.]+%$/.test(cellStr.trim());
+                  const isNegative = (isNumeric && parseFloat(cellStr) < 0) || (isPercent && cellStr.startsWith('-'));
+                  const isCentred = isNumeric || isPercent;
+                  return (
+                    <DataTable.Cell
+                      key={colIdx}
+                      textAlign={isCentred ? 'center' : 'left'}
+                      fontFamily={isCentred ? 'mono' : undefined}
+                      color={isNegative ? 'red.600' : undefined}
+                      fontWeight={
+                        isLabelRow && colIdx === 0 ? '800'
+                        : !isNumeric && cellStr && colIdx <= 1 ? '500'
+                        : 'normal'
+                      }
+                    >
+                      {isNumeric ? fmt2dp(cellStr) : cellStr}
+                    </DataTable.Cell>
+                  );
+                })}
               </DataTable.Row>
             );
           })}
         </DataTable.Body>
       </DataTable.Root>
     </TableContainer>
+  );
+}
+
+// ============================================================
+// COMPUTED HEADLINE RESULTS
+// Uses the headlineResults() function from @abitat/bng
+// ============================================================
+
+function ComputedHeadlineResults({ hr }) {
+  if (!hr) {
+    return (
+      <Text color="fg.muted" fontStyle="italic" fontSize="sm">
+        No headline results available.
+      </Text>
+    );
+  }
+
+  const fmtN = (n) => {
+    if (n === undefined || n === null || (typeof n === 'string' && n === 'N/A')) return '—';
+    if (!Number.isFinite(n)) return '—';
+    return n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  const fmtP = (n) => {
+    if (!Number.isFinite(n)) return '—';
+    return `${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
+  };
+  const numColor = (n) => (typeof n === 'number' && n < 0 ? 'red.600' : undefined);
+  const pctColor = (n) => (typeof n === 'number' && n < 0 ? 'red.600' : n > 0 ? 'green.600' : undefined);
+
+  const NC = ({ v }) => (
+    <DataTable.CenteredNumericCell color={numColor(v)} fontSize="0.875rem">{fmtN(v)}</DataTable.CenteredNumericCell>
+  );
+  const PC = ({ v }) => (
+    <DataTable.CenteredNumericCell color={pctColor(v)} fontSize="0.875rem">{fmtP(v)}</DataTable.CenteredNumericCell>
+  );
+
+  const LabelCell = ({ children, subtitle, isFinal }) => (
+    <DataTable.Cell fontWeight={isFinal ? '700' : '600'} fontSize="0.9rem">
+      {children}
+      {subtitle && <Text as="span" display="block" fontSize="0.72rem" fontWeight="400" color="fg.muted" mt="2px" fontStyle="italic">{subtitle}</Text>}
+    </DataTable.Cell>
+  );
+
+  const SepRow = () => (
+    <DataTable.Row><DataTable.Cell colSpan={4} py={1} borderBottom="2px solid" borderBottomColor="subtleBorder" /></DataTable.Row>
+  );
+  const FinalHeader = () => (
+    <DataTable.Row>
+      <DataTable.Cell colSpan={4} bg="brand.500" color="white" fontWeight="900" textAlign="center" py={2} fontSize="1rem">
+        FINAL RESULTS
+      </DataTable.Cell>
+    </DataTable.Row>
+  );
+
+  return (
+    <VStack gap={4} align="start" width="100%">
+      <TableContainer width="100%">
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader textAlign="left" fontWeight="700">Section</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Area habitat units</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Hedgerow units</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Watercourse units</DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            <DataTable.Row><LabelCell>On-site baseline</LabelCell><NC v={hr.onSiteHabitatBaseline} /><NC v={hr.onSiteHedgerowBaseline} /><NC v={hr.onSiteWatercourseBaseline} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="Including habitat retention, creation & enhancement">On-site post-intervention</LabelCell><NC v={hr.onSiteHabitatPostIntervention} /><NC v={hr.onSiteHedgerowPostIntervention} /><NC v={hr.onSiteWatercoursePostIntervention} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="units">On-site net change</LabelCell><NC v={hr.onSiteHabitatNetChange.units} /><NC v={hr.onSiteHedgerowNetChange.units} /><NC v={hr.onSiteWatercourseNetChange.units} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="percentage">On-site net change</LabelCell><PC v={hr.onSiteHabitatNetChange.percentage} /><PC v={hr.onSiteHedgerowNetChange.percentage} /><PC v={hr.onSiteWatercourseNetChange.percentage} /></DataTable.Row>
+            <SepRow />
+            <DataTable.Row><LabelCell>Off-site baseline</LabelCell><NC v={hr.offSiteHabitatBaseline} /><NC v={hr.offSiteHedgerowBaseline} /><NC v={hr.offSiteWatercourseBaseline} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="Including habitat retention, creation & enhancement">Off-site post-intervention</LabelCell><NC v={hr.offSiteHabitatPostIntervention} /><NC v={hr.offSiteHedgerowPostIntervention} /><NC v={hr.offSiteWatercoursePostIntervention} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="units">Off-site net change</LabelCell><NC v={hr.offSiteHabitatNetChange.units} /><NC v={hr.offSiteHedgerowNetChange.units} /><NC v={hr.offSiteWatercourseNetChange.units} /></DataTable.Row>
+            <DataTable.Row><LabelCell subtitle="percentage">Off-site net change</LabelCell><PC v={hr.offSiteHabitatNetChange.percentage} /><PC v={hr.offSiteHedgerowNetChange.percentage} /><PC v={hr.offSiteWatercourseNetChange.percentage} /></DataTable.Row>
+            <SepRow />
+            <DataTable.Row><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement">Combined net unit change</LabelCell><NC v={hr.combinedNetUnitChange.habitat} /><NC v={hr.combinedNetUnitChange.hedgerow} /><NC v={hr.combinedNetUnitChange.watercourse} /></DataTable.Row>
+            <DataTable.Row><LabelCell>Spatial risk multiplier (SRM) deductions</LabelCell><NC v={hr.totalSRMDeductions.habitat} /><NC v={hr.totalSRMDeductions.hedgerow} /><NC v={hr.totalSRMDeductions.watercourse} /></DataTable.Row>
+            <FinalHeader />
+            <DataTable.Row bg="rgba(184,161,98,0.12)"><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement" isFinal>Total net unit change</LabelCell><NC v={hr.totalNetUnitChange.habitat} /><NC v={hr.totalNetUnitChange.hedgerow} /><NC v={hr.totalNetUnitChange.watercourse} /></DataTable.Row>
+            <DataTable.Row bg="rgba(184,161,98,0.12)"><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement" isFinal>Total net % change</LabelCell><PC v={hr.totalNetPercentageChange.habitat} /><PC v={hr.totalNetPercentageChange.hedgerow} /><PC v={hr.totalNetPercentageChange.watercourse} /></DataTable.Row>
+            <DataTable.Row bg="rgba(184,161,98,0.12)">
+              <DataTable.Cell fontWeight="700">Trading rules satisfied?</DataTable.Cell>
+              <DataTable.Cell colSpan={3} textAlign="center" fontWeight="700" color={hr.tradingRulesSatisfied ? 'green.600' : 'red.600'}>
+                {hr.tradingRulesSatisfied ? '✓ Yes — Trading Rules Satisfied' : '✗ No — Check Trading Summaries'}
+              </DataTable.Cell>
+            </DataTable.Row>
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+
+      {/* Unit deficit summary */}
+      <Heading as="h3" size="sm" mt={2}>Unit Deficit Summary</Heading>
+      <TableContainer width="100%">
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader textAlign="left" fontWeight="700">Unit Type</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Target</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Baseline Units</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Units Required</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Unit Deficit</DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            {[
+              { label: 'Area habitat units', s: hr.habitatUnitSummary },
+              { label: 'Hedgerow units', s: hr.hedgerowUnitSummary },
+              { label: 'Watercourse units', s: hr.watercourseUnitSummary },
+            ].map(({ label, s }) => (
+              <DataTable.Row key={label}>
+                <DataTable.Cell fontStyle="italic">{label}</DataTable.Cell>
+                <DataTable.CenteredNumericCell>{fmtP(s.target)}</DataTable.CenteredNumericCell>
+                <DataTable.CenteredNumericCell>{fmtN(s.baselineUnits)}</DataTable.CenteredNumericCell>
+                <DataTable.CenteredNumericCell>{fmtN(s.requiredUnits)}</DataTable.CenteredNumericCell>
+                <DataTable.CenteredNumericCell color={s.unitDeficit > 0 ? 'red.600' : undefined}>{fmtN(s.unitDeficit)}</DataTable.CenteredNumericCell>
+              </DataTable.Row>
+            ))}
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+    </VStack>
+  );
+}
+
+// ============================================================
+// COMPUTED TRADING SUMMARIES
+// Uses the tradingSummaries() function from @abitat/bng
+// ============================================================
+
+function ComputedTradingSummaries({ ts }) {
+  if (!ts) {
+    return (
+      <Text color="fg.muted" fontStyle="italic" fontSize="sm">
+        No trading summaries available.
+      </Text>
+    );
+  }
+
+  const fmtN = (n) => {
+    if (!Number.isFinite(n)) return '—';
+    return n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  const renderSection = (title, summary) => {
+    const { details, vHighSatisfied, highSatisfied, mediumSatisfied, lowSatisfied } = summary;
+    const bands = [
+      { label: 'Very High Distinctiveness', key: 'vHigh', satisfied: vHighSatisfied, detail: details.vHigh },
+      { label: 'High Distinctiveness', key: 'high', satisfied: highSatisfied, detail: details.high },
+      { label: 'Medium Distinctiveness', key: 'medium', satisfied: mediumSatisfied, detail: details.medium },
+      { label: 'Low Distinctiveness', key: 'low', satisfied: lowSatisfied, detail: details.low },
+    ];
+
+    return (
+      <Box width="100%">
+        <Heading as="h3" size="md" mb={3}>{title}</Heading>
+        <TableContainer>
+          <DataTable.Root>
+            <DataTable.Header>
+              <DataTable.Row>
+                <DataTable.ColumnHeader textAlign="left" fontWeight="700">Distinctiveness Band</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader fontWeight="700">Trading Rule</DataTable.ColumnHeader>
+                <DataTable.ColumnHeader fontWeight="700">Detail</DataTable.ColumnHeader>
+              </DataTable.Row>
+            </DataTable.Header>
+            <DataTable.Body>
+              {bands.map(({ label, key, satisfied, detail }) => (
+                <DataTable.Row key={key}>
+                  <DataTable.Cell fontWeight="600">{label}</DataTable.Cell>
+                  <DataTable.Cell textAlign="center" fontWeight="700" color={satisfied ? 'green.600' : 'red.600'}>
+                    {satisfied ? '✓ Satisfied' : '✗ Not satisfied'}
+                  </DataTable.Cell>
+                  <DataTable.Cell fontSize="0.85rem" color="fg.muted">
+                    {detail && Object.entries(detail).map(([k, v]) => (
+                      <Text key={k} as="span" display="block">
+                        {k.replace(/([A-Z])/g, ' $1').toLowerCase()}: <Text as="span" fontFamily="mono" color={typeof v === 'number' && v < 0 ? 'red.600' : undefined}>{fmtN(v)}</Text>
+                      </Text>
+                    ))}
+                  </DataTable.Cell>
+                </DataTable.Row>
+              ))}
+            </DataTable.Body>
+          </DataTable.Root>
+        </TableContainer>
+      </Box>
+    );
+  };
+
+  return (
+    <VStack gap={8} align="start" width="100%">
+      {renderSection('Area Habitats Trading Summary', ts.habitats)}
+      {renderSection('Hedgerow Habitats Trading Summary', ts.hedgerows)}
+      {renderSection('Watercourse Habitats Trading Summary', ts.watercourses)}
+    </VStack>
   );
 }
 
@@ -1007,7 +710,7 @@ function tabRowCount(features, keys) {
 }
 
 function ResultsView({ result, onReset }) {
-  const { fileName, fileSize, startRows, headlineRows, tradingSummary, features } = result;
+  const { fileName, fileSize, startRows, hr, ts, features } = result;
   const totalRows = countFeatureRows(features);
 
   const areaHabitatCount = tabRowCount(features, [
@@ -1123,51 +826,14 @@ function ResultsView({ result, onReset }) {
         {/* ── Headline Results ─────────────────────────────────── */}
         <Tabs.Content value="headline-results">
           <Box py={5}>
-            <HeadlineResultsDisplay rows={headlineRows} />
+            <ComputedHeadlineResults hr={hr} />
           </Box>
         </Tabs.Content>
 
         {/* ── Trading Summary ──────────────────────────────────── */}
         <Tabs.Content value="trading-summary">
           <Box py={5}>
-            <VStack align="start" gap={8}>
-              <Box width="100%">
-                <Heading as="h3" size="md" mb={3}>
-                  Area Habitats Trading Summary
-                </Heading>
-                {tradingSummary?.area?.length > 0 ? (
-                  <TradingDataSection rows={tradingSummary.area} habitatGroup="Area Habitats" />
-                ) : (
-                  <Text color="fg.muted" fontStyle="italic" fontSize="sm">
-                    No area habitat trading data with non-zero values found.
-                  </Text>
-                )}
-              </Box>
-              <Box width="100%">
-                <Heading as="h3" size="md" mb={3}>
-                  Hedgerow Habitats Trading Summary
-                </Heading>
-                {tradingSummary?.hedgerows?.length > 0 ? (
-                  <TradingDataSection rows={tradingSummary.hedgerows} habitatGroup="Hedgerow Habitats" />
-                ) : (
-                  <Text color="fg.muted" fontStyle="italic" fontSize="sm">
-                    No hedgerow trading data with non-zero values found.
-                  </Text>
-                )}
-              </Box>
-              <Box width="100%">
-                <Heading as="h3" size="md" mb={3}>
-                  Watercourse Habitats Trading Summary
-                </Heading>
-                {tradingSummary?.watercourses?.length > 0 ? (
-                  <TradingDataSection rows={tradingSummary.watercourses} habitatGroup="Watercourse Habitats" />
-                ) : (
-                  <Text color="fg.muted" fontStyle="italic" fontSize="sm">
-                    No watercourse trading data with non-zero values found.
-                  </Text>
-                )}
-              </Box>
-            </VStack>
+            <ComputedTradingSummaries ts={ts} />
           </Box>
         </Tabs.Content>
 
@@ -1330,36 +996,28 @@ export default function MetricFileUpload() {
     try {
       const buffer = await file.arrayBuffer();
 
-      // Read raw sheets for display
+      // Read Start sheet for project metadata
       const rawWorkbook = read(buffer, {
-        sheets: [
-          'Start',
-          'Headline Results',
-          'Trading Summary Area Habitats',
-          'Trading Summary Hedgerows',
-          "Trading Summary WaterC's",
-        ],
+        sheets: ['Start'],
         cellDates: false,
         cellNF: false,
         cellHTML: false,
       });
       const startRows = extractStartData(rawWorkbook);
-      const headlineRows = extractSheetRows(rawWorkbook, 'Headline Results');
-      const tradingSummary = {
-        area:        extractTradingRows(rawWorkbook, 'Trading Summary Area Habitats'),
-        hedgerows:   extractTradingRows(rawWorkbook, 'Trading Summary Hedgerows'),
-        watercourses: extractTradingRows(rawWorkbook, "Trading Summary WaterC's"),
-      };
 
-      // Parse all feature data rows (lenient mode tolerates real-world imperfections)
+      // Parse all feature data rows using @abitat/bng
       const features = parseFile(buffer, { validate: false });
+
+      // Compute trading summaries and headline results from parsed features
+      const ts = computeTradingSummaries(features);
+      const hr = computeHeadlineResults(features, ts);
 
       setResult({
         fileName: file.name,
         fileSize: file.size,
         startRows,
-        headlineRows,
-        tradingSummary,
+        hr,
+        ts,
         features,
       });
     } catch (err) {
