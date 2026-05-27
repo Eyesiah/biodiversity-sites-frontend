@@ -10,6 +10,7 @@ import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { DataTable } from '@/components/styles/DataTable';
 import Button from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
+import Modal from '@/components/ui/Modal';
 
 // ============================================================
 // COLUMN DEFINITIONS
@@ -166,13 +167,20 @@ function countFeatureRows(features) {
 }
 
 // ============================================================
-// FEATURE TABLE (with sortable column headers)
+// FEATURE TABLE (with sortable column headers + comments modal)
 // ============================================================
+
+const COMMENT_FIELDS = [
+  { key: 'habitatReferenceNumber', label: 'Habitat Reference Number', inline: true },
+  { key: 'userComments', label: 'User Comments' },
+  { key: 'planningAuthorityComments', label: 'Planning Authority Comments' },
+];
 
 function FeatureTable({ rows, columns }) {
   const { items: sortedRows, requestSort, getSortIndicator } = useSortableData(
     rows || []
   );
+  const [selectedRow, setSelectedRow] = useState(null);
 
   if (!rows || rows.length === 0) {
     return (
@@ -184,61 +192,136 @@ function FeatureTable({ rows, columns }) {
     );
   }
 
+  // Only show the comments column if at least one row has any comments
+  const hasAnyComments = sortedRows.some((row) =>
+    COMMENT_FIELDS.some(({ key }) => row[key] && String(row[key]).trim() !== '')
+  );
+
+  const getRowTitle = (row) => {
+    const label = row.habitatType || row.broadHabitat || '';
+    return label || 'Habitat Row';
+  };
+
   return (
-    <TableContainer>
-      <DataTable.Root>
-        <DataTable.Header>
-          <DataTable.Row>
-            <DataTable.ColumnHeader width="3rem" textAlign="center">
-              #
-            </DataTable.ColumnHeader>
-            {columns.map((col) => (
-              <DataTable.ColumnHeader
-                key={col.key}
-                onClick={() => requestSort(col.key)}
-              >
-                {col.label}{getSortIndicator(col.key)}
+    <>
+      <TableContainer>
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader width="3rem" textAlign="center">
+                #
               </DataTable.ColumnHeader>
-            ))}
-          </DataTable.Row>
-        </DataTable.Header>
-        <DataTable.Body>
-          {sortedRows.map((row, i) => (
-            <DataTable.Row key={i}>
-              <DataTable.CenteredNumericCell color="fg.muted" fontWeight="500">
-                {i + 1}
-              </DataTable.CenteredNumericCell>
-              {columns.map((col) => {
-                const val = row[col.key];
-                const isNumeric = typeof val === 'number' && Number.isFinite(val);
-                if (isNumeric) {
-                  return (
-                    <DataTable.CenteredNumericCell
-                      key={col.key}
-                      color={val < 0 ? 'red.600' : undefined}
-                    >
-                      {formatCellValue(val)}
-                    </DataTable.CenteredNumericCell>
-                  );
-                }
-                if (col.centered) {
-                  return (
-                    <DataTable.Cell key={col.key} textAlign="center">
-                      {formatCellValue(val)}
-                    </DataTable.Cell>
-                  );
-                }
-                return (
-                  <DataTable.Cell key={col.key}>
-                    {formatCellValue(val)}
-                  </DataTable.Cell>
-                );
-              })}
+              {columns.map((col) => (
+                <DataTable.ColumnHeader
+                  key={col.key}
+                  onClick={() => requestSort(col.key)}
+                >
+                  {col.label}{getSortIndicator(col.key)}
+                </DataTable.ColumnHeader>
+              ))}
+              {hasAnyComments && (
+                <DataTable.ColumnHeader width="3rem" textAlign="center" title="Comments">
+                  💬
+                </DataTable.ColumnHeader>
+              )}
             </DataTable.Row>
-          ))}
-        </DataTable.Body>
-      </DataTable.Root>
-    </TableContainer>
+          </DataTable.Header>
+          <DataTable.Body>
+            {sortedRows.map((row, i) => {
+              const rowComments = COMMENT_FIELDS.reduce((acc, { key, label, inline }) => {
+                const v = row[key] ? String(row[key]).trim() : '';
+                if (v) acc.push({ label, text: v, inline });
+                return acc;
+              }, []);
+              const hasComments = rowComments.length > 0;
+
+              return (
+                <DataTable.Row key={i}>
+                  <DataTable.CenteredNumericCell color="fg.muted" fontWeight="500">
+                    {i + 1}
+                  </DataTable.CenteredNumericCell>
+                  {columns.map((col) => {
+                    const val = row[col.key];
+                    const isNumeric = typeof val === 'number' && Number.isFinite(val);
+                    if (isNumeric) {
+                      return (
+                        <DataTable.CenteredNumericCell
+                          key={col.key}
+                          color={val < 0 ? 'red.600' : undefined}
+                        >
+                          {formatCellValue(val)}
+                        </DataTable.CenteredNumericCell>
+                      );
+                    }
+                    if (col.centered) {
+                      return (
+                        <DataTable.Cell key={col.key} textAlign="center">
+                          {formatCellValue(val)}
+                        </DataTable.Cell>
+                      );
+                    }
+                    return (
+                      <DataTable.Cell key={col.key}>
+                        {formatCellValue(val)}
+                      </DataTable.Cell>
+                    );
+                  })}
+                  {hasAnyComments && (
+                    <DataTable.Cell textAlign="center" padding="0.25rem">
+                      {hasComments && (
+                        <Box
+                          as="button"
+                          fontSize="1rem"
+                          lineHeight="1"
+                          cursor="pointer"
+                          bg="transparent"
+                          border="none"
+                          padding="0.25rem"
+                          borderRadius="sm"
+                          title="View comments"
+                          onClick={() => setSelectedRow({ title: getRowTitle(row), comments: rowComments })}
+                          _hover={{ bg: 'tableHoverBg', transform: 'scale(1.15)' }}
+                          transition="all 0.15s"
+                        >
+                          💬
+                        </Box>
+                      )}
+                    </DataTable.Cell>
+                  )}
+                </DataTable.Row>
+              );
+            })}
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+
+      {selectedRow && (
+        <Modal
+          show={!!selectedRow}
+          onClose={() => setSelectedRow(null)}
+          title={`Comments — ${selectedRow.title}`}
+          size="md"
+        >
+          <Box bg="bg" color="fg" padding="1rem" borderRadius="md">
+            {selectedRow.comments.map(({ label, text, inline }, idx) => (
+              <Box key={label} mb={idx < selectedRow.comments.length - 1 ? 4 : 0}>
+                {inline ? (
+                  <Text fontSize="0.95rem">
+                    <Text as="span" fontWeight="600">{label}: </Text>
+                    {text}
+                  </Text>
+                ) : (
+                  <>
+                    <Text fontWeight="600" mb={1} fontSize="0.95rem">{label}</Text>
+                    <Text fontSize="0.95rem" lineHeight="1.6">{text}</Text>
+                  </>
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Modal>
+      )}
+    </>
   );
 }
 
