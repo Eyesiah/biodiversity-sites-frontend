@@ -405,7 +405,7 @@ function ComputedHeadlineResults({ hr }) {
             <DataTable.Row><LabelCell>Spatial risk multiplier (SRM) deductions</LabelCell><NC v={hr.totalSRMDeductions.habitat} /><NC v={hr.totalSRMDeductions.hedgerow} /><NC v={hr.totalSRMDeductions.watercourse} /></DataTable.Row>
             <FinalHeader />
             <DataTable.Row bg="rgba(184,161,98,0.12)"><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement" isFinal>Total net unit change</LabelCell><NC v={hr.totalNetUnitChange.habitat} /><NC v={hr.totalNetUnitChange.hedgerow} /><NC v={hr.totalNetUnitChange.watercourse} /></DataTable.Row>
-            <DataTable.Row bg="rgba(184,161,98,0.12)"><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement" isFinal>Total net % change</LabelCell><PC v={hr.totalNetPercentageChange.habitat} /><PC v={hr.totalNetPercentageChange.hedgerow} /><PC v={hr.totalNetPercentageChange.watercourse} /></DataTable.Row>
+            <DataTable.Row bg="rgba(184,161,98,0.12)"><LabelCell subtitle="Including all on-site & off-site habitat retention, creation & enhancement" isFinal>Total net % change</LabelCell><PC v={hr.totalNetPercentageChange.habitat * 100} /><PC v={hr.totalNetPercentageChange.hedgerow * 100} /><PC v={hr.totalNetPercentageChange.watercourse * 100} /></DataTable.Row>
             <DataTable.Row bg="rgba(184,161,98,0.12)">
               <DataTable.Cell fontWeight="700">Trading rules satisfied?</DataTable.Cell>
               <DataTable.Cell colSpan={3} textAlign="center" fontWeight="700" color={hr.tradingRulesSatisfied ? 'green.600' : 'red.600'}>
