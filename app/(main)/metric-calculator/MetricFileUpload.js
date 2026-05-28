@@ -90,7 +90,7 @@ const HEDGEROW_CREATION_COLS = [
 ];
 
 const HEDGEROW_ENHANCEMENT_COLS = [
-  { key: 'baselineRef', label: 'Baseline Ref' },
+  { key: 'baselineRef', label: 'Baseline Ref', centered: true },
   { key: 'habitatType', label: 'Hedgerow Type' },
   { key: 'length', label: 'Length (km)' },
   { key: 'condition', label: 'Condition' },
@@ -121,7 +121,7 @@ const WATERCOURSE_CREATION_COLS = [
 ];
 
 const WATERCOURSE_ENHANCEMENT_COLS = [
-  { key: 'baselineRef', label: 'Baseline Ref' },
+  { key: 'baselineRef', label: 'Baseline Ref', centered: true },
   { key: 'habitatType', label: 'Watercourse Type' },
   { key: 'length', label: 'Length (km)' },
   { key: 'condition', label: 'Condition' },
@@ -1547,19 +1547,28 @@ export default function MetricFileUpload() {
   return (
     <Box px={{ base: 3, md: 6 }} py={6} maxWidth="1600px" mx="auto">
       {/* Page header */}
-      <VStack align="start" gap={1} mb={6}>
-        <Tooltip text="Powered by the <a href='https://www.npmjs.com/package/@abitat/bng' target='_blank' rel='noopener noreferrer' style='color:#2d618f;text-decoration:underline;'>Abitat Intel</a> statutory metric parser.">
+      <HStack justifyContent="space-between" alignItems="flex-start" mb={6}>
+        <VStack align="start" gap={1}>
           <Heading as="h2" size="xl">
             Statutory Metric Viewer
           </Heading>
-        </Tooltip>
-        <Text color="fg.muted" maxWidth="780px">
-          Upload your statutory biodiversity metric calculation file (.xlsm or
-          .xlsx) to view its project information and all parsed habitat,
-          hedgerow, and watercourse data rows. All processing happens entirely
-          in your browser so no data is sent to any server.
-        </Text>
-      </VStack>
+          <Text color="fg.muted" maxWidth="780px">
+            Upload your statutory biodiversity metric calculation file (.xlsm or
+            .xlsx) to view its project information and all parsed habitat,
+            hedgerow, and watercourse data rows. All processing happens entirely
+            in your browser so no data is sent to any server.
+          </Text>
+        </VStack>
+        <Box flexShrink={0} pt={1}>
+          <a href="https://intel.abitat.dev/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://assets.intel.abitat.dev/built-with-abitat-intel-light.svg"
+              alt="Built with Abitat Intel"
+              style={{ height: '7rem' }}
+            />
+          </a>
+        </Box>
+      </HStack>
 
       {/* Upload zone (hidden once a result is loaded) */}
       {!result && !isProcessing && (
