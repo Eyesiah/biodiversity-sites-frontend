@@ -11,6 +11,7 @@ import { DataTable } from '@/components/styles/DataTable';
 import Button from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
 import Modal from '@/components/ui/Modal';
+import Tooltip from '@/components/ui/Tooltip';
 
 // ============================================================
 // COLUMN DEFINITIONS
@@ -57,7 +58,7 @@ const HABITAT_CREATION_COLS = [
 ];
 
 const HABITAT_ENHANCEMENT_COLS = [
-  { key: 'baselineRef', label: 'Baseline Ref' },
+  { key: 'baselineRef', label: 'Baseline Ref', centered: true },
   { key: 'broadHabitat', label: 'Proposed Broad Habitat' },
   { key: 'habitatType', label: 'Proposed Habitat' },
   { key: 'area', label: 'Area (ha)' },
@@ -174,10 +175,41 @@ function extractStartData(workbook) {
 }
 
 /**
- * Read the 'Ref' column (column D) values from a habitat baseline sheet,
+ * Find the first workbook sheet whose name matches any of the given patterns
+ * (tried in order: exact match, then case-insensitive, then keyword scan).
+ * Returns the matched sheet name, or null if none found.
+ */
+function findSheetName(workbook, ...candidates) {
+  const sheetNames = workbook.SheetNames ?? Object.keys(workbook.Sheets ?? {});
+  // 1. Exact match
+  for (const candidate of candidates) {
+    if (sheetNames.includes(candidate)) return candidate;
+  }
+  // 2. Case-insensitive match
+  for (const candidate of candidates) {
+    const lower = candidate.toLowerCase();
+    const found = sheetNames.find(n => n.toLowerCase() === lower);
+    if (found) return found;
+  }
+  // 3. Keyword scan — every word (>2 chars) in the candidate must appear in the sheet name
+  for (const candidate of candidates) {
+    const keywords = candidate.toLowerCase().split(/\s+/).filter(k => k.length > 2);
+    const found = sheetNames.find(n =>
+      keywords.every(k => n.toLowerCase().includes(k))
+    );
+    if (found) return found;
+  }
+  return null;
+}
+
+/**
+ * Read the 'Ref' column (column D) values from a habitat baseline or enhancement sheet,
  * matching the same data rows that @abitat/bng would parse (non-empty detect column).
  * The @abitat/bng parser uses `ref` internally for row lookups but does not
  * include it in the returned parsed row objects — this fills that gap.
+ * For enhancement sheets the detect column header may read "Proposed Broad Habitat"
+ * rather than "Broad Habitat", so we skip any header-like row where the cell
+ * contains "broad habitat" (case-insensitive).
  */
 function extractBaselineRefs(workbook, sheetName, detectColumn, refColumn, startRow = 10) {
   const sheet = workbook.Sheets[sheetName];
@@ -187,7 +219,8 @@ function extractBaselineRefs(workbook, sheetName, detectColumn, refColumn, start
     const detectCell = sheet[`${detectColumn}${row}`];
     if (!detectCell) continue;
     const detectVal = String(detectCell.v ?? '').trim();
-    if (detectVal === '' || detectVal === 'Broad Habitat') continue;
+    // Skip empty cells and any header row that mentions "broad habitat"
+    if (detectVal === '' || detectVal.toLowerCase().includes('broad habitat')) continue;
     const refCell = sheet[`${refColumn}${row}`];
     // Store as string so it displays as "13" rather than "13.00"
     refs.push(refCell != null ? String(refCell.v) : null);
@@ -1358,11 +1391,60 @@ export default function MetricFileUpload() {
 
       // Augment baseline rows with the 'Ref' value from column D of each sheet
       const onSiteHabitatRefs = extractBaselineRefs(
-        rawWorkbook, 'A-1 On-Site Habitat Baseline', 'E', 'D', 10
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'A-1 On-Site Habitat Baseline', 'A-1 On-site Habitat Baseline'),
+        'E', 'D', 10
       );
       const offSiteHabitatRefs = extractBaselineRefs(
-        rawWorkbook, 'D-1 Off-Site Habitat Baseline', 'E', 'D', 10
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'D-1 Off-Site Habitat Baseline', 'D-1 Off-site Habitat Baseline'),
+        'E', 'D', 10
       );
+
+      // Augment enhancement rows with the 'Baseline Ref' value from each enhancement sheet.
+      // Sheet names, detect columns, ref columns, and start rows are taken directly from the
+      // @abitat/bng column mappings spec.  findSheetName falls back to keyword scan so that
+      // minor naming variations between metric versions are tolerated.
+
+      // A-3: baselineRef in col E, detect via col E, data starts at Excel row 12
+      // (library's startRow:11 is 0-indexed → 1-indexed Excel row 12; row 11 is the column header)
+      const onSiteHabitatEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'A-3 On-Site Habitat Enhancement', 'A-3 On-site Habitat Enhancement'),
+        'E', 'E', 12
+      );
+      // B-3: baselineRef in col B, detect via col B, data starts at Excel row 12
+      const onSiteHedgerowEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'B-3 On-Site Hedge Enhancement', 'B-3 On-Site Hedgerow Enhancement', 'B-3 On-site Hedge Enhancement'),
+        'B', 'B', 12
+      );
+      // C-3: baselineRef in col B, detect via col N (watercourse type), data starts at Excel row 12
+      const onSiteWatercourseEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, "C-3 On-Site WaterC' Enhancement", 'C-3 On-Site Watercourse Enhancement', 'C-3 On-site Watercourse Enhancement'),
+        'N', 'B', 12
+      );
+      // D-3: baselineRef in col E, detect via col E, data starts at Excel row 12
+      // Note: official sheet name has a typo "Enhancment" – include both spellings.
+      const offSiteHabitatEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'D-3 Off-Site Habitat Enhancment', 'D-3 Off-Site Habitat Enhancement', 'D-3 Off-site Habitat Enhancement'),
+        'E', 'E', 12
+      );
+      // E-3: baselineRef in col B, detect via col B, data starts at Excel row 12
+      const offSiteHedgerowEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'E-3 Off-Site Hedge Enhancement', 'E-3 Off-Site Hedgerow Enhancement', 'E-3 Off-site Hedge Enhancement'),
+        'B', 'B', 12
+      );
+      // F-3: baselineRef in col B, detect via col AP (watercourse type), data starts at Excel row 12
+      const offSiteWatercourseEnhancementRefs = extractBaselineRefs(
+        rawWorkbook,
+        findSheetName(rawWorkbook, 'F-3 Off-Site WaterC Enhancement', 'F-3 Off-Site Watercourse Enhancement', 'F-3 Off-site Watercourse Enhancement'),
+        'AP', 'B', 12
+      );
+
       const augmentedFeatures = {
         ...features,
         onSiteHabitatBaselines: features.onSiteHabitatBaselines.map((row, i) => ({
@@ -1372,6 +1454,30 @@ export default function MetricFileUpload() {
         offSiteHabitatBaselines: features.offSiteHabitatBaselines.map((row, i) => ({
           ref: offSiteHabitatRefs[i] ?? null,
           ...row,
+        })),
+        onSiteHabitatEnhancements: features.onSiteHabitatEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: onSiteHabitatEnhancementRefs[i] ?? row.baselineRef ?? null,
+        })),
+        onSiteHedgerowEnhancements: features.onSiteHedgerowEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: onSiteHedgerowEnhancementRefs[i] ?? row.baselineRef ?? null,
+        })),
+        onSiteWatercourseEnhancements: features.onSiteWatercourseEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: onSiteWatercourseEnhancementRefs[i] ?? row.baselineRef ?? null,
+        })),
+        offSiteHabitatEnhancements: features.offSiteHabitatEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: offSiteHabitatEnhancementRefs[i] ?? row.baselineRef ?? null,
+        })),
+        offSiteHedgerowEnhancements: features.offSiteHedgerowEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: offSiteHedgerowEnhancementRefs[i] ?? row.baselineRef ?? null,
+        })),
+        offSiteWatercourseEnhancements: features.offSiteWatercourseEnhancements.map((row, i) => ({
+          ...row,
+          baselineRef: offSiteWatercourseEnhancementRefs[i] ?? row.baselineRef ?? null,
         })),
       };
 
@@ -1442,14 +1548,16 @@ export default function MetricFileUpload() {
     <Box px={{ base: 3, md: 6 }} py={6} maxWidth="1600px" mx="auto">
       {/* Page header */}
       <VStack align="start" gap={1} mb={6}>
-        <Heading as="h2" size="xl">
-          Statutory Metric Viewer
-        </Heading>
+        <Tooltip text="Powered by the <a href='https://www.npmjs.com/package/@abitat/bng' target='_blank' rel='noopener noreferrer' style='color:#2d618f;text-decoration:underline;'>Abitat Intel</a> statutory metric parser.">
+          <Heading as="h2" size="xl">
+            Statutory Metric Viewer
+          </Heading>
+        </Tooltip>
         <Text color="fg.muted" maxWidth="780px">
-          Upload a statutory biodiversity metric calculation file (.xlsm or
+          Upload your statutory biodiversity metric calculation file (.xlsm or
           .xlsx) to view its project information and all parsed habitat,
           hedgerow, and watercourse data rows. All processing happens entirely
-          in your browser — no data is sent to any server.
+          in your browser so no data is sent to any server.
         </Text>
       </VStack>
 
