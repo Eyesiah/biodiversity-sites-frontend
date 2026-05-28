@@ -17,7 +17,7 @@ import Modal from '@/components/ui/Modal';
 // ============================================================
 
 const HABITAT_BASELINE_COLS = [
-  { key: 'ref', label: 'Habitat Reference' },
+  { key: 'ref', label: 'Habitat Reference', centered: true },
   { key: 'broadHabitat', label: 'Broad Habitat' },
   { key: 'habitatType', label: 'Habitat Type' },
   { key: 'irreplaceableHabitat', label: 'Irreplaceable', centered: true },
@@ -34,17 +34,17 @@ const HABITAT_BASELINE_COLS = [
 ];
 
 const IRREPLACEABLE_HABITAT_COLS = [
-  { key: 'ref', label: 'Habitat Reference' },
+  { key: 'ref', label: 'Habitat Reference', centered: true },
   { key: 'habitatType', label: 'Metric Habitat Type' },
   { key: 'irreplaceableHabitatName', label: 'Irreplaceable Habitat Name' },
   { key: 'area', label: 'Total Area at Baseline (ha)' },
   { key: 'areaRetained', label: 'Area Retained' },
   { key: 'areaEnhanced', label: 'Area Enhanced' },
   { key: 'areaHabitatLost', label: 'Area Lost' },
-  { key: 'bespokeCompensationAgreedForLosses', label: 'Bespoke Compensation Agreed for Losses?' },
+  { key: 'bespokeCompensationAgreed', label: 'Bespoke Compensation Agreed for Losses?' },
   { key: 'userComments', label: 'User Comments' },
   { key: 'planningAuthorityComments', label: 'Planning Authority Comments' },
-  { key: 'habitatReferenceNumber', label: 'Habitat Reference Number' },
+  { key: 'habitatReferenceNumber', label: 'Habitat Reference Number', centered: true },
 ];
 
 const HABITAT_CREATION_COLS = [
@@ -173,6 +173,28 @@ function extractStartData(workbook) {
   return extractSheetRows(workbook, 'Start');
 }
 
+/**
+ * Read the 'Ref' column (column D) values from a habitat baseline sheet,
+ * matching the same data rows that @abitat/bng would parse (non-empty detect column).
+ * The @abitat/bng parser uses `ref` internally for row lookups but does not
+ * include it in the returned parsed row objects — this fills that gap.
+ */
+function extractBaselineRefs(workbook, sheetName, detectColumn, refColumn, startRow = 10) {
+  const sheet = workbook.Sheets[sheetName];
+  if (!sheet) return [];
+  const refs = [];
+  for (let row = startRow; row < startRow + 1000; row++) {
+    const detectCell = sheet[`${detectColumn}${row}`];
+    if (!detectCell) continue;
+    const detectVal = String(detectCell.v ?? '').trim();
+    if (detectVal === '' || detectVal === 'Broad Habitat') continue;
+    const refCell = sheet[`${refColumn}${row}`];
+    // Store as string so it displays as "13" rather than "13.00"
+    refs.push(refCell != null ? String(refCell.v) : null);
+  }
+  return refs;
+}
+
 function countFeatureRows(features) {
   return Object.values(features).reduce(
     (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0),
@@ -190,7 +212,7 @@ const COMMENT_FIELDS = [
   { key: 'planningAuthorityComments', label: 'Planning Authority Comments' },
 ];
 
-function FeatureTable({ rows, columns }) {
+function FeatureTable({ rows, columns, hideComments = false }) {
   const { items: sortedRows, requestSort, getSortIndicator } = useSortableData(
     rows || []
   );
@@ -206,8 +228,8 @@ function FeatureTable({ rows, columns }) {
     );
   }
 
-  // Only show the comments column if at least one row has any comments
-  const hasAnyComments = sortedRows.some((row) =>
+  // Only show the comments modal column if enabled and at least one row has comments
+  const hasAnyComments = !hideComments && sortedRows.some((row) =>
     COMMENT_FIELDS.some(({ key }) => row[key] && String(row[key]).trim() !== '')
   );
 
@@ -343,7 +365,7 @@ function FeatureTable({ rows, columns }) {
 // SECTION BLOCK (header + table)
 // ============================================================
 
-function SectionBlock({ title, rows, columns }) {
+function SectionBlock({ title, rows, columns, hideComments = false }) {
   const count = rows ? rows.length : 0;
   return (
     <Box mb={8}>
@@ -359,7 +381,7 @@ function SectionBlock({ title, rows, columns }) {
           {count} row{count !== 1 ? 's' : ''}
         </Badge>
       </HStack>
-      <FeatureTable rows={rows || []} columns={columns} />
+      <FeatureTable rows={rows || []} columns={columns} hideComments={hideComments} />
     </Box>
   );
 }
@@ -985,6 +1007,7 @@ function ResultsView({ result, onReset }) {
                   title="On-Site Baseline — Irreplaceable Habitats"
                   rows={irreplaceableOnSite}
                   columns={IRREPLACEABLE_HABITAT_COLS}
+                  hideComments
                 />
                 <Heading as="h3" size="md" mb={4} mt={8}>
                   Off-Site Irreplaceable Habitats
@@ -993,6 +1016,7 @@ function ResultsView({ result, onReset }) {
                   title="Off-Site Baseline — Irreplaceable Habitats"
                   rows={irreplaceableOffSite}
                   columns={IRREPLACEABLE_HABITAT_COLS}
+                  hideComments
                 />
               </>
             )}
@@ -1158,9 +1182,11 @@ export default function MetricFileUpload() {
     try {
       const buffer = await file.arrayBuffer();
 
-      // Read Start sheet for project metadata
+      // Read workbook for Start sheet data and ref value extraction.
+      // Reading all sheets here (rather than just 'Start') so we can also
+      // extract the 'Ref' column (col D) from the habitat baseline sheets —
+      // the @abitat/bng parser uses ref internally but does not return it.
       const rawWorkbook = read(buffer, {
-        sheets: ['Start'],
         cellDates: false,
         cellNF: false,
         cellHTML: false,
@@ -1169,6 +1195,25 @@ export default function MetricFileUpload() {
 
       // Parse all feature data rows using @abitat/bng
       const features = parseFile(buffer, { validate: false });
+
+      // Augment baseline rows with the 'Ref' value from column D of each sheet
+      const onSiteHabitatRefs = extractBaselineRefs(
+        rawWorkbook, 'A-1 On-Site Habitat Baseline', 'E', 'D', 10
+      );
+      const offSiteHabitatRefs = extractBaselineRefs(
+        rawWorkbook, 'D-1 Off-Site Habitat Baseline', 'E', 'D', 10
+      );
+      const augmentedFeatures = {
+        ...features,
+        onSiteHabitatBaselines: features.onSiteHabitatBaselines.map((row, i) => ({
+          ref: onSiteHabitatRefs[i] ?? null,
+          ...row,
+        })),
+        offSiteHabitatBaselines: features.offSiteHabitatBaselines.map((row, i) => ({
+          ref: offSiteHabitatRefs[i] ?? null,
+          ...row,
+        })),
+      };
 
       // Compute trading summaries and headline results from parsed features
       const ts = computeTradingSummaries(features);
@@ -1180,7 +1225,7 @@ export default function MetricFileUpload() {
         startRows,
         hr,
         ts,
-        features,
+        features: augmentedFeatures,
       });
     } catch (err) {
       const raw = err?.message ?? 'Failed to parse the metric file.';
