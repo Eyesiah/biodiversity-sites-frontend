@@ -195,6 +195,69 @@ function extractBaselineRefs(workbook, sheetName, detectColumn, refColumn, start
   return refs;
 }
 
+/**
+ * Find and parse the Credits Required by Tier/Module table from the workbook.
+ * Scans all sheets for one whose name contains "credit" (case-insensitive),
+ * then locates the header row and extracts tier/credits pairs.
+ */
+function extractCreditsData(workbook) {
+  const sheetNames = workbook.SheetNames ?? Object.keys(workbook.Sheets);
+
+  // Scan every sheet for one that has a "Tier" + "Credits" header row —
+  // do NOT rely on the sheet name, which varies between metric versions.
+  let allRows = null;
+  let headerRowIdx = -1;
+
+  for (const sheetName of sheetNames) {
+    const sheet = workbook.Sheets[sheetName];
+    if (!sheet) continue;
+    const rows = utils.sheet_to_json(sheet, { header: 1, raw: true, defval: null });
+    for (let i = 0; i < rows.length; i++) {
+      const rowStr = rows[i].map((c) => String(c ?? '').toLowerCase()).join(' ');
+      if (rowStr.includes('tier') && rowStr.includes('credit')) {
+        allRows = rows;
+        headerRowIdx = i;
+        break;
+      }
+    }
+    if (headerRowIdx !== -1) break;
+  }
+
+  if (!allRows || headerRowIdx === -1) return null;
+
+  // Collect footnote (any row after data that starts with *)
+  const tiers = [];
+  let footnote = null;
+
+  for (let i = headerRowIdx + 1; i < allRows.length; i++) {
+    const row = allRows[i];
+    // Find first non-null cell
+    const cells = row.filter((c) => c !== null && c !== undefined && String(c).trim() !== '');
+    if (cells.length === 0) continue;
+
+    const firstCell = String(cells[0]).trim();
+
+    // Footnote line
+    if (firstCell.startsWith('*')) {
+      footnote = firstCell;
+      continue;
+    }
+
+    // Tier row: first cell is a short code (A1–A5, H, W, etc.)
+    // Second non-null cell should be the numeric credits value
+    if (/^[A-Za-z0-9]{1,3}$/.test(firstCell) && cells.length >= 2) {
+      const creditsRaw = cells[1];
+      const credits = typeof creditsRaw === 'number' ? creditsRaw : parseFloat(String(creditsRaw).replace(/,/g, ''));
+      tiers.push({
+        tier: firstCell,
+        creditsRequired: Number.isFinite(credits) ? credits : 0,
+      });
+    }
+  }
+
+  return tiers.length > 0 ? { tiers, footnote } : null;
+}
+
 function countFeatureRows(features) {
   return Object.values(features).reduce(
     (sum, arr) => sum + (Array.isArray(arr) ? arr.length : 0),
@@ -713,6 +776,95 @@ function CountSummaryTable({ features }) {
 }
 
 // ============================================================
+// CREDITS SUMMARY TABLE
+// ============================================================
+
+function CreditsSummaryTable({ creditsData }) {
+  if (!creditsData) {
+    return (
+      <Box
+        p={6}
+        bg="bg.muted"
+        borderRadius="md"
+        border="1px solid"
+        borderColor="border"
+        textAlign="center"
+      >
+        <Text fontSize="2xl" mb={3}>🏅</Text>
+        <Text fontWeight="600" fontSize="lg" mb={1}>No Credits Summary Found</Text>
+        <Text color="fg.muted" fontSize="sm">
+          This metric file does not contain a recognised Credits Summary sheet.
+        </Text>
+      </Box>
+    );
+  }
+
+  const { tiers, footnote } = creditsData;
+  const totalCredits = tiers.reduce((sum, t) => sum + t.creditsRequired, 0);
+
+  const fmtN = (n) =>
+    Number.isFinite(n)
+      ? n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : '—';
+
+  return (
+    <VStack gap={4} align="start" maxWidth="480px">
+      <Heading as="h3" size="md">Credits Required by Tier / Module</Heading>
+      <TableContainer width="100%">
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader fontWeight="700" textAlign="center">Tier</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700" textAlign="center">Credits Required</DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            {tiers.map(({ tier, creditsRequired }) => {
+              const hasCredits = creditsRequired > 0;
+              return (
+                <DataTable.Row key={tier} bg={hasCredits ? 'rgba(234,179,8,0.08)' : undefined}>
+                  <DataTable.Cell
+                    textAlign="center"
+                    fontWeight="700"
+                    fontSize="1rem"
+                    color={hasCredits ? 'orange.700' : 'fg.muted'}
+                  >
+                    {tier}
+                  </DataTable.Cell>
+                  <DataTable.CenteredNumericCell
+                    fontWeight={hasCredits ? '700' : 'normal'}
+                    color={hasCredits ? 'orange.700' : 'fg.muted'}
+                  >
+                    {fmtN(creditsRequired)}
+                    {hasCredits && (
+                      <Text as="span" ml={2} fontSize="0.8em" color="orange.600">▲</Text>
+                    )}
+                  </DataTable.CenteredNumericCell>
+                </DataTable.Row>
+              );
+            })}
+            <DataTable.Row borderTop="2px solid" borderTopColor="subtleBorder">
+              <DataTable.Cell fontWeight="700" textAlign="center">Total</DataTable.Cell>
+              <DataTable.CenteredNumericCell
+                fontWeight="700"
+                color={totalCredits > 0 ? 'orange.700' : undefined}
+              >
+                {fmtN(totalCredits)}
+              </DataTable.CenteredNumericCell>
+            </DataTable.Row>
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+      {footnote && (
+        <Text fontSize="xs" color="fg.muted" fontStyle="italic">
+          {footnote}
+        </Text>
+      )}
+    </VStack>
+  );
+}
+
+// ============================================================
 // UPLOAD DROP ZONE
 // ============================================================
 
@@ -829,7 +981,7 @@ function tabRowCount(features, keys) {
 }
 
 function ResultsView({ result, onReset }) {
-  const { fileName, fileSize, startRows, hr, ts, features } = result;
+  const { fileName, fileSize, startRows, hr, ts, features, creditsData } = result;
   const totalRows = countFeatureRows(features);
 
   const isIrreplaceable = (row) => {
@@ -904,6 +1056,7 @@ function ResultsView({ result, onReset }) {
           <Tabs.Trigger value="summary">📋 Summary</Tabs.Trigger>
           <Tabs.Trigger value="headline-results">📈 Headline Results</Tabs.Trigger>
           <Tabs.Trigger value="trading-summary">🔄 Trading Summary</Tabs.Trigger>
+          <Tabs.Trigger value="credits-summary">🏅 Credits Summary</Tabs.Trigger>
           <Tabs.Trigger value="irreplaceable-habitats">
             🌿 Irreplaceable Habitats&nbsp;
             <Badge
@@ -977,6 +1130,13 @@ function ResultsView({ result, onReset }) {
         <Tabs.Content value="trading-summary">
           <Box py={5}>
             <ComputedTradingSummaries ts={ts} />
+          </Box>
+        </Tabs.Content>
+
+        {/* ── Credits Summary ──────────────────────────────────── */}
+        <Tabs.Content value="credits-summary">
+          <Box py={5}>
+            <CreditsSummaryTable creditsData={creditsData} />
           </Box>
         </Tabs.Content>
 
@@ -1215,6 +1375,9 @@ export default function MetricFileUpload() {
         })),
       };
 
+      // Extract credits summary from the credits sheet (if present)
+      const creditsData = extractCreditsData(rawWorkbook);
+
       // Compute trading summaries and headline results from parsed features
       const ts = computeTradingSummaries(features);
       const hr = computeHeadlineResults(features, ts);
@@ -1226,6 +1389,7 @@ export default function MetricFileUpload() {
         hr,
         ts,
         features: augmentedFeatures,
+        creditsData,
       });
     } catch (err) {
       const raw = err?.message ?? 'Failed to parse the metric file.';
