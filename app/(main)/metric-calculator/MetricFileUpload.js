@@ -17,7 +17,7 @@ import Modal from '@/components/ui/Modal';
 // ============================================================
 
 const HABITAT_BASELINE_COLS = [
-  { key: 'ref', label: 'Ref' },
+  { key: 'ref', label: 'Habitat Reference' },
   { key: 'broadHabitat', label: 'Broad Habitat' },
   { key: 'habitatType', label: 'Habitat Type' },
   { key: 'irreplaceableHabitat', label: 'Irreplaceable', centered: true },
@@ -31,6 +31,20 @@ const HABITAT_BASELINE_COLS = [
   { key: 'baselineUnitsRetained', label: 'Baseline Units Retained' },
   { key: 'baselineUnitsEnhanced', label: 'Baseline Units Enhanced' },
   { key: 'unitsLost', label: 'Units Lost' },
+];
+
+const IRREPLACEABLE_HABITAT_COLS = [
+  { key: 'ref', label: 'Habitat Reference' },
+  { key: 'habitatType', label: 'Metric Habitat Type' },
+  { key: 'irreplaceableHabitatName', label: 'Irreplaceable Habitat Name' },
+  { key: 'area', label: 'Total Area at Baseline (ha)' },
+  { key: 'areaRetained', label: 'Area Retained' },
+  { key: 'areaEnhanced', label: 'Area Enhanced' },
+  { key: 'areaHabitatLost', label: 'Area Lost' },
+  { key: 'bespokeCompensationAgreedForLosses', label: 'Bespoke Compensation Agreed for Losses?' },
+  { key: 'userComments', label: 'User Comments' },
+  { key: 'planningAuthorityComments', label: 'Planning Authority Comments' },
+  { key: 'habitatReferenceNumber', label: 'Habitat Reference Number' },
 ];
 
 const HABITAT_CREATION_COLS = [
@@ -796,6 +810,20 @@ function ResultsView({ result, onReset }) {
   const { fileName, fileSize, startRows, hr, ts, features } = result;
   const totalRows = countFeatureRows(features);
 
+  const isIrreplaceable = (row) => {
+    const v = row.irreplaceableHabitat;
+    if (typeof v === 'boolean') return v;
+    if (typeof v === 'string') {
+      const s = v.trim().toLowerCase();
+      return s !== '' && s !== 'no' && s !== 'false' && s !== '0';
+    }
+    return false;
+  };
+
+  const irreplaceableOnSite = (features.onSiteHabitatBaselines ?? []).filter(isIrreplaceable);
+  const irreplaceableOffSite = (features.offSiteHabitatBaselines ?? []).filter(isIrreplaceable);
+  const irreplaceableCount = irreplaceableOnSite.length + irreplaceableOffSite.length;
+
   const areaHabitatCount = tabRowCount(features, [
     'onSiteHabitatBaselines',
     'onSiteHabitatCreations',
@@ -854,6 +882,16 @@ function ResultsView({ result, onReset }) {
           <Tabs.Trigger value="summary">📋 Summary</Tabs.Trigger>
           <Tabs.Trigger value="headline-results">📈 Headline Results</Tabs.Trigger>
           <Tabs.Trigger value="trading-summary">🔄 Trading Summary</Tabs.Trigger>
+          <Tabs.Trigger value="irreplaceable-habitats">
+            🌿 Irreplaceable Habitats&nbsp;
+            <Badge
+              variant="subtle"
+              colorPalette={irreplaceableCount > 0 ? 'orange' : 'gray'}
+              fontSize="xs"
+            >
+              {irreplaceableCount}
+            </Badge>
+          </Tabs.Trigger>
           <Tabs.Trigger value="area-habitats">
             Area Habitats&nbsp;
             <Badge
@@ -917,6 +955,47 @@ function ResultsView({ result, onReset }) {
         <Tabs.Content value="trading-summary">
           <Box py={5}>
             <ComputedTradingSummaries ts={ts} />
+          </Box>
+        </Tabs.Content>
+
+        {/* ── Irreplaceable Habitats ───────────────────────────── */}
+        <Tabs.Content value="irreplaceable-habitats">
+          <Box py={5}>
+            {irreplaceableCount === 0 ? (
+              <Box
+                p={6}
+                bg="bg.muted"
+                borderRadius="md"
+                border="1px solid"
+                borderColor="border"
+                textAlign="center"
+              >
+                <Text fontSize="2xl" mb={3}>🌿</Text>
+                <Text fontWeight="600" fontSize="lg" mb={1}>No Irreplaceable Habitats Found</Text>
+                <Text color="fg.muted" fontSize="sm">
+                  This metric file contains no baseline habitat rows flagged as irreplaceable.
+                </Text>
+              </Box>
+            ) : (
+              <>
+                <Heading as="h3" size="md" mb={4}>
+                  On-Site Irreplaceable Habitats
+                </Heading>
+                <SectionBlock
+                  title="On-Site Baseline — Irreplaceable Habitats"
+                  rows={irreplaceableOnSite}
+                  columns={IRREPLACEABLE_HABITAT_COLS}
+                />
+                <Heading as="h3" size="md" mb={4} mt={8}>
+                  Off-Site Irreplaceable Habitats
+                </Heading>
+                <SectionBlock
+                  title="Off-Site Baseline — Irreplaceable Habitats"
+                  rows={irreplaceableOffSite}
+                  columns={IRREPLACEABLE_HABITAT_COLS}
+                />
+              </>
+            )}
           </Box>
         </Tabs.Content>
 
