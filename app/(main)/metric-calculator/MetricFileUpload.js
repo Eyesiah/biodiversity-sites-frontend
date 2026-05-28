@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { read, utils } from 'xlsx';
-import { parseFile, tradingSummaries as computeTradingSummaries, headlineResults as computeHeadlineResults } from '@abitat/bng/browser';
+import { parseFile, tradingSummaries as computeTradingSummaries, headlineResults as computeHeadlineResults, cumulativeBroadHabitatChange } from '@abitat/bng/browser';
 import {
   Box, Text, VStack, HStack, Heading, Badge, Tabs, Spinner, SimpleGrid,
 } from '@chakra-ui/react';
@@ -671,7 +671,200 @@ function ComputedHeadlineResults({ hr }) {
 // Uses the tradingSummaries() function from @abitat/bng
 // ============================================================
 
-function ComputedTradingSummaries({ ts }) {
+/** Human-readable labels for trading summary detail fields */
+const DETAIL_LABEL_MAP = {
+  unitsAvailableToOffsetDownwards: 'Units available to offset downwards',
+  unitsAvailableToOffsetUpwards:   'Units available to offset upwards (losses)',
+  remainingLosses:                 'Remaining losses',
+  surplusUnitsMinusDeficit:        'Surplus units minus deficit',
+  cumulativeSurplus:               'Cumulative surplus / deficit',
+  netChangeInUnits:                'Net change in units',
+};
+
+/**
+ * The key fields that determine pass/fail per band — highlighted prominently
+ * when the band is not satisfied.
+ */
+const KEY_METRIC_FIELDS = new Set([
+  'remainingLosses',
+  'cumulativeSurplus',
+  'surplusUnitsMinusDeficit',
+]);
+
+/**
+ * Compute net unit change per habitat type from raw feature rows.
+ * Used for hedgerow and watercourse shortfall breakdowns.
+ */
+function computeTypeNetChanges(allBaselines, allCreations, allEnhancements, deliveredKey) {
+  const map = {};
+  const add = (type, val) => { map[type] = (map[type] ?? 0) + (val ?? 0); };
+  for (const row of allBaselines)    add(row.habitatType || 'Unknown', -(row.unitsLost ?? 0));
+  for (const row of allCreations)    add(row.habitatType || 'Unknown', row[deliveredKey] ?? 0);
+  for (const row of allEnhancements) add(row.habitatType || 'Unknown', row[deliveredKey] ?? 0);
+  return map;
+}
+
+/**
+ * Alert panel that appears at the top of the Trading Summary tab whenever one
+ * or more distinctiveness bands are not satisfied.  For each failing band it
+ * shows a table of habitat/hedgerow/watercourse groups with their cumulative
+ * unit change across the whole project (on-site + off-site).
+ *
+ * Area habitats use the library's exported `cumulativeBroadHabitatChange()`
+ * which matches the exact values used internally by `tradingSummaries()`.
+ * Hedgerows and watercourses are aggregated directly from the feature rows.
+ */
+function ShortfallAlertPanel({ ts, features }) {
+  const { habitats: h, hedgerows: hr, watercourses: wc } = ts;
+
+  const habitatBands = [
+    { key: 'vHigh',  label: 'Very High Distinctiveness', satisfied: h.vHighSatisfied,  category: 'V.High'  },
+    { key: 'high',   label: 'High Distinctiveness',      satisfied: h.highSatisfied,   category: 'High'    },
+    { key: 'medium', label: 'Medium Distinctiveness',    satisfied: h.mediumSatisfied, category: 'Medium'  },
+    { key: 'low',    label: 'Low Distinctiveness',       satisfied: h.lowSatisfied,    category: 'Low'     },
+  ];
+  const hedgerowBands = [
+    { key: 'vHigh',  label: 'Very High Distinctiveness', satisfied: hr.vHighSatisfied  },
+    { key: 'high',   label: 'High Distinctiveness',      satisfied: hr.highSatisfied   },
+    { key: 'medium', label: 'Medium Distinctiveness',    satisfied: hr.mediumSatisfied },
+    { key: 'low',    label: 'Low Distinctiveness',       satisfied: hr.lowSatisfied    },
+    { key: 'vLow',   label: 'Very Low Distinctiveness',  satisfied: hr.vLowSatisfied   },
+  ];
+  const watercourseBands = [
+    { key: 'vHigh',  label: 'Very High Distinctiveness', satisfied: wc.vHighSatisfied  },
+    { key: 'high',   label: 'High Distinctiveness',      satisfied: wc.highSatisfied   },
+    { key: 'medium', label: 'Medium Distinctiveness',    satisfied: wc.mediumSatisfied },
+    { key: 'low',    label: 'Low Distinctiveness',       satisfied: wc.lowSatisfied    },
+  ];
+
+  const failingHabitat     = habitatBands.filter(b => !b.satisfied);
+  const failingHedgerow    = hedgerowBands.filter(b => !b.satisfied);
+  const failingWatercourse = watercourseBands.filter(b => !b.satisfied);
+
+  if (!failingHabitat.length && !failingHedgerow.length && !failingWatercourse.length) return null;
+
+  // Per-band broad-habitat cumulative changes (area habitats only)
+  const habitatBandGroups = {};
+  for (const band of failingHabitat) {
+    habitatBandGroups[band.key] = cumulativeBroadHabitatChange(features, band.category);
+  }
+
+  // Net change per type for hedgerows and watercourses
+  const hedgerowTypeChanges = computeTypeNetChanges(
+    [...(features.onSiteHedgerowBaselines  ?? []), ...(features.offSiteHedgerowBaselines  ?? [])],
+    [...(features.onSiteHedgerowCreations  ?? []), ...(features.offSiteHedgerowCreations  ?? [])],
+    [...(features.onSiteHedgerowEnhancements ?? []), ...(features.offSiteHedgerowEnhancements ?? [])],
+    'hedgerowUnitsDelivered'
+  );
+  const watercourseTypeChanges = computeTypeNetChanges(
+    [...(features.onSiteWatercourseBaselines  ?? []), ...(features.offSiteWatercourseBaselines  ?? [])],
+    [...(features.onSiteWatercourseCreations  ?? []), ...(features.offSiteWatercourseCreations  ?? [])],
+    [...(features.onSiteWatercourseEnhancements ?? []), ...(features.offSiteWatercourseEnhancements ?? [])],
+    'watercourseUnitsDelivered'
+  );
+
+  const fmtN = (n) =>
+    Number.isFinite(n)
+      ? n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : '—';
+
+  const renderGroupTable = (groupChanges) => {
+    const entries = Object.entries(groupChanges).filter(([, v]) => Number.isFinite(v) && v !== 0);
+    if (entries.length === 0) {
+      return (
+        <Text fontSize="sm" color="fg.muted" fontStyle="italic" mt={1}>
+          No data rows found for this band.
+        </Text>
+      );
+    }
+    return (
+      <TableContainer mt={2}>
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader textAlign="left">Habitat Group</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader textAlign="center">Cumulative Unit Change</DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            {entries.map(([group, change]) => (
+              <DataTable.Row key={group}>
+                <DataTable.Cell fontSize="sm">{group}</DataTable.Cell>
+                <DataTable.CenteredNumericCell
+                  fontSize="sm"
+                  fontWeight={change < 0 ? '700' : 'normal'}
+                  color={change < 0 ? 'red.600' : 'green.600'}
+                >
+                  {fmtN(change)}
+                </DataTable.CenteredNumericCell>
+              </DataTable.Row>
+            ))}
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+    );
+  };
+
+  const renderBandBlock = (band, groupChanges, sectionLabel) => (
+    <Box
+      key={`${sectionLabel}-${band.key}`}
+      mb={4}
+      p={4}
+      bg="bg"
+      borderRadius="md"
+      border="1px solid"
+      borderColor="red.200"
+    >
+      <Text fontWeight="700" color="red.700" fontSize="sm" mb={1}>
+        ✗ {sectionLabel} — {band.label}
+      </Text>
+      {renderGroupTable(groupChanges)}
+    </Box>
+  );
+
+  return (
+    <Box mb={8} p={5} bg="red.subtle" borderRadius="lg" border="1px solid" borderColor="red.300">
+      <HStack mb={3} gap={2} alignItems="center">
+        <Text fontSize="xl" lineHeight="1">⚠️</Text>
+        <Heading as="h3" size="md" color="red.700">Trading Rule Shortfalls</Heading>
+      </HStack>
+      <Text fontSize="sm" color="red.700" mb={5}>
+        One or more distinctiveness bands are not satisfied. The tables below show the cumulative
+        unit change by broad habitat group across the whole project (on-site and off-site combined)
+        for each failing band.
+      </Text>
+
+      {failingHabitat.length > 0 && (
+        <Box mb={5}>
+          <Heading as="h4" size="sm" mb={3} color="red.800">Area Habitats</Heading>
+          {failingHabitat.map(band =>
+            renderBandBlock(band, habitatBandGroups[band.key] ?? {}, 'Area Habitats')
+          )}
+        </Box>
+      )}
+
+      {failingHedgerow.length > 0 && (
+        <Box mb={5}>
+          <Heading as="h4" size="sm" mb={3} color="red.800">Hedgerow Habitats</Heading>
+          {failingHedgerow.map(band =>
+            renderBandBlock(band, hedgerowTypeChanges, 'Hedgerow Habitats')
+          )}
+        </Box>
+      )}
+
+      {failingWatercourse.length > 0 && (
+        <Box>
+          <Heading as="h4" size="sm" mb={3} color="red.800">Watercourse Habitats</Heading>
+          {failingWatercourse.map(band =>
+            renderBandBlock(band, watercourseTypeChanges, 'Watercourse Habitats')
+          )}
+        </Box>
+      )}
+    </Box>
+  );
+}
+
+function ComputedTradingSummaries({ ts, features }) {
   if (!ts) {
     return (
       <Text color="fg.muted" fontStyle="italic" fontSize="sm">
@@ -685,55 +878,89 @@ function ComputedTradingSummaries({ ts }) {
     return n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const renderSection = (title, summary) => {
-    const { details, vHighSatisfied, highSatisfied, mediumSatisfied, lowSatisfied } = summary;
-    const bands = [
-      { label: 'Very High Distinctiveness', key: 'vHigh', satisfied: vHighSatisfied, detail: details.vHigh },
-      { label: 'High Distinctiveness', key: 'high', satisfied: highSatisfied, detail: details.high },
-      { label: 'Medium Distinctiveness', key: 'medium', satisfied: mediumSatisfied, detail: details.medium },
-      { label: 'Low Distinctiveness', key: 'low', satisfied: lowSatisfied, detail: details.low },
-    ];
-
-    return (
-      <Box width="100%">
-        <Heading as="h3" size="md" mb={3}>{title}</Heading>
-        <TableContainer>
-          <DataTable.Root>
-            <DataTable.Header>
-              <DataTable.Row>
-                <DataTable.ColumnHeader textAlign="left" fontWeight="700">Distinctiveness Band</DataTable.ColumnHeader>
-                <DataTable.ColumnHeader fontWeight="700">Trading Rule</DataTable.ColumnHeader>
-                <DataTable.ColumnHeader fontWeight="700">Detail</DataTable.ColumnHeader>
-              </DataTable.Row>
-            </DataTable.Header>
-            <DataTable.Body>
-              {bands.map(({ label, key, satisfied, detail }) => (
-                <DataTable.Row key={key}>
-                  <DataTable.Cell fontWeight="600">{label}</DataTable.Cell>
-                  <DataTable.Cell textAlign="center" fontWeight="700" color={satisfied ? 'green.600' : 'red.600'}>
-                    {satisfied ? '✓ Satisfied' : '✗ Not satisfied'}
-                  </DataTable.Cell>
-                  <DataTable.Cell fontSize="0.85rem" color="fg.muted">
-                    {detail && Object.entries(detail).map(([k, v]) => (
-                      <Text key={k} as="span" display="block">
-                        {k.replace(/([A-Z])/g, ' $1').toLowerCase()}: <Text as="span" fontFamily="mono" color={typeof v === 'number' && v < 0 ? 'red.600' : undefined}>{fmtN(v)}</Text>
-                      </Text>
-                    ))}
-                  </DataTable.Cell>
-                </DataTable.Row>
-              ))}
-            </DataTable.Body>
-          </DataTable.Root>
-        </TableContainer>
-      </Box>
-    );
+  const renderDetail = (detail, satisfied) => {
+    if (!detail) return null;
+    return Object.entries(detail).map(([k, v]) => {
+      const label = DETAIL_LABEL_MAP[k] ?? k.replace(/([A-Z])/g, ' $1').toLowerCase();
+      const isKeyMetric = !satisfied && KEY_METRIC_FIELDS.has(k);
+      return (
+        <Text key={k} as="span" display="block" fontSize="0.85rem">
+          <Text as="span" color="fg.muted">{label}: </Text>
+          <Text
+            as="span"
+            fontFamily="mono"
+            fontWeight={isKeyMetric ? '700' : 'normal'}
+            color={
+              isKeyMetric && typeof v === 'number' && v < 0
+                ? 'red.600'
+                : typeof v === 'number' && v < 0
+                ? 'red.500'
+                : undefined
+            }
+          >
+            {fmtN(v)}
+          </Text>
+        </Text>
+      );
+    });
   };
+
+  const renderSection = (title, summary, bands) => (
+    <Box width="100%">
+      <Heading as="h3" size="md" mb={3}>{title}</Heading>
+      <TableContainer>
+        <DataTable.Root>
+          <DataTable.Header>
+            <DataTable.Row>
+              <DataTable.ColumnHeader textAlign="left" fontWeight="700">Distinctiveness Band</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Trading Rule</DataTable.ColumnHeader>
+              <DataTable.ColumnHeader fontWeight="700">Detail</DataTable.ColumnHeader>
+            </DataTable.Row>
+          </DataTable.Header>
+          <DataTable.Body>
+            {bands.map(({ label, key, satisfied }) => (
+              <DataTable.Row key={key}>
+                <DataTable.Cell fontWeight="600">{label}</DataTable.Cell>
+                <DataTable.Cell textAlign="center" fontWeight="700" color={satisfied ? 'green.600' : 'red.600'}>
+                  {satisfied ? '✓ Satisfied' : '✗ Not satisfied'}
+                </DataTable.Cell>
+                <DataTable.Cell fontSize="0.85rem">
+                  {renderDetail(summary.details[key], satisfied)}
+                </DataTable.Cell>
+              </DataTable.Row>
+            ))}
+          </DataTable.Body>
+        </DataTable.Root>
+      </TableContainer>
+    </Box>
+  );
+
+  const habitatBands = [
+    { label: 'Very High Distinctiveness', key: 'vHigh',  satisfied: ts.habitats.vHighSatisfied  },
+    { label: 'High Distinctiveness',      key: 'high',   satisfied: ts.habitats.highSatisfied   },
+    { label: 'Medium Distinctiveness',    key: 'medium', satisfied: ts.habitats.mediumSatisfied },
+    { label: 'Low Distinctiveness',       key: 'low',    satisfied: ts.habitats.lowSatisfied    },
+  ];
+  const hedgerowBands = [
+    { label: 'Very High Distinctiveness', key: 'vHigh',  satisfied: ts.hedgerows.vHighSatisfied  },
+    { label: 'High Distinctiveness',      key: 'high',   satisfied: ts.hedgerows.highSatisfied   },
+    { label: 'Medium Distinctiveness',    key: 'medium', satisfied: ts.hedgerows.mediumSatisfied },
+    { label: 'Low Distinctiveness',       key: 'low',    satisfied: ts.hedgerows.lowSatisfied    },
+    { label: 'Very Low Distinctiveness',  key: 'vLow',   satisfied: ts.hedgerows.vLowSatisfied   },
+  ];
+  const watercourseBands = [
+    { label: 'Very High Distinctiveness', key: 'vHigh',  satisfied: ts.watercourses.vHighSatisfied  },
+    { label: 'High Distinctiveness',      key: 'high',   satisfied: ts.watercourses.highSatisfied   },
+    { label: 'Medium Distinctiveness',    key: 'medium', satisfied: ts.watercourses.mediumSatisfied },
+    { label: 'Low Distinctiveness',       key: 'low',    satisfied: ts.watercourses.lowSatisfied    },
+  ];
 
   return (
     <VStack gap={8} align="start" width="100%">
-      {renderSection('Area Habitats Trading Summary', ts.habitats)}
-      {renderSection('Hedgerow Habitats Trading Summary', ts.hedgerows)}
-      {renderSection('Watercourse Habitats Trading Summary', ts.watercourses)}
+      {features && <ShortfallAlertPanel ts={ts} features={features} />}
+      {renderSection('Area Habitats Trading Summary', ts.habitats, habitatBands)}
+      {renderSection('Hedgerow Habitats Trading Summary', ts.hedgerows, hedgerowBands)}
+      {renderSection('Watercourse Habitats Trading Summary', ts.watercourses, watercourseBands)}
     </VStack>
   );
 }
@@ -1163,7 +1390,7 @@ function ResultsView({ result, onReset }) {
         {/* ── Trading Summary ──────────────────────────────────── */}
         <Tabs.Content value="trading-summary">
           <Box py={5}>
-            <ComputedTradingSummaries ts={ts} />
+            <ComputedTradingSummaries ts={ts} features={features} />
           </Box>
         </Tabs.Content>
 
