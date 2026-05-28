@@ -10,6 +10,7 @@ import { PrimaryCard, TableContainer } from '@/components/styles/PrimaryCard';
 import { DataTable } from '@/components/styles/DataTable';
 import Button from '@/components/styles/Button';
 import { useSortableData } from '@/lib/hooks';
+import Image from 'next/image';
 import Modal from '@/components/ui/Modal';
 import Tooltip from '@/components/ui/Tooltip';
 
@@ -1561,10 +1562,13 @@ export default function MetricFileUpload() {
         </VStack>
         <Box flexShrink={0} pt={1}>
           <a href="https://intel.abitat.dev/" target="_blank" rel="noopener noreferrer">
-            <img
+            <Image
               src="https://assets.intel.abitat.dev/built-with-abitat-intel-light.svg"
               alt="Built with Abitat Intel"
-              style={{ height: '7rem' }}
+              width={300}
+              height={112}
+              unoptimized
+              style={{ height: '7rem', width: 'auto' }}
             />
           </a>
         </Box>
