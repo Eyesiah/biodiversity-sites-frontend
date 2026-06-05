@@ -81,9 +81,6 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
 
         <PrimaryCard>
           <Box>
-            <BodyDetailRow bodyType='nca' glossaryTerm='National Character Area (NCA)' hasData={site.ncaName != null} isChecked={bodyLayerStates?.showNCA} setIsChecked={bodyLayerStates?.setShowNCA} >
-              {site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'}
-            </BodyDetailRow>
             <BodyDetailRow bodyType='lnrs' glossaryTerm='Local Nature Recovery Strategy (LNRS) site' hasData={site.lnrsName != null} isChecked={bodyLayerStates?.showLNRS} setIsChecked={bodyLayerStates?.setShowLNRS} >
               {site.lnrsName ? site.lnrsName : 'N/A'}
             </BodyDetailRow>
@@ -93,6 +90,9 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                   <Text>{site.lpaName}</Text>
                 </InfoButton>
               ) : 'N/A'}
+            </BodyDetailRow>
+            <BodyDetailRow bodyType='nca' glossaryTerm='National Character Area (NCA)' hasData={site.ncaName != null} isChecked={bodyLayerStates?.showNCA} setIsChecked={bodyLayerStates?.setShowNCA} >
+              {site.ncaName ? <ExternalLink href={`https://nationalcharacterareas.co.uk/${slugify(site.ncaName)}`}>{site.ncaName}</ExternalLink> : 'N/A'}
             </BodyDetailRow>
             <BodyDetailRow bodyType='lsoa' glossaryTerm='Lower Layer Super Output Area (LSOA)' hasData={site.lsoa?.name != null} isChecked={bodyLayerStates?.showLSOA} setIsChecked={bodyLayerStates?.setShowLSOA} >
               {site.lsoa?.name ? (
