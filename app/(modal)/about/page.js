@@ -39,15 +39,15 @@ export default function About() {
         <Text>The boundaries of all the English LPAs are used to identify the LPA in which a development site or BGS site is located</Text>
         <Text><ExternalLink href="https://geoportal.statistics.gov.uk/datasets/local-planning-authorities-april-2023-names-and-codes-in-the-uk/explore">All LPAs</ExternalLink>.</Text>
 
-        <Heading as="h3" size="md">5. National Character Areas (NCAs)</Heading>
-        <Text>The boundaries of NCAs are used to identify the NCA in which a development site or BGS site is located.</Text>
-        <Text><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles</ExternalLink>.</Text>
-
-        <Heading as="h3" size="md">6. Local Nature Recovery Strategy (LNRS)</Heading>
+        <Heading as="h3" size="md">5. Local Nature Recovery Strategy (LNRS)</Heading>
         <Text>The boundaries of LNRS sites are used to identify the LNRS in which a development site or BGS site is located</Text>
         <Text><ExternalLink href="https://www.gov.uk/government/publications/local-nature-recovery-strategies-areas-and-responsible-authorities">LNRSs and their Profiles</ExternalLink>.</Text>
 
-        <Heading as="h3" size="md">7. Deprivation</Heading>
+       <Heading as="h3" size="md">6. National Character Areas (NCAs)</Heading>
+        <Text>The boundaries of NCAs are used to identify the NCA in which a development site or BGS site is located.</Text>
+        <Text><ExternalLink href="https://nationalcharacterareas.co.uk/">NCAs and their Profiles</ExternalLink>.</Text>
+
+         <Heading as="h3" size="md">7. Deprivation</Heading>
         <Text>Deprivation refers to people&apos;s unmet needs, a lack of access to opportunities and resources which we might expect in our society.</Text>
         
         <Heading as="h3" size="md">7 a). Lower Layer Super Output Areas (LSOAs)</Heading>
