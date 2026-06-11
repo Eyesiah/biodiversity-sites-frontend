@@ -114,7 +114,7 @@ export default function AllocationAnalysis({ allocations }) {
             <LineChart data={distanceDistributionData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 105]} />
               <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
               <Legend />
               <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
@@ -124,10 +124,10 @@ export default function AllocationAnalysis({ allocations }) {
         <ChartItem>
           <Heading as="h4" size="md" textAlign="center">Habitat Unit (HU) Distribution</Heading>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
+            <BarChart data={habitatUnitDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" name="HUs" />
-              <YAxis name="Count" />
+              <YAxis name="Count" allowDecimals={false} />
               <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
               <Legend />
               <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
