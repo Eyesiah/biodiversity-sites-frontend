@@ -176,7 +176,10 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
             onSortedItemsChange={setFilteredProjects}
             summary={(filteredCount, totalCount) => (
               <Text fontSize="1.2rem">
-                Showing <Text as="strong">{filteredCount}</Text> of <Text as="strong">{totalCount}</Text> Nationally Significant Infrastructure Projects.
+                Showing <Text as="strong">{filteredCount}</Text> of <Text as="strong">{totalCount}</Text>{' '}
+                <ExternalLink href="https://national-infrastructure-consenting.planninginspectorate.gov.uk/project-search">
+                  Nationally Significant Infrastructure Projects
+                </ExternalLink>.
               </Text>
             )}
           >
