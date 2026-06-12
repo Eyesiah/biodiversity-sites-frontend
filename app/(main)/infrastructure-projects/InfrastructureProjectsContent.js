@@ -167,13 +167,12 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
               return (
                 (item.name?.toLowerCase() || '').includes(lowercasedTerm) ||
                 (item.reference?.toLowerCase() || '').includes(lowercasedTerm) ||
-                (item.typeLabel?.toLowerCase() || '').includes(lowercasedTerm) ||
-                (item.decision?.toLowerCase() || '').includes(lowercasedTerm) ||
-                (item.developer?.toLowerCase() || '').includes(lowercasedTerm)
+                (item.developer?.toLowerCase() || '').includes(lowercasedTerm) ||
+                (item.region?.toLowerCase() || '').includes(lowercasedTerm)
               );
             }}
             initialSortConfig={{ key: 'name', direction: 'ascending' }}
-            placeholder="Search by project name, reference, type, status or developer."
+            placeholder="Search by project name, reference, developer or region."
             onSortedItemsChange={setFilteredProjects}
             summary={(filteredCount, totalCount) => (
               <Text fontSize="1.2rem">
@@ -190,6 +189,7 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
                       <PrimaryTable.ColumnHeader onClick={() => requestSort('reference')}>Reference{getSortIndicator('reference')}</PrimaryTable.ColumnHeader>
                       <PrimaryTable.ColumnHeader onClick={() => requestSort('typeLabel')}>Type{getSortIndicator('typeLabel')}</PrimaryTable.ColumnHeader>
                       <PrimaryTable.ColumnHeader onClick={() => requestSort('decision')}>Status{getSortIndicator('decision')}</PrimaryTable.ColumnHeader>
+                      <PrimaryTable.ColumnHeader onClick={() => requestSort('region')}>Region{getSortIndicator('region')}</PrimaryTable.ColumnHeader>
                       <PrimaryTable.ColumnHeader onClick={() => requestSort('developer')}>Developer{getSortIndicator('developer')}</PrimaryTable.ColumnHeader>
                     </PrimaryTable.Row>
                   </PrimaryTable.Header>
@@ -208,6 +208,7 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
                         <PrimaryTable.Cell fontFamily="mono" textAlign="center">{project.reference}</PrimaryTable.Cell>
                         <PrimaryTable.Cell textAlign="center"><TypeSwatch type={project.type} />{project.typeLabel}</PrimaryTable.Cell>
                         <PrimaryTable.Cell textAlign="center">{project.decision}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell textAlign="center">{project.region || 'N/A'}</PrimaryTable.Cell>
                         <PrimaryTable.Cell textAlign="center">{project.developer || 'N/A'}</PrimaryTable.Cell>
                       </PrimaryTable.Row>
                     ))}

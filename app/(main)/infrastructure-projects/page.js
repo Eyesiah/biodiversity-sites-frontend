@@ -1,5 +1,5 @@
 import Footer from '@/components/core/Footer';
-import { fetchNSIPGeoJson, fetchNSIPDevelopers } from '@/lib/nsip';
+import { fetchNSIPGeoJson, fetchNSIPDevelopers, fetchNSIPRegisterRows } from '@/lib/nsip';
 import { processNSIPData } from '@/lib/nsip-data';
 import InfrastructureProjectsContent from './InfrastructureProjectsContent';
 
@@ -16,11 +16,12 @@ export const metadata = {
 
 export default async function InfrastructureProjectsPage() {
   try {
-    const [geoJson, developers] = await Promise.all([
+    const [geoJson, developers, registerRows] = await Promise.all([
       fetchNSIPGeoJson(),
       fetchNSIPDevelopers(),
+      fetchNSIPRegisterRows(),
     ]);
-    const projects = processNSIPData(geoJson, developers);
+    const projects = processNSIPData(geoJson, developers, registerRows);
 
     return (
       <>

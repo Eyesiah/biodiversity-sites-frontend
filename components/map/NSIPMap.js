@@ -8,6 +8,12 @@ import { NSIP_TYPE_COLORS } from '@/lib/nsip-data';
 const DEFAULT_COLOR = '#7f8c8d';
 const HIGHLIGHT_COLOR = '#ff0000';
 
+// Converts a register CSV date (YYYY-MM-DD) to DD/MM/YYYY for display.
+const formatDate = (date) => {
+  const [year, month, day] = date.split('-');
+  return `${day}/${month}/${year}`;
+};
+
 const NSIPMap = ({ projects, highlightedReference = null }) => {
   const geoJson = useMemo(() => ({
     type: 'FeatureCollection',
@@ -20,9 +26,11 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
           name: p.name,
           type: p.type,
           typeLabel: p.typeLabel,
-          decision: p.decision,
-          developer: p.developer,
           documentationUrl: p.documentationUrl,
+          location: p.location,
+          description: p.description,
+          dateOfApplication: p.dateOfApplication,
+          dateOfDecision: p.dateOfDecision,
         },
         geometry: p.geometry,
       }))
@@ -53,18 +61,26 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
   };
 
   const onEachFeature = (feature, layer) => {
-    const { name, reference, typeLabel, decision, developer, documentationUrl } = feature.properties;
-    const developerLine = developer ? `<br /><b>Developer:</b> ${developer}` : '';
+    const { name, reference, typeLabel, documentationUrl, location, description, dateOfApplication, dateOfDecision } = feature.properties;
+    const locationLine = location ? `<br /><b>Location:</b> ${location}` : '';
+    const dateOfApplicationLine = dateOfApplication ? `<br /><b>Date of application:</b> ${formatDate(dateOfApplication)}` : '';
+    const dateOfDecisionLine = dateOfDecision ? `<br /><b>Date of decision:</b> ${formatDate(dateOfDecision)}` : '';
+    const descriptionLine = description
+      ? `<br />${description.length > 400 ? `${description.slice(0, 400)}…` : description}`
+      : '';
     const link = documentationUrl
       ? `<br /><a href="${documentationUrl}" target="_blank" rel="noopener noreferrer">View project page</a>`
       : '';
     layer.bindPopup(
       `<b>${name}</b><br />` +
       `<b>Reference:</b> ${reference}<br />` +
-      `<b>Type:</b> ${typeLabel}<br />` +
-      `<b>Status:</b> ${decision}` +
-      developerLine +
-      link
+      `<b>Type:</b> ${typeLabel}` +
+      locationLine +
+      dateOfApplicationLine +
+      dateOfDecisionLine +
+      descriptionLine +
+      link,
+      { maxWidth: 350 }
     );
   };
 
