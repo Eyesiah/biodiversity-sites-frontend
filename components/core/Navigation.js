@@ -445,6 +445,9 @@ export default function Navigation() {
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
+          <NavLink href="/infrastructure-projects" onClick={closeMenu}>
+            Infrastructure Projects (NSIPs)
+          </NavLink>
           <DropdownMenu category="Stats & Tools">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Planner' />
