@@ -6,6 +6,7 @@ import { BaseMap } from '@/components/map/BaseMap';
 import { NSIP_TYPE_COLORS } from '@/lib/nsip-data';
 
 const DEFAULT_COLOR = '#7f8c8d';
+const HIGHLIGHT_COLOR = '#ff0000';
 
 const NSIPMap = ({ projects, highlightedReference = null }) => {
   const geoJson = useMemo(() => ({
@@ -17,8 +18,10 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
         properties: {
           reference: p.reference,
           name: p.name,
+          type: p.type,
           typeLabel: p.typeLabel,
           decision: p.decision,
+          developer: p.developer,
           documentationUrl: p.documentationUrl,
         },
         geometry: p.geometry,
@@ -26,31 +29,32 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
   }), [projects]);
 
   const styleFeature = (feature) => {
-    const color = NSIP_TYPE_COLORS[feature.properties.type] || DEFAULT_COLOR;
     const isHighlighted = highlightedReference && feature.properties.reference === highlightedReference;
+    const color = isHighlighted ? HIGHLIGHT_COLOR : (NSIP_TYPE_COLORS[feature.properties.type] || DEFAULT_COLOR);
     return {
       color,
       weight: isHighlighted ? 4 : 2,
       opacity: 1,
-      fillOpacity: 0.2,
+      fillOpacity: isHighlighted ? 0.5 : 0.2,
     };
   };
 
   const pointToLayer = (feature, latlng) => {
-    const color = NSIP_TYPE_COLORS[feature.properties.type] || DEFAULT_COLOR;
     const isHighlighted = highlightedReference && feature.properties.reference === highlightedReference;
+    const color = isHighlighted ? HIGHLIGHT_COLOR : (NSIP_TYPE_COLORS[feature.properties.type] || DEFAULT_COLOR);
     return L.circleMarker(latlng, {
-      radius: isHighlighted ? 8 : 5,
+      radius: isHighlighted ? 9 : 5,
       color,
-      weight: 2,
+      weight: isHighlighted ? 3 : 2,
       opacity: 1,
       fillColor: color,
-      fillOpacity: 0.6,
+      fillOpacity: isHighlighted ? 0.9 : 0.6,
     });
   };
 
   const onEachFeature = (feature, layer) => {
-    const { name, reference, typeLabel, decision, documentationUrl } = feature.properties;
+    const { name, reference, typeLabel, decision, developer, documentationUrl } = feature.properties;
+    const developerLine = developer ? `<br /><b>Developer:</b> ${developer}` : '';
     const link = documentationUrl
       ? `<br /><a href="${documentationUrl}" target="_blank" rel="noopener noreferrer">View project page</a>`
       : '';
@@ -59,6 +63,7 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
       `<b>Reference:</b> ${reference}<br />` +
       `<b>Type:</b> ${typeLabel}<br />` +
       `<b>Status:</b> ${decision}` +
+      developerLine +
       link
     );
   };

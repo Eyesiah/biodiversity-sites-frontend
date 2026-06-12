@@ -114,7 +114,7 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
               );
             }}
             initialSortConfig={{ key: 'name', direction: 'ascending' }}
-            placeholder="Search by project name, reference, type or status."
+            placeholder="Search by project name, reference, type, status or developer."
             onSortedItemsChange={setFilteredProjects}
             summary={(filteredCount, totalCount) => (
               <Text fontSize="1.2rem">
@@ -146,10 +146,10 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
                             ? <ExternalLink href={project.documentationUrl}>{project.name}</ExternalLink>
                             : project.name}
                         </PrimaryTable.Cell>
-                        <PrimaryTable.Cell fontFamily="mono">{project.reference}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell><TypeSwatch type={project.type} />{project.typeLabel}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell>{project.decision}</PrimaryTable.Cell>
-                        <PrimaryTable.Cell>{project.developer || 'N/A'}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell fontFamily="mono" textAlign="center">{project.reference}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell textAlign="center"><TypeSwatch type={project.type} />{project.typeLabel}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell textAlign="center">{project.decision}</PrimaryTable.Cell>
+                        <PrimaryTable.Cell textAlign="center">{project.developer || 'N/A'}</PrimaryTable.Cell>
                       </PrimaryTable.Row>
                     ))}
                   </PrimaryTable.Body>
