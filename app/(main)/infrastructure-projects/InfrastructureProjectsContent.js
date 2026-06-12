@@ -8,7 +8,7 @@ import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { ContentStack } from '@/components/styles/ContentStack';
-import { NSIP_TYPE_COLORS, NSIP_TYPE_LABELS } from '@/lib/nsip-data';
+import { NSIP_TYPE_COLORS, NSIP_TYPE_LABELS, NSIP_STAGE_TO_DECISION_MAP } from '@/lib/nsip-data';
 
 const NSIPMap = dynamic(() => import('@/components/map/NSIPMap'), {
   ssr: false,
@@ -48,7 +48,10 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
     return [...new Set(projects.map(p => p.decision).filter(Boolean))].sort();
   }, [projects]);
 
-  const [selectedStatuses, setSelectedStatuses] = useState(() => new Set(availableStatuses));
+  const [selectedStatuses, setSelectedStatuses] = useState(() => {
+    const preApplication = NSIP_STAGE_TO_DECISION_MAP['Pre-application'];
+    return availableStatuses.includes(preApplication) ? new Set([preApplication]) : new Set(availableStatuses);
+  });
 
   const statusFilteredProjects = useMemo(
     () => typeFilteredProjects.filter(p => selectedStatuses.has(p.decision)),
