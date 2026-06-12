@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { Box, Text, Checkbox, Wrap } from '@chakra-ui/react';
+import { Box, Text, Checkbox, Wrap, Flex } from '@chakra-ui/react';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
@@ -44,6 +44,17 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
     [projects, selectedTypes]
   );
 
+  const availableStatuses = useMemo(() => {
+    return [...new Set(projects.map(p => p.decision).filter(Boolean))].sort();
+  }, [projects]);
+
+  const [selectedStatuses, setSelectedStatuses] = useState(() => new Set(availableStatuses));
+
+  const statusFilteredProjects = useMemo(
+    () => typeFilteredProjects.filter(p => selectedStatuses.has(p.decision)),
+    [typeFilteredProjects, selectedStatuses]
+  );
+
   const mapProjects = useMemo(() => filteredProjects, [filteredProjects]);
 
   const toggleType = (type, checked) => {
@@ -65,6 +76,25 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
     setSelectedTypes(checked ? new Set(availableTypes) : new Set());
   };
 
+  const toggleStatus = (status, checked) => {
+    setSelectedStatuses(prev => {
+      const next = new Set(prev);
+      if (checked) {
+        next.add(status);
+      } else {
+        next.delete(status);
+      }
+      return next;
+    });
+  };
+
+  const allStatusesSelected = selectedStatuses.size === availableStatuses.length;
+  const noneStatusesSelected = selectedStatuses.size === 0;
+
+  const toggleAllStatuses = (checked) => {
+    setSelectedStatuses(checked ? new Set(availableStatuses) : new Set());
+  };
+
   if (error) {
     return <Text color="red.500">Error loading Nationally Significant Infrastructure Projects: {error}</Text>;
   }
@@ -76,33 +106,62 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
       }
       content={
         <ContentStack>
-          <Wrap spacing="1rem" padding="0 0 0.5rem" justify="center" width="100%">
-            <Checkbox.Root
-              checked={allSelected ? true : (noneSelected ? false : 'indeterminate')}
-              onCheckedChange={(details) => toggleAllTypes(!!details.checked)}
-            >
-              <Checkbox.HiddenInput />
-              <Checkbox.Control />
-              <Checkbox.Label>
-                <Text as="strong">{allSelected ? 'Deselect all' : 'Select all'}</Text>
-              </Checkbox.Label>
-            </Checkbox.Root>
-            {availableTypes.map(type => (
+          <Flex align="center" gap="1rem" justify="center" width="100%">
+            <Text fontWeight="bold">Type:</Text>
+            <Wrap spacing="1rem" padding="0 0 0.5rem" justify="center">
               <Checkbox.Root
-                key={type}
-                checked={selectedTypes.has(type)}
-                onCheckedChange={(details) => toggleType(type, !!details.checked)}
+                checked={allSelected ? true : (noneSelected ? false : 'indeterminate')}
+                onCheckedChange={(details) => toggleAllTypes(!!details.checked)}
               >
                 <Checkbox.HiddenInput />
                 <Checkbox.Control />
                 <Checkbox.Label>
-                  <TypeSwatch type={type} />{NSIP_TYPE_LABELS[type]}
+                  <Text as="strong">{allSelected ? 'Deselect all' : 'Select all'}</Text>
                 </Checkbox.Label>
               </Checkbox.Root>
-            ))}
-          </Wrap>
+              {availableTypes.map(type => (
+                <Checkbox.Root
+                  key={type}
+                  checked={selectedTypes.has(type)}
+                  onCheckedChange={(details) => toggleType(type, !!details.checked)}
+                >
+                  <Checkbox.HiddenInput />
+                  <Checkbox.Control />
+                  <Checkbox.Label>
+                    <TypeSwatch type={type} />{NSIP_TYPE_LABELS[type]}
+                  </Checkbox.Label>
+                </Checkbox.Root>
+              ))}
+            </Wrap>
+          </Flex>
+          <Flex align="center" gap="1rem" justify="center" width="100%">
+            <Text fontWeight="bold">Stage:</Text>
+            <Wrap spacing="1rem" padding="0 0 0.5rem" justify="center">
+              <Checkbox.Root
+                checked={allStatusesSelected ? true : (noneStatusesSelected ? false : 'indeterminate')}
+                onCheckedChange={(details) => toggleAllStatuses(!!details.checked)}
+              >
+                <Checkbox.HiddenInput />
+                <Checkbox.Control />
+                <Checkbox.Label>
+                  <Text as="strong">{allStatusesSelected ? 'Deselect all' : 'Select all'}</Text>
+                </Checkbox.Label>
+              </Checkbox.Root>
+              {availableStatuses.map(status => (
+                <Checkbox.Root
+                  key={status}
+                  checked={selectedStatuses.has(status)}
+                  onCheckedChange={(details) => toggleStatus(status, !!details.checked)}
+                >
+                  <Checkbox.HiddenInput />
+                  <Checkbox.Control />
+                  <Checkbox.Label>{status}</Checkbox.Label>
+                </Checkbox.Root>
+              ))}
+            </Wrap>
+          </Flex>
           <SearchableTableLayout
-            initialItems={typeFilteredProjects}
+            initialItems={statusFilteredProjects}
             filterPredicate={(item, term) => {
               const lowercasedTerm = term.toLowerCase();
               return (

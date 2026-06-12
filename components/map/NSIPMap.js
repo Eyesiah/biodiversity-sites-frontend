@@ -68,11 +68,16 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
     );
   };
 
+  const geoJsonKey = useMemo(
+    () => `${geoJson.features.map(f => f.properties.reference).join(',')}|${highlightedReference || ''}`,
+    [geoJson, highlightedReference]
+  );
+
   return (
     <div style={{ height: '100%', width: '100%' }}>
       <BaseMap style={{ height: '100%', width: '100%' }}>
         <GeoJSON
-          key={highlightedReference || 'all'}
+          key={geoJsonKey}
           data={geoJson}
           style={styleFeature}
           pointToLayer={pointToLayer}
