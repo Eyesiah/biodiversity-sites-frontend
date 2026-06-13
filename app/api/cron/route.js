@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import clientPromise from '@/lib/mongodb';
 import { fetchAllSites } from '@/lib/api';
 import { processSiteDataForIndex } from '@/lib/sites';
+import { refreshNSIPCache } from '@/lib/nsip';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
 export const maxDuration = 300; // Sets timeout to 5 minutes (300 seconds)
@@ -52,6 +53,14 @@ export async function GET(request) {
     });
 
     revalidatePath('/statistics');
+
+    // Refresh the NSIP cache too, since fetchWithMongoCache never re-fetches once cached.
+    try {
+      await refreshNSIPCache();
+      revalidatePath('/infrastructure-projects');
+    } catch (nsipError) {
+      console.error('NSIP cache refresh failed:', nsipError);
+    }
 
     return NextResponse.json({
       message: 'Statistics updated successfully.',
