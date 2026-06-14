@@ -1,4 +1,5 @@
 import AdminSiteNameForm from './AdminSiteNameForm';
+import AdminUploadBoundary from './AdminUploadBoundary';
 import Footer from '@/components/core/Footer';
 import { ContentLayout } from '@/components/styles/ContentLayout';
 import { Tabs } from '@/components/styles/Tabs';
@@ -77,6 +78,16 @@ export default async function AdminPage({}) {
       content: () => {
         return (
           <AdminSiteNameForm
+            referenceOptions={referenceOptions}
+          />
+        );
+      }
+    },
+    {
+      title: 'Upload Boundary Maps',
+      content: () => {
+        return (
+          <AdminUploadBoundary
             referenceOptions={referenceOptions}
           />
         );
