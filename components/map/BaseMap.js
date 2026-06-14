@@ -24,6 +24,25 @@ const highlightedSiteIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+// Creates a teardrop pin marker icon (matching the size/silhouette of /icons/greenMarker.svg and
+// /icons/blueMarker.svg) filled with an arbitrary colour, for use where marker colour needs to
+// vary dynamically (e.g. per feature type).
+export const createPinIcon = (color, { size = 25 } = {}) => {
+  const height = size * (41 / 25);
+  return new L.DivIcon({
+    html: `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 41" width="${size}" height="${height}">
+        <path d="M12.5 0C5.6 0 0 5.6 0 12.5c0 8.5 12.5 28.5 12.5 28.5S25 21 25 12.5C25 5.6 19.4 0 12.5 0z" fill="${color}" stroke="#000" stroke-width="1"/>
+        <circle cx="12.5" cy="12.5" r="5" fill="#fff" fill-opacity="0.7"/>
+      </svg>
+    `,
+    className: '',
+    iconSize: [size, height],
+    iconAnchor: [size * 0.48, height],
+    popupAnchor: [size * 0.04, -height * 0.83],
+  });
+};
+
 export async function getPolys(geoJsonUrl, queryField, value) {
   const encodedValue = encodeURIComponent(value.replace(/'/g, "''"));
   const url = `${geoJsonUrl}?where=${queryField}='${encodedValue}'&outFields=*&returnGeometry=true&f=geojson`;

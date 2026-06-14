@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { BaseMap } from '@/components/map/BaseMap';
+import { BaseMap, createPinIcon } from '@/components/map/BaseMap';
 import { NSIP_TYPE_COLORS } from '@/lib/nsip-data';
 
 const DEFAULT_COLOR = '#7f8c8d';
-const HIGHLIGHT_COLOR = '#ff0000';
+const HIGHLIGHT_COLOR = '#D55E00';
 
 // Converts a register CSV date (YYYY-MM-DD) to DD/MM/YYYY for display.
 const formatDate = (date) => {
@@ -50,13 +50,9 @@ const NSIPMap = ({ projects, highlightedReference = null }) => {
   const pointToLayer = (feature, latlng) => {
     const isHighlighted = highlightedReference && feature.properties.reference === highlightedReference;
     const color = isHighlighted ? HIGHLIGHT_COLOR : (NSIP_TYPE_COLORS[feature.properties.type] || DEFAULT_COLOR);
-    return L.circleMarker(latlng, {
-      radius: isHighlighted ? 9 : 5,
-      color,
-      weight: isHighlighted ? 3 : 2,
-      opacity: 1,
-      fillColor: color,
-      fillOpacity: isHighlighted ? 0.9 : 0.6,
+    return L.marker(latlng, {
+      icon: createPinIcon(color, { size: isHighlighted ? 35 : 25 }),
+      zIndexOffset: isHighlighted ? 1000 : 0,
     });
   };
 
