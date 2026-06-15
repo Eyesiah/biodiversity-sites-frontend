@@ -33,8 +33,8 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Only PDF files are allowed.' }, { status: 400 });
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File size must be less than 10MB.' }, { status: 400 });
+    if (file.size > 20 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size must be less than 20MB.' }, { status: 400 });
     }
 
     // Upload to Vercel Blob
