@@ -75,7 +75,8 @@ export default function About() {
         <Text>We refresh Defra&apos;s BGS data every 12 hours.</Text>
 
         <Heading as="h2" size="lg">Acknowledgements</Heading>
-        <Text>Digital boundaries and reference maps:</Text>
+       <Text>Nationally Significant Infrastructure Projects data extracted from the Planning Inspectorate is published under version 3.0 of the Open Government Licence.</Text>
+        <Text>Digital boundaries, reference and BGS Boundary maps:</Text>
         <Text>© Natural England 2023. Contains OS data © Crown Copyright [and database right] 2023;</Text>
         <Text>Contains GeoPlace data © Local Government Information House Limited copyright and database right 2023.</Text>
         <Text>UKHab Ltd (2023). UK Habitat Classification Version 2.0.</Text>
