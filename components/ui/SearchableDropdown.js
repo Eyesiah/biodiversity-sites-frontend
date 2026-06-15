@@ -102,12 +102,17 @@ export default function SearchableDropdown({ name, options, value, onChange, dis
     }
   };
 
+  const handleFocus = (event) => {
+    event.target.select();
+  };
+
   return (
     <Select
       name={name}
       options={selectOptions}
       value={selectedOption}
       onChange={handleChange}
+      onFocus={handleFocus}
       styles={customStyles}
       isDisabled={disabled}
       menuPortalTarget={typeof document !== 'undefined' ? document.body : null}
