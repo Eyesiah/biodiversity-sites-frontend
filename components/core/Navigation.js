@@ -458,13 +458,11 @@ export default function Navigation() {
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
-          <NavLink href="/infrastructure-projects" onClick={closeMenu}>
-            Infrastructure Projects (NSIPs)
-          </NavLink>
           <DropdownMenu category="Stats & Tools">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Planner' />
             <DropdownLink href='/metric-calculator' label='Statutory Metric File Viewer' />
+            <DropdownLink href='/infrastructure-projects' label='Infrastructure Projects (NSIPs)' />
             <DropdownLink href='/query' label='API Query & Export' />
             <CopyWfsLinkButton />
           </DropdownMenu>
