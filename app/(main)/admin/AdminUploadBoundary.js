@@ -142,7 +142,7 @@ export default function AdminUploadBoundary({ referenceOptions }) {
       <VStack spacing={4} align="stretch">
         <Text fontWeight="bold" fontSize="lg">Upload Boundary Maps</Text>
         <Text fontSize="sm" color="gray.600">
-          Upload a PDF boundary map for a site that doesn't have one from the BGS register.
+          Upload a PDF boundary map for a site that doesn&apos;t have one from the BGS register.
           Only sites without a register-provided boundary map will use the uploaded PDF.
         </Text>
 
