@@ -34,6 +34,7 @@ async function getExtraSiteDetails() {
         bgsReferenceUrl: record.bgsReferenceUrl || null,
         bgsWebsite: record.bgsWebsite || null,
         miscUrls: record.miscUrls || null,
+        boundaryMapUrl: record.boundaryMapUrl || null,
         metricFileUrl: record.metricFileUrl || null,
         metricFileName: record.metricFileName || null,
       });
@@ -65,7 +66,8 @@ export default async function AdminPage({}) {
     return {
       value: site.referenceNumber,
       label: displayText,
-      map: site.landBoundary,
+      // Use blob-hosted boundary map as fallback if BGS register has none
+      map: site.landBoundary || siteData?.boundaryMapUrl || null,
       hasName,
       isMarkedNotFound,
       bgsReference: siteData?.bgsReference || null,
