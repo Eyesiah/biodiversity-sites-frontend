@@ -47,8 +47,12 @@ export default forwardRef(function SearchableTableLayout({
   const prevSortedItemsRef = useRef(null);
   useEffect(() => {
     if (onSortedItemsChange) {
-      // Only call the callback if the items have actually changed (by comparing length)
-      if (!prevSortedItemsRef.current || prevSortedItemsRef.current.length !== sortedItems.length) {
+      // Only call the callback if the items have actually changed (by length or content)
+      const prev = prevSortedItemsRef.current;
+      const changed = !prev
+        || prev.length !== sortedItems.length
+        || sortedItems.some((item, i) => item !== prev[i]);
+      if (changed) {
         prevSortedItemsRef.current = sortedItems;
         onSortedItemsChange(sortedItems);
       }

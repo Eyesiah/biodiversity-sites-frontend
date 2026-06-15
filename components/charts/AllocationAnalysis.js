@@ -77,9 +77,9 @@ export default function AllocationAnalysis({ allocations }) {
     const totalAllocations = allocations.length > 0 ? allocations.length : 1;
 
     const bins = {
-      'Within': { category: 'Within', lpa: 0, nca: 0, outside: 0 },
-      'Neighbouring': { category: 'Neighbouring', lpa: 0, nca: 0, outside: 0 },
-      'Outside': { category: 'Outside', lpa: 0, nca: 0, outside: 0 },
+      'Within': { category: 'Within', lpa: 0, lnrs: 0, outside: 0 },
+      'Neighbouring': { category: 'Neighbouring', lpa: 0, lnrs: 0, outside: 0 },
+      'Outside': { category: 'Outside', lpa: 0, lnrs: 0, outside: 0 },
     };
 
     allocations.forEach(alloc => {
@@ -91,7 +91,7 @@ export default function AllocationAnalysis({ allocations }) {
           } else {
             const from = alloc.sr.from || 'LPA';
             if (from === 'LPA') bins[category].lpa++;
-            if (from === 'NCA') bins[category].nca++;
+            if (from === 'LNRS') bins[category].lnrs++;
           }
         }
       }
@@ -100,7 +100,7 @@ export default function AllocationAnalysis({ allocations }) {
     return Object.values(bins).map(bin => ({
       ...bin,
       lpaPercentage: (bin.lpa / totalAllocations) * 100,
-      ncaPercentage: (bin.nca / totalAllocations) * 100,
+      lnrsPercentage: (bin.lnrs / totalAllocations) * 100,
       outsidePercentage: (bin.outside / totalAllocations) * 100,
     }));
   }, [allocations]);
@@ -114,7 +114,7 @@ export default function AllocationAnalysis({ allocations }) {
             <LineChart data={distanceDistributionData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 100]} />
+              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 105]} />
               <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
               <Legend />
               <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
@@ -124,10 +124,10 @@ export default function AllocationAnalysis({ allocations }) {
         <ChartItem>
           <Heading as="h4" size="md" textAlign="center">Habitat Unit (HU) Distribution</Heading>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={habitatUnitDistributionData} barCategoryGap="10%">
+            <BarChart data={habitatUnitDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" name="HUs" />
-              <YAxis name="Count" />
+              <YAxis name="Count" allowDecimals={false} />
               <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
               <Legend />
               <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
@@ -166,7 +166,7 @@ export default function AllocationAnalysis({ allocations }) {
                       {payload.filter(p => p.value > 0).map((p, index) => {
                         let percentage = 0;
                         if (p.name === 'LPA') percentage = p.payload.lpaPercentage;
-                        if (p.name === 'NCA') percentage = p.payload.ncaPercentage;
+                        if (p.name === 'LNRS') percentage = p.payload.lnrsPercentage;
                         if (p.name === 'Outside') percentage = p.payload.outsidePercentage;
                         return (
                           <li key={index} className="recharts-tooltip-item" style={{ color: p.color }}>
@@ -183,8 +183,8 @@ export default function AllocationAnalysis({ allocations }) {
             <Bar dataKey="lpa" fill="#e2742fff" name="LPA">
               <LabelList dataKey="lpa" position="top" formatter={(v) => v > 0 ? v : ''} />
             </Bar>
-            <Bar dataKey="nca" fill="#6ac98fff" name="NCA">
-              <LabelList dataKey="nca" position="top" formatter={(v) => v > 0 ? v : ''} />
+            <Bar dataKey="lnrs" fill="#6ac98fff" name="LNRS">
+              <LabelList dataKey="lnrs" position="top" formatter={(v) => v > 0 ? v : ''} />
             </Bar>
             <Bar dataKey="outside" fill="#8884d8" name="Outside">
               <LabelList dataKey="outside" position="top" formatter={(v) => v > 0 ? v : ''} />
@@ -198,7 +198,7 @@ export default function AllocationAnalysis({ allocations }) {
           </Flex>
           <Flex alignItems="center">
             <Box w="12px" h="12px" bg="#6ac98fff" mr="5px" border="1px solid #ccc"></Box>
-            <Text>NCA</Text>
+            <Text>LNRS</Text>
           </Flex>
           <Flex alignItems="center">
             <Box w="12px" h="12px" bg="#8884d8" mr="5px" border="1px solid #ccc"></Box>

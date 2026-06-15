@@ -6,6 +6,7 @@ import MapContentLayout from '@/components/ui/MapContentLayout';
 import { SiteDetailsCard } from './SiteDetailsCard'
 import { AllocationsTable } from './AllocationsTable'
 import HabitatTabContent from './HabitatTabContent'
+import SiteMetricReportTab from './SiteMetricReportTab'
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
 import { formatNumber } from '@/lib/format';
@@ -265,6 +266,13 @@ export default function SitePageContent({ site }) {
           <Tooltip text="Click to download data as a .CSV file"><Button padding="4px" border="2px solid" size={15} onClick={() => handleExportCSV(site)}><GrDocumentCsv size={40} padding={0} /></Button></Tooltip>
         </Flex>
       )
+    },
+    {
+      title: 'Statutory Metric Report',
+      content: () => (
+        <SiteMetricReportTab metricFileUrl={site.metricFileUrl} metricFileName={site.metricFileName} />
+      ),
+      shouldRender: () => !!site.metricFileUrl
     }
   ], [
     site

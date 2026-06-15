@@ -1,4 +1,6 @@
 import AdminSiteNameForm from './AdminSiteNameForm';
+import AdminUploadBoundary from './AdminUploadBoundary';
+import AdminUploadMetricFile from './AdminUploadMetricFile';
 import Footer from '@/components/core/Footer';
 import { ContentLayout } from '@/components/styles/ContentLayout';
 import { Tabs } from '@/components/styles/Tabs';
@@ -32,6 +34,8 @@ async function getExtraSiteDetails() {
         bgsReferenceUrl: record.bgsReferenceUrl || null,
         bgsWebsite: record.bgsWebsite || null,
         miscUrls: record.miscUrls || null,
+        metricFileUrl: record.metricFileUrl || null,
+        metricFileName: record.metricFileName || null,
       });
     });
 
@@ -68,6 +72,8 @@ export default async function AdminPage({}) {
       bgsReferenceUrl: siteData?.bgsReferenceUrl || null,
       bgsWebsite: siteData?.bgsWebsite || null,
       miscUrls: siteData?.miscUrls || null,
+      metricFileUrl: siteData?.metricFileUrl || null,
+      metricFileName: siteData?.metricFileName || null,
     };
   }).sort((a, b) => a.value.localeCompare(b.value));
 
@@ -77,6 +83,26 @@ export default async function AdminPage({}) {
       content: () => {
         return (
           <AdminSiteNameForm
+            referenceOptions={referenceOptions}
+          />
+        );
+      }
+    },
+    {
+      title: 'Upload Boundary Maps',
+      content: () => {
+        return (
+          <AdminUploadBoundary
+            referenceOptions={referenceOptions}
+          />
+        );
+      }
+    },
+    {
+      title: 'Upload Metric Files',
+      content: () => {
+        return (
+          <AdminUploadMetricFile
             referenceOptions={referenceOptions}
           />
         );

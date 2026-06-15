@@ -7,6 +7,7 @@ import Image from 'next/image';
 import ExternalLink from '@/components/ui/ExternalLink';
 import Modal from '@/components/ui/Modal'
 import Tooltip from '@/components/ui/Tooltip';
+import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { WFS_URL } from '@/config'
 import { ColorModeButton } from '@/components/styles/color-mode'
 import { 
@@ -400,6 +401,12 @@ export default function Navigation() {
     };
   }, [pathname]);
 
+  // If the page title corresponds to a glossary entry (matching exactly, or with an
+  // abbreviation suffix e.g. "... (NSIP)"), show its definition instead of the page description.
+  const glossaryTerm = (typeof window !== 'undefined' && window.glossaryData)
+    ? Object.keys(window.glossaryData).find(term => term === pageTitle || term.startsWith(`${pageTitle} (`))
+    : null;
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -425,9 +432,15 @@ export default function Navigation() {
             alt="Bristol Tree Forum Logo"
           />
         </ExternalLink>
-        <Tooltip text={pageDesc}>
-          <PageTitle>{pageTitle}</PageTitle>
-        </Tooltip>
+        {glossaryTerm ? (
+          <GlossaryTooltip term={glossaryTerm}>
+            <PageTitle>{pageTitle}</PageTitle>
+          </GlossaryTooltip>
+        ) : (
+          <Tooltip text={pageDesc}>
+            <PageTitle>{pageTitle}</PageTitle>
+          </Tooltip>
+        )}
       </NavSection>
       
       <MobileMenuButton isOpen={isOpen} onToggle={toggleMenu} />
@@ -445,6 +458,9 @@ export default function Navigation() {
             <DropdownLink href='/habitat-analysis' label='BGS Habitat Analysis' />
             <DropdownLink href='/all-allocations' label='BGS Habitat Allocations' />
           </DropdownMenu>
+          <NavLink href="/infrastructure-projects" onClick={closeMenu}>
+            Infrastructure Projects (NSIPs)
+          </NavLink>
           <DropdownMenu category="Stats & Tools">
             <DropdownLink href='/statistics' label='BGS Statistics' />
             <DropdownLink href='/scenario-planning' label='Habitat Unit Planner' />
