@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { del } from '@vercel/blob';
 import clientPromise from '@/lib/mongodb';
 import { MONGODB_DATABASE_NAME } from '@/config';
@@ -47,6 +48,9 @@ export async function POST(request) {
         }
       }
     );
+
+    revalidatePath(`/sites/${referenceNumber}`);
+    revalidatePath('/admin');
 
     return NextResponse.json({
       message: `Metric file deleted successfully for site ${referenceNumber}`

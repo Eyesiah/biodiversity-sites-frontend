@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { put } from '@vercel/blob';
 import clientPromise from '@/lib/mongodb';
 import { MONGODB_DATABASE_NAME } from '@/config';
@@ -62,6 +63,9 @@ export async function POST(request) {
       },
       { upsert: true }
     );
+
+    revalidatePath(`/sites/${referenceNumber}`);
+    revalidatePath('/admin');
 
     return NextResponse.json({
       message: `Metric file uploaded successfully for site ${referenceNumber}`,
