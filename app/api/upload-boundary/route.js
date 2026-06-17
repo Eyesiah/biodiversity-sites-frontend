@@ -24,6 +24,9 @@ export async function POST(request) {
     if (!referenceNumber) {
       return NextResponse.json({ error: 'Reference number is required.' }, { status: 400 });
     }
+    if (!/^BGS-\d{9}$/.test(referenceNumber)) {
+      return NextResponse.json({ error: 'Invalid reference number format.' }, { status: 400 });
+    }
 
     // Validate file
     if (!file || !(file instanceof File)) {
@@ -43,6 +46,7 @@ export async function POST(request) {
     const blob = await put(blobPath, file, {
       access: 'public',
       addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     // Save boundaryMapUrl to MongoDB siteName collection

@@ -11,6 +11,9 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   // Protect the endpoint with a secret
+  if (!process.env.CRON_SECRET) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
   const authorization = request.headers.get('authorization');
   if (authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
