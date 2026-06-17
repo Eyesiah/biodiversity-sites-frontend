@@ -24,6 +24,9 @@ export async function POST(request) {
     if (!referenceNumber) {
       return NextResponse.json({ error: 'Reference number is required.' }, { status: 400 });
     }
+    if (!/^BGS-\d{9}$/.test(referenceNumber)) {
+      return NextResponse.json({ error: 'Invalid reference number format.' }, { status: 400 });
+    }
 
     // Validate file
     if (!file || !(file instanceof File)) {
