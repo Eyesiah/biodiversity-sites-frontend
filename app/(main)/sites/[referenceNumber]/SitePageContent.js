@@ -63,6 +63,7 @@ const handleExportCSV = (site) => {
     ['Field', 'Value'],
     ['BGS Reference', site.referenceNumber ?? ''],
     ['Responsible Bodies', Array.isArray(site.responsibleBodies) ? site.responsibleBodies.join('; ') : (site.responsibleBodies ?? '')],
+    ['Published to BGS Register', site.publishedDate ? (site.publishedDatePreTracking ? `Predates ${new Date(site.publishedDate).toLocaleDateString('en-GB')}` : new Date(site.publishedDate).toLocaleDateString('en-GB')) : ''],
     ['Start Date', site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : ''],
     ['Site Area (ha)', site.siteSize != null ? formatNumber(site.siteSize, 4) : ''],
     ['LPA', site.lpaName ?? ''],

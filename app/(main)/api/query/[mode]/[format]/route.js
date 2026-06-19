@@ -65,6 +65,7 @@ export async function GET(_, { params }) {
       return {
       'reference-number': s.referenceNumber,
       'responsible-body': s.responsibleBodies.join(', '),
+      'publishedDate': s.publishedDate ?? null,
       'startDate': s.startDate,
       'latitude': formatNumber(s.latitude, 6),
       'longitude': formatNumber(s.longitude, 6),
