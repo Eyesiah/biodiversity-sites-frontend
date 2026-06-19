@@ -1,9 +1,10 @@
 import GlossaryTooltip from '../ui/GlossaryTooltip';
+import Tooltip from '../ui/Tooltip';
 import { Box, Text, Checkbox, Flex } from '@chakra-ui/react';
 import { lsoaStyle, lnrsStyle, ncaStyle, lpaStyle } from '@/components/map/MapStyles'
 
 // Helper component for a detail row to keep the JSX clean.
-export const DetailRow = ({ label, value, textColor, glossaryTerm }) => {
+export const DetailRow = ({ label, value, textColor, glossaryTerm, tooltipText }) => {
 
   const labelText = () => {
     return <Text
@@ -16,6 +17,12 @@ export const DetailRow = ({ label, value, textColor, glossaryTerm }) => {
     </Text>
   }
 
+  const wrappedLabel = () => {
+    if (glossaryTerm && glossaryTerm.length > 0) return <GlossaryTooltip term={glossaryTerm}>{labelText()}</GlossaryTooltip>;
+    if (tooltipText) return <Tooltip text={tooltipText}>{labelText()}</Tooltip>;
+    return labelText();
+  };
+
   return (
     <Box
       display="flex"
@@ -25,7 +32,7 @@ export const DetailRow = ({ label, value, textColor, glossaryTerm }) => {
       borderColor="subtleBorder"
       _last={{ borderBottom: "none" }}
     >
-      {glossaryTerm && glossaryTerm.length > 0 ? <GlossaryTooltip term={glossaryTerm}>{labelText()}</GlossaryTooltip> : labelText()}
+      {wrappedLabel()}
       <Text
         as="dd"
         color={textColor || "fg"}

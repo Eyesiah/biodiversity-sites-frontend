@@ -34,11 +34,12 @@ export async function GET(request) {
     const sitesCollection = db.collection('sites');
     const knownSites = await sitesCollection.find({}).toArray();
     const knownSiteIDs = knownSites.map((site) => site.id);
+    const timestamp = new Date();
     let newSites = [];
     for (const site of processedSites) {
       if (!knownSiteIDs.includes(site.referenceNumber)) {
         newSites.push(site.referenceNumber)
-        await sitesCollection.insertOne({id: site.referenceNumber});
+        await sitesCollection.insertOne({ id: site.referenceNumber, publishedDate: timestamp });
       }
     }
 
@@ -46,7 +47,6 @@ export async function GET(request) {
     // Save the statistics to the database
     const statsCollection = db.collection('statistics');
 
-    const timestamp = new Date();
     const version = process.env.APP_VERSION;
     await statsCollection.insertOne({
       timestamp,

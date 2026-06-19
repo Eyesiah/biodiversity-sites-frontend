@@ -65,6 +65,13 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                 ) : 'N/A'
               }
             />
+            <DetailRow label="Published to BGS Register" tooltipText="This is the date we first recorded the publication of the site on the NE Biodiversity Gain Sites Register. We do not hold this information for BGS sites published before 25/02/2025." value={
+              site.publishedDate
+                ? (site.publishedDatePreTracking
+                  ? `Predates ${new Date(site.publishedDate).toLocaleDateString('en-GB')}`
+                  : new Date(site.publishedDate).toLocaleDateString('en-GB'))
+                : 'N/A'
+            } />
             <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
             {site.latitude && site.longitude && <DetailRow label="Location & Maps" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}{` (Lat/Long: ${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)})`}</>} />}
             <Tooltip text="Please email us at BGS_Suggestions@bristoltreeforum.org to suggest Links or a Name for this site."><DetailRow label="External Links" value={<>

@@ -30,7 +30,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "setup-db-indexes": "node scripts/setup-database-indexes.js"
+    "setup-db-indexes": "node scripts/setup-database-indexes.js",
+    "backfill-published-dates": "node scripts/backfill-published-dates.js"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
