@@ -485,6 +485,7 @@ export default function SiteListPageContent({ sites }) {
       'reference-number': s.referenceNumber,
       'name': s.name || '',
       'responsible-body': Array.isArray(s.responsibleBodies) ? s.responsibleBodies.join(', ') : (s.responsibleBodies || ''),
+      'published-date': s.publishedDate ? (s.publishedDatePreTracking ? `Predates ${new Date(s.publishedDate).toLocaleDateString('en-GB')}` : new Date(s.publishedDate).toLocaleDateString('en-GB')) : '',
       'LPA': s.lpaName || '',
       'NCA': s.ncaName || '',
       'LNRS': s.lnrsName || '',
