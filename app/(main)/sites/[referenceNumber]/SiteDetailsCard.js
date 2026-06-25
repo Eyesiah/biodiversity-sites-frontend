@@ -89,7 +89,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
         <PrimaryCard>
           <Box>
             <BodyDetailRow bodyType='lnrs' glossaryTerm='Local Nature Recovery Strategy (LNRS) site' hasData={site.lnrsName != null} isChecked={bodyLayerStates?.showLNRS} setIsChecked={bodyLayerStates?.setShowLNRS} >
-              {site.lnrsName ? site.lnrsName : 'N/A'}
+              {site.lnrsName ? (site.lnrsUrl ? <ExternalLink href={site.lnrsUrl}>{site.lnrsName}</ExternalLink> : site.lnrsName) : 'N/A'}
             </BodyDetailRow>
             <BodyDetailRow bodyType='lpa' glossaryTerm='Local Planning Authority (LPA)' hasData={site.lpaName != null} isChecked={bodyLayerStates?.showLPA} setIsChecked={bodyLayerStates?.setShowLPA} >
               {site.lpaName ? (
