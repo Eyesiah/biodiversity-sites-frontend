@@ -196,14 +196,14 @@ export const HabitatSummaryTable = ({ site, showSites = false }) => {
             {!isMobile && <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>}
             {!isMobile && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>}
             {!isMobile && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>}
-            {!isMobile && hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocation'>Allocations</GlossaryTooltip></DataTable.ColumnHeader>}
-            {!isMobile && hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
+            {!isMobile && hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocations'>Allocations</GlossaryTooltip></DataTable.ColumnHeader>}
+            {!isMobile && hasAllocs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='% Allocated'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
             <DataTable.ColumnHeader fontSize={headerFontSize} style={{ borderLeft: "2px solid #878080" }}><GlossaryTooltip term='Baseline habitat'>Baseline</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Created</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Improvement habitat'>Enhanced</GlossaryTooltip></DataTable.ColumnHeader>
             <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='HU Gain'>HU Gain</GlossaryTooltip></DataTable.ColumnHeader>
-            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocation'>Allocations</GlossaryTooltip></DataTable.ColumnHeader>}
-            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='Allocation'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
+            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}><GlossaryTooltip term='Allocations'>Allocations</GlossaryTooltip></DataTable.ColumnHeader>}
+            {hasAllocHUs && <DataTable.ColumnHeader fontSize={headerFontSize}>% <GlossaryTooltip term='% Allocated'>Allocated</GlossaryTooltip></DataTable.ColumnHeader>}
           </DataTable.Row>
         </DataTable.Header>
         <DataTable.Body>

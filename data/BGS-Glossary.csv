@@ -1,5 +1,6 @@
 Term,Definition,Link,LinkText
 Allocations,"The size of habitat parcels allocated in the Biodiversity Gain Site to meet the offsite BNG requirements of specific developments.",,
+% Allocated,"The proportion of a site's created and enhanced habitat that have been allocated to development sites. This is calculated as allocated size or Habitat Units divided by the total improvement (created + enhanced) size or Habitat Units, shown as a percentage.",,
 API,"An Application Programming Interface is a set of rules and protocols that allows different software systems to communicate and exchange data with each other in a standardized way, without users needing to know the intricate details of how each system is built.",,
 Area Habitat,"Habitats recorded in the biodiversity metric tool in area (hectares)."
 Baseline habitat,"The pre-existing habitat of a site before that site is developed.",
