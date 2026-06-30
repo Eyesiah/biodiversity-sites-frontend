@@ -20,6 +20,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import simplify from '@turf/simplify';
+import { fixLpaApostrophe } from '../lib/format.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,6 +43,9 @@ const DATASETS = [
     // LPA23CD is prefixed by country (E/S/W/N) - English LPAs only, since that's the only
     // place BGS allocations can land.
     url: `${ARCGIS_LPA_URL}?where=LPA23CD+LIKE+'E%25'&outFields=LPA23NM&returnGeometry=true&geometryPrecision=6&f=geojson`,
+    // This ArcGIS service mangles the apostrophe in "King's Lynn and West Norfolk LPA"
+    // (returns "King0s..."), so fix it before writing - see lib/format.js fixLpaApostrophe.
+    nameProperty: 'LPA23NM',
   },
   {
     name: 'NCA',
@@ -81,6 +85,15 @@ async function generateBoundaries() {
       continue;
     }
     console.log(`  ${dataset.name}: fetched ${geojson.features.length} features.`);
+
+    if (dataset.nameProperty) {
+      geojson.features.forEach(feature => {
+        const value = feature.properties[dataset.nameProperty];
+        if (value) {
+          feature.properties[dataset.nameProperty] = fixLpaApostrophe(value);
+        }
+      });
+    }
 
     const simplified = simplifyToTarget(geojson, dataset.name);
 
