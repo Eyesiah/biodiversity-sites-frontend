@@ -5,7 +5,7 @@ import { slugify, normalizeBodyName } from '@/lib/format';
 import { fetchAllSites, transformAllocations } from '@/lib/api';
 import { processSiteForListView, processSitesForListView } from '@/lib/sites';
 import { getLPAData, getNCAData } from '@/lib/habitat';
-import { ARCGIS_LNRS_URL, ARCGIS_LPA_URL, ARCGIS_NCA_URL } from '@/config';
+import { ARCGIS_LNRS_URL } from '@/config';
 import BGSBodiesContent from './BGSBodiesContent';
 import Footer from '@/components/core/Footer';
 
@@ -173,43 +173,32 @@ async function getLNRSPageData(allSites) {
   }
 }
 
-async function getLNRSBoundaries() {
+// LNRS/LPA/NCA boundaries are pre-fetched and simplified into static files by
+// scripts/generate-region-boundaries.js, rather than being live-fetched here. The live ArcGIS
+// responses (LNRS ~25-30MB, NCA ~4MB) are far too large for Next.js's fetch Data Cache (which
+// has a hard 2MB-per-item limit and silently fails to cache anything bigger), so every request
+// was doing an uncached multi-MB live fetch. Re-run that script if the source boundaries change.
+function readBoundariesFile(fileName) {
   try {
-    // geometryPrecision rounds coordinates to ~1m accuracy without removing any vertices,
-    // cutting payload size substantially with no risk of distorting the boundary shapes.
-    // (Note: maxAllowableOffset-based generalization was tried and rejected - this ArcGIS
-    // service collapses polygons to a handful of points even at a 1m offset, corrupting the shapes.)
-    const url = `${ARCGIS_LNRS_URL}?where=1%3D1&outFields=Name&returnGeometry=true&geometryPrecision=5&f=geojson`;
-    const res = await fetch(url, { next: { revalidate: revalidate } });
-    return await res.json();
+    const jsonPath = path.join(process.cwd(), 'data', fileName);
+    const jsonData = fs.readFileSync(jsonPath, 'utf-8');
+    return JSON.parse(jsonData);
   } catch (e) {
-    console.error('Error loading LNRS boundaries:', e);
+    console.error(`Error loading ${fileName}:`, e);
     return null;
   }
 }
 
-async function getLPABoundaries() {
-  try {
-    // This service covers the whole UK; LPA23CD is prefixed by country (E/S/W/N), so filter
-    // to English LPAs only, since that's the only place BGS allocations can land.
-    const url = `${ARCGIS_LPA_URL}?where=LPA23CD+LIKE+'E%25'&outFields=LPA23NM&returnGeometry=true&geometryPrecision=5&f=geojson`;
-    const res = await fetch(url, { next: { revalidate: revalidate } });
-    return await res.json();
-  } catch (e) {
-    console.error('Error loading LPA boundaries:', e);
-    return null;
-  }
+function getLNRSBoundaries() {
+  return readBoundariesFile('LNRS-Boundaries.json');
 }
 
-async function getNCABoundaries() {
-  try {
-    const url = `${ARCGIS_NCA_URL}?where=1%3D1&outFields=NCA_Name&returnGeometry=true&geometryPrecision=5&f=geojson`;
-    const res = await fetch(url, { next: { revalidate: revalidate } });
-    return await res.json();
-  } catch (e) {
-    console.error('Error loading NCA boundaries:', e);
-    return null;
-  }
+function getLPABoundaries() {
+  return readBoundariesFile('LPA-Boundaries.json');
+}
+
+function getNCABoundaries() {
+  return readBoundariesFile('NCA-Boundaries.json');
 }
 
 export default async function BGSBodiesPage() {
