@@ -14,7 +14,7 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
-import { YELLOW_PALETTE, BLUE_PALETTE } from '@/components/map/heatMapPalettes';
+import { YELLOW_PALETTE, BLUE_PALETTE, ORANGE_PALETTE } from '@/components/map/heatMapPalettes';
 
 const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
@@ -264,7 +264,10 @@ export default function BGSBodiesContent({
           LNRS Chart
         </Tabs.Trigger>
         <Tabs.Trigger value="lnrs-allocation-map">
-          LNRS Allocation Map
+          LNRS Allocation Supply
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs-allocation-demand-map">
+          LNRS Allocation Demand
         </Tabs.Trigger>
         <Tabs.Trigger value="lpa">
           LPA List
@@ -273,7 +276,10 @@ export default function BGSBodiesContent({
           LPA Chart
         </Tabs.Trigger>
         <Tabs.Trigger value="lpa-allocation-map">
-          LPA Allocation Map
+          LPA Allocation Supply
+        </Tabs.Trigger>
+        <Tabs.Trigger value="lpa-allocation-demand-map">
+          LPA Allocation Demand
         </Tabs.Trigger>
         <Tabs.Trigger value="nca">
           NCA List
@@ -282,7 +288,7 @@ export default function BGSBodiesContent({
           NCA Chart
         </Tabs.Trigger>
         <Tabs.Trigger value="nca-allocation-map">
-          NCA Allocation Map
+          NCA Allocation Supply
         </Tabs.Trigger>
       </Tabs.List>
 
@@ -327,6 +333,40 @@ export default function BGSBodiesContent({
             boundaries={lnrsBoundaries}
             fallbackFetchUrl={ARCGIS_LNRS_URL}
             specialMarkers={SCILLY_LNRS_MARKERS}
+            description="Allocations grouped by where the BGS gain site is located (supply)."
+            allocationsLabel="Allocations Supplied"
+            bySiteLabel="Demand Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
+          />
+        </Box>
+      </Tabs.Content>
+
+      <Tabs.Content value="lnrs-allocation-demand-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="allocLnrs"
+            nameField="Name"
+            boundaries={lnrsBoundaries}
+            fallbackFetchUrl={ARCGIS_LNRS_URL}
+            specialMarkers={SCILLY_LNRS_MARKERS}
+            heatFrom={ORANGE_PALETTE.heatFrom}
+            heatTo={ORANGE_PALETTE.heatTo}
+            accentColor={ORANGE_PALETTE.accentColor}
+            description="Allocations grouped by where the originating development is located (demand)."
+            allocationsLabel="Allocation Demand"
+            bySiteLabel="Supply Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
           />
         </Box>
       </Tabs.Content>
@@ -360,6 +400,40 @@ export default function BGSBodiesContent({
             heatFrom={YELLOW_PALETTE.heatFrom}
             heatTo={YELLOW_PALETTE.heatTo}
             accentColor={YELLOW_PALETTE.accentColor}
+            description="Allocations grouped by where the BGS gain site is located (supply)."
+            allocationsLabel="Allocations Supplied"
+            bySiteLabel="Demand Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
+          />
+        </Box>
+      </Tabs.Content>
+
+      <Tabs.Content value="lpa-allocation-demand-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="lpa"
+            nameField="LPA23NM"
+            boundaries={lpaBoundaries}
+            fallbackFetchUrl={ARCGIS_LPA_URL}
+            specialMarkers={SCILLY_LPA_MARKERS}
+            heatFrom={ORANGE_PALETTE.heatFrom}
+            heatTo={ORANGE_PALETTE.heatTo}
+            accentColor={ORANGE_PALETTE.accentColor}
+            description="Allocations grouped by where the originating development is located (demand)."
+            allocationsLabel="Allocation Demand"
+            bySiteLabel="Supply Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
           />
         </Box>
       </Tabs.Content>
@@ -394,6 +468,14 @@ export default function BGSBodiesContent({
             heatFrom={BLUE_PALETTE.heatFrom}
             heatTo={BLUE_PALETTE.heatTo}
             accentColor={BLUE_PALETTE.accentColor}
+            allocationsLabel="Allocations Supplied"
+            bySiteLabel="Demand Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
           />
         </Box>
       </Tabs.Content>

@@ -203,8 +203,9 @@ function getNCABoundaries() {
 
 export default async function BGSBodiesPage() {
   try {
-    // Fetch all sites once
-    const allSites = await fetchAllSites(true, false, true);
+    // Fetch all sites once (withAllocSpatialData=true so each allocation's own LNRS/NCA/LSOA -
+    // i.e. the development site's location, used for the "demand" allocation maps - gets computed)
+    const allSites = await fetchAllSites(true, true, true);
 
     // Fetch all body data in parallel
     const [responsibleBodyItems, lpaData, ncaData, lnrsData, lnrsBoundaries, lpaBoundaries, ncaBoundaries] = await Promise.all([
