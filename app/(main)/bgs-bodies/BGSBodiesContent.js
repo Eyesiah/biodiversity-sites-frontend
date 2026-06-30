@@ -366,6 +366,7 @@ export default function BGSBodiesContent({
             boundaries={lnrsBoundaries}
             specialMarkers={SCILLY_LNRS_MARKERS}
             description="Allocations grouped by where the BGS gain site is located (supply)."
+            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LNRS to approved development allocations."
             allocationsLabel="Allocations Supplied"
             bySiteLabel="Demand Side"
             breakdownKeyField="srCat"
@@ -390,6 +391,7 @@ export default function BGSBodiesContent({
             heatTo={ORANGE_PALETTE.heatTo}
             accentColor={ORANGE_PALETTE.accentColor}
             description="Allocations grouped by where the originating development is located (demand)."
+            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
             allocationsLabel="Allocation Demand"
             bySiteLabel="Supply Side"
             breakdownKeyField="srCat"
@@ -431,6 +433,7 @@ export default function BGSBodiesContent({
             heatTo={YELLOW_PALETTE.heatTo}
             accentColor={YELLOW_PALETTE.accentColor}
             description="Allocations grouped by where the BGS gain site is located (supply)."
+            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LPA to approved development allocations."
             allocationsLabel="Allocations Supplied"
             bySiteLabel="Demand Side"
             breakdownKeyField="srCat"
@@ -455,6 +458,7 @@ export default function BGSBodiesContent({
             heatTo={ORANGE_PALETTE.heatTo}
             accentColor={ORANGE_PALETTE.accentColor}
             description="Allocations grouped by where the originating development is located (demand)."
+            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
             allocationsLabel="Allocation Demand"
             bySiteLabel="Supply Side"
             breakdownKeyField="srCat"
@@ -496,6 +500,7 @@ export default function BGSBodiesContent({
             heatFrom={BLUE_PALETTE.heatFrom}
             heatTo={BLUE_PALETTE.heatTo}
             accentColor={BLUE_PALETTE.accentColor}
+            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each NCA to approved development allocations."
             allocationsLabel="Allocations Supplied"
             bySiteLabel="Demand Side"
             breakdownKeyField="srCat"
@@ -520,6 +525,7 @@ export default function BGSBodiesContent({
             heatTo={ORANGE_PALETTE.heatTo}
             accentColor={ORANGE_PALETTE.accentColor}
             description="Allocations grouped by where the originating development is located (demand)."
+            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
             allocationsLabel="Allocation Demand"
             bySiteLabel="Supply Side"
             breakdownKeyField="srCat"

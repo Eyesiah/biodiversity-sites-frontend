@@ -7,6 +7,7 @@ import L from 'leaflet';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { formatNumber } from '@/lib/format';
 import { GREEN_PALETTE } from '@/components/map/heatMapPalettes';
+import Tooltip from '@/components/ui/Tooltip';
 
 const OUTLINE_COLOR = '#ffffff';
 const NO_DATA_COLOR = '#e3ded6';
@@ -160,6 +161,8 @@ const HeatLegend = ({ maxValue, heatFrom, heatTo }) => {
 //   allocations as a percentage instead of a raw count - defaults to false
 // - breakdownShowSpatialRisk: if true, appends each row's spatial risk category (Within /
 //   Neighbouring / Outside) - defaults to false
+// - shadingTooltip: optional tooltip text shown on hover over the main title, explaining what
+//   the map's colour shading is based on (e.g. differs for supply vs demand maps)
 const RegionAllocationHeatMap = ({
   allocations,
   regionField,
@@ -171,6 +174,7 @@ const RegionAllocationHeatMap = ({
   heatTo = GREEN_PALETTE.heatTo,
   accentColor = GREEN_PALETTE.accentColor,
   description = null,
+  shadingTooltip = null,
   allocationsLabel = 'Total Allocations',
   bySiteLabel = 'By site',
   breakdownKeyField = 'srn',
@@ -308,8 +312,8 @@ const RegionAllocationHeatMap = ({
 
     return (
       `<b>${name}</b><br />` +
-      `Total HU: ${formatNumber(entry?.totalHU || 0, 2)} - Area: ${formatNumber(entry?.area || 0, 2)} HU, Hedgerow: ${formatNumber(entry?.hedgerow || 0, 2)} HU, Watercourse: ${formatNumber(entry?.watercourse || 0, 2)} HU<br />` +
-      `${allocationsLabel}: ${count}<br /><br />` +
+      `${allocationsLabel}: ${count}<br />` +
+      `Total HU: ${formatNumber(entry?.totalHU || 0, 2)} - Area: ${formatNumber(entry?.area || 0, 2)} HU, Hedgerow: ${formatNumber(entry?.hedgerow || 0, 2)} HU, Watercourse: ${formatNumber(entry?.watercourse || 0, 2)} HU<br /><br />` +
       `<b>${bySiteLabel}:</b><br />${siteRows}`
     );
   };
@@ -334,7 +338,8 @@ const RegionAllocationHeatMap = ({
   return (
     <Flex direction="column" height="100%" width="100%">
       <Text fontSize="1.2rem" fontWeight="bold" color={accentColor} textAlign="center" marginBottom="0.5rem">
-        Total Habitat Units Allocated<br />{formatNumber(totalHU, 2)} HU total
+        {shadingTooltip ? <Tooltip text={shadingTooltip}>Total Habitat Units Allocated</Tooltip> : 'Total Habitat Units Allocated'}
+        <br />{formatNumber(totalHU, 2)} HU total
         <br />
         <Text as="span" fontSize="0.95rem" fontWeight="normal">
           Area: {formatNumber(totalArea, 2)} HU, Hedgerow: {formatNumber(totalHedgerow, 2)} HU, Watercourse: {formatNumber(totalWatercourse, 2)} HU
