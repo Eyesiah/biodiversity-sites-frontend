@@ -31,10 +31,12 @@
     "start": "next start",
     "lint": "eslint .",
     "setup-db-indexes": "node scripts/setup-database-indexes.js",
-    "backfill-published-dates": "node scripts/backfill-published-dates.js"
+    "backfill-published-dates": "node scripts/backfill-published-dates.js",
+    "generate-region-boundaries": "node scripts/generate-region-boundaries.js"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
+    "@turf/simplify": "^7.3.5",
     "baseline-browser-mapping": "2.9.19",
     "cross-env": "10.0.0",
     "dotenv": "16.4.5",
