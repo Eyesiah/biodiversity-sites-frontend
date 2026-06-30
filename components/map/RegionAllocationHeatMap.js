@@ -347,7 +347,7 @@ const RegionAllocationHeatMap = ({
         {breakdownOrder && (
           <>
             <Text as="span" fontSize="0.85rem" fontWeight="normal" color="gray.600">
-              {`The ${bySiteLabel} breakdown reflects whether the development's own LPA or LNRS matches, neighbours, or differs from the gain site's LPA or LNRS.`}
+              {`The ${bySiteLabel} breakdown popup reflects whether the development's own LPA or LNRS matches, neighbours, or is outside of the gain site's LPA or LNRS.`}
             </Text>
             <br />
           </>
