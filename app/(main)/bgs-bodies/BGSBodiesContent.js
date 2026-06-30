@@ -320,6 +320,9 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="nca-allocation-map">
           NCA Allocation Supply
         </Tabs.Trigger>
+        <Tabs.Trigger value="nca-allocation-demand-map">
+          NCA Allocation Demand
+        </Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content value="responsible-bodies">
@@ -495,6 +498,30 @@ export default function BGSBodiesContent({
             accentColor={BLUE_PALETTE.accentColor}
             allocationsLabel="Allocations Supplied"
             bySiteLabel="Demand Side"
+            breakdownKeyField="srCat"
+            breakdownNameField="srCat"
+            breakdownLinkPrefix={null}
+            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+            breakdownShowDistance={false}
+            breakdownShowPercentage={true}
+          />
+        </Box>
+      </Tabs.Content>
+
+      <Tabs.Content value="nca-allocation-demand-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="allocNca"
+            nameField="NCA_Name"
+            boundaries={ncaBoundaries}
+            specialMarkers={SCILLY_NCA_MARKERS}
+            heatFrom={ORANGE_PALETTE.heatFrom}
+            heatTo={ORANGE_PALETTE.heatTo}
+            accentColor={ORANGE_PALETTE.accentColor}
+            description="Allocations grouped by where the originating development is located (demand)."
+            allocationsLabel="Allocation Demand"
+            bySiteLabel="Supply Side"
             breakdownKeyField="srCat"
             breakdownNameField="srCat"
             breakdownLinkPrefix={null}
