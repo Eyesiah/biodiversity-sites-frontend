@@ -344,6 +344,14 @@ const RegionAllocationHeatMap = ({
           {formatNumber(totalAllocations, 0)} allocations. Map shading is based on total HUs per region.{description && ` ${description}`}
         </Text>
         <br />
+        {breakdownOrder && (
+          <>
+            <Text as="span" fontSize="0.85rem" fontWeight="normal" color="gray.600">
+              {`The ${bySiteLabel} breakdown reflects whether the development's own LPA or LNRS matches, neighbours, or differs from the gain site's LPA or LNRS.`}
+            </Text>
+            <br />
+          </>
+        )}
         <Text as="span" fontSize="0.85rem" fontWeight="normal" fontStyle="italic" color="gray.600">
           Click on a region to see more information.
         </Text>
