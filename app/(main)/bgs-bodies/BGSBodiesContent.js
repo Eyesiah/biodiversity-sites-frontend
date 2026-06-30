@@ -5,6 +5,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
 import MapContentLayout from '@/components/ui/MapContentLayout';
+import { NAV_HEIGHT, ARCGIS_LNRS_URL, ARCGIS_LPA_URL, ARCGIS_NCA_URL } from '@/config';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import LPAContent from './LPAContent';
 import NCAContent from './NCAContent';
@@ -13,11 +14,31 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
+import { YELLOW_PALETTE, BLUE_PALETTE } from '@/components/map/heatMapPalettes';
 
 const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
   loading: () => <p>Loading map...</p>
 });
+
+const RegionAllocationHeatMap = dynamic(() => import('@/components/map/RegionAllocationHeatMap'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>
+});
+
+// The Isles of Scilly are too small/remote to reliably see or click on the rendered
+// choropleth at England-wide zoom, so each map gets a fixed-pixel-size marker over them -
+// the region name differs per dataset (LNRS combines them with Cornwall; LPA and NCA each
+// have a distinct "Isles of Scilly" entry).
+const SCILLY_LNRS_MARKERS = [
+  { position: [49.92, -6.32], regionName: 'Cornwall and the Isles of Scilly', radius: 5 }
+];
+const SCILLY_LPA_MARKERS = [
+  { position: [49.92, -6.32], regionName: 'Isles of Scilly LPA', radius: 5 }
+];
+const SCILLY_NCA_MARKERS = [
+  { position: [49.92, -6.32], regionName: 'Isles of Scilly', radius: 5 }
+];
 
 export default function BGSBodiesContent({
   responsibleBodies = [],
@@ -25,6 +46,10 @@ export default function BGSBodiesContent({
   ncas = [],
   lnrs = [],
   sites = [],
+  allocations = [],
+  lnrsBoundaries = null,
+  lpaBoundaries = null,
+  ncaBoundaries = null,
   error = null
 }) {
   // Handle filter clear events from any content component
@@ -238,17 +263,26 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="lnrs-chart">
           LNRS Chart
         </Tabs.Trigger>
+        <Tabs.Trigger value="lnrs-allocation-map">
+          LNRS Allocation Map
+        </Tabs.Trigger>
         <Tabs.Trigger value="lpa">
           LPA List
         </Tabs.Trigger>
         <Tabs.Trigger value="lpa-chart">
           LPA Chart
         </Tabs.Trigger>
+        <Tabs.Trigger value="lpa-allocation-map">
+          LPA Allocation Map
+        </Tabs.Trigger>
         <Tabs.Trigger value="nca">
           NCA List
         </Tabs.Trigger>
         <Tabs.Trigger value="nca-chart">
           NCA Chart
+        </Tabs.Trigger>
+        <Tabs.Trigger value="nca-allocation-map">
+          NCA Allocation Map
         </Tabs.Trigger>
       </Tabs.List>
 
@@ -284,6 +318,19 @@ export default function BGSBodiesContent({
         <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
 
+      <Tabs.Content value="lnrs-allocation-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="lnrs"
+            nameField="Name"
+            boundaries={lnrsBoundaries}
+            fallbackFetchUrl={ARCGIS_LNRS_URL}
+            specialMarkers={SCILLY_LNRS_MARKERS}
+          />
+        </Box>
+      </Tabs.Content>
+
       <Tabs.Content value="lpa">
         <LPAContent
           ref={lpaContentRef}
@@ -299,6 +346,22 @@ export default function BGSBodiesContent({
 
       <Tabs.Content value="lpa-chart">
         <LPAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
+      </Tabs.Content>
+
+      <Tabs.Content value="lpa-allocation-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="siteLpa"
+            nameField="LPA23NM"
+            boundaries={lpaBoundaries}
+            fallbackFetchUrl={ARCGIS_LPA_URL}
+            specialMarkers={SCILLY_LPA_MARKERS}
+            heatFrom={YELLOW_PALETTE.heatFrom}
+            heatTo={YELLOW_PALETTE.heatTo}
+            accentColor={YELLOW_PALETTE.accentColor}
+          />
+        </Box>
       </Tabs.Content>
 
       <Tabs.Content value="nca">
@@ -318,8 +381,24 @@ export default function BGSBodiesContent({
       <Tabs.Content value="nca-chart">
         <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
+
+      <Tabs.Content value="nca-allocation-map">
+        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
+          <RegionAllocationHeatMap
+            allocations={allocations}
+            regionField="nca"
+            nameField="NCA_Name"
+            boundaries={ncaBoundaries}
+            fallbackFetchUrl={ARCGIS_NCA_URL}
+            specialMarkers={SCILLY_NCA_MARKERS}
+            heatFrom={BLUE_PALETTE.heatFrom}
+            heatTo={BLUE_PALETTE.heatTo}
+            accentColor={BLUE_PALETTE.accentColor}
+          />
+        </Box>
+      </Tabs.Content>
     </Tabs.Root>
-  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, handleFilterCleared, handleFilteredBodiesChange]);
+  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, allocations, lnrsBoundaries, lpaBoundaries, ncaBoundaries, handleFilterCleared, handleFilteredBodiesChange]);
 
   // Check for error after all hooks are called
   if (error) {

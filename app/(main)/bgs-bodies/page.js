@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { slugify, normalizeBodyName } from '@/lib/format';
-import { fetchAllSites } from '@/lib/api';
+import { fetchAllSites, transformAllocations } from '@/lib/api';
 import { processSiteForListView, processSitesForListView } from '@/lib/sites';
 import { getLPAData, getNCAData } from '@/lib/habitat';
-import { ARCGIS_LNRS_URL } from '@/config';
+import { ARCGIS_LNRS_URL, ARCGIS_LPA_URL, ARCGIS_NCA_URL } from '@/config';
 import BGSBodiesContent from './BGSBodiesContent';
 import Footer from '@/components/core/Footer';
 
@@ -173,20 +173,64 @@ async function getLNRSPageData(allSites) {
   }
 }
 
+async function getLNRSBoundaries() {
+  try {
+    // geometryPrecision rounds coordinates to ~1m accuracy without removing any vertices,
+    // cutting payload size substantially with no risk of distorting the boundary shapes.
+    // (Note: maxAllowableOffset-based generalization was tried and rejected - this ArcGIS
+    // service collapses polygons to a handful of points even at a 1m offset, corrupting the shapes.)
+    const url = `${ARCGIS_LNRS_URL}?where=1%3D1&outFields=Name&returnGeometry=true&geometryPrecision=5&f=geojson`;
+    const res = await fetch(url, { next: { revalidate: revalidate } });
+    return await res.json();
+  } catch (e) {
+    console.error('Error loading LNRS boundaries:', e);
+    return null;
+  }
+}
+
+async function getLPABoundaries() {
+  try {
+    // This service covers the whole UK; LPA23CD is prefixed by country (E/S/W/N), so filter
+    // to English LPAs only, since that's the only place BGS allocations can land.
+    const url = `${ARCGIS_LPA_URL}?where=LPA23CD+LIKE+'E%25'&outFields=LPA23NM&returnGeometry=true&geometryPrecision=5&f=geojson`;
+    const res = await fetch(url, { next: { revalidate: revalidate } });
+    return await res.json();
+  } catch (e) {
+    console.error('Error loading LPA boundaries:', e);
+    return null;
+  }
+}
+
+async function getNCABoundaries() {
+  try {
+    const url = `${ARCGIS_NCA_URL}?where=1%3D1&outFields=NCA_Name&returnGeometry=true&geometryPrecision=5&f=geojson`;
+    const res = await fetch(url, { next: { revalidate: revalidate } });
+    return await res.json();
+  } catch (e) {
+    console.error('Error loading NCA boundaries:', e);
+    return null;
+  }
+}
+
 export default async function BGSBodiesPage() {
   try {
     // Fetch all sites once
     const allSites = await fetchAllSites(true, false, true);
 
     // Fetch all body data in parallel
-    const [responsibleBodyItems, lpaData, ncaData, lnrsData] = await Promise.all([
+    const [responsibleBodyItems, lpaData, ncaData, lnrsData, lnrsBoundaries, lpaBoundaries, ncaBoundaries] = await Promise.all([
       getResponsibleBodiesData(allSites),
       getLPAPageData(allSites),
       getNCAPageData(allSites),
-      getLNRSPageData(allSites)
+      getLNRSPageData(allSites),
+      getLNRSBoundaries(),
+      getLPABoundaries(),
+      getNCABoundaries()
     ]);
 
     const lastUpdated = new Date().toISOString();
+
+    const allocations = transformAllocations(allSites);
 
     return (
       <>
@@ -196,6 +240,10 @@ export default async function BGSBodiesPage() {
           ncas={ncaData}
           lnrs={lnrsData}
           sites={processSitesForListView(allSites)}
+          allocations={allocations}
+          lnrsBoundaries={lnrsBoundaries}
+          lpaBoundaries={lpaBoundaries}
+          ncaBoundaries={ncaBoundaries}
         />
         <Footer lastUpdated={lastUpdated} />
       </>
