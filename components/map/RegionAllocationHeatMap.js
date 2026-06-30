@@ -156,10 +156,13 @@ const RegionAllocationHeatMap = ({
       if (!regionName || regionName === 'N/A') return;
 
       if (!data[regionName]) {
-        data[regionName] = { total: 0, bySite: {} };
+        data[regionName] = { total: 0, area: 0, hedgerow: 0, watercourse: 0, bySite: {} };
       }
       const regionEntry = data[regionName];
       regionEntry.total += 1;
+      regionEntry.area += alloc.au || 0;
+      regionEntry.hedgerow += alloc.hu || 0;
+      regionEntry.watercourse += alloc.wu || 0;
       total += 1;
 
       const siteKey = alloc.srn || 'Unknown';
@@ -202,7 +205,8 @@ const RegionAllocationHeatMap = ({
 
     return (
       `<b>${name}</b><br />` +
-      `Total Allocations: ${count}<br /><br />` +
+      `Total Allocations: ${count}<br />` +
+      `Area: ${formatNumber(entry?.area || 0, 2)} HU, Hedgerow: ${formatNumber(entry?.hedgerow || 0, 2)} HU, Watercourse: ${formatNumber(entry?.watercourse || 0, 2)} HU<br /><br />` +
       `<b>By site:</b><br />${siteRows}`
     );
   };
