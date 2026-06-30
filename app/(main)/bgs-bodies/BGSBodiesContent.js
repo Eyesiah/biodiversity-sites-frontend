@@ -5,7 +5,7 @@ import { Box, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
 import MapContentLayout from '@/components/ui/MapContentLayout';
-import { NAV_HEIGHT, ARCGIS_LNRS_URL, ARCGIS_LPA_URL, ARCGIS_NCA_URL } from '@/config';
+import { NAV_HEIGHT } from '@/config';
 import ResponsibleBodiesContent from './ResponsibleBodiesContent';
 import LPAContent from './LPAContent';
 import NCAContent from './NCAContent';
@@ -46,10 +46,6 @@ export default function BGSBodiesContent({
   ncas = [],
   lnrs = [],
   sites = [],
-  allocations = [],
-  lnrsBoundaries = null,
-  lpaBoundaries = null,
-  ncaBoundaries = null,
   error = null
 }) {
   // Handle filter clear events from any content component
@@ -59,6 +55,40 @@ export default function BGSBodiesContent({
     setMapSites([]);
   }, []);
   const [activeTab, setActiveTab] = useState('responsible-bodies');
+
+  // Data for the region allocation heat maps (5 tabs below) is fetched client-side rather than
+  // passed down as server-rendered props - the boundary GeoJSON and full allocations data are
+  // large enough that embedding them in this page's server-rendered payload pushed the BGS
+  // Bodies page's pre-rendered ISR response over Vercel's 19.07MB limit and broke the production
+  // deployment (FALLBACK_BODY_TOO_LARGE). See app/api/region-allocations/route.js and
+  // public/region-boundaries/.
+  const [allocations, setAllocations] = useState([]);
+  const [lnrsBoundaries, setLnrsBoundaries] = useState(null);
+  const [lpaBoundaries, setLpaBoundaries] = useState(null);
+  const [ncaBoundaries, setNcaBoundaries] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    Promise.all([
+      fetch('/api/region-allocations').then(res => res.json()),
+      fetch('/region-boundaries/lnrs.json').then(res => res.json()),
+      fetch('/region-boundaries/lpa.json').then(res => res.json()),
+      fetch('/region-boundaries/nca.json').then(res => res.json()),
+    ]).then(([allocationsData, lnrsData, lpaData, ncaData]) => {
+      if (cancelled) return;
+      setAllocations(allocationsData);
+      setLnrsBoundaries(lnrsData);
+      setLpaBoundaries(lpaData);
+      setNcaBoundaries(ncaData);
+    }).catch(e => {
+      console.error('Failed to load region allocation map data:', e);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Shared map state
   const [mapSites, setMapSites] = useState([]);
@@ -331,7 +361,6 @@ export default function BGSBodiesContent({
             regionField="lnrs"
             nameField="Name"
             boundaries={lnrsBoundaries}
-            fallbackFetchUrl={ARCGIS_LNRS_URL}
             specialMarkers={SCILLY_LNRS_MARKERS}
             description="Allocations grouped by where the BGS gain site is located (supply)."
             allocationsLabel="Allocations Supplied"
@@ -353,7 +382,6 @@ export default function BGSBodiesContent({
             regionField="allocLnrs"
             nameField="Name"
             boundaries={lnrsBoundaries}
-            fallbackFetchUrl={ARCGIS_LNRS_URL}
             specialMarkers={SCILLY_LNRS_MARKERS}
             heatFrom={ORANGE_PALETTE.heatFrom}
             heatTo={ORANGE_PALETTE.heatTo}
@@ -395,7 +423,6 @@ export default function BGSBodiesContent({
             regionField="siteLpa"
             nameField="LPA23NM"
             boundaries={lpaBoundaries}
-            fallbackFetchUrl={ARCGIS_LPA_URL}
             specialMarkers={SCILLY_LPA_MARKERS}
             heatFrom={YELLOW_PALETTE.heatFrom}
             heatTo={YELLOW_PALETTE.heatTo}
@@ -420,7 +447,6 @@ export default function BGSBodiesContent({
             regionField="lpa"
             nameField="LPA23NM"
             boundaries={lpaBoundaries}
-            fallbackFetchUrl={ARCGIS_LPA_URL}
             specialMarkers={SCILLY_LPA_MARKERS}
             heatFrom={ORANGE_PALETTE.heatFrom}
             heatTo={ORANGE_PALETTE.heatTo}
@@ -463,7 +489,6 @@ export default function BGSBodiesContent({
             regionField="nca"
             nameField="NCA_Name"
             boundaries={ncaBoundaries}
-            fallbackFetchUrl={ARCGIS_NCA_URL}
             specialMarkers={SCILLY_NCA_MARKERS}
             heatFrom={BLUE_PALETTE.heatFrom}
             heatTo={BLUE_PALETTE.heatTo}
