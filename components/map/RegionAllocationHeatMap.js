@@ -46,11 +46,38 @@ const FitBoundsToData = ({ data }) => {
 
   useEffect(() => {
     if (!data) return;
+    // The container may not have its final size yet at this point (e.g. this map sits inside
+    // a lazy-mounted tab, and the surrounding flex/aspect-ratio layout can still be settling
+    // when this effect runs) - Leaflet caches its container size on init/last invalidateSize
+    // call, so without this it can compute the wrong viewport and render blank or mis-fit.
+    map.invalidateSize();
     const bounds = L.geoJSON(data).getBounds();
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [10, 10] });
     }
   }, [data, map]);
+
+  return null;
+};
+
+// Belt-and-braces fix for the same issue: keeps the map correctly sized for as long as it's
+// mounted, in case the container resizes after the initial fitBounds (tab switches, window
+// resize, sidebar collapsing, etc), any of which can otherwise leave Leaflet showing a blank
+// or wrongly-cropped map until something else forces a resize.
+const InvalidateSizeOnResize = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    if (!container || typeof ResizeObserver === 'undefined') return;
+
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize();
+    });
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [map]);
 
   return null;
 };
@@ -359,6 +386,7 @@ const RegionAllocationHeatMap = ({
               </CircleMarker>
             ))}
             <FitBoundsToData data={boundaries} />
+            <InvalidateSizeOnResize />
           </MapContainer>
         </Box>
       </Flex>
