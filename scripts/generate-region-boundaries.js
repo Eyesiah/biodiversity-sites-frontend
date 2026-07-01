@@ -4,10 +4,12 @@
  * Region Boundary Generation Script
  *
  * Fetches LNRS, LPA, and NCA boundary GeoJSON from their ArcGIS services and writes a
- * simplified, static snapshot to data/. The live ArcGIS responses are too large (LNRS is
- * ~25-30MB, NCA ~4MB) to be cached by Next.js's fetch Data Cache (2MB hard limit per item),
- * so app/(main)/bgs-bodies/page.js reads these static files directly instead of live-fetching
- * on every request.
+ * simplified, static snapshot to public/region-boundaries/. The live ArcGIS responses are too
+ * large (LNRS is ~25-30MB, NCA ~4MB) to fetch on every request, and serving them as public
+ * static assets means components fetch them client-side without bloating any server-rendered
+ * page's payload (a previous version read these server-side in page.js and passed them down as
+ * props, which pushed the BGS Bodies page's pre-rendered ISR response over Vercel's 19.07MB
+ * limit and broke the production deployment - FALLBACK_BODY_TOO_LARGE).
  *
  * Re-run this manually if Natural England/ONS revise these boundaries.
  *
@@ -18,6 +20,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import simplify from '@turf/simplify';
+import { fixLpaApostrophe } from '../lib/format.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,19 +34,22 @@ const MAX_TARGET_BYTES = 1.5 * 1024 * 1024; // stay comfortably under Next's 2MB
 const DATASETS = [
   {
     name: 'LNRS',
-    outputFile: 'LNRS-Boundaries.json',
+    outputFile: 'lnrs.json',
     url: `${ARCGIS_LNRS_URL}?where=1%3D1&outFields=Name&returnGeometry=true&geometryPrecision=6&f=geojson`,
   },
   {
     name: 'LPA',
-    outputFile: 'LPA-Boundaries.json',
+    outputFile: 'lpa.json',
     // LPA23CD is prefixed by country (E/S/W/N) - English LPAs only, since that's the only
     // place BGS allocations can land.
     url: `${ARCGIS_LPA_URL}?where=LPA23CD+LIKE+'E%25'&outFields=LPA23NM&returnGeometry=true&geometryPrecision=6&f=geojson`,
+    // This ArcGIS service mangles the apostrophe in "King's Lynn and West Norfolk LPA"
+    // (returns "King0s..."), so fix it before writing - see lib/format.js fixLpaApostrophe.
+    nameProperty: 'LPA23NM',
   },
   {
     name: 'NCA',
-    outputFile: 'NCA-Boundaries.json',
+    outputFile: 'nca.json',
     url: `${ARCGIS_NCA_URL}?where=1%3D1&outFields=NCA_Name&returnGeometry=true&geometryPrecision=6&f=geojson`,
   },
 ];
@@ -80,9 +86,18 @@ async function generateBoundaries() {
     }
     console.log(`  ${dataset.name}: fetched ${geojson.features.length} features.`);
 
+    if (dataset.nameProperty) {
+      geojson.features.forEach(feature => {
+        const value = feature.properties[dataset.nameProperty];
+        if (value) {
+          feature.properties[dataset.nameProperty] = fixLpaApostrophe(value);
+        }
+      });
+    }
+
     const simplified = simplifyToTarget(geojson, dataset.name);
 
-    const outputPath = path.join(__dirname, '..', 'data', dataset.outputFile);
+    const outputPath = path.join(__dirname, '..', 'public', 'region-boundaries', dataset.outputFile);
     fs.writeFileSync(outputPath, JSON.stringify(simplified));
     const finalSize = fs.statSync(outputPath).size;
     console.log(`  ${dataset.name}: wrote ${outputPath} (${(finalSize / 1024 / 1024).toFixed(2)}MB)\n`);

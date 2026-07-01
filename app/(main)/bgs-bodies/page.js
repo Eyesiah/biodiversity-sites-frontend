@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Papa from 'papaparse';
 import { slugify, normalizeBodyName } from '@/lib/format';
-import { fetchAllSites, transformAllocations } from '@/lib/api';
+import { fetchAllSites } from '@/lib/api';
 import { processSiteForListView, processSitesForListView } from '@/lib/sites';
 import { getLPAData, getNCAData } from '@/lib/habitat';
 import { ARCGIS_LNRS_URL } from '@/config';
@@ -173,53 +173,23 @@ async function getLNRSPageData(allSites) {
   }
 }
 
-// LNRS/LPA/NCA boundaries are pre-fetched and simplified into static files by
-// scripts/generate-region-boundaries.js, rather than being live-fetched here. The live ArcGIS
-// responses (LNRS ~25-30MB, NCA ~4MB) are far too large for Next.js's fetch Data Cache (which
-// has a hard 2MB-per-item limit and silently fails to cache anything bigger), so every request
-// was doing an uncached multi-MB live fetch. Re-run that script if the source boundaries change.
-function readBoundariesFile(fileName) {
-  try {
-    const jsonPath = path.join(process.cwd(), 'data', fileName);
-    const jsonData = fs.readFileSync(jsonPath, 'utf-8');
-    return JSON.parse(jsonData);
-  } catch (e) {
-    console.error(`Error loading ${fileName}:`, e);
-    return null;
-  }
-}
-
-function getLNRSBoundaries() {
-  return readBoundariesFile('LNRS-Boundaries.json');
-}
-
-function getLPABoundaries() {
-  return readBoundariesFile('LPA-Boundaries.json');
-}
-
-function getNCABoundaries() {
-  return readBoundariesFile('NCA-Boundaries.json');
-}
-
 export default async function BGSBodiesPage() {
   try {
-    // Fetch all sites once
+    // Fetch all sites once. withAllocSpatialData=false here - the region heat maps (which need
+    // each allocation's own LNRS/NCA/LSOA and spatial risk category) fetch their own lightweight
+    // allocation data client-side via /api/region-allocations instead, see that route and
+    // components/map/RegionAllocationHeatMap.js for why.
     const allSites = await fetchAllSites(true, false, true);
 
     // Fetch all body data in parallel
-    const [responsibleBodyItems, lpaData, ncaData, lnrsData, lnrsBoundaries, lpaBoundaries, ncaBoundaries] = await Promise.all([
+    const [responsibleBodyItems, lpaData, ncaData, lnrsData] = await Promise.all([
       getResponsibleBodiesData(allSites),
       getLPAPageData(allSites),
       getNCAPageData(allSites),
-      getLNRSPageData(allSites),
-      getLNRSBoundaries(),
-      getLPABoundaries(),
-      getNCABoundaries()
+      getLNRSPageData(allSites)
     ]);
 
     const lastUpdated = new Date().toISOString();
-
-    const allocations = transformAllocations(allSites);
 
     return (
       <>
@@ -229,10 +199,6 @@ export default async function BGSBodiesPage() {
           ncas={ncaData}
           lnrs={lnrsData}
           sites={processSitesForListView(allSites)}
-          allocations={allocations}
-          lnrsBoundaries={lnrsBoundaries}
-          lpaBoundaries={lpaBoundaries}
-          ncaBoundaries={ncaBoundaries}
         />
         <Footer lastUpdated={lastUpdated} />
       </>
