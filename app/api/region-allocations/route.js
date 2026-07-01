@@ -9,7 +9,7 @@ import { fetchAllSites, transformAllocations } from '@/lib/api';
 // 19.07MB limit and broke the production deployment (FALLBACK_BODY_TOO_LARGE).
 export const revalidate = 86400; // 24 hours
 
-const FIELDS_USED_BY_HEAT_MAPS = ['lnrs', 'allocLnrs', 'siteLpa', 'lpa', 'nca', 'allocNca', 'srn', 'siteName', 'au', 'hu', 'wu', 'd', 'srCat'];
+const FIELDS_USED_BY_HEAT_MAPS = ['lnrs', 'allocLnrs', 'siteLpa', 'lpa', 'nca', 'allocNca', 'srn', 'siteName', 'rb', 'au', 'hu', 'wu', 'd', 'srCat'];
 
 export async function GET() {
   const allSites = await fetchAllSites(true, true, true);

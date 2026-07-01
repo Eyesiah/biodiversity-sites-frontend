@@ -15,6 +15,7 @@ import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
 import { YELLOW_PALETTE, BLUE_PALETTE, ORANGE_PALETTE } from '@/components/map/heatMapPalettes';
+import TopAllocationsTab from './TopAllocationsTab';
 
 const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
@@ -323,6 +324,9 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="nca-allocation-demand-map">
           NCA Allocation Demand
         </Tabs.Trigger>
+        <Tabs.Trigger value="top-10">
+          Allocation Top 10
+        </Tabs.Trigger>
       </Tabs.List>
 
       <Tabs.Content value="responsible-bodies">
@@ -536,6 +540,10 @@ export default function BGSBodiesContent({
             breakdownShowPercentage={true}
           />
         </Box>
+      </Tabs.Content>
+
+      <Tabs.Content value="top-10">
+        <TopAllocationsTab allocations={allocations} />
       </Tabs.Content>
     </Tabs.Root>
   ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, allocations, lnrsBoundaries, lpaBoundaries, ncaBoundaries, handleFilterCleared, handleFilteredBodiesChange]);
