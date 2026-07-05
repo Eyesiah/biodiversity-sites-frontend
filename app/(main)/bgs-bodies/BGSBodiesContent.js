@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { Tabs } from '@/components/styles/Tabs';
 import dynamic from 'next/dynamic';
 import MapContentLayout from '@/components/ui/MapContentLayout';
@@ -14,8 +14,37 @@ import { ResponsibleBodyMetricsChart } from '@/components/charts/ResponsibleBody
 import { LPAMetricsChart } from '@/components/charts/LPAMetricsChart';
 import { NCAMetricsChart } from '@/components/charts/NCAMetricsChart';
 import { LNRSMetricsChart } from '@/components/charts/LNRSMetricsChart';
-import { YELLOW_PALETTE, BLUE_PALETTE, ORANGE_PALETTE } from '@/components/map/heatMapPalettes';
+import { GREEN_PALETTE, YELLOW_PALETTE, BLUE_PALETTE, ORANGE_PALETTE } from '@/components/map/heatMapPalettes';
 import TopAllocationsTab from './TopAllocationsTab';
+import Tooltip from '@/components/ui/Tooltip';
+import { formatNumber } from '@/lib/format';
+
+const AllocationMapInfo = ({ regionType }) => (
+  <Box
+    bg="ivory"
+    border="1px solid #2d618f"
+    borderRadius="6px"
+    p="8px 16px"
+    mb="0.25rem"
+    fontSize="0.85rem"
+    color="gray.700"
+    flexShrink={0}
+    display="table"
+    mx="auto"
+    textAlign="center"
+  >
+    <Text marginBottom="0.2rem">
+      <strong>Allocation Supply</strong> (left): shading shows total Habitat Units (Area, Hedgerow &amp; Watercourse) already supplied by BGS gain sites within each {regionType} region to approved development allocations.
+    </Text>
+    <Text marginBottom="0.2rem">
+      <strong>Allocation Demand</strong> (right): shading shows total Habitat Units purchased from BGS gain sites by developments located within each {regionType} region.
+    </Text>
+    <Text marginBottom="0.2rem">
+      The popup breakdown shows allocations grouped as <strong>Within</strong>, <strong>Neighbouring</strong>, or <strong>Outside</strong> — reflecting whether the corresponding site&apos;s {regionType} matches, borders, or falls outside the selected region.
+    </Text>
+    <Text fontStyle="italic">Click on a region to open its popup.</Text>
+  </Box>
+);
 
 const BodiesMap = dynamic(() => import('@/components/map/BodiesMap'), {
   ssr: false,
@@ -56,6 +85,7 @@ export default function BGSBodiesContent({
     setMapSites([]);
   }, []);
   const [activeTab, setActiveTab] = useState('responsible-bodies');
+  const [mapInfoOpen, setMapInfoOpen] = useState(false);
 
   // Data for the region allocation heat maps (5 tabs below) is fetched client-side rather than
   // passed down as server-rendered props - the boundary GeoJSON and full allocations data are
@@ -64,6 +94,16 @@ export default function BGSBodiesContent({
   // deployment (FALLBACK_BODY_TOO_LARGE). See app/api/region-allocations/route.js and
   // public/region-boundaries/.
   const [allocations, setAllocations] = useState([]);
+
+  const allocationTotals = useMemo(() => {
+    let area = 0, hedgerow = 0, watercourse = 0;
+    (allocations || []).forEach(alloc => {
+      area += alloc.au || 0;
+      hedgerow += alloc.hu || 0;
+      watercourse += alloc.wu || 0;
+    });
+    return { area, hedgerow, watercourse, total: area + hedgerow + watercourse };
+  }, [allocations]);
   const [lnrsBoundaries, setLnrsBoundaries] = useState(null);
   const [lpaBoundaries, setLpaBoundaries] = useState(null);
   const [ncaBoundaries, setNcaBoundaries] = useState(null);
@@ -152,6 +192,7 @@ export default function BGSBodiesContent({
     setHoveredSite(null);
     setSelectedSite(null);
     setSelectedBody(null);
+    setMapInfoOpen(false);
   }, [activeTab]);
 
   // Handle polygon click on map - find the clicked body and set it as selected
@@ -279,6 +320,8 @@ export default function BGSBodiesContent({
   // Determine if we should disable zoom on the map (for chart hover)
   const disableZoom = activeTab === 'rb-chart' || activeTab === 'lpa-chart' || activeTab === 'nca-chart' || activeTab === 'lnrs-chart';
 
+  const isAllocationMapTab = activeTab === 'lnrs-allocation-maps' || activeTab === 'lpa-allocation-maps' || activeTab === 'nca-allocation-maps';
+
   const mainContent = useMemo(() => (
     <Tabs.Root value={activeTab} onValueChange={(details) => setActiveTab(details.value)}>
       <Tabs.List>
@@ -294,11 +337,8 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="lnrs-chart">
           LNRS Chart
         </Tabs.Trigger>
-        <Tabs.Trigger value="lnrs-allocation-map">
-          LNRS Allocation Supply
-        </Tabs.Trigger>
-        <Tabs.Trigger value="lnrs-allocation-demand-map">
-          LNRS Allocation Demand
+        <Tabs.Trigger value="lnrs-allocation-maps">
+          LNRS Allocation Maps
         </Tabs.Trigger>
         <Tabs.Trigger value="lpa">
           LPA List
@@ -306,11 +346,8 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="lpa-chart">
           LPA Chart
         </Tabs.Trigger>
-        <Tabs.Trigger value="lpa-allocation-map">
-          LPA Allocation Supply
-        </Tabs.Trigger>
-        <Tabs.Trigger value="lpa-allocation-demand-map">
-          LPA Allocation Demand
+        <Tabs.Trigger value="lpa-allocation-maps">
+          LPA Allocation Maps
         </Tabs.Trigger>
         <Tabs.Trigger value="nca">
           NCA List
@@ -318,11 +355,8 @@ export default function BGSBodiesContent({
         <Tabs.Trigger value="nca-chart">
           NCA Chart
         </Tabs.Trigger>
-        <Tabs.Trigger value="nca-allocation-map">
-          NCA Allocation Supply
-        </Tabs.Trigger>
-        <Tabs.Trigger value="nca-allocation-demand-map">
-          NCA Allocation Demand
+        <Tabs.Trigger value="nca-allocation-maps">
+          NCA Allocation Maps
         </Tabs.Trigger>
         <Tabs.Trigger value="top-10">
           Allocation Top 10
@@ -361,50 +395,86 @@ export default function BGSBodiesContent({
         <LNRSMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
 
-      <Tabs.Content value="lnrs-allocation-map">
+      <Tabs.Content value="lnrs-allocation-maps">
         <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="lnrs"
-            nameField="Name"
-            boundaries={lnrsBoundaries}
-            specialMarkers={SCILLY_LNRS_MARKERS}
-            description="Allocations grouped by where the BGS gain site is located (supply)."
-            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LNRS to approved development allocations."
-            allocationsLabel="Allocations Supplied"
-            bySiteLabel="Demand Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
-        </Box>
-      </Tabs.Content>
-
-      <Tabs.Content value="lnrs-allocation-demand-map">
-        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="allocLnrs"
-            nameField="Name"
-            boundaries={lnrsBoundaries}
-            specialMarkers={SCILLY_LNRS_MARKERS}
-            heatFrom={ORANGE_PALETTE.heatFrom}
-            heatTo={ORANGE_PALETTE.heatTo}
-            accentColor={ORANGE_PALETTE.accentColor}
-            description="Allocations grouped by where the originating development is located (demand)."
-            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
-            allocationsLabel="Allocation Demand"
-            bySiteLabel="Supply Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
+          <Flex direction="column" height="100%">
+            <Flex justify="center" paddingY="0.3rem" flexShrink={0}>
+              <Box
+                as="button"
+                fontSize="0.8rem"
+                fontWeight="semibold"
+                color={mapInfoOpen ? 'white' : '#2d618f'}
+                bg={mapInfoOpen ? '#2d618f' : 'transparent'}
+                cursor="pointer"
+                border="1.5px solid #2d618f"
+                borderRadius="4px"
+                px="0.6rem"
+                py="0.15rem"
+                userSelect="none"
+                onClick={() => setMapInfoOpen(v => !v)}
+                style={{ transition: 'background 0.15s, color 0.15s' }}
+              >
+                ⓘ Map Info
+              </Box>
+            </Flex>
+            <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
+              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+            </Text>
+            {mapInfoOpen && <AllocationMapInfo regionType="LNRS" />}
+            <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={GREEN_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on total HUs already supplied by all the BGS in each LNRS to approved development allocations.">LNRS Allocation Supply</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="lnrs"
+                    nameField="Name"
+                    boundaries={lnrsBoundaries}
+                    specialMarkers={SCILLY_LNRS_MARKERS}
+                    description="Allocations grouped by where the BGS gain site is located (supply)."
+                    shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LNRS to approved development allocations."
+                    allocationsLabel="Allocations Supplied"
+                    bySiteLabel="Demand Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={ORANGE_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on the total HUs already purchased from BGS gain sites by developments in each LNRS region.">LNRS Allocation Demand</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="allocLnrs"
+                    nameField="Name"
+                    boundaries={lnrsBoundaries}
+                    specialMarkers={SCILLY_LNRS_MARKERS}
+                    heatFrom={ORANGE_PALETTE.heatFrom}
+                    heatTo={ORANGE_PALETTE.heatTo}
+                    accentColor={ORANGE_PALETTE.accentColor}
+                    description="Allocations grouped by where the originating development is located (demand)."
+                    shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
+                    allocationsLabel="Allocation Demand"
+                    bySiteLabel="Supply Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+            </Flex>
+          </Flex>
         </Box>
       </Tabs.Content>
 
@@ -425,53 +495,89 @@ export default function BGSBodiesContent({
         <LPAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
 
-      <Tabs.Content value="lpa-allocation-map">
+      <Tabs.Content value="lpa-allocation-maps">
         <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="siteLpa"
-            nameField="LPA23NM"
-            boundaries={lpaBoundaries}
-            specialMarkers={SCILLY_LPA_MARKERS}
-            heatFrom={YELLOW_PALETTE.heatFrom}
-            heatTo={YELLOW_PALETTE.heatTo}
-            accentColor={YELLOW_PALETTE.accentColor}
-            description="Allocations grouped by where the BGS gain site is located (supply)."
-            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LPA to approved development allocations."
-            allocationsLabel="Allocations Supplied"
-            bySiteLabel="Demand Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
-        </Box>
-      </Tabs.Content>
-
-      <Tabs.Content value="lpa-allocation-demand-map">
-        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="lpa"
-            nameField="LPA23NM"
-            boundaries={lpaBoundaries}
-            specialMarkers={SCILLY_LPA_MARKERS}
-            heatFrom={ORANGE_PALETTE.heatFrom}
-            heatTo={ORANGE_PALETTE.heatTo}
-            accentColor={ORANGE_PALETTE.accentColor}
-            description="Allocations grouped by where the originating development is located (demand)."
-            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
-            allocationsLabel="Allocation Demand"
-            bySiteLabel="Supply Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
+          <Flex direction="column" height="100%">
+            <Flex justify="center" paddingY="0.3rem" flexShrink={0}>
+              <Box
+                as="button"
+                fontSize="0.8rem"
+                fontWeight="semibold"
+                color={mapInfoOpen ? 'white' : '#2d618f'}
+                bg={mapInfoOpen ? '#2d618f' : 'transparent'}
+                cursor="pointer"
+                border="1.5px solid #2d618f"
+                borderRadius="4px"
+                px="0.6rem"
+                py="0.15rem"
+                userSelect="none"
+                onClick={() => setMapInfoOpen(v => !v)}
+                style={{ transition: 'background 0.15s, color 0.15s' }}
+              >
+                ⓘ Map Info
+              </Box>
+            </Flex>
+            <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
+              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+            </Text>
+            {mapInfoOpen && <AllocationMapInfo regionType="LPA" />}
+            <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={YELLOW_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on total HUs already supplied by all the BGS in each LPA to approved development allocations.">LPA Allocation Supply</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="siteLpa"
+                    nameField="LPA23NM"
+                    boundaries={lpaBoundaries}
+                    specialMarkers={SCILLY_LPA_MARKERS}
+                    heatFrom={YELLOW_PALETTE.heatFrom}
+                    heatTo={YELLOW_PALETTE.heatTo}
+                    accentColor={YELLOW_PALETTE.accentColor}
+                    description="Allocations grouped by where the BGS gain site is located (supply)."
+                    shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each LPA to approved development allocations."
+                    allocationsLabel="Allocations Supplied"
+                    bySiteLabel="Demand Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={ORANGE_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on the total HUs already purchased from BGS gain sites by developments in each LPA.">LPA Allocation Demand</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="lpa"
+                    nameField="LPA23NM"
+                    boundaries={lpaBoundaries}
+                    specialMarkers={SCILLY_LPA_MARKERS}
+                    heatFrom={ORANGE_PALETTE.heatFrom}
+                    heatTo={ORANGE_PALETTE.heatTo}
+                    accentColor={ORANGE_PALETTE.accentColor}
+                    description="Allocations grouped by where the originating development is located (demand)."
+                    shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
+                    allocationsLabel="Allocation Demand"
+                    bySiteLabel="Supply Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+            </Flex>
+          </Flex>
         </Box>
       </Tabs.Content>
 
@@ -493,52 +599,89 @@ export default function BGSBodiesContent({
         <NCAMetricsChart sites={sites} onHoveredEntityChange={handleChartHover} />
       </Tabs.Content>
 
-      <Tabs.Content value="nca-allocation-map">
+      <Tabs.Content value="nca-allocation-maps">
         <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="nca"
-            nameField="NCA_Name"
-            boundaries={ncaBoundaries}
-            specialMarkers={SCILLY_NCA_MARKERS}
-            heatFrom={BLUE_PALETTE.heatFrom}
-            heatTo={BLUE_PALETTE.heatTo}
-            accentColor={BLUE_PALETTE.accentColor}
-            shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each NCA to approved development allocations."
-            allocationsLabel="Allocations Supplied"
-            bySiteLabel="Demand Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
-        </Box>
-      </Tabs.Content>
-
-      <Tabs.Content value="nca-allocation-demand-map">
-        <Box height={`calc(100vh - ${NAV_HEIGHT})`} width="100%">
-          <RegionAllocationHeatMap
-            allocations={allocations}
-            regionField="allocNca"
-            nameField="NCA_Name"
-            boundaries={ncaBoundaries}
-            specialMarkers={SCILLY_NCA_MARKERS}
-            heatFrom={ORANGE_PALETTE.heatFrom}
-            heatTo={ORANGE_PALETTE.heatTo}
-            accentColor={ORANGE_PALETTE.accentColor}
-            description="Allocations grouped by where the originating development is located (demand)."
-            shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
-            allocationsLabel="Allocation Demand"
-            bySiteLabel="Supply Side"
-            breakdownKeyField="srCat"
-            breakdownNameField="srCat"
-            breakdownLinkPrefix={null}
-            breakdownOrder={['Within', 'Neighbouring', 'Outside']}
-            breakdownShowDistance={false}
-            breakdownShowPercentage={true}
-          />
+          <Flex direction="column" height="100%">
+            <Flex justify="center" paddingY="0.3rem" flexShrink={0}>
+              <Box
+                as="button"
+                fontSize="0.8rem"
+                fontWeight="semibold"
+                color={mapInfoOpen ? 'white' : '#2d618f'}
+                bg={mapInfoOpen ? '#2d618f' : 'transparent'}
+                cursor="pointer"
+                border="1.5px solid #2d618f"
+                borderRadius="4px"
+                px="0.6rem"
+                py="0.15rem"
+                userSelect="none"
+                onClick={() => setMapInfoOpen(v => !v)}
+                style={{ transition: 'background 0.15s, color 0.15s' }}
+              >
+                ⓘ Map Info
+              </Box>
+            </Flex>
+            <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
+              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+            </Text>
+            {mapInfoOpen && <AllocationMapInfo regionType="NCA" />}
+            <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={BLUE_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on total HUs already supplied by all the BGS in each NCA to approved development allocations.">NCA Allocation Supply</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="nca"
+                    nameField="NCA_Name"
+                    boundaries={ncaBoundaries}
+                    specialMarkers={SCILLY_NCA_MARKERS}
+                    heatFrom={BLUE_PALETTE.heatFrom}
+                    heatTo={BLUE_PALETTE.heatTo}
+                    accentColor={BLUE_PALETTE.accentColor}
+                    description="Allocations grouped by where the BGS gain site is located (supply)."
+                    shadingTooltip="Map shading is based on total HUs already supplied by all the BGS in each NCA to approved development allocations."
+                    allocationsLabel="Allocations Supplied"
+                    bySiteLabel="Demand Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+              <Flex flex="1" direction="column" height={{ base: '50vh', xl: '100%' }} minWidth="0">
+                <Text fontSize="0.85rem" fontWeight="bold" color={ORANGE_PALETTE.accentColor} textAlign="center" py="0.2rem" flexShrink={0}>
+                  <Tooltip text="Map shading is based on the total HUs already purchased from BGS gain sites by developments in each NCA.">NCA Allocation Demand</Tooltip>
+                </Text>
+                <Box flex="1" minHeight="0">
+                  <RegionAllocationHeatMap
+                    allocations={allocations}
+                    regionField="allocNca"
+                    nameField="NCA_Name"
+                    boundaries={ncaBoundaries}
+                    specialMarkers={SCILLY_NCA_MARKERS}
+                    heatFrom={ORANGE_PALETTE.heatFrom}
+                    heatTo={ORANGE_PALETTE.heatTo}
+                    accentColor={ORANGE_PALETTE.accentColor}
+                    description="Allocations grouped by where the originating development is located (demand)."
+                    shadingTooltip="Map shading is based on the number of HUs already purchased from all developments in the region."
+                    allocationsLabel="Allocation Demand"
+                    bySiteLabel="Supply Side"
+                    breakdownKeyField="srCat"
+                    breakdownNameField="srCat"
+                    breakdownLinkPrefix={null}
+                    breakdownOrder={['Within', 'Neighbouring', 'Outside']}
+                    breakdownShowDistance={false}
+                    breakdownShowPercentage={true}
+                  />
+                </Box>
+              </Flex>
+            </Flex>
+          </Flex>
         </Box>
       </Tabs.Content>
 
@@ -546,7 +689,7 @@ export default function BGSBodiesContent({
         <TopAllocationsTab allocations={allocations} />
       </Tabs.Content>
     </Tabs.Root>
-  ), [activeTab, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, allocations, lnrsBoundaries, lpaBoundaries, ncaBoundaries, handleFilterCleared, handleFilteredBodiesChange]);
+  ), [activeTab, mapInfoOpen, allocationTotals, handleChartHover, handleExpandedBodyChanged, setHoveredSite, lnrs, lpas, ncas, responsibleBodies, sites, allocations, lnrsBoundaries, lpaBoundaries, ncaBoundaries, handleFilterCleared, handleFilteredBodiesChange]);
 
   // Check for error after all hooks are called
   if (error) {
@@ -571,6 +714,7 @@ export default function BGSBodiesContent({
         onPolygonClick={handlePolygonClick}
       />}
       content={mainContent}
+      hideMap={isAllocationMapTab}
     />
   );
 }

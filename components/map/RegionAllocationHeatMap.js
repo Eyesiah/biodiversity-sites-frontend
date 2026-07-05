@@ -7,7 +7,6 @@ import L from 'leaflet';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { formatNumber } from '@/lib/format';
 import { GREEN_PALETTE } from '@/components/map/heatMapPalettes';
-import Tooltip from '@/components/ui/Tooltip';
 
 const OUTLINE_COLOR = '#ffffff';
 const NO_DATA_COLOR = '#e3ded6';
@@ -337,30 +336,6 @@ const RegionAllocationHeatMap = ({
 
   return (
     <Flex direction="column" height="100%" width="100%">
-      <Text fontSize="1.2rem" fontWeight="bold" color={accentColor} textAlign="center" marginBottom="0.5rem">
-        {shadingTooltip ? <Tooltip text={shadingTooltip}>Total Habitat Units Allocated</Tooltip> : 'Total Habitat Units Allocated'}
-        <br />{formatNumber(totalHU, 2)} HU total
-        <br />
-        <Text as="span" fontSize="0.95rem" fontWeight="normal">
-          Area: {formatNumber(totalArea, 2)} HU, Hedgerow: {formatNumber(totalHedgerow, 2)} HU, Watercourse: {formatNumber(totalWatercourse, 2)} HU
-        </Text>
-        <br />
-        <Text as="span" fontSize="0.85rem" fontWeight="normal" color="gray.600">
-          {formatNumber(totalAllocations, 0)} allocations. Map shading is based on total HUs per region.{description && ` ${description}`}
-        </Text>
-        <br />
-        {breakdownOrder && (
-          <>
-            <Text as="span" fontSize="0.85rem" fontWeight="normal" color="gray.600">
-              {`The ${bySiteLabel} breakdown popup reflects whether the development's own LPA or LNRS matches, neighbours, or is outside of the gain site's LPA or LNRS.`}
-            </Text>
-            <br />
-          </>
-        )}
-        <Text as="span" fontSize="0.85rem" fontWeight="normal" fontStyle="italic" color="gray.600">
-          Click on a region to see more information.
-        </Text>
-      </Text>
       <Flex flex="1" minHeight="0" width="100%">
         <HeatLegend maxValue={maxHU} heatFrom={heatFrom} heatTo={heatTo} />
         <Box flex="1" height="100%" style={{ aspectRatio: '3 / 4', maxHeight: '100%' }} marginX="auto">
