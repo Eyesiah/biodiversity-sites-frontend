@@ -1,6 +1,6 @@
 {
   "name": "biodiversity-sites-frontend",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "private": false,
   "license": "MIT",
   "dependencies": {
