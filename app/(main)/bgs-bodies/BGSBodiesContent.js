@@ -102,7 +102,7 @@ export default function BGSBodiesContent({
       hedgerow += alloc.hu || 0;
       watercourse += alloc.wu || 0;
     });
-    return { area, hedgerow, watercourse, total: area + hedgerow + watercourse };
+    return { area, hedgerow, watercourse, total: area + hedgerow + watercourse, count: (allocations || []).length };
   }, [allocations]);
   const [lnrsBoundaries, setLnrsBoundaries] = useState(null);
   const [lpaBoundaries, setLpaBoundaries] = useState(null);
@@ -418,7 +418,7 @@ export default function BGSBodiesContent({
               </Box>
             </Flex>
             <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
-              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+              {formatNumber(allocationTotals.count, 0)} allocations — {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
             </Text>
             {mapInfoOpen && <AllocationMapInfo regionType="LNRS" />}
             <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">
@@ -518,7 +518,7 @@ export default function BGSBodiesContent({
               </Box>
             </Flex>
             <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
-              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+              {formatNumber(allocationTotals.count, 0)} allocations — {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
             </Text>
             {mapInfoOpen && <AllocationMapInfo regionType="LPA" />}
             <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">
@@ -622,7 +622,7 @@ export default function BGSBodiesContent({
               </Box>
             </Flex>
             <Text fontSize="1rem" fontWeight="semibold" textAlign="center" color="gray.700" flexShrink={0} paddingBottom="0.2rem">
-              {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
+              {formatNumber(allocationTotals.count, 0)} allocations — {formatNumber(allocationTotals.total, 2)} HU total — Area: {formatNumber(allocationTotals.area, 2)} HU, Hedgerow: {formatNumber(allocationTotals.hedgerow, 2)} HU, Watercourse: {formatNumber(allocationTotals.watercourse, 2)} HU
             </Text>
             {mapInfoOpen && <AllocationMapInfo regionType="NCA" />}
             <Flex flex="1" minHeight="0" direction={{ base: 'column', xl: 'row' }} gap="0.5rem">

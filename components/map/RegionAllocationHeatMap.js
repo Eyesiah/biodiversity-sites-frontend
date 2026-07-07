@@ -29,6 +29,13 @@ const getHeatColor = (value, max, heatFrom, heatTo) => {
   return `rgb(${r}, ${g}, ${b})`;
 };
 
+const median = (arr) => {
+  if (!arr || arr.length === 0) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+};
+
 // Picks "nice" round tick values for the legend axis, e.g. [0, 50, 100, 150, 200].
 const getNiceTicks = (max) => {
   if (max <= 0) return [0];
@@ -233,7 +240,7 @@ const RegionAllocationHeatMap = ({
       if (!regionName || regionName === 'N/A') return;
 
       if (!data[regionName]) {
-        data[regionName] = { total: 0, area: 0, hedgerow: 0, watercourse: 0, totalHU: 0, bySite: {} };
+        data[regionName] = { total: 0, area: 0, hedgerow: 0, watercourse: 0, totalHU: 0, bySite: {}, distanceValues: [] };
       }
       const regionEntry = data[regionName];
       regionEntry.total += 1;
@@ -241,6 +248,7 @@ const RegionAllocationHeatMap = ({
       regionEntry.hedgerow += alloc.hu || 0;
       regionEntry.watercourse += alloc.wu || 0;
       regionEntry.totalHU += (alloc.au || 0) + (alloc.hu || 0) + (alloc.wu || 0);
+      if (typeof alloc.d === 'number') regionEntry.distanceValues.push(alloc.d);
       total += 1;
 
       const breakdownKey = alloc[breakdownKeyField] || 'Unknown';
@@ -313,7 +321,8 @@ const RegionAllocationHeatMap = ({
       `<b>${name}</b><br />` +
       `${allocationsLabel}: ${count}<br />` +
       `Total HU: ${formatNumber(entry?.totalHU || 0, 2)} - Area: ${formatNumber(entry?.area || 0, 2)} HU, Hedgerow: ${formatNumber(entry?.hedgerow || 0, 2)} HU, Watercourse: ${formatNumber(entry?.watercourse || 0, 2)} HU<br /><br />` +
-      `<b>${bySiteLabel}:</b><br />${siteRows}`
+      `<b>${bySiteLabel}:</b><br />${siteRows}<br /><br />` +
+      `Median distance: ${entry?.distanceValues?.length ? `${formatNumber(median(entry.distanceValues), 0)} km` : 'unknown'}`
     );
   };
 
