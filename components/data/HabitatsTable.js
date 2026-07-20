@@ -19,10 +19,11 @@ const formatTreeCountWithTooltip = (area) => {
 export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isHabitatOpen, sites, habitatType }) => {
 
   const hasSites = sites != null;
+  const showBroadHabitat = !['hedgerows', 'watercourses', 'Hedgerows', 'Watercourses'].includes(habitatType);
 
   const mainRow = (
     <>
-      <DataTable.Cell textAlign="center">{habitat.broadHabitat}</DataTable.Cell>
+      {showBroadHabitat && <DataTable.Cell textAlign="center">{habitat.broadHabitat}</DataTable.Cell>}
       <DataTable.Cell>{habitat.type}</DataTable.Cell>
       <DataTable.Cell textAlign="center">{habitat.distinctiveness || '[Unknown Habitat Type]'}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
@@ -99,6 +100,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
 };
 
 export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement, onHabitatToggle, isHabitatOpen, sites, units, habitatType }) => {
+  const showBroadHabitat = !['hedgerows', 'watercourses', 'Hedgerows', 'Watercourses'].includes(habitatType);
 
 
   if (!habitats || habitats.length == 0)
@@ -129,9 +131,11 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
         <DataTable.Root>
           <DataTable.Header>
             <DataTable.Row>
-              <DataTable.ColumnHeader onClick={() => requestSort('broadHabitat')} textAlign="center">
-                <GlossaryTooltip term='Broad habitat'>Broad habitat</GlossaryTooltip>{getSortIndicator('broadHabitat')}
-              </DataTable.ColumnHeader>
+              {showBroadHabitat && (
+                <DataTable.ColumnHeader onClick={() => requestSort('broadHabitat')} textAlign="center">
+                  <GlossaryTooltip term='Broad habitat'>Broad habitat</GlossaryTooltip>{getSortIndicator('broadHabitat')}
+                </DataTable.ColumnHeader>
+              )}
               <DataTable.ColumnHeader onClick={() => requestSort('type')}>
                 <GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip>{getSortIndicator('type')}
               </DataTable.ColumnHeader>
