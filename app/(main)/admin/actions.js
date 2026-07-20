@@ -2,6 +2,7 @@
 
 import clientPromise from '@/lib/mongodb.js';
 import { MONGODB_DATABASE_NAME } from '@/config';
+import { revalidatePath } from 'next/cache';
 
 export async function addSiteName(prevState, formData) {
   const apiKey = formData.get("apiKey");
@@ -68,6 +69,8 @@ export async function addSiteName(prevState, formData) {
         { upsert: true }
       );
 
+      revalidatePath(`/sites/${referenceNumber}`);
+      revalidatePath('/admin');
       return {
         apiKey: apiKey, // Keep API key
         referenceNumber: '',
@@ -95,6 +98,8 @@ export async function addSiteName(prevState, formData) {
         { upsert: true }
       );
 
+      revalidatePath(`/sites/${referenceNumber}`);
+      revalidatePath('/admin');
       return {
         apiKey: apiKey, // Keep API key
         referenceNumber: '',
@@ -106,7 +111,7 @@ export async function addSiteName(prevState, formData) {
         message: `Cleared BGS data fields for site ${referenceNumber}`,
         error: null
       };
-     
+
     } else {
       // Add/update site data
       await collection.updateOne(
@@ -125,6 +130,8 @@ export async function addSiteName(prevState, formData) {
         { upsert: true }
       );
 
+      revalidatePath(`/sites/${referenceNumber}`);
+      revalidatePath('/admin');
       return {
         apiKey: apiKey, // Keep API key
         referenceNumber: '',
