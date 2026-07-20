@@ -22,7 +22,7 @@ export const HabitatRow = ({ habitat, isImprovement, units, onHabitatToggle, isH
 
   const mainRow = (
     <>
-      <DataTable.Cell textAlign="center">{habitat.broadHabitat}</DataTable.Cell>
+      {habitatType !== 'hedgerows' && habitatType !== 'watercourses' && <DataTable.Cell textAlign="center">{habitat.broadHabitat}</DataTable.Cell>}
       <DataTable.Cell>{habitat.type}</DataTable.Cell>
       <DataTable.Cell textAlign="center">{habitat.distinctiveness || '[Unknown Habitat Type]'}</DataTable.Cell>
       {hasSites && <DataTable.CenteredNumericCell>{sites.length}</DataTable.CenteredNumericCell>}
@@ -129,9 +129,11 @@ export const HabitatTable = ({ habitats, requestSort, sortConfig, isImprovement,
         <DataTable.Root>
           <DataTable.Header>
             <DataTable.Row>
-              <DataTable.ColumnHeader onClick={() => requestSort('broadHabitat')} textAlign="center">
-                <GlossaryTooltip term='Broad habitat'>Broad habitat</GlossaryTooltip>{getSortIndicator('broadHabitat')}
-              </DataTable.ColumnHeader>
+              {habitatType !== 'hedgerows' && habitatType !== 'watercourses' && (
+                <DataTable.ColumnHeader onClick={() => requestSort('broadHabitat')} textAlign="center">
+                  <GlossaryTooltip term='Broad habitat'>Broad habitat</GlossaryTooltip>{getSortIndicator('broadHabitat')}
+                </DataTable.ColumnHeader>
+              )}
               <DataTable.ColumnHeader onClick={() => requestSort('type')}>
                 <GlossaryTooltip term='Habitat'>Habitat</GlossaryTooltip>{getSortIndicator('type')}
               </DataTable.ColumnHeader>
