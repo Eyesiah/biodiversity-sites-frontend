@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from 'react';
+import { upload } from '@vercel/blob/client';
 import dynamic from 'next/dynamic';
 import { Box, Button, Input, Text, VStack, HStack } from '@chakra-ui/react';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
@@ -63,31 +64,31 @@ export default function AdminUploadMetricFile({ referenceOptions }) {
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('apiKey', apiKey);
-      formData.append('referenceNumber', selectedReference);
-      formData.append('file', file);
-
-      const response = await fetch('/api/upload-metric-file', {
-        method: 'POST',
-        body: formData,
+      const ext = file.name.toLowerCase().split('.').pop();
+      const blob = await upload(`metric-files/${selectedReference}.${ext}`, file, {
+        access: 'public',
+        handleUploadUrl: '/api/upload-metric-file',
+        clientPayload: JSON.stringify({ apiKey, referenceNumber: selectedReference }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.error || 'Upload failed.');
-        return;
+      // Explicitly persist the URL to MongoDB (don't rely solely on the Vercel webhook)
+      const saveRes = await fetch('/api/upload-metric-file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save', apiKey, referenceNumber: selectedReference, url: blob.url, fileName: file.name }),
+      });
+      if (!saveRes.ok) {
+        const saveData = await saveRes.json();
+        throw new Error(saveData.error || 'File uploaded but failed to save metadata.');
       }
 
-      setCurrentUrl(data.url);
+      setCurrentUrl(blob.url);
       setCurrentFileName(file.name);
       setMessage(`Metric file uploaded successfully for site ${selectedReference}`);
       setFile(null);
-      // Reset file input
       document.getElementById('metric-file-input') && (document.getElementById('metric-file-input').value = '');
     } catch (e) {
-      setError('Failed to upload file. Please try again.');
+      setError(e.message || 'Failed to upload file. Please try again.');
     } finally {
       setUploading(false);
     }
@@ -139,7 +140,7 @@ export default function AdminUploadMetricFile({ referenceOptions }) {
       <VStack spacing={4} align="stretch">
         <Text fontWeight="bold" fontSize="lg">Upload Statutory Metric Files</Text>
         <Text fontSize="sm" color="gray.600">
-          Upload a statutory biodiversity metric file (.xlsm or .xlsx, max 5MB) for a site.
+          Upload a statutory biodiversity metric file (.xlsm or .xlsx, large files supported) for a site.
           Once uploaded, a &quot;Statutory Metric Report&quot; tab will appear on the site&apos;s detail page.
         </Text>
 
