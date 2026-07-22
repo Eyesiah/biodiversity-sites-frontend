@@ -1,81 +1,93 @@
+import { handleUpload } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { put } from '@vercel/blob';
 import clientPromise from '@/lib/mongodb';
 import { MONGODB_DATABASE_NAME } from '@/config';
 
-export const maxDuration = 60; // 1 minute timeout for uploads
+export const maxDuration = 60;
 export const dynamic = 'force-dynamic';
 
-export async function POST(request) {
-  try {
-    const formData = await request.formData();
-    const apiKey = formData.get('apiKey');
-    const referenceNumber = formData.get('referenceNumber');
-    const file = formData.get('file');
+async function saveMetricFile(referenceNumber, url, fileName) {
+  const client = await clientPromise;
+  const db = client.db(MONGODB_DATABASE_NAME);
+  await db.collection('siteName').updateOne(
+    { _id: referenceNumber },
+    { $set: { metricFileUrl: url, metricFileName: fileName, updatedAt: new Date() } },
+    { upsert: true }
+  );
+  revalidatePath(`/sites/${referenceNumber}`);
+  revalidatePath('/admin');
+}
 
-    // Validate API key
+export async function POST(request) {
+  const body = await request.json();
+
+  // Explicit save call from client after upload() completes
+  if (body.action === 'save') {
+    const { apiKey, referenceNumber, url, fileName } = body;
+
     const adminKeys = process.env.ADMIN_API_KEYS?.split(',') || [];
     if (!adminKeys.includes(apiKey)) {
       return NextResponse.json({ error: 'Invalid API key. Access denied.' }, { status: 401 });
     }
-
-    // Validate reference number
-    if (!referenceNumber) {
-      return NextResponse.json({ error: 'Reference number is required.' }, { status: 400 });
-    }
-    if (!/^BGS-\d{9}$/.test(referenceNumber)) {
+    if (!referenceNumber || !/^BGS-\d{9}$/.test(referenceNumber)) {
       return NextResponse.json({ error: 'Invalid reference number format.' }, { status: 400 });
     }
-
-    // Validate file
-    if (!file || !(file instanceof File)) {
-      return NextResponse.json({ error: 'Metric file is required.' }, { status: 400 });
+    if (!url) {
+      return NextResponse.json({ error: 'URL is required.' }, { status: 400 });
     }
 
-    const ext = file.name.toLowerCase().split('.').pop();
-    if (!['xlsm', 'xlsx'].includes(ext)) {
-      return NextResponse.json({ error: 'Only .xlsm or .xlsx files are allowed.' }, { status: 400 });
+    try {
+      await saveMetricFile(referenceNumber, url, fileName || null);
+      return NextResponse.json({ success: true });
+    } catch (error) {
+      console.error('Error saving metric file metadata:', error);
+      return NextResponse.json({ error: 'Failed to save metric file metadata.' }, { status: 500 });
     }
+  }
 
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json({ error: 'File size must be less than 5MB.' }, { status: 400 });
-    }
+  // handleUpload protocol: token generation + completion webhook from Vercel Blob CDN
+  try {
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
+        const { apiKey, referenceNumber } = JSON.parse(clientPayload);
 
-    // Upload to Vercel Blob
-    const blobPath = `metric-files/${referenceNumber}.${ext}`;
-    const blob = await put(blobPath, file, {
-      access: 'public',
-      addRandomSuffix: false,
-      allowOverwrite: true,
-    });
+        const adminKeys = process.env.ADMIN_API_KEYS?.split(',') || [];
+        if (!adminKeys.includes(apiKey)) {
+          throw new Error('Invalid API key. Access denied.');
+        }
+        if (!referenceNumber || !/^BGS-\d{9}$/.test(referenceNumber)) {
+          throw new Error('Invalid reference number format.');
+        }
+        const ext = pathname.toLowerCase().split('.').pop();
+        if (!['xlsm', 'xlsx'].includes(ext)) {
+          throw new Error('Only .xlsm or .xlsx files are allowed.');
+        }
 
-    // Save metricFileUrl to MongoDB siteName collection
-    const client = await clientPromise;
-    const db = client.db(MONGODB_DATABASE_NAME);
-    const collection = db.collection('siteName');
-
-    await collection.updateOne(
-      { _id: referenceNumber },
-      {
-        $set: {
-          metricFileUrl: blob.url,
-          metricFileName: file.name,
-          updatedAt: new Date()
+        return {
+          allowOverwrite: true,
+          tokenPayload: JSON.stringify({ referenceNumber }),
+        };
+      },
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        const { referenceNumber } = JSON.parse(tokenPayload);
+        const fileName = blob.pathname.split('/').pop();
+        try {
+          await saveMetricFile(referenceNumber, blob.url, fileName);
+        } catch (error) {
+          console.error('onUploadCompleted: failed to save metric file metadata:', error);
         }
       },
-      { upsert: true }
-    );
-
-    revalidatePath(`/sites/${referenceNumber}`);
-    revalidatePath('/admin');
-
-    return NextResponse.json({
-      message: `Metric file uploaded successfully for site ${referenceNumber}`,
-      url: blob.url
     });
+
+    return NextResponse.json(jsonResponse);
   } catch (error) {
-    console.error('Error uploading metric file:', error);
-    return NextResponse.json({ error: 'Failed to upload metric file.' }, { status: 500 });
+    console.error('Error in metric file upload:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to upload metric file.' },
+      { status: 400 }
+    );
   }
 }
