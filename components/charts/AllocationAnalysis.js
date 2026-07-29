@@ -61,9 +61,16 @@ export default function AllocationAnalysis({ allocations }) {
 
     const counts = Object.fromEntries(CATEGORY_ORDER.map(c => [c, groups[c].length]));
 
+    const med = arr => {
+      if (arr.length === 0) return null;
+      const mid = Math.floor(arr.length / 2);
+      return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    };
+    const medians = Object.fromEntries(CATEGORY_ORDER.map(c => [c, med(groups[c])]));
+
     // Merge all distances, then compute cumulative % per category at each point
     const allDistances = [...new Set(Object.values(groups).flat())].sort((a, b) => a - b);
-    if (allDistances.length === 0) return { data: [], counts };
+    if (allDistances.length === 0) return { data: [], counts, medians };
 
     const pointers = Object.fromEntries(CATEGORY_ORDER.map(c => [c, 0]));
     const data = allDistances.map(d => {
@@ -76,7 +83,7 @@ export default function AllocationAnalysis({ allocations }) {
       return point;
     });
 
-    return { data, counts };
+    return { data, counts, medians };
   }, [allocations]);
 
   const habitatUnitDistributionData = useMemo(() => {
@@ -195,6 +202,16 @@ export default function AllocationAnalysis({ allocations }) {
               ))}
             </LineChart>
           </ResponsiveContainer>
+          <Text fontSize="0.8rem" color="gray.500" textAlign="center" mt={1}>
+            Median distances — {CATEGORY_ORDER.map((cat, i) => (
+              <span key={cat}>
+                {i > 0 ? ' · ' : ''}
+                {cat}: {distanceByCategoryData.medians?.[cat] != null
+                  ? `${formatNumber(distanceByCategoryData.medians[cat], 0)} km`
+                  : 'n/a'}
+              </span>
+            ))}
+          </Text>
         </ChartItem>
         <ChartItem>
           <Heading as="h4" size="md" textAlign="center">
