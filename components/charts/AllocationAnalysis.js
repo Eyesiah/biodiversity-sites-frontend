@@ -159,10 +159,10 @@ export default function AllocationAnalysis({ allocations }) {
                 return [`${formatNumber((value / huSummary.total) * 100, 1)}% of habitat units`, name];
               }} />
               <Legend verticalAlign="top" />
-              <Bar yAxisId="left" dataKey="count" fill="#2d6e42" name="Allocations (count)">
+              <Bar yAxisId="left" dataKey="count" fill="#6ac98fff" name="Allocations (count)">
                 <LabelList dataKey="count" content={makeBarLabel(v => formatNumber(v, 0))} />
               </Bar>
-              <Bar yAxisId="right" dataKey="sum" fill="#b85c2a" name="Habitat units (sum)">
+              <Bar yAxisId="right" dataKey="sum" fill="#e2742fff" name="Habitat units (sum)">
                 <LabelList dataKey="sum" content={makeBarLabel(v => {
                   if (v >= 1) return formatNumber(v, 0);
                   if (v >= 0.001) return formatNumber(v, 3);
