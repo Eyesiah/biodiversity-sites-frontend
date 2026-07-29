@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { formatNumber } from '@/lib/format';
-import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, BarChart, Bar, LabelList } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend, ReferenceLine, BarChart, Bar, LabelList } from 'recharts';
 import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
 import { Heading, Flex, Box, Text } from '@chakra-ui/react';
+import Tooltip from '@/components/ui/Tooltip';
+import LPA_TYPES from '@/data/lpa-authority-types.json';
 
 const makeBarLabel = (fmt = String) => {
   const BarLabel = ({ x, y, width, height, value }) => {
@@ -26,6 +28,14 @@ const makeBarLabel = (fmt = String) => {
   return BarLabel;
 };
 
+const CATEGORY_ORDER = ['London boroughs', 'Metropolitan districts', 'Other unitary authorities', 'Non-urban authorities'];
+const CATEGORY_COLORS = {
+  'London boroughs': '#2d6e42',
+  'Metropolitan districts': '#6ac98fff',
+  'Other unitary authorities': '#e2742fff',
+  'Non-urban authorities': '#999999',
+};
+
 const BIN_DEFS = [
   { key: '0 – 0.01',   test: t => t <  0.01 },
   { key: '0.01 – 0.1', test: t => t <  0.1  },
@@ -37,25 +47,36 @@ const BIN_DEFS = [
 
 export default function AllocationAnalysis({ allocations }) {
 
-  const distanceDistributionData = useMemo(() => {
-    const distances = allocations.map(alloc => alloc.d).filter(d => typeof d === 'number').sort((a, b) => a - b);
-    if (distances.length === 0) {
-      return [];
-    }
+  const distanceByCategoryData = useMemo(() => {
+    const groups = Object.fromEntries(CATEGORY_ORDER.map(c => [c, []]));
 
-    const cumulativeData = [];
-    const total = distances.length;
-
-    distances.forEach((distance, index) => {
-      const cumulativeCount = index + 1;
-      cumulativeData.push({
-        distance: distance,
-        cumulativeCount: cumulativeCount,
-        percentage: (cumulativeCount / total) * 100,
-      });
+    allocations.forEach(alloc => {
+      if (typeof alloc.d !== 'number' || alloc.d <= 0) return;
+      const name = (alloc.lpa || '').replace(/ LPA$/i, '').trim();
+      const type = LPA_TYPES[name] || 'Non-urban authorities';
+      groups[type].push(alloc.d);
     });
 
-    return cumulativeData;
+    CATEGORY_ORDER.forEach(c => groups[c].sort((a, b) => a - b));
+
+    const counts = Object.fromEntries(CATEGORY_ORDER.map(c => [c, groups[c].length]));
+
+    // Merge all distances, then compute cumulative % per category at each point
+    const allDistances = [...new Set(Object.values(groups).flat())].sort((a, b) => a - b);
+    if (allDistances.length === 0) return { data: [], counts };
+
+    const pointers = Object.fromEntries(CATEGORY_ORDER.map(c => [c, 0]));
+    const data = allDistances.map(d => {
+      const point = { distance: d };
+      CATEGORY_ORDER.forEach(c => {
+        const sorted = groups[c];
+        while (pointers[c] < sorted.length && sorted[pointers[c]] <= d) pointers[c]++;
+        point[c] = sorted.length > 0 ? (pointers[c] / sorted.length) * 100 : null;
+      });
+      return point;
+    });
+
+    return { data, counts };
   }, [allocations]);
 
   const habitatUnitDistributionData = useMemo(() => {
@@ -132,20 +153,55 @@ export default function AllocationAnalysis({ allocations }) {
     <>
       <ChartRow>
         <ChartItem>
-          <Heading as="h4" size="md" textAlign="center">Cumulative distance distribution (km) - The distance between the development site and the BGS offset site.</Heading>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={distanceDistributionData}>
+          <Heading as="h4" size="md" textAlign="center">
+            <Tooltip text="Each line shows the cumulative % of allocations whose development-to-offset distance is at or below each value (x-axis, log scale). Lines are split by the authority type of the development site's LPA: London boroughs (33 inner/outer London boroughs including City of London); Metropolitan districts (36 boroughs across Greater Manchester, Merseyside, West Midlands, West Yorkshire, South Yorkshire and Tyne & Wear); Other unitary authorities (single-tier councils outside London and the metropolitan areas); Non-urban authorities (district councils in two-tier county areas, plus national parks and development corporations).">
+              Cumulative distance distribution — development site to BGS offset site (log scale)
+            </Tooltip>
+          </Heading>
+          <ResponsiveContainer width="100%" height={340}>
+            <LineChart data={distanceByCategoryData.data} margin={{ top: 10, right: 20, left: 20, bottom: 40 }}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" dataKey="distance" name="CDistance (km)" unit="km" domain={['dataMin', 'dataMax']} tickFormatter={(value) => formatNumber(value, 0)} />
-              <YAxis dataKey="percentage" name="Cumulative Percentage" unit="%" domain={[0, 105]} />
-              <RechartsTooltip formatter={(value, name, props) => (name === 'Cumulative Percentage' ? `${formatNumber(value, 2)}%` : `${formatNumber(props.payload.distance, 2)} km`)} labelFormatter={(label) => `Distance: ${formatNumber(label, 2)} km`} />
-              <Legend />
-              <Line type="monotone" dataKey="percentage" stroke="#8884d8" name="Cumulative Percentage" dot={false} strokeWidth={2} />
+              <XAxis
+                type="number"
+                dataKey="distance"
+                scale="log"
+                domain={['dataMin', 'dataMax']}
+                ticks={[1, 3, 10, 30, 100, 300]}
+                tickFormatter={v => v}
+                label={{ value: 'Distance from development to allocated habitat (km, log scale)', position: 'insideBottom', offset: -25 }}
+              />
+              <YAxis
+                domain={[0, 100]}
+                unit="%"
+                label={{ value: '% of allocations at or below', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+              />
+              <RechartsTooltip
+                formatter={(value, name) => value != null ? [`${formatNumber(value, 1)}%`, name] : [null, name]}
+                labelFormatter={label => `Distance: ${formatNumber(label, 1)} km`}
+              />
+              <ReferenceLine y={50} stroke="#bbb" strokeDasharray="4 4" />
+              <Legend verticalAlign="top" />
+              {CATEGORY_ORDER.map(cat => (
+                <Line
+                  key={cat}
+                  type="monotone"
+                  dataKey={cat}
+                  stroke={CATEGORY_COLORS[cat]}
+                  dot={false}
+                  strokeWidth={2}
+                  name={`${cat} (n=${distanceByCategoryData.counts?.[cat] ?? 0})`}
+                  connectNulls={false}
+                />
+              ))}
             </LineChart>
           </ResponsiveContainer>
         </ChartItem>
         <ChartItem>
-          <Heading as="h4" size="md" textAlign="center">Habitat Unit (HU) Distribution</Heading>
+          <Heading as="h4" size="md" textAlign="center">
+            <Tooltip text="Each allocation is placed into a bin based on its total habitat units (area + hedgerow + watercourse HUs combined). The green bars show the number of allocations in each bin (left axis); the orange bars show the total habitat units those allocations represent (right axis). Bins use a logarithmic scale (0–0.01, 0.01–0.1, 0.1–1, 1–10, 10–100, over 100 HUs) to reveal the distribution across allocations of very different sizes.">
+              Habitat Unit (HU) Distribution
+            </Tooltip>
+          </Heading>
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={habitatUnitDistributionData} margin={{ top: 20, right: 60, left: 20, bottom: 5 }} barCategoryGap="15%">
               <CartesianGrid strokeDasharray="3 3" />
