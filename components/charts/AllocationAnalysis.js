@@ -5,6 +5,36 @@ import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
 import { Heading, Flex, Box, Text } from '@chakra-ui/react';
 
+const makeBarLabel = (fmt = String) => {
+  const BarLabel = ({ x, y, width, height, value }) => {
+    if (value == null || value === 0) return null;
+    const inside = height > 18;
+    return (
+      <text
+        x={x + width / 2}
+        y={inside ? y + height / 2 : y - 4}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize={11}
+        fill={inside ? '#fff' : '#555'}
+      >
+        {fmt(value)}
+      </text>
+    );
+  };
+  BarLabel.displayName = 'BarLabel';
+  return BarLabel;
+};
+
+const BIN_DEFS = [
+  { key: '0 – 0.01',   test: t => t <  0.01 },
+  { key: '0.01 – 0.1', test: t => t <  0.1  },
+  { key: '0.1 – 1',    test: t => t <  1     },
+  { key: '1 – 10',     test: t => t < 10     },
+  { key: '10 – 100',   test: t => t < 100    },
+  { key: 'over 100',   test: () => true       },
+];
+
 export default function AllocationAnalysis({ allocations }) {
 
   const distanceDistributionData = useMemo(() => {
@@ -29,29 +59,22 @@ export default function AllocationAnalysis({ allocations }) {
   }, [allocations]);
 
   const habitatUnitDistributionData = useMemo(() => {
-    const allUnits = allocations.flatMap(alloc => [alloc.au, alloc.hu, alloc.wu]).filter(u => typeof u === 'number' && u > 0);
-    if (allUnits.length === 0) return [];
-    const totalCount = allUnits.length;
+    if (allocations.length === 0) return [];
+    const bins = Object.fromEntries(BIN_DEFS.map(b => [b.key, { name: b.key, count: 0, sum: 0 }]));
+    allocations.forEach(alloc => {
+      const total = (alloc.au || 0) + (alloc.hu || 0) + (alloc.wu || 0);
+      const bin = BIN_DEFS.find(b => b.test(total));
+      bins[bin.key].count++;
+      bins[bin.key].sum += total;
+    });
+    return BIN_DEFS.map(b => bins[b.key]);
+  }, [allocations]);
 
-    const bins = {
-      '0-1 HUs': 0,
-      '1-2 HUs': 0,
-      '2-3 HUs': 0,
-      '3-4 HUs': 0,
-      '4-5 HUs': 0,
-      '>5 HUs': 0,
-    };
-
-    for (const unit of allUnits) {
-      if (unit <= 1) bins['0-1 HUs']++;
-      else if (unit <= 2) bins['1-2 HUs']++;
-      else if (unit <= 3) bins['2-3 HUs']++;
-      else if (unit <= 4) bins['3-4 HUs']++;
-      else if (unit <= 5) bins['4-5 HUs']++;
-      else bins['>5 HUs']++;
-    }
-
-    return Object.entries(bins).map(([name, count]) => ({ name, count, percentage: (count / totalCount) * 100 }));
+  const huSummary = useMemo(() => {
+    const area = allocations.reduce((s, a) => s + (a.au || 0), 0);
+    const hedgerow = allocations.reduce((s, a) => s + (a.hu || 0), 0);
+    const watercourse = allocations.reduce((s, a) => s + (a.wu || 0), 0);
+    return { count: allocations.length, total: area + hedgerow + watercourse, area, hedgerow, watercourse };
   }, [allocations]);
 
   const imdDistributionData = useMemo(() => {
@@ -123,16 +146,35 @@ export default function AllocationAnalysis({ allocations }) {
         </ChartItem>
         <ChartItem>
           <Heading as="h4" size="md" textAlign="center">Habitat Unit (HU) Distribution</Heading>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={habitatUnitDistributionData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }} barCategoryGap="10%">
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={habitatUnitDistributionData} margin={{ top: 20, right: 60, left: 20, bottom: 5 }} barCategoryGap="15%">
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" name="HUs" />
-              <YAxis name="Count" allowDecimals={false} />
-              <RechartsTooltip formatter={(value, name, props) => [`${value} (${formatNumber(props.payload.percentage, 1)}%)`, name]} />
-              <Legend />
-              <Bar dataKey="count" fill="#6ac98fff" name="Number of Allocations"><LabelList dataKey="count" position="top" /></Bar>
+              <XAxis dataKey="name" />
+              <YAxis yAxisId="left" orientation="left" allowDecimals={false} tickFormatter={(v) => formatNumber(v, 0)} label={{ value: 'Number of allocations', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }} />
+              <YAxis yAxisId="right" orientation="right" tickFormatter={(v) => formatNumber(v, 0)} label={{ value: 'Habitat units', angle: 90, position: 'insideRight', style: { textAnchor: 'middle' } }} />
+              <RechartsTooltip formatter={(value, name, props) => {
+                if (name === 'Allocations (count)') {
+                  return [`${formatNumber((value / huSummary.count) * 100, 1)}% of allocations`, name];
+                }
+                return [`${formatNumber((value / huSummary.total) * 100, 1)}% of habitat units`, name];
+              }} />
+              <Legend verticalAlign="top" />
+              <Bar yAxisId="left" dataKey="count" fill="#2d6e42" name="Allocations (count)">
+                <LabelList dataKey="count" content={makeBarLabel(v => formatNumber(v, 0))} />
+              </Bar>
+              <Bar yAxisId="right" dataKey="sum" fill="#b85c2a" name="Habitat units (sum)">
+                <LabelList dataKey="sum" content={makeBarLabel(v => {
+                  if (v >= 1) return formatNumber(v, 0);
+                  if (v >= 0.001) return formatNumber(v, 3);
+                  if (v > 0) return '<0.001';
+                  return '0';
+                })} />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
+          <Text fontSize="0.8rem" color="gray.500" textAlign="center" mt={1}>
+            {huSummary.count.toLocaleString()} allocations totalling {formatNumber(huSummary.total, 2)} habitat units ({formatNumber(huSummary.area, 2)} area, {formatNumber(huSummary.hedgerow, 2)} hedgerow, {formatNumber(huSummary.watercourse, 2)} watercourse)
+          </Text>
         </ChartItem>
       </ChartRow>
       <ChartRow>
