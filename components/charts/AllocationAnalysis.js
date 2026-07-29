@@ -5,7 +5,7 @@ import ChartRow from '@/components/styles/ChartRow';
 import ChartItem from '@/components/styles/ChartItem';
 import { Heading, Flex, Box, Text } from '@chakra-ui/react';
 import Tooltip from '@/components/ui/Tooltip';
-import LPA_TYPES from '@/data/lpa-authority-types.json';
+import AUTHORITY_TIERS from '@/data/authority-tiers.json';
 
 const makeBarLabel = (fmt = String) => {
   const BarLabel = ({ x, y, width, height, value }) => {
@@ -28,12 +28,18 @@ const makeBarLabel = (fmt = String) => {
   return BarLabel;
 };
 
-const CATEGORY_ORDER = ['London boroughs', 'Metropolitan districts', 'Other unitary authorities', 'Non-urban authorities'];
+const CATEGORY_ORDER = ['London borough', 'Metropolitan district', 'Other urban unitary', 'Non-urban'];
 const CATEGORY_COLORS = {
-  'London boroughs': '#2d6e42',
-  'Metropolitan districts': '#6ac98fff',
-  'Other unitary authorities': '#e2742fff',
-  'Non-urban authorities': '#999999',
+  'London borough': '#2d6e42',
+  'Metropolitan district': '#6ac98fff',
+  'Other urban unitary': '#e2742fff',
+  'Non-urban': '#999999',
+};
+const TIER_LABELS = {
+  'London borough': 'London boroughs',
+  'Metropolitan district': 'Metropolitan districts',
+  'Other urban unitary': 'Other unitary authorities',
+  'Non-urban': 'Non-urban authorities',
 };
 
 const BIN_DEFS = [
@@ -53,7 +59,7 @@ export default function AllocationAnalysis({ allocations }) {
     allocations.forEach(alloc => {
       if (typeof alloc.d !== 'number' || alloc.d <= 0) return;
       const name = (alloc.lpa || '').replace(/ LPA$/i, '').trim();
-      const type = LPA_TYPES[name] || 'Non-urban authorities';
+      const type = AUTHORITY_TIERS[name] || 'Non-urban';
       groups[type].push(alloc.d);
     });
 
@@ -161,7 +167,7 @@ export default function AllocationAnalysis({ allocations }) {
       <ChartRow>
         <ChartItem>
           <Heading as="h4" size="md" textAlign="center">
-            <Tooltip text="Each line shows the cumulative % of allocations whose development-to-offset distance is at or below each value (x-axis, log scale). Lines are split by the authority type of the development site's LPA: London boroughs (33 inner/outer London boroughs including City of London); Metropolitan districts (36 boroughs across Greater Manchester, Merseyside, West Midlands, West Yorkshire, South Yorkshire and Tyne & Wear); Other unitary authorities (single-tier councils outside London and the metropolitan areas); Non-urban authorities (district councils in two-tier county areas, plus national parks and development corporations).">
+            <Tooltip text="Each line shows the cumulative % of allocations whose development-to-offset distance is at or below each value (x-axis, log scale). Lines are split by the built-up character of the development site's LPA, using the classification from the Bristol Tree Forum article 'Where does the biodiversity go?': London boroughs (26 inner and outer London boroughs); Metropolitan districts (35 boroughs across Greater Manchester, Merseyside, West Midlands, West Yorkshire, South Yorkshire and Tyne & Wear); Other unitary authorities (30 substantially built-up unitary authorities outside London and the metropolitan areas); Non-urban authorities (all other authorities — largely rural unitaries such as Cornwall, Wiltshire and North Yorkshire, plus district and county councils, national parks and development corporations).">
               Cumulative distance distribution — development site to BGS offset site (log scale)
             </Tooltip>
           </Heading>
@@ -196,7 +202,7 @@ export default function AllocationAnalysis({ allocations }) {
                   stroke={CATEGORY_COLORS[cat]}
                   dot={false}
                   strokeWidth={2}
-                  name={`${cat} (n=${distanceByCategoryData.counts?.[cat] ?? 0})`}
+                  name={`${TIER_LABELS[cat]} (n=${distanceByCategoryData.counts?.[cat] ?? 0})`}
                   connectNulls={false}
                 />
               ))}
@@ -206,7 +212,7 @@ export default function AllocationAnalysis({ allocations }) {
             Median distances — {CATEGORY_ORDER.map((cat, i) => (
               <span key={cat}>
                 {i > 0 ? ' · ' : ''}
-                {cat}: {distanceByCategoryData.medians?.[cat] != null
+                {TIER_LABELS[cat]}: {distanceByCategoryData.medians?.[cat] != null
                   ? `${formatNumber(distanceByCategoryData.medians[cat], 0)} km`
                   : 'n/a'}
               </span>
