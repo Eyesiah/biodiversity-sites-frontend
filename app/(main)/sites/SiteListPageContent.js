@@ -484,6 +484,9 @@ export default function SiteListPageContent({ sites }) {
     const data = (items || []).map(s => ({
       'reference-number': s.referenceNumber,
       'name': s.name || '',
+      'bgs-website': s.bgsWebsite || '',
+      'bgs-reference-url': s.bgsReferenceUrl || '',
+      'misc-urls': s.miscUrls || '',
       'responsible-body': Array.isArray(s.responsibleBodies) ? s.responsibleBodies.join(', ') : (s.responsibleBodies || ''),
       'published-date': s.publishedDate ? (s.publishedDatePreTracking ? `Predates ${new Date(s.publishedDate).toLocaleDateString('en-GB')}` : new Date(s.publishedDate).toLocaleDateString('en-GB')) : '',
       'LPA': s.lpaName || '',
