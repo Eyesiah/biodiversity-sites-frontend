@@ -23,6 +23,8 @@
     "react-plotly.js": "2.6.0",
     "react-select": "5.10.2",
     "recharts": "3.3.0",
+    "xlsx": "^0.18.5",
+    "xlsx-js-style": "^1.2.0",
     "xmlbuilder2": "4.0.3"
   },
   "scripts": {
