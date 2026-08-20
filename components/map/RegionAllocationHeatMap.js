@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { formatNumber } from '@/lib/format';
+import { triggerDownload } from '@/lib/utils';
 import { GREEN_PALETTE } from '@/components/map/heatMapPalettes';
 
 const OUTLINE_COLOR = '#ffffff';
@@ -127,6 +128,119 @@ const HeatLegend = ({ maxValue, heatFrom, heatTo }) => {
   );
 };
 
+const PopupDownloadHandler = ({ allocations, downloadDemandField, downloadSupplyField }) => {
+  const map = useMap();
+  useEffect(() => {
+    const handlePopupOpen = (e) => {
+      const btn = e.popup.getElement()?.querySelector('.region-download-btn');
+      if (!btn) return;
+      const lpaName = btn.dataset.regionName;
+      btn.onclick = async () => {
+        const orig = btn.textContent;
+        btn.textContent = 'Generating…';
+        btn.disabled = true;
+        try {
+          const XLSX = await import('xlsx-js-style');
+          const toRow = alloc => ({
+            'BGS Reference': alloc.srn ?? '',
+            'Site Name': alloc.siteName ?? '',
+            'Planning Reference': alloc.pr ?? '',
+            'Planning Address': alloc.pn ?? '',
+            'Responsible Bodies': Array.isArray(alloc.rb) ? alloc.rb.join('; ') : (alloc.rb ?? ''),
+            'LNRS': alloc.lnrs ?? '',
+            'Spatial Risk': alloc.sr
+              ? `${alloc.sr.cat}${alloc.sr.cat !== 'Outside' ? ` (${alloc.sr.from})` : ''}`
+              : (alloc.srCat ?? ''),
+            'Allocation IMD Decile': alloc.imd ?? '',
+            'Site IMD Decile': alloc.simd ?? '',
+            'Distance (km)': typeof alloc.d === 'number' ? alloc.d : '',
+            'Area HUs': alloc.au > 0 ? alloc.au : '',
+            'Hedgerow HUs': alloc.hu > 0 ? alloc.hu : '',
+            'Watercourse HUs': alloc.wu > 0 ? alloc.wu : '',
+          });
+          const BORDER = {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } },
+          };
+          const CELL_STYLE = {
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+            border: BORDER,
+          };
+          const HEADER_STYLE = {
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+            fill: { fgColor: { rgb: '36454F' } },
+            font: { color: { rgb: 'FFFFFF' }, bold: true },
+            border: BORDER,
+          };
+          const LABEL_STYLE = {
+            alignment: { horizontal: 'center', vertical: 'center' },
+            font: { bold: true, italic: true },
+            border: BORDER,
+          };
+          const TOTALS_STYLE = {
+            alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+            font: { bold: true },
+            border: BORDER,
+          };
+          const MEDIAN_COLS = ['Allocation IMD Decile', 'Site IMD Decile', 'Distance (km)'];
+          const SUM_COLS = ['Area HUs', 'Hedgerow HUs', 'Watercourse HUs'];
+          const LABEL_ROW = { 'BGS Reference': '', 'Site Name': '', 'Planning Reference': '', 'Planning Address': '', 'Responsible Bodies': '', 'LNRS': '', 'Spatial Risk': '', 'Allocation IMD Decile': 'Median', 'Site IMD Decile': '', 'Distance (km)': '', 'Area HUs': 'Total', 'Hedgerow HUs': '', 'Watercourse HUs': '' };
+          const MERGES = [
+            { s: { r: 1, c: 7 }, e: { r: 1, c: 9 } },   // H2:J2
+            { s: { r: 1, c: 10 }, e: { r: 1, c: 12 } },  // K2:M2
+          ];
+          const totalsRow = (rows) => {
+            const row = { 'BGS Reference': 'Values', 'Site Name': '', 'Planning Reference': '', 'Planning Address': '', 'Responsible Bodies': '', 'LNRS': '', 'Spatial Risk': '' };
+            MEDIAN_COLS.forEach(col => {
+              const vals = rows.map(r => r[col]).filter(v => typeof v === 'number');
+              const val = vals.length > 0 ? median(vals) : '';
+              row[col] = (col === 'Distance (km)' && typeof val === 'number') ? parseFloat(val.toFixed(2)) : val;
+            });
+            SUM_COLS.forEach(col => {
+              row[col] = rows.reduce((s, r) => s + (typeof r[col] === 'number' ? r[col] : 0), 0);
+            });
+            return row;
+          };
+          const applyStyles = (ws) => {
+            const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+            for (let R = range.s.r; R <= range.e.r; R++) {
+              for (let C = range.s.c; C <= range.e.c; C++) {
+                const addr = XLSX.utils.encode_cell({ r: R, c: C });
+                if (!ws[addr]) ws[addr] = { v: '', t: 's' };
+                ws[addr].s = R === 0 ? HEADER_STYLE : R === 1 ? LABEL_STYLE : R === 2 ? TOTALS_STYLE : CELL_STYLE;
+              }
+            }
+          };
+          const demand = allocations.filter(a => a[downloadDemandField] === lpaName).map(toRow);
+          const supply = allocations.filter(a => a[downloadSupplyField] === lpaName).map(toRow);
+          const wb = XLSX.utils.book_new();
+          const wsDemand = XLSX.utils.json_to_sheet([LABEL_ROW, totalsRow(demand), ...demand]);
+          wsDemand['!merges'] = MERGES;
+          const wsSupply = XLSX.utils.json_to_sheet([LABEL_ROW, totalsRow(supply), ...supply]);
+          wsSupply['!merges'] = MERGES;
+          applyStyles(wsDemand);
+          applyStyles(wsSupply);
+          XLSX.utils.book_append_sheet(wb, wsDemand, 'Demand');
+          XLSX.utils.book_append_sheet(wb, wsSupply, 'Supply');
+          const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array', cellStyles: true });
+          const blob = new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+          triggerDownload(blob, `${lpaName.replace(/ LPA$/i, '').replace(/[^a-zA-Z0-9 ]/g, '')}-allocations.xlsx`);
+        } catch (err) {
+          console.error('Download error:', err);
+        } finally {
+          btn.textContent = orig;
+          btn.disabled = false;
+        }
+      };
+    };
+    map.on('popupopen', handlePopupOpen);
+    return () => map.off('popupopen', handlePopupOpen);
+  }, [map, allocations, downloadDemandField, downloadSupplyField]);
+  return null;
+};
+
 // Generic choropleth showing total Habitat Units (area + hedgerow + watercourse) allocated
 // per region (LNRS / LPA / NCA / etc), shaded from white (no data) through a configurable
 // colour palette at the highest HU total, with a vertical legend to the left and a
@@ -190,6 +304,9 @@ const RegionAllocationHeatMap = ({
   breakdownShowDistance = true,
   breakdownShowPercentage = false,
   breakdownShowSpatialRisk = false,
+  downloadEnabled = false,
+  downloadDemandField = null,
+  downloadSupplyField = null,
 }) => {
   const [fetchedBoundaries, setFetchedBoundaries] = useState(null);
   const [error, setError] = useState(null);
@@ -322,7 +439,10 @@ const RegionAllocationHeatMap = ({
       `${allocationsLabel}: ${count}<br />` +
       `Total HU: ${formatNumber(entry?.totalHU || 0, 2)} - Area: ${formatNumber(entry?.area || 0, 2)} HU, Hedgerow: ${formatNumber(entry?.hedgerow || 0, 2)} HU, Watercourse: ${formatNumber(entry?.watercourse || 0, 2)} HU<br /><br />` +
       `<b>${bySiteLabel}:</b><br />${siteRows}<br /><br />` +
-      `Median distance: ${entry?.distanceValues?.length ? `${formatNumber(median(entry.distanceValues), 0)} km` : 'unknown'}`
+      `Median distance: ${entry?.distanceValues?.length ? `${formatNumber(median(entry.distanceValues), 0)} km` : 'unknown'}` +
+      (downloadEnabled
+        ? `<br /><br /><button class="region-download-btn" data-region-name="${name.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" style="cursor:pointer;padding:4px 10px;margin-top:4px;background:#2d6e42;color:#fff;border:none;border-radius:4px;font-size:0.85rem;width:100%">&#8203;⬇ Download spreadsheet</button>`
+        : '')
     );
   };
 
@@ -384,6 +504,13 @@ const RegionAllocationHeatMap = ({
             ))}
             <FitBoundsToData data={boundaries} />
             <InvalidateSizeOnResize />
+            {downloadEnabled && downloadDemandField && downloadSupplyField && (
+              <PopupDownloadHandler
+                allocations={allocations}
+                downloadDemandField={downloadDemandField}
+                downloadSupplyField={downloadSupplyField}
+              />
+            )}
           </MapContainer>
         </Box>
       </Flex>

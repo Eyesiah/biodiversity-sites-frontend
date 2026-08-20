@@ -443,6 +443,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="allocLnrs"
+                    downloadSupplyField="lnrs"
                   />
                 </Box>
               </Flex>
@@ -470,6 +473,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="allocLnrs"
+                    downloadSupplyField="lnrs"
                   />
                 </Box>
               </Flex>
@@ -546,6 +552,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="lpa"
+                    downloadSupplyField="siteLpa"
                   />
                 </Box>
               </Flex>
@@ -573,6 +582,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="lpa"
+                    downloadSupplyField="siteLpa"
                   />
                 </Box>
               </Flex>
@@ -650,6 +662,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="allocNca"
+                    downloadSupplyField="nca"
                   />
                 </Box>
               </Flex>
@@ -677,6 +692,9 @@ export default function BGSBodiesContent({
                     breakdownOrder={['Within', 'Neighbouring', 'Outside']}
                     breakdownShowDistance={false}
                     breakdownShowPercentage={true}
+                    downloadEnabled={true}
+                    downloadDemandField="allocNca"
+                    downloadSupplyField="nca"
                   />
                 </Box>
               </Flex>
