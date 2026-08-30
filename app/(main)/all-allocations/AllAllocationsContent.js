@@ -60,7 +60,7 @@ const filterPredicate = (alloc, searchTerm) => {
   );
 }
 
-export default function AllAllocationsContent({ allocations }) {
+export default function AllAllocationsContent({ allocations, siteSupply }) {
 
   const handleExportXML = (items) => {
     const builder = new XMLBuilder({ format: true, ignoreAttributes: false, attributeNamePrefix: "@_" });
@@ -137,6 +137,257 @@ export default function AllAllocationsContent({ allocations }) {
     const csv = Papa.unparse(dedupedCsvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     triggerDownload(blob, 'bgs-allocations.csv');
+  };
+
+  const handleExportSummaryCSV = async (items) => {
+    const XLSX = await import('xlsx-js-style');
+
+    // Sort by planning reference; deduplicate exact (BGS ref, planning ref) pairs
+    const sorted = [...items].sort((a, b) => {
+      const srnCmp = (a.srn || '').localeCompare(b.srn || '');
+      return srnCmp !== 0 ? srnCmp : (a.pr || '').localeCompare(b.pr || '');
+    });
+    const seen = new Set();
+    const deduped = sorted.filter(alloc => {
+      const key = `${alloc.srn}|${alloc.pr}|${alloc.dr}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    // Col 0 = empty spacer; Site HUs (4-6) precede Allocated HUs (7-9)
+    const HEADERS = [
+      '', 'BGS Reference', 'Planning Reference', 'BGS Allocation Count',
+      'Site Area HUs', 'Site Hedgerow HUs', 'Site Watercourse HUs',
+      'Allocated Area HUs', 'Allocated Hedgerow HUs', 'Allocated Watercourse HUs',
+      '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated',
+    ];
+    const INT_COLS = new Set([3]);
+    const NUM_COLS = new Set([4, 5, 6, 7, 8, 9]);
+    const PCT_COLS = new Set([10, 11, 12]);
+
+    const BORDER = {
+      top: { style: 'thin', color: { rgb: '000000' } },
+      bottom: { style: 'thin', color: { rgb: '000000' } },
+      left: { style: 'thin', color: { rgb: '000000' } },
+      right: { style: 'thin', color: { rgb: '000000' } },
+    };
+    const ALIGN = { horizontal: 'center', vertical: 'center', wrapText: true };
+    const HEADER_STYLE = { alignment: ALIGN, fill: { fgColor: { rgb: '36454F' } }, font: { color: { rgb: 'FFFFFF' }, bold: true }, border: BORDER };
+    const CELL_STYLE = { alignment: ALIGN, border: BORDER };
+    const SUMMARY_STYLE = { alignment: ALIGN, fill: { fgColor: { rgb: 'D9E1F2' } }, font: { bold: true }, border: BORDER };
+
+    // Count allocations per BGS reference (in the deduped/filtered set)
+    const bgsCount = {};
+    deduped.forEach(alloc => { bgsCount[alloc.srn] = (bgsCount[alloc.srn] || 0) + 1; });
+
+    // Pre-compute all row values so we can derive stats before writing
+    // Col layout: 0=empty, 1=BGS ref, 2=PR, 3=count, 4=siteArea, 5=siteHedge, 6=siteWater, 7=allocArea, 8=allocHedge, 9=allocWater, 10=%area, 11=%hedge, 12=%water
+    const rowData = deduped.map(alloc => {
+      const supply = siteSupply?.[alloc.srn] || {};
+      const siteAreaHUs = (supply.areaHUs || 0) + (supply.treeHUs || 0);
+      return [
+        null,
+        alloc.srn ?? '',
+        alloc.pr ?? '',
+        bgsCount[alloc.srn] ?? null,
+        siteAreaHUs > 0 ? siteAreaHUs : null,
+        supply.hedgerowHUs > 0 ? supply.hedgerowHUs : null,
+        supply.watercourseHUs > 0 ? supply.watercourseHUs : null,
+        alloc.au > 0 ? alloc.au : null,
+        alloc.hu > 0 ? alloc.hu : null,
+        alloc.wu > 0 ? alloc.wu : null,
+        siteAreaHUs > 0 ? (alloc.au || 0) / siteAreaHUs : null,
+        supply.hedgerowHUs > 0 ? (alloc.hu || 0) / supply.hedgerowHUs : null,
+        supply.watercourseHUs > 0 ? (alloc.wu || 0) / supply.watercourseHUs : null,
+      ];
+    });
+
+    // Null out merged columns on non-first rows within each BGS group
+    let prevSrn = null;
+    rowData.forEach(row => {
+      if (row[1] === prevSrn) { row[1] = null; row[3] = null; row[4] = null; row[5] = null; row[6] = null; }
+      prevSrn = row[1] ?? prevSrn;
+    });
+
+    // For summary rows: count col uses per-BGS-ref counts (not per-row values)
+    const bgsCountValues = Object.values(bgsCount);
+    const STAT_COLS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const colArrays = Object.fromEntries(
+      STAT_COLS.map(c => [c, rowData.map(row => row[c]).filter(v => v !== null)])
+    );
+    const colSum = c => colArrays[c].length ? colArrays[c].reduce((s, v) => s + v, 0) : null;
+    const colAvg = c => colArrays[c].length ? colArrays[c].reduce((s, v) => s + v, 0) / colArrays[c].length : null;
+    const colMedian = c => {
+      const arr = colArrays[c];
+      if (!arr.length) return null;
+      const s = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+
+    const medianOf = arr => {
+      if (!arr.length) return null;
+      const s = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+    const countSummary = {
+      Total:   deduped.length,
+      Average: bgsCountValues.length ? bgsCountValues.reduce((s, v) => s + v, 0) / bgsCountValues.length : null,
+      Median:  medianOf(bgsCountValues),
+    };
+
+    const writeCell = (r, c, v, style) => {
+      const isInt = INT_COLS.has(c);
+      const isNum = NUM_COLS.has(c);
+      const isPct = PCT_COLS.has(c);
+      const numeric = v !== null && (isInt || isNum || isPct);
+      const cell = { v: v ?? '', t: numeric ? 'n' : 's', s: style };
+      if (isInt && v !== null) cell.z = '#,##0';
+      if (isNum && v !== null) cell.z = '#,##0.00';
+      if (isPct && v !== null) cell.z = '0.00%';
+      ws[XLSX.utils.encode_cell({ r, c })] = cell;
+    };
+
+    const uniqueBGSCount = Object.keys(bgsCount).length;
+    const uniquePRCount = new Set(deduped.map(a => a.pr)).size;
+
+    const writeSummaryRow = (r, label, valFn, countVal, bgsRefCount, prCount) => {
+      HEADERS.forEach((_, c) => {
+        const v = c === 0 ? label : c === 1 ? (bgsRefCount ?? '') : c === 2 ? (prCount ?? '') : c === 3 ? countVal : valFn(c);
+        if ((c === 1 || c === 2) && typeof v === 'number') {
+          ws[XLSX.utils.encode_cell({ r, c })] = { v, t: 'n', z: '#,##0', s: SUMMARY_STYLE };
+        } else {
+          writeCell(r, c, v, SUMMARY_STYLE);
+        }
+      });
+    };
+
+    const ws = {};
+    HEADERS.forEach((h, c) => {
+      ws[XLSX.utils.encode_cell({ r: 0, c })] = { v: h, t: 's', s: HEADER_STYLE };
+    });
+    writeSummaryRow(1, 'Total', c => {
+      if (c === 10) return colSum(4) > 0 ? colSum(7) / colSum(4) : null;
+      if (c === 11) return colSum(5) > 0 ? colSum(8) / colSum(5) : null;
+      if (c === 12) return colSum(6) > 0 ? colSum(9) / colSum(6) : null;
+      return colSum(c);
+    }, countSummary.Total, uniqueBGSCount, uniquePRCount);
+    writeSummaryRow(2, 'Average', c => colAvg(c),    countSummary.Average, null, null);
+    writeSummaryRow(3, 'Median',  c => colMedian(c), countSummary.Median,  null, null);
+
+    // Merge BGS ref, count and site HU cols across consecutive rows sharing the same BGS ref
+    const MERGE_COLS = [1, 3, 4, 5, 6];
+    const merges = [];
+    // Use original srn values from deduped (rowData[1] is nulled for non-first rows)
+    const srnSequence = deduped.map(a => a.srn || '');
+    let groupStart = 4;
+    srnSequence.forEach((srn, i) => {
+      const isLast = i === srnSequence.length - 1;
+      if (isLast || srnSequence[i + 1] !== srn) {
+        const groupEnd = 4 + i;
+        if (groupEnd > groupStart) {
+          MERGE_COLS.forEach(c => merges.push({ s: { r: groupStart, c }, e: { r: groupEnd, c } }));
+        }
+        groupStart = groupEnd + 1;
+      }
+    });
+
+    let r = 4;
+    for (const values of rowData) {
+      values.forEach((v, c) => writeCell(r, c, v, CELL_STYLE));
+      r++;
+    }
+
+    // Summary table at col O (14): one row per unique BGS ref, summed allocation %s
+    const BGS_SUMMARY_COL = 14;
+    const BGS_SUMMARY_HEADERS = ['BGS Reference', '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated', 'Total % Allocated'];
+    BGS_SUMMARY_HEADERS.forEach((h, i) => {
+      ws[XLSX.utils.encode_cell({ r: 0, c: BGS_SUMMARY_COL + i })] = { v: h, t: 's', s: HEADER_STYLE };
+    });
+
+    const bgsSummed = {};
+    deduped.forEach(alloc => {
+      if (!bgsSummed[alloc.srn]) bgsSummed[alloc.srn] = { au: 0, hu: 0, wu: 0 };
+      bgsSummed[alloc.srn].au += (alloc.au || 0);
+      bgsSummed[alloc.srn].hu += (alloc.hu || 0);
+      bgsSummed[alloc.srn].wu += (alloc.wu || 0);
+    });
+
+    const sortedBGS = Object.keys(bgsSummed).sort();
+    const bgsStatArrays = { pctArea: [], pctHedge: [], pctWater: [], pctTotal: [] };
+    let totalAllocArea = 0, totalAllocHedge = 0, totalAllocWater = 0;
+    let totalSiteArea = 0, totalSiteHedge = 0, totalSiteWater = 0;
+
+    const bgsRows = sortedBGS.map(srn => {
+      const supply = siteSupply?.[srn] || {};
+      const siteAreaHUs = (supply.areaHUs || 0) + (supply.treeHUs || 0);
+      const sums = bgsSummed[srn];
+      totalAllocArea += sums.au; totalSiteArea += siteAreaHUs;
+      totalAllocHedge += sums.hu; totalSiteHedge += (supply.hedgerowHUs || 0);
+      totalAllocWater += sums.wu; totalSiteWater += (supply.watercourseHUs || 0);
+      const pctArea  = siteAreaHUs > 0         ? sums.au / siteAreaHUs         : null;
+      const pctHedge = supply.hedgerowHUs > 0   ? sums.hu / supply.hedgerowHUs   : null;
+      const pctWater = supply.watercourseHUs > 0 ? sums.wu / supply.watercourseHUs : null;
+      const totalSiteHUs = siteAreaHUs + (supply.hedgerowHUs || 0) + (supply.watercourseHUs || 0);
+      const pctTotal = totalSiteHUs > 0 ? (sums.au + sums.hu + sums.wu) / totalSiteHUs : null;
+      if (pctArea  !== null) bgsStatArrays.pctArea.push(pctArea);
+      if (pctHedge !== null) bgsStatArrays.pctHedge.push(pctHedge);
+      if (pctWater !== null) bgsStatArrays.pctWater.push(pctWater);
+      if (pctTotal !== null) bgsStatArrays.pctTotal.push(pctTotal);
+      return { srn, pctArea, pctHedge, pctWater, pctTotal };
+    });
+
+    const bgsAvg = arr => arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
+    const bgsMedian = arr => {
+      if (!arr.length) return null;
+      const s = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(s.length / 2);
+      return s.length % 2 !== 0 ? s[mid] : (s[mid - 1] + s[mid]) / 2;
+    };
+
+    const bgsPctCell = (v, style) => ({ v: v ?? '', t: v !== null ? 'n' : 's', z: '0.00%', s: style });
+    const bgsSummaryLabel = (v) => ({ v, t: 's', s: SUMMARY_STYLE });
+
+    const totalPctArea  = totalSiteArea  > 0 ? totalAllocArea  / totalSiteArea  : null;
+    const totalPctHedge = totalSiteHedge > 0 ? totalAllocHedge / totalSiteHedge : null;
+    const totalPctWater = totalSiteWater > 0 ? totalAllocWater / totalSiteWater : null;
+    const totalAllHUs = totalSiteArea + totalSiteHedge + totalSiteWater;
+    const totalPctSum = totalAllHUs > 0 ? (totalAllocArea + totalAllocHedge + totalAllocWater) / totalAllHUs : null;
+
+    [[1, 'Total',   [totalPctArea, totalPctHedge, totalPctWater, totalPctSum]],
+     [2, 'Average', [bgsAvg(bgsStatArrays.pctArea), bgsAvg(bgsStatArrays.pctHedge), bgsAvg(bgsStatArrays.pctWater), bgsAvg(bgsStatArrays.pctTotal)]],
+     [3, 'Median',  [bgsMedian(bgsStatArrays.pctArea), bgsMedian(bgsStatArrays.pctHedge), bgsMedian(bgsStatArrays.pctWater), bgsMedian(bgsStatArrays.pctTotal)]],
+    ].forEach(([row, label, vals]) => {
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL })] = bgsSummaryLabel(label);
+      vals.forEach((v, i) => { ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 + i })] = bgsPctCell(v, SUMMARY_STYLE); });
+    });
+
+    bgsRows.sort((a, b) => (b.pctTotal ?? -Infinity) - (a.pctTotal ?? -Infinity));
+
+    bgsRows.forEach(({ srn, pctArea, pctHedge, pctWater, pctTotal }, i) => {
+      const row = i + 4;
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL })]     = { v: srn, t: 's', s: CELL_STYLE };
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 })] = bgsPctCell(pctArea, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 2 })] = bgsPctCell(pctHedge, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 3 })] = bgsPctCell(pctWater, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 4 })] = bgsPctCell(pctTotal, CELL_STYLE);
+    });
+
+    const lastRow = Math.max(r - 1, sortedBGS.length + 3);
+    const lastCol = BGS_SUMMARY_COL + BGS_SUMMARY_HEADERS.length - 1;
+    ws['!ref'] = XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: lastRow, c: lastCol } });
+    if (r > 5) merges.push({ s: { r: 4, c: 0 }, e: { r: r - 1, c: 0 } });
+    if (merges.length) ws['!merges'] = merges;
+    ws['!sheetViews'] = [{ state: 'frozen', ySplit: 4, topLeftCell: 'A5' }];
+    ws['!cols'] = [{ wch: 10 }, { wch: 22 }, { wch: 20 }, { wch: 10 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 4 }, { wch: 22 }, { wch: 20 }, { wch: 22 }, { wch: 24 }, { wch: 16 }];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Allocations');
+    const out = XLSX.write(wb, { bookType: 'xlsx', type: 'array', cellStyles: true });
+    const blob = new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    triggerDownload(blob, 'bgs-allocations-summary.xlsx');
   };
 
   const calcSummaryData = useCallback((filteredAllocations) => {
@@ -366,7 +617,7 @@ export default function AllAllocationsContent({ allocations }) {
       filterPredicate={filterPredicate}
       initialSortConfig={{ key: 'srn', direction: 'ascending' }}
       placeholder="Filter by BGS Ref, Site Name, Responsible Body, Planning Ref, Planning Address, LPA, LNRS or Spatial Risk ..."
-      exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON, onExportCsv: handleExportCSV }}
+      exportConfig={{ onExportXml: handleExportXML, onExportJson: handleExportJSON, onExportCsv: handleExportCSV, onExportCsvSummary: handleExportSummaryCSV }}
       summary={(filteredCount, totalCount) => (
         <Box textAlign='center'>
           <Text fontSize='1.2rem'>Displaying <strong>{formatNumber(filteredCount, 0)}</strong> out of <strong>{formatNumber(totalCount, 0)}</strong> allocations arising from <strong>{formatNumber(summaryData.uniquePlanningRefs,0)}</strong> out of <strong>{formatNumber(summaryData.totalUniquePlanningRefs,0)}</strong> planning applications.</Text>

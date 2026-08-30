@@ -18,11 +18,23 @@ export default async function AllocationsPage() {
   const allSites = await fetchAllSites(true, true, true);
   const allocations = transformAllocations(allSites);
 
+  const siteSupply = {};
+  for (const site of allSites) {
+    const sum = (unit) =>
+      (site.improvements?.[unit] || []).reduce((s, h) => s + (h.HUs || 0), 0);
+    siteSupply[site.referenceNumber] = {
+      areaHUs: sum('areas'),
+      treeHUs: sum('trees'),
+      hedgerowHUs: sum('hedgerows'),
+      watercourseHUs: sum('watercourses'),
+    };
+  }
+
   const lastUpdated = Date.now();
 
   return (
     <>
-      <AllAllocationsContent allocations={allocations}/>
+      <AllAllocationsContent allocations={allocations} siteSupply={siteSupply} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
