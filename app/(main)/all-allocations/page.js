@@ -27,6 +27,7 @@ export default async function AllocationsPage() {
       treeHUs: sum('trees'),
       hedgerowHUs: sum('hedgerows'),
       watercourseHUs: sum('watercourses'),
+      siteSize: site.siteSize || 0,
     };
   }
 

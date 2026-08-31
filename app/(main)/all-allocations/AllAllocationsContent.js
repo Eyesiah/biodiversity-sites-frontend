@@ -302,7 +302,7 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
 
     // Summary table at col O (14): one row per unique BGS ref, summed allocation %s
     const BGS_SUMMARY_COL = 14;
-    const BGS_SUMMARY_HEADERS = ['BGS Reference', '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated', 'Total % Allocated'];
+    const BGS_SUMMARY_HEADERS = ['BGS Reference', 'Site Area (ha)', 'No. of Allocations', '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated', 'Total % Allocated'];
     BGS_SUMMARY_HEADERS.forEach((h, i) => {
       ws[XLSX.utils.encode_cell({ r: 0, c: BGS_SUMMARY_COL + i })] = { v: h, t: 's', s: HEADER_STYLE };
     });
@@ -316,9 +316,10 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     });
 
     const sortedBGS = Object.keys(bgsSummed).sort();
-    const bgsStatArrays = { pctArea: [], pctHedge: [], pctWater: [], pctTotal: [] };
+    const bgsStatArrays = { siteSize: [], allocCount: [], pctArea: [], pctHedge: [], pctWater: [], pctTotal: [] };
     let totalAllocArea = 0, totalAllocHedge = 0, totalAllocWater = 0;
     let totalSiteArea = 0, totalSiteHedge = 0, totalSiteWater = 0;
+    let totalSiteAreaHa = 0, totalAllocCount = 0;
 
     const bgsRows = sortedBGS.map(srn => {
       const supply = siteSupply?.[srn] || {};
@@ -327,16 +328,20 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
       totalAllocArea += sums.au; totalSiteArea += siteAreaHUs;
       totalAllocHedge += sums.hu; totalSiteHedge += (supply.hedgerowHUs || 0);
       totalAllocWater += sums.wu; totalSiteWater += (supply.watercourseHUs || 0);
+      totalSiteAreaHa += (supply.siteSize || 0);
+      totalAllocCount += (bgsCount[srn] || 0);
       const pctArea  = siteAreaHUs > 0         ? sums.au / siteAreaHUs         : null;
       const pctHedge = supply.hedgerowHUs > 0   ? sums.hu / supply.hedgerowHUs   : null;
       const pctWater = supply.watercourseHUs > 0 ? sums.wu / supply.watercourseHUs : null;
       const totalSiteHUs = siteAreaHUs + (supply.hedgerowHUs || 0) + (supply.watercourseHUs || 0);
       const pctTotal = totalSiteHUs > 0 ? (sums.au + sums.hu + sums.wu) / totalSiteHUs : null;
+      if (supply.siteSize > 0) bgsStatArrays.siteSize.push(supply.siteSize);
+      if (bgsCount[srn] > 0)   bgsStatArrays.allocCount.push(bgsCount[srn]);
       if (pctArea  !== null) bgsStatArrays.pctArea.push(pctArea);
       if (pctHedge !== null) bgsStatArrays.pctHedge.push(pctHedge);
       if (pctWater !== null) bgsStatArrays.pctWater.push(pctWater);
       if (pctTotal !== null) bgsStatArrays.pctTotal.push(pctTotal);
-      return { srn, pctArea, pctHedge, pctWater, pctTotal };
+      return { srn, siteSize: supply.siteSize || null, allocCount: bgsCount[srn] || null, pctArea, pctHedge, pctWater, pctTotal };
     });
 
     const bgsAvg = arr => arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
@@ -348,6 +353,8 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     };
 
     const bgsPctCell = (v, style) => ({ v: v ?? '', t: v !== null ? 'n' : 's', z: '0.00%', s: style });
+    const bgsNumCell = (v, style) => ({ v: v ?? '', t: v !== null ? 'n' : 's', z: '#,##0.00', s: style });
+    const bgsIntCell = (v, style) => ({ v: v ?? '', t: v !== null ? 'n' : 's', z: '#,##0',   s: style });
     const bgsSummaryLabel = (v) => ({ v, t: 's', s: SUMMARY_STYLE });
 
     const totalPctArea  = totalSiteArea  > 0 ? totalAllocArea  / totalSiteArea  : null;
@@ -356,23 +363,31 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     const totalAllHUs = totalSiteArea + totalSiteHedge + totalSiteWater;
     const totalPctSum = totalAllHUs > 0 ? (totalAllocArea + totalAllocHedge + totalAllocWater) / totalAllHUs : null;
 
-    [[1, 'Total',   [totalPctArea, totalPctHedge, totalPctWater, totalPctSum]],
-     [2, 'Average', [bgsAvg(bgsStatArrays.pctArea), bgsAvg(bgsStatArrays.pctHedge), bgsAvg(bgsStatArrays.pctWater), bgsAvg(bgsStatArrays.pctTotal)]],
-     [3, 'Median',  [bgsMedian(bgsStatArrays.pctArea), bgsMedian(bgsStatArrays.pctHedge), bgsMedian(bgsStatArrays.pctWater), bgsMedian(bgsStatArrays.pctTotal)]],
-    ].forEach(([row, label, vals]) => {
-      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL })] = bgsSummaryLabel(label);
-      vals.forEach((v, i) => { ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 + i })] = bgsPctCell(v, SUMMARY_STYLE); });
+    [
+      [1, 'Total',   totalSiteAreaHa,                      totalAllocCount,                      totalPctArea, totalPctHedge, totalPctWater, totalPctSum],
+      [2, 'Average', bgsAvg(bgsStatArrays.siteSize),       bgsAvg(bgsStatArrays.allocCount),     bgsAvg(bgsStatArrays.pctArea), bgsAvg(bgsStatArrays.pctHedge), bgsAvg(bgsStatArrays.pctWater), bgsAvg(bgsStatArrays.pctTotal)],
+      [3, 'Median',  bgsMedian(bgsStatArrays.siteSize),    bgsMedian(bgsStatArrays.allocCount),  bgsMedian(bgsStatArrays.pctArea), bgsMedian(bgsStatArrays.pctHedge), bgsMedian(bgsStatArrays.pctWater), bgsMedian(bgsStatArrays.pctTotal)],
+    ].forEach(([row, label, sizeVal, countVal, pa, ph, pw, pt]) => {
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL })]     = bgsSummaryLabel(label);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 })] = bgsNumCell(sizeVal, SUMMARY_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 2 })] = bgsIntCell(countVal, SUMMARY_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 3 })] = bgsPctCell(pa, SUMMARY_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 4 })] = bgsPctCell(ph, SUMMARY_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 5 })] = bgsPctCell(pw, SUMMARY_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 6 })] = bgsPctCell(pt, SUMMARY_STYLE);
     });
 
     bgsRows.sort((a, b) => (b.pctTotal ?? -Infinity) - (a.pctTotal ?? -Infinity));
 
-    bgsRows.forEach(({ srn, pctArea, pctHedge, pctWater, pctTotal }, i) => {
+    bgsRows.forEach(({ srn, siteSize, allocCount, pctArea, pctHedge, pctWater, pctTotal }, i) => {
       const row = i + 4;
       ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL })]     = { v: srn, t: 's', s: CELL_STYLE };
-      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 })] = bgsPctCell(pctArea, CELL_STYLE);
-      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 2 })] = bgsPctCell(pctHedge, CELL_STYLE);
-      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 3 })] = bgsPctCell(pctWater, CELL_STYLE);
-      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 4 })] = bgsPctCell(pctTotal, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 1 })] = bgsNumCell(siteSize, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 2 })] = bgsIntCell(allocCount, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 3 })] = bgsPctCell(pctArea, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 4 })] = bgsPctCell(pctHedge, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 5 })] = bgsPctCell(pctWater, CELL_STYLE);
+      ws[XLSX.utils.encode_cell({ r: row, c: BGS_SUMMARY_COL + 6 })] = bgsPctCell(pctTotal, CELL_STYLE);
     });
 
     const lastRow = Math.max(r - 1, sortedBGS.length + 3);
@@ -381,7 +396,7 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     if (r > 5) merges.push({ s: { r: 4, c: 0 }, e: { r: r - 1, c: 0 } });
     if (merges.length) ws['!merges'] = merges;
     ws['!sheetViews'] = [{ state: 'frozen', ySplit: 4, topLeftCell: 'A5' }];
-    ws['!cols'] = [{ wch: 10 }, { wch: 22 }, { wch: 20 }, { wch: 10 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 4 }, { wch: 22 }, { wch: 20 }, { wch: 22 }, { wch: 24 }, { wch: 16 }];
+    ws['!cols'] = [{ wch: 10 }, { wch: 22 }, { wch: 20 }, { wch: 10 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 16 }, { wch: 20 }, { wch: 22 }, { wch: 24 }, { wch: 16 }];
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Allocations');
