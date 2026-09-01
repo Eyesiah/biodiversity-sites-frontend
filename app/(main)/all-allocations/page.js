@@ -1,4 +1,6 @@
 import { fetchAllSites, transformAllocations } from '@/lib/api';
+import clientPromise from '@/lib/mongodb';
+import { MONGODB_DATABASE_NAME } from '@/config';
 import AllAllocationsContent from './AllAllocationsContent';
 import Footer from '@/components/core/Footer';
 
@@ -31,11 +33,31 @@ export default async function AllocationsPage() {
     };
   }
 
+  // Fetch per-allocation first-seen timestamps recorded by the cron job
+  let allocFirstSeen = {};
+  if (clientPromise) {
+    try {
+      const client = await clientPromise;
+      const db = client.db(MONGODB_DATABASE_NAME);
+      const records = await db.collection('allocations').find({}, { projection: { dr: 1, firstSeen: 1 } }).toArray();
+      for (const r of records) {
+        if (r.dr && r.firstSeen) allocFirstSeen[r.dr] = r.firstSeen;
+      }
+    } catch (e) {
+      console.error('Failed to fetch allocation timestamps:', e);
+    }
+  }
+
+  const allocationsWithDates = allocations.map(alloc => ({
+    ...alloc,
+    firstSeen: allocFirstSeen[alloc.dr] || null,
+  }));
+
   const lastUpdated = Date.now();
 
   return (
     <>
-      <AllAllocationsContent allocations={allocations} siteSupply={siteSupply} />
+      <AllAllocationsContent allocations={allocationsWithDates} siteSupply={siteSupply} />
       <Footer lastUpdated={lastUpdated} />
     </>
   );
