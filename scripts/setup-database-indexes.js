@@ -119,6 +119,16 @@ async function setupDatabaseIndexes() {
             options: { unique: true, name: 'slugMapping_id_idx' }
           }
         ]
+      },
+      {
+        name: 'allocations',
+        description: 'First-seen timestamps for allocations, keyed by developerReference',
+        indexes: [
+          {
+            key: { dr: 1 },
+            options: { unique: true, name: 'allocations_dr_idx' }
+          }
+        ]
       }
     ];
 

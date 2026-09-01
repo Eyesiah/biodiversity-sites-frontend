@@ -107,9 +107,11 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
         'Watercourse HUs': alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu, 4) : '',
       };
 
+      const firstRegistered = alloc.firstSeen ? new Date(alloc.firstSeen).toLocaleDateString('en-GB') : '';
+
       if (allHabitats.length === 0) {
         // No habitat detail available — emit a single row with empty habitat fields
-        return [{ ...baseRow, 'Broad Habitat': '', 'Habitat Type': '', 'Module': '', 'Condition': '', 'Habitat Size': '' }];
+        return [{ ...baseRow, 'Broad Habitat': '', 'Habitat Type': '', 'Module': '', 'Condition': '', 'Habitat Size': '', 'First Registered': firstRegistered }];
       }
 
       // One row per habitat, repeating the allocation-level fields
@@ -120,6 +122,7 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
         'Module': habitat.module ?? '',
         'Condition': habitat.condition ?? '',
         'Habitat Size': habitat.size != null ? formatNumber(habitat.size, 4) : '',
+        'First Registered': firstRegistered,
       }));
     });
 
@@ -155,12 +158,13 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
       return true;
     });
 
-    // Col 0 = empty spacer; Site HUs (4-6) precede Allocated HUs (7-9)
+    // Col 0 = empty spacer; Site HUs (4-6) precede Allocated HUs (7-9); date at 13
     const HEADERS = [
       '', 'BGS Reference', 'Planning Reference', 'BGS Allocation Count',
       'Site Area HUs', 'Site Hedgerow HUs', 'Site Watercourse HUs',
       'Allocated Area HUs', 'Allocated Hedgerow HUs', 'Allocated Watercourse HUs',
       '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated',
+      'First Registered',
     ];
     const INT_COLS = new Set([3]);
     const NUM_COLS = new Set([4, 5, 6, 7, 8, 9]);
@@ -200,6 +204,7 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
         siteAreaHUs > 0 ? (alloc.au || 0) / siteAreaHUs : null,
         supply.hedgerowHUs > 0 ? (alloc.hu || 0) / supply.hedgerowHUs : null,
         supply.watercourseHUs > 0 ? (alloc.wu || 0) / supply.watercourseHUs : null,
+        alloc.firstSeen ? new Date(alloc.firstSeen).toLocaleDateString('en-GB') : null,
       ];
     });
 
@@ -216,10 +221,10 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     const colArrays = Object.fromEntries(
       STAT_COLS.map(c => [c, rowData.map(row => row[c]).filter(v => v !== null)])
     );
-    const colSum = c => colArrays[c].length ? colArrays[c].reduce((s, v) => s + v, 0) : null;
-    const colAvg = c => colArrays[c].length ? colArrays[c].reduce((s, v) => s + v, 0) / colArrays[c].length : null;
+    const colSum = c => { const a = colArrays[c] || []; return a.length ? a.reduce((s, v) => s + v, 0) : null; };
+    const colAvg = c => { const a = colArrays[c] || []; return a.length ? a.reduce((s, v) => s + v, 0) / a.length : null; };
     const colMedian = c => {
-      const arr = colArrays[c];
+      const arr = colArrays[c] || [];
       if (!arr.length) return null;
       const s = [...arr].sort((a, b) => a - b);
       const mid = Math.floor(s.length / 2);
@@ -300,8 +305,8 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
       r++;
     }
 
-    // Summary table at col O (14): one row per unique BGS ref, summed allocation %s
-    const BGS_SUMMARY_COL = 14;
+    // Summary table at col P (15): one row per unique BGS ref, summed allocation %s
+    const BGS_SUMMARY_COL = 15;
     const BGS_SUMMARY_HEADERS = ['BGS Reference', 'Site Area (ha)', 'No. of Allocations', '% Area HUs Allocated', '% Hedgerow HUs Allocated', '% Watercourse HUs Allocated', 'Total % Allocated'];
     BGS_SUMMARY_HEADERS.forEach((h, i) => {
       ws[XLSX.utils.encode_cell({ r: 0, c: BGS_SUMMARY_COL + i })] = { v: h, t: 's', s: HEADER_STYLE };
@@ -396,7 +401,7 @@ export default function AllAllocationsContent({ allocations, siteSupply }) {
     if (r > 5) merges.push({ s: { r: 4, c: 0 }, e: { r: r - 1, c: 0 } });
     if (merges.length) ws['!merges'] = merges;
     ws['!sheetViews'] = [{ state: 'frozen', ySplit: 4, topLeftCell: 'A5' }];
-    ws['!cols'] = [{ wch: 10 }, { wch: 22 }, { wch: 20 }, { wch: 10 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 16 }, { wch: 20 }, { wch: 22 }, { wch: 24 }, { wch: 16 }];
+    ws['!cols'] = [{ wch: 10 }, { wch: 22 }, { wch: 20 }, { wch: 10 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 14 }, { wch: 16 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 22 }, { wch: 16 }, { wch: 4 }, { wch: 22 }, { wch: 14 }, { wch: 16 }, { wch: 20 }, { wch: 22 }, { wch: 24 }, { wch: 16 }];
 
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Allocations');

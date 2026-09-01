@@ -43,6 +43,26 @@ export async function GET(request) {
       }
     }
 
+    // Detect new allocations by developerReference and record their first-seen timestamp
+    const allocationsCollection = db.collection('allocations');
+    const knownDRs = new Set(
+      (await allocationsCollection.find({}, { projection: { dr: 1 } }).toArray()).map(a => a.dr)
+    );
+    let newAllocations = [];
+    for (const site of allSites) {
+      for (const alloc of (site.allocations || [])) {
+        const dr = alloc.developerReference;
+        if (!dr || knownDRs.has(dr)) continue;
+        knownDRs.add(dr);
+        newAllocations.push(dr);
+        await allocationsCollection.insertOne({
+          dr,
+          srn: site.referenceNumber,
+          pr: alloc.planningReference || null,
+          firstSeen: timestamp,
+        });
+      }
+    }
 
     // Save the statistics to the database
     const statsCollection = db.collection('statistics');
@@ -52,7 +72,8 @@ export async function GET(request) {
       timestamp,
       version,
       ...summary,
-      newSites
+      newSites,
+      newAllocations,
     });
 
     revalidatePath('/statistics');

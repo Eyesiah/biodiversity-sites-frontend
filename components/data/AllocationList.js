@@ -38,6 +38,9 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
       <PrimaryTable.NumericCell>{alloc.au && alloc.au > 0 ? formatNumber(alloc.au) : ''}</PrimaryTable.NumericCell>
       <PrimaryTable.NumericCell>{alloc.hu && alloc.hu > 0 ? formatNumber(alloc.hu) : ''}</PrimaryTable.NumericCell>
       <PrimaryTable.NumericCell>{alloc.wu && alloc.wu > 0 ? formatNumber(alloc.wu) : ''}</PrimaryTable.NumericCell>
+      <PrimaryTable.CenteredNumericCell>
+        {alloc.firstSeen ? new Date(alloc.firstSeen).toLocaleDateString('en-GB') : '—'}
+      </PrimaryTable.CenteredNumericCell>
     </>
   )
 
@@ -45,7 +48,7 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
     return <CollapsibleRow
       mainRow={mainRow}
       collapsibleContent={<AllocationHabitats habitats={[...alloc.habitats.areas, ...alloc.habitats.hedgerows, ...alloc.habitats.watercourses, ...alloc.habitats.trees]} />}
-      colSpan={displayPlanningRef ? 12 : 10}
+      colSpan={displayPlanningRef ? 13 : 11}
     />
   } else {
     return <DataFetchingCollapsibleRow
@@ -53,7 +56,7 @@ const AllocationRow = ({ alloc, displayPlanningRef = true }) => {
       dataUrl={alloc.srn && alloc.pr ? `/api/modal/allocations/${alloc.srn}/${slugify(alloc.pr.trim())}` : null}
       renderDetails={details => <AllocationHabitats habitats={details} />}
       dataExtractor={json => json}
-      colSpan={displayPlanningRef ? 12 : 10}
+      colSpan={displayPlanningRef ? 13 : 11}
     />
   }
 };
@@ -86,6 +89,7 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
             <PrimaryTable.ColumnHeader onClick={() => requestSort('au')} {...getSortProps('au', sortConfig)}>Area HUs</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('hu')} {...getSortProps('hu', sortConfig)}>Hedgerow HUs</PrimaryTable.ColumnHeader>
             <PrimaryTable.ColumnHeader onClick={() => requestSort('wu')} {...getSortProps('wu', sortConfig)}>Watercourse HUs</PrimaryTable.ColumnHeader>
+            <PrimaryTable.ColumnHeader onClick={() => requestSort('firstSeen')} {...getSortProps('firstSeen', sortConfig)}>First registered</PrimaryTable.ColumnHeader>
           </PrimaryTable.Row>
         </PrimaryTable.Header>
         <PrimaryTable.Body>
@@ -100,6 +104,7 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
             <PrimaryTable.NumericCell sx={{ border: `3px solid ${totalsBorder}` }}>{formatNumber(summaryData.totalArea)}</PrimaryTable.NumericCell>
             <PrimaryTable.NumericCell sx={{ border: `3px solid ${totalsBorder}` }}>{formatNumber(summaryData.totalHedgerow)}</PrimaryTable.NumericCell>
             <PrimaryTable.NumericCell sx={{ border: `3px solid ${totalsBorder}` }}>{formatNumber(summaryData.totalWatercourse)}</PrimaryTable.NumericCell>
+            <PrimaryTable.Cell sx={{ border: `3px solid ${totalsBorder}` }} />
           </PrimaryTable.Row>
           {sortedItems.map((alloc) => (
             <AllocationRow key={`${alloc.srn}-${alloc.pr}-${alloc.dr}`} alloc={alloc} displayPlanningRef={displayPlanningRef} />
