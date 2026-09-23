@@ -33,8 +33,10 @@ export async function POST(request) {
       return NextResponse.json({ error: 'PDF file is required.' }, { status: 400 });
     }
 
-    if (file.type !== 'application/pdf') {
-      return NextResponse.json({ error: 'Only PDF files are allowed.' }, { status: 400 });
+    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+    const allowedExts = { 'application/pdf': 'pdf', 'image/png': 'png', 'image/jpeg': 'jpg' };
+    if (!allowedTypes.includes(file.type)) {
+      return NextResponse.json({ error: 'Only PDF, PNG or JPEG files are allowed.' }, { status: 400 });
     }
 
     if (file.size > 20 * 1024 * 1024) {
@@ -42,7 +44,8 @@ export async function POST(request) {
     }
 
     // Upload to Vercel Blob
-    const blobPath = `boundary-maps/${referenceNumber}.pdf`;
+    const ext = allowedExts[file.type];
+    const blobPath = `boundary-maps/${referenceNumber}.${ext}`;
     const blob = await put(blobPath, file, {
       access: 'public',
       addRandomSuffix: false,

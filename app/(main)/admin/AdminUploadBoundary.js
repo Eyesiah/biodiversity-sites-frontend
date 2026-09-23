@@ -142,8 +142,8 @@ export default function AdminUploadBoundary({ referenceOptions }) {
       <VStack spacing={4} align="stretch">
         <Text fontWeight="bold" fontSize="lg">Upload Boundary Maps</Text>
         <Text fontSize="sm" color="gray.600">
-          Upload a PDF boundary map for a site that doesn&apos;t have one from the BGS register.
-          Only sites without a register-provided boundary map will use the uploaded PDF.
+          Upload a boundary map (PDF, PNG or JPEG) for a site that doesn&apos;t have one from the BGS register.
+          Only sites without a register-provided boundary map will use the uploaded file.
         </Text>
 
         <HStack spacing={4}>
@@ -201,11 +201,11 @@ export default function AdminUploadBoundary({ referenceOptions }) {
 
         {/* File input */}
         <HStack spacing={4}>
-          <Text w="240px" flexShrink={0} fontWeight="bold">PDF File</Text>
+          <Text w="240px" flexShrink={0} fontWeight="bold">PDF / PNG / JPEG File</Text>
           <Input
             id="boundary-file-input"
             type="file"
-            accept=".pdf,application/pdf"
+            accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
             onChange={(e) => setFile(e.target.files[0] || null)}
             flex="1"
             padding={2}
