@@ -91,25 +91,28 @@ export default async function StatisticsPage() {
     .sort({ firstSeen: 1 })
     .toArray();
 
-  const monthlyCountMap = new Map();
+  // Bucket by half-month: 1st-15th and 16th-end of month
+  const halfMonthCountMap = new Map();
   for (const doc of allocDocs) {
     const d = new Date(doc.firstSeen);
-    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
-    monthlyCountMap.set(key, (monthlyCountMap.get(key) || 0) + 1);
+    const half = d.getUTCDate() <= 15 ? 'a' : 'b';
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${half}`;
+    halfMonthCountMap.set(key, (halfMonthCountMap.get(key) || 0) + 1);
   }
 
   const cronPoints = stats.map(s => ({ timestamp: s.timestamp, totalSites: s.totalSites || 0 }))
     .sort((a, b) => a.timestamp - b.timestamp);
 
   let cumulative = 0;
-  const allocStats = [...monthlyCountMap.entries()]
+  const allocStats = [...halfMonthCountMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([key, count]) => {
       cumulative += count;
-      const [year, month] = key.split('-').map(Number);
-      const timestamp = Date.UTC(year, month - 1, 1);
-      const endOfMonth = Date.UTC(year, month, 0); // last day of month — ensures cron records mid-month are found
-      const cronMatch = cronPoints.filter(s => s.timestamp <= endOfMonth).pop();
+      const [year, month, half] = key.split('-');
+      const y = Number(year);
+      const m = Number(month);
+      const timestamp = half === 'a' ? Date.UTC(y, m - 1, 15) : Date.UTC(y, m, 0); // 15th, or last day of month
+      const cronMatch = cronPoints.filter(s => s.timestamp <= timestamp).pop();
       const totalSites = cronMatch?.totalSites || null;
       return {
         timestamp,
