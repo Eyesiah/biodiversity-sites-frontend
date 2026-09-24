@@ -85,6 +85,40 @@ export default async function StatisticsPage() {
     };
   });
 
+  // Build a cumulative monthly allocation series from firstSeen dates
+  const allocDocs = await db.collection('allocations')
+    .find({ firstSeen: { $exists: true } }, { projection: { firstSeen: 1 } })
+    .sort({ firstSeen: 1 })
+    .toArray();
+
+  const monthlyCountMap = new Map();
+  for (const doc of allocDocs) {
+    const d = new Date(doc.firstSeen);
+    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+    monthlyCountMap.set(key, (monthlyCountMap.get(key) || 0) + 1);
+  }
+
+  const cronPoints = stats.map(s => ({ timestamp: s.timestamp, totalSites: s.totalSites || 0 }))
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  let cumulative = 0;
+  const allocStats = [...monthlyCountMap.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, count]) => {
+      cumulative += count;
+      const [year, month] = key.split('-').map(Number);
+      const timestamp = Date.UTC(year, month - 1, 1);
+      const endOfMonth = Date.UTC(year, month, 0); // last day of month — ensures cron records mid-month are found
+      const cronMatch = cronPoints.filter(s => s.timestamp <= endOfMonth).pop();
+      const totalSites = cronMatch?.totalSites || null;
+      return {
+        timestamp,
+        numAllocations: cumulative,
+        totalSites,
+        allocationsPerSite: totalSites ? cumulative / totalSites : null,
+      };
+    });
+
 
 
   return (
@@ -94,7 +128,7 @@ export default async function StatisticsPage() {
           <>
             <ChartRow marginTop={5}>
               <ChartItem>
-                <StatsChart stats={stats}
+                <StatsChart stats={allocStats}
                   dataKeys={['totalSites', 'numAllocations']}
                   strokeColors={['#8884d8', '#82ca9d']}
                   names={['Total Sites', 'Total Allocations']}
@@ -102,7 +136,7 @@ export default async function StatisticsPage() {
                 />
               </ChartItem>
               <ChartItem>
-                <StatsChart stats={stats}
+                <StatsChart stats={allocStats}
                   dataKeys={['allocationsPerSite']}
                   strokeColors={['#d4a6f2']}
                   names={['Allocations per site']}
