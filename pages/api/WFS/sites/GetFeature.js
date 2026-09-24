@@ -9,9 +9,11 @@ export default async function handler(req, res) {
 
   // first get the easting/northings
   allSites.forEach(s => {
-    var gridref = OsGridRef.parse(s.gridReference);
-    s.easting = gridref.easting;
-    s.northing = gridref.northing;
+    if (s.gridReference) {
+      var gridref = OsGridRef.parse(s.gridReference);
+      s.easting = gridref.easting;
+      s.northing = gridref.northing;
+    }
   });
 
   // create the data array to return
