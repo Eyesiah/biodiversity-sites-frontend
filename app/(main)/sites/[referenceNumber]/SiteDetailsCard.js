@@ -8,7 +8,7 @@ import { formatNumber, slugify, normalizeBodyName } from '@/lib/format';
 import { InfoModal } from '@/components/ui/InfoModal';
 import Modal from '@/components/ui/Modal';
 import { PrimaryCard } from '@/components/styles/PrimaryCard';
-import { Box, Text, VStack, Stack, Checkbox, Flex, HStack } from '@chakra-ui/react';
+import { Alert, Box, Text, VStack, Stack, Checkbox, Flex, HStack } from '@chakra-ui/react';
 import InfoButton from '@/components/styles/InfoButton'
 import Tooltip from '@/components/ui/Tooltip';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
@@ -32,8 +32,19 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
     setModalState({ show: true, type, name: slugify(normalizeBodyName(name)), title, data, size: size });
   };
 
+  const removalDate = site.removalDate ? new Date(site.removalDate) : null;
+
   return (
     <VStack>
+      {removalDate && (
+        <Alert.Root status="warning" width="100%">
+          <Alert.Indicator />
+          <Alert.Content>
+            <Alert.Title>This site was removed from the Biodiversity Gain Sites Register on {removalDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.</Alert.Title>
+            <Alert.Description>The register no longer publishes its location, responsible body, habitats or allocations, so the details below are empty.</Alert.Description>
+          </Alert.Content>
+        </Alert.Root>
+      )}
       <Stack direction={['column', 'row']} width='100%'>
         <PrimaryCard>
           <Box>
@@ -72,6 +83,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                   : new Date(site.publishedDate).toLocaleDateString('en-GB'))
                 : 'N/A'
             } />
+            {removalDate && <DetailRow label="Removed from BGS Register" value={removalDate.toLocaleDateString('en-GB')} />}
             <DetailRow label="Start date of enhancement works" value={site.startDate ? new Date(site.startDate).toLocaleDateString('en-GB') : 'N/A'} />
             {site.latitude && site.longitude && <DetailRow label="Location & Maps" value={<><ExternalLink href={`https://www.google.com/maps/search/?api=1&query=${site.latitude},${site.longitude}`}>Google Maps</ExternalLink> {site.landBoundary && <ExternalLink href={site.landBoundary}>Boundary Map</ExternalLink>}{` (Lat/Long: ${site.latitude.toFixed(5)}, ${site.longitude.toFixed(5)})`}</>} />}
             <Tooltip text="Please email us at BGS_Suggestions@bristoltreeforum.org to suggest Links or a Name for this site."><DetailRow label="External Links" value={<>
