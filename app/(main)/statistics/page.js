@@ -100,8 +100,12 @@ export default async function StatisticsPage() {
     halfMonthCountMap.set(key, (halfMonthCountMap.get(key) || 0) + 1);
   }
 
-  const cronPoints = stats.map(s => ({ timestamp: s.timestamp, totalSites: s.totalSites || 0 }))
-    .sort((a, b) => a.timestamp - b.timestamp);
+  // Site counts come from each site's published date (NE acceptance date where known)
+  const siteDocs = await db.collection('sites')
+    .find({ publishedDate: { $ne: null } }, { projection: { publishedDate: 1 } })
+    .toArray();
+  const publishedTimes = siteDocs.map(doc => new Date(doc.publishedDate).getTime()).sort((a, b) => a - b);
+  let sitesPublished = 0;
 
   let cumulative = 0;
   const allocStats = [...halfMonthCountMap.entries()]
@@ -112,8 +116,10 @@ export default async function StatisticsPage() {
       const y = Number(year);
       const m = Number(month);
       const timestamp = half === 'a' ? Date.UTC(y, m - 1, 15) : Date.UTC(y, m, 0); // 15th, or last day of month
-      const cronMatch = cronPoints.filter(s => s.timestamp <= timestamp).pop();
-      const totalSites = cronMatch?.totalSites || null;
+      while (sitesPublished < publishedTimes.length && publishedTimes[sitesPublished] <= timestamp) {
+        sitesPublished++;
+      }
+      const totalSites = sitesPublished || null;
       return {
         timestamp,
         numAllocations: cumulative,

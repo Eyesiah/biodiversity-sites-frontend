@@ -76,7 +76,7 @@ export const SiteDetailsCard = ({ site, bodyLayerStates }) => {
                 ) : 'N/A'
               }
             />
-            <DetailRow label="Published to BGS Register" tooltipText="This is the date we first recorded the publication of the site on the NE Biodiversity Gain Sites Register. We do not hold this information for BGS sites published before 25/02/2025." value={
+            <DetailRow label="Published to BGS Register" tooltipText="This is the date Natural England accepted the site onto the Biodiversity Gain Sites Register, where known. For more recent sites it is the date we first recorded the site on the register." value={
               site.publishedDate
                 ? (site.publishedDatePreTracking
                   ? `Predates ${new Date(site.publishedDate).toLocaleDateString('en-GB')}`
