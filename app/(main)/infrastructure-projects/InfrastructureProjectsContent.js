@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Box, Text, Checkbox, Wrap, Flex } from '@chakra-ui/react';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
+import { ScrollableTableContainer } from '@/components/styles/ScrollableTableContainer';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import ExternalLink from '@/components/ui/ExternalLink';
 import { ContentStack } from '@/components/styles/ContentStack';
@@ -187,7 +188,7 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
             )}
           >
             {({ sortedItems, requestSort, getSortIndicator }) => (
-              <Box width="100%" overflowX="auto">
+              <ScrollableTableContainer>
                 <PrimaryTable.Root>
                   <PrimaryTable.Header>
                     <PrimaryTable.Row>
@@ -220,7 +221,7 @@ export default function InfrastructureProjectsContent({ projects = [], error = n
                     ))}
                   </PrimaryTable.Body>
                 </PrimaryTable.Root>
-              </Box>
+              </ScrollableTableContainer>
             )}
           </SearchableTableLayout>
         </ContentStack>

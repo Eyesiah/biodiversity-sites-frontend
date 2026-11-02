@@ -1,5 +1,13 @@
 import { Box } from '@chakra-ui/react';
 
+// macOS hides scrollbars until scrolling starts; styling them keeps them visible.
+// Don't set scrollbar-width or scrollbar-color here, as Chrome then ignores these.
+export const visibleScrollbarCss = {
+  '&::-webkit-scrollbar': { width: '12px', height: '12px' },
+  '&::-webkit-scrollbar-track': { background: 'var(--chakra-colors-subtle-border)' },
+  '&::-webkit-scrollbar-thumb': { background: 'var(--chakra-colors-table-header-bg)', borderRadius: '6px' },
+};
+
 /**
  * PrimaryCard - A pre-styled card component with consistent styling
  * Used for grouping related content with a border and shadow
@@ -42,7 +50,7 @@ export const CardTitle = (props) => (
  * TableContainer - wrapper for tables so they are scrollable on mobile displays
  */
 export const TableContainer = (props) => (
-  <Box overflowX="auto" width="100%"
+  <Box overflowX="auto" width="100%" css={visibleScrollbarCss}
     {...props}
   />
 )

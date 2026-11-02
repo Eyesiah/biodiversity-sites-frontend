@@ -6,7 +6,7 @@ import { DataFetchingCollapsibleRow } from '@/components/data/DataFetchingCollap
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import { getSortProps } from '@/lib/hooks';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
-import { TableContainer } from '@/components/styles/PrimaryCard';
+import { ScrollableTableContainer } from '@/components/styles/ScrollableTableContainer';
 import { AllocationHabitats } from '@/components/data/AllocationHabitats';
 import GlossaryTooltip from '@/components/ui/GlossaryTooltip';
 import { useColorModeValue } from '@/components/styles/color-mode';
@@ -67,7 +67,7 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
   const totalsBorder = useColorModeValue("#bdc3c7", "#555555"); // subtleBorder equivalent
 
   return (
-    <TableContainer>
+    <ScrollableTableContainer>
       <PrimaryTable.Root>
         <PrimaryTable.Header>
           <PrimaryTable.Row>
@@ -111,6 +111,6 @@ export default function AllocationList({ sortedItems, requestSort, sortConfig, s
           ))}
         </PrimaryTable.Body>
       </PrimaryTable.Root>
-    </TableContainer>
+    </ScrollableTableContainer>
   )
 };
