@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { formatNumber } from '@/lib/format';
 import MapContentLayout from '@/components/ui/MapContentLayout';
 import SiteList from '@/components/data/SiteList';
+import { ScrollableTableContainer } from '@/components/styles/ScrollableTableContainer';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import dynamic from 'next/dynamic';
 import { triggerDownload } from '@/lib/utils';
@@ -571,14 +572,14 @@ export default function SiteListPageContent({ sites }) {
               {
                 title: "Sites",
                 content: ({ sortedItems }) => (
-                  <Box width="100%" overflowX="auto">
+                  <ScrollableTableContainer>
                     <SiteList
                       sites={sortedItems}
                       onSiteHover={setHoveredSite}
                       onSiteClick={handleSiteSelect}
                       columns={FULL_SITE_COLUMNS}
                     />
-                  </Box>
+                  </ScrollableTableContainer>
                 )
               },
               {

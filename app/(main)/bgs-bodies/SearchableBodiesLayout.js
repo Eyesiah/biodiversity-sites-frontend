@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import { CollapsibleRow } from '@/components/data/CollapsibleRow';
 import SiteList from '@/components/data/SiteList';
+import { ScrollableTableContainer } from '@/components/styles/ScrollableTableContainer';
 import SearchableTableLayout from '@/components/ui/SearchableTableLayout';
 import { PrimaryTable } from '@/components/styles/PrimaryTable';
 import { InfoModal } from '@/components/ui/InfoModal';
@@ -145,32 +146,34 @@ export default forwardRef(function SearchableBodiesLayout({
       >
         {({ sortedItems: tableSortedItems, requestSort, getSortIndicator, inputValue: tableInputValue, setInputValue: tableSetInputValue }) => {
           return (
-            <PrimaryTable.Root>
-              <PrimaryTable.Header>
-                <PrimaryTable.Row>
-                  {headers.map((header) => (
-                    <PrimaryTable.ColumnHeader
-                      key={header.key}
-                      onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
-                      textAlign={header.textAlign}
-                    >
-                      {header.label}
-                      {header.sortable !== false && getSortIndicator(header.key)}
-                    </PrimaryTable.ColumnHeader>
+            <ScrollableTableContainer>
+              <PrimaryTable.Root>
+                <PrimaryTable.Header>
+                  <PrimaryTable.Row>
+                    {headers.map((header) => (
+                      <PrimaryTable.ColumnHeader
+                        key={header.key}
+                        onClick={header.sortable !== false ? () => requestSort(header.key) : undefined}
+                        textAlign={header.textAlign}
+                      >
+                        {header.label}
+                        {header.sortable !== false && getSortIndicator(header.key)}
+                      </PrimaryTable.ColumnHeader>
+                    ))}
+                  </PrimaryTable.Row>
+                </PrimaryTable.Header>
+                <PrimaryTable.Body>
+                  {tableSortedItems.map((body) => (
+                    <BodyRow
+                      body={body}
+                      key={body[bodyNameKey]}
+                      isOpen={expandedRow == body[bodyNameKey]}
+                      onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
+                    />
                   ))}
-                </PrimaryTable.Row>
-              </PrimaryTable.Header>
-              <PrimaryTable.Body>
-                {tableSortedItems.map((body) => (
-                  <BodyRow
-                    body={body}
-                    key={body[bodyNameKey]}
-                    isOpen={expandedRow == body[bodyNameKey]}
-                    onToggle={(isOpen) => handleToggle(body[bodyNameKey], isOpen)}
-                  />
-                ))}
-              </PrimaryTable.Body>
-            </PrimaryTable.Root>
+                </PrimaryTable.Body>
+              </PrimaryTable.Root>
+            </ScrollableTableContainer>
           );
         }}
       </SearchableTableLayout>
